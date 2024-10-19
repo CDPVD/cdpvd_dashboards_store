@@ -22,7 +22,7 @@ with
         where
             y_stud.ordre_ens = '4'  -- Secondaire
             and type_parcours in ('08')  -- 08 = FMS
-            and y_stud.annee < {{ get_current_year() }} + 1  -- Enlève l'année prévisionnelle de GPI
+            and y_stud.annee < {{ core_dashboards_store.get_current_year() }} + 1  -- Enlève l'année prévisionnelle de GPI
     )
 
 select *
