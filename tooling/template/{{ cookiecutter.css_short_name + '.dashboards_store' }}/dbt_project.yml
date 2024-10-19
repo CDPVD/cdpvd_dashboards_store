@@ -24,7 +24,7 @@ on-run-end:
 {% endraw %}
 
 models:
-  store:
+  core_dashboards_store:
     marts:
       human_resources:
         +enabled: False
