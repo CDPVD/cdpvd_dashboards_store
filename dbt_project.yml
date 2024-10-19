@@ -18,9 +18,8 @@ clean-targets:
 
 seeds:
     +tags: ["seeds"]
-    cdpvd_store:
-        +enabled:
-            false
+    cdpvd_dashboards_store:
+        +enabled: false
         dashboards:
             other:
                 pevr:
@@ -51,11 +50,10 @@ models:
                 i_t_prog:
                     +enabled: false
 
-
-    cdpvd_dashboards_store:      
-        +materialized: table                  
+    cdpvd_dashboards_store:
+        +materialized: table
         dashboards:
-            other:            
+            other:
                 pevr:
                     +tags: ["pevr"]
                     +schema: "dashboard_pevr"
@@ -72,10 +70,7 @@ vars:
     database_paie: "Replace me in the CSS repositery"
     database_gpi: "Replace me in the CSS repositery"
     database_jade: "Replace me in the CSS repositery"
-    database_geobus: "Replace me in the CSS repositery" # contains routes, buses, contractors, student files, and related to db GPL.
-    database_piastre: "Replace me in the CSS repositery" # financial data on school transport. no connections to db Geobus.
     database_prodrome: "Replace me in the CSS repositery" # Modelling output from the Sciance's models.
-    # res_epreuves's dashboard variables:
 
     interfaces:
         gpi:
@@ -89,4 +84,3 @@ vars:
     dashboards:
         res_epreuves:
             cod_css: 866%
-
