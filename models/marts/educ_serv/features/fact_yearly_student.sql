@@ -57,7 +57,9 @@ with
             {{ ref("i_wl_descr") }} as des_mes
             on des_mes.code = mes.type_mesure
             and nom_table = 'type_mesure'
-        where seqid = 1 and spi.annee >= {{ store.get_current_year() }} - 10  -- On garde un max de 10 ans dans nos données d'étudiants / Limite par défaut
+        where
+            seqid = 1
+            and spi.annee >= {{ core_dashboards_store.get_current_year() }} - 10  -- On garde un max de 10 ans dans nos données d'étudiants / Limite par défaut
     )
 select
     code_perm,

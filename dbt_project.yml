@@ -27,8 +27,7 @@ seeds:
                     +tags: ["pevr"]
                     +schema: "dashboard_pevr"
 models:
-
-    store:
+    core_dashboards_store:
         +enabled: true
         marts:
             human_resources:
@@ -63,8 +62,8 @@ models:
                     pbi_tables:
                         +post-hook:
                             [
-                                "{{ store.stamp_model('dashboard_pevr') }}",
-                            ]                        
+                                "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}",
+                            ]
 
 vars:
     is_context_core: false

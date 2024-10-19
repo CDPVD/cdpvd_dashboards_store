@@ -37,8 +37,8 @@ with
             and sch.annee = mentions.annee
         where
             sch.annee
-            between {{ store.get_current_year() }}
-            - 3 and {{ store.get_current_year() }}
+            between {{ core_dashboards_store.get_current_year() }}
+            - 3 and {{ core_dashboards_store.get_current_year() }}
             and mentions.indice_cfpt = 1.0  -- Qualification fpt
     ),
     -- Ajout des filtres utilisés dans le tableau de bord.

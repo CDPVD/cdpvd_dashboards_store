@@ -47,8 +47,8 @@ with
         where
             ordre_ens = 4
             and sch.annee
-            between {{ store.get_current_year() }}
-            - 3 and {{ store.get_current_year() }}
+            between {{ core_dashboards_store.get_current_year() }}
+            - 3 and {{ core_dashboards_store.get_current_year() }}
     ),
     ppp as (
         select

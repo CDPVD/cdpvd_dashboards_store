@@ -18,9 +18,9 @@ clean-targets:
 
 {% raw %}
 on-run-start:
-  - "{{ store.init_metadata_table() }}"
+  - "{{ core_dashboards_store.init_metadata_table() }}"
 on-run-end:
-  - "{{ store.purge_metadata_table() }}"
+  - "{{ core_dashboards_store.purge_metadata_table() }}"
 {% endraw %}
 
 models:
