@@ -104,5 +104,5 @@ seeds:
         - pevr
       schema: pevr_seeds
       column_types:
-        id_indicateur: nvarchar(12)
-        description_indicateur: nvarchar(max)      
+        id_indicateur: nvarchar(64)
+        description_indicateur: nvarchar(max)
