@@ -41,10 +41,6 @@ models:
                 features:
                 staging:
 
-        dashboards:
-            human_resources:
-                retirement:
-                    +enabled: false # Disable the retirement dashboard as we are working on an alternative version
         interfaces:
             gpi:
                 i_gpm_e_dan:
