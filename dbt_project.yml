@@ -17,17 +17,22 @@ clean-targets:
     - "dbt_packages"
 
 seeds:
-    +tags: ["seeds"]
+    ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
+    # >>> BEGIN
+    core_dashboards_store:
+        +enabled: true
+    ### <<< END
     cdpvd_dashboards_store:
-        +enabled: false
         dashboards:
             other:
                 pevr:
                     +tags: ["pevr"]
                     +schema: "dashboard_pevr"
 models:
+    ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
+    # >>> BEGIN
     core_dashboards_store:
-        +enabled: true
+        +enabled: true # By default, all models in the core schould be enabled
         marts:
             human_resources:
                 features:
@@ -39,7 +44,7 @@ models:
         dashboards:
             human_resources:
                 retirement:
-                    +enabled: false
+                    +enabled: false # Disable the retirement dashboard as we are working on an alternative version
         interfaces:
             gpi:
                 i_gpm_e_dan:
@@ -49,7 +54,10 @@ models:
                     +enabled: false
                 i_t_prog:
                     +enabled: false
+    ### <<< END
 
+    # This code block can be safely overriden in the cssXX_dashboards_store.
+    # There is no need for code duplication here
     cdpvd_dashboards_store:
         +materialized: table
         dashboards:
@@ -59,9 +67,9 @@ models:
                     +schema: "dashboard_pevr"
                     pbi_tables:
                         +post-hook:
-                            [
-                                "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}",
-                            ]
+                            - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
+        interfaces:
+            +materialized: ephemeral
 
 vars:
     is_context_core: false
@@ -83,4 +91,4 @@ vars:
                 years_of_data_grades: 10 # How many years of data to keep for the 'grades' centric dashboards.
     dashboards:
         res_epreuves:
-            cod_css: 866%
+            cod_css: replaceme # The code of the CSS to use for the res_epreuves dashboard. A regex like placeholder. Something like '866%'
