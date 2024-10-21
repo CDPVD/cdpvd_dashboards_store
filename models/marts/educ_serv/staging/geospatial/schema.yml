@@ -5,7 +5,7 @@ models:
     description: >
       table showing students' residential addresses for each year.
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - fiche
             - annee
