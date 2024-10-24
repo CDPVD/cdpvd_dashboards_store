@@ -1,6 +1,6 @@
 {#
-Dashboards Store - Helping students, one dashboard at a time.
-Copyright (C) 2023  Sciance Inc.
+CDPVD Dashboards store
+Copyright (C) 2024 CDPVD.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -66,7 +66,12 @@ with
             date_fin,
             sequence_id,
             case
-                when {{ store.weekdays_between("previous_date_fin", "date_eff") }} <= 1
+                when
+                    {{
+                        core_dashboards_store.weekdays_between(
+                            "previous_date_fin", "date_eff"
+                        )
+                    }} <= 1
                 then 0
                 else 1
             end as is_rupture

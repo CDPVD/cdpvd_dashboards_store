@@ -17,19 +17,22 @@ clean-targets:
     - "dbt_packages"
 
 seeds:
-    +tags: ["seeds"]
-    cdpvd_store:
-        +enabled:
-            false
+    ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
+    # >>> BEGIN
+    core_dashboards_store:
+        +enabled: true
+    ### <<< END
+    cdpvd_dashboards_store:
         dashboards:
             other:
                 pevr:
                     +tags: ["pevr"]
                     +schema: "dashboard_pevr"
 models:
-
-    store:
-        +enabled: true
+    ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
+    # >>> BEGIN
+    core_dashboards_store:
+        +enabled: true # By default, all models in the core schould be enabled
         marts:
             human_resources:
                 features:
@@ -38,10 +41,6 @@ models:
                 features:
                 staging:
 
-        dashboards:
-            human_resources:
-                retirement:
-                    +enabled: false
         interfaces:
             gpi:
                 i_gpm_e_dan:
@@ -51,20 +50,22 @@ models:
                     +enabled: false
                 i_t_prog:
                     +enabled: false
+    ### <<< END
 
-
-    cdpvd_dashboards_store:      
-        +materialized: table                  
+    # This code block can be safely overriden in the cssXX_dashboards_store.
+    # There is no need for code duplication here
+    cdpvd_dashboards_store:
+        +materialized: table
         dashboards:
-            other:            
+            other:
                 pevr:
                     +tags: ["pevr"]
                     +schema: "dashboard_pevr"
                     pbi_tables:
                         +post-hook:
-                            [
-                                "{{ store.stamp_model('dashboard_pevr') }}",
-                            ]                        
+                            - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
+        interfaces:
+            +materialized: ephemeral
 
 vars:
     is_context_core: false
@@ -73,10 +74,7 @@ vars:
     database_paie: "Replace me in the CSS repositery"
     database_gpi: "Replace me in the CSS repositery"
     database_jade: "Replace me in the CSS repositery"
-    database_geobus: "Replace me in the CSS repositery" # contains routes, buses, contractors, student files, and related to db GPL.
-    database_piastre: "Replace me in the CSS repositery" # financial data on school transport. no connections to db Geobus.
     database_prodrome: "Replace me in the CSS repositery" # Modelling output from the Sciance's models.
-    # res_epreuves's dashboard variables:
 
     interfaces:
         gpi:
@@ -89,5 +87,4 @@ vars:
                 years_of_data_grades: 10 # How many years of data to keep for the 'grades' centric dashboards.
     dashboards:
         res_epreuves:
-            cod_css: 866%
-
+            cod_css: replaceme # The code of the CSS to use for the res_epreuves dashboard. A regex like placeholder. Something like '866%'

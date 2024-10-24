@@ -1,6 +1,6 @@
 {#
-Dashboards Store - Helping students, one dashboard at a time.
-Copyright (C) 2023  Sciance Inc.
+CDPVD Dashboards store
+Copyright (C) 2024 CDPVD.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -57,7 +57,9 @@ with
             {{ ref("i_wl_descr") }} as des_mes
             on des_mes.code = mes.type_mesure
             and nom_table = 'type_mesure'
-        where seqid = 1 and spi.annee >= {{ store.get_current_year() }} - 10  -- On garde un max de 10 ans dans nos données d'étudiants / Limite par défaut
+        where
+            seqid = 1
+            and spi.annee >= {{ core_dashboards_store.get_current_year() }} - 10  -- On garde un max de 10 ans dans nos données d'étudiants / Limite par défaut
     )
 select
     code_perm,

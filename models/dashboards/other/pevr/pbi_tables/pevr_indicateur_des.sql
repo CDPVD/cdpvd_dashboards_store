@@ -1,6 +1,6 @@
 {#
-Dashboards Store - Helping students, one dashboard at a time.
-Copyright (C) 2023  Sciance Inc.
+CDPVD Dashboards store
+Copyright (C) 2024 CDPVD.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -36,8 +36,8 @@ with
             and sch.annee = mentions.annee
         where
             sch.annee
-            between {{ store.get_current_year() }}
-            - 3 and {{ store.get_current_year() }}
+            between {{ core_dashboards_store.get_current_year() }}
+            - 3 and {{ core_dashboards_store.get_current_year() }}
             and mentions.indice_des = 1.0  -- dip DES
     ),
 

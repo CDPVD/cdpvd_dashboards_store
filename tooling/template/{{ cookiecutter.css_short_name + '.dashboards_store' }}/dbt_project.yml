@@ -18,80 +18,98 @@ clean-targets:
 
 {% raw %}
 on-run-start:
-  - "{{ store.init_metadata_table() }}"
+  - "{{ core_dashboards_store.init_metadata_table() }}"
 on-run-end:
-  - "{{ store.purge_metadata_table() }}"
+  - "{{ core_dashboards_store.purge_metadata_table() }}"
 {% endraw %}
 
-models:
-  store:
-    marts:
-      human_resources:
-        +enabled: False
-      educ_serv:
-        +enabled: False
 
-    dashboards:
-      effectif_css:
-        +enabled: False
-      emp_conge:
-        +enabled: False
-      emp_actif:
-        +enabled: False
-      prospectif_cdp:
-        +enabled: False
-      res_epreuves:
-        +enabled: False
-      res_scolaires:
-        +enabled: False
-      suivi_resultats:
-        +enabled: False
-      transport:
-        +enabled: False
-      retirement:
-        +enabled: False
-      chronic_absenteeism:
-        +enabled: False
-      predictive_view_aggregated:
-        +enabled: False
-      pevr:
-        +enabled: False
-      diplome:
-        +enabled: False
+seeds:
+  ### WARN : !IMPORTANT : This configuration must be composed starting from the core_dashboards_store, as dbt does not natively support config inheritance.
+  # >>> BEGIN
+  core_dashboards_store:
+    +enabled: true
+    ### <<< END
+
+models:
+  ### WARN : !IMPORTANT : This configuration must be composed starting from the core_dashboards_store. Start from it and updated it as you nee
+  core_dashboards_store:
+    +enabled: true # By default, all models in the core schould be enabled
+    marts:
+        human_resources:
+            features:
+            staging:
+        educ_serv:
+            features:
+            staging:
+
+    dashboards:     
+        human_resources:
+            emp_conge:
+                +enabled: False
+            emp_actif:
+                +enabled: False
+            # >>> Overridden by cdpvd_dashboards_store
+            retirement:
+                +enabled: false
+
+        educ_serv:
+            effectif_css:
+                +enabled: False
+            res_epreuves:
+                +enabled: False
+            res_scolaires:
+                +enabled: False
+            suivi_resultats:
+                +enabled: False
+            chronic_absenteeism:
+                +enabled: False
+            absenteeism:
+                +enabled: False
+            predictive_view_aggregated:
+                +enabled: False
 
     interfaces:
-      +tags: ["interfaces"]
-      +materialized: ephemeral
-      bi_distribution:
-        +enabled: False
-      paie:
-        +enabled: False
-      gpi:
-        +enabled: False
-      jade:
-        +enabled: False
-      geobus:
-        +enabled: False
-      prodrome:
-        +enabled: False
-
+        prodrome:
+            +enabled: False
+        paie:
+            +enabled: False
+        gpi:
+            +enabled: false
+            # >>> Overridden by cdpvd_dashboards_store
+            i_gpm_e_dan:
+                +enabled: false
+        jade:
+            +enabled: false
+            # >>> Overridden by cdpvd_dashboards_store
+            i_e_ri_mentions:
+                +enabled: false
+            # >>> Overridden by cdpvd_dashboards_store
+            i_t_prog:
+                +enabled: false
     rls:
-      +enabled: false
-    +materialized: table
+        +enabled: false
+
 
 vars:
   # As the code is excuted from the inherited repo, sources schould behave as if there were refs.
-  is_context_core: false
+    is_context_core: false
 
-  # The source database to pull the data for a css.
-  database_bi: "[{{ cookiecutter.server_ip }}].[BI_DISTRIBUTION]"
-  database_paie: "[{{ cookiecutter.server_ip }}].[PAIE]"
-  database_gpi: "[{{ cookiecutter.server_ip }}].[GPIPRIM]"
-  database_cbm: "[{{ cookiecutter.server_ip }}].[JADEFGFPCVILLE]"
-  database_crif: "[{{ cookiecutter.server_ip }}].[JADECRIF]"
-  database_jade: "[{{ cookiecutter.server_ip }}].[JADE]"
-  database_geobus: "[{{ cookiecutter.server_ip }}].[GEOBUS]"
-  database_prodrome: "[{{ cookiecutter.server_ip }}].[PRODROME]"
+    database_paie: "[{{ cookiecutter.server_ip }}].[PAIE]"
+    database_gpi: "[{{ cookiecutter.server_ip }}].[GPIPRIM]"
+    database_jade: "[{{ cookiecutter.server_ip }}].[JADE]"
+    database_prodrome: "[{{ cookiecutter.server_ip }}].[PRODROME]"
 
-  res_epreuves:
-    cod_css: <cssRegex>
+    marts:
+        educ_serv:
+            recency:
+                years_of_data_absences: 10 # How many years of data to keep for the 'absences' centric dashboards.
+                years_of_data_grades: 10 # How many years of data to keep for the 'grades' centric dashboards.
+    interfaces:
+        gpi:
+            max_etapes: 30 # Must be set to the number of etapes, as found in gpm_t_obj_mat_grp
+            max_periodes: 20 # Must be set to the number of periodes, as identified in gpm_t_cal
+    
+    dashboards:
+        res_epreuves:
+            cod_css: replaceme # The code of the CSS to use for the res_epreuves dashboard. A regex like placeholder. Something like '866%'

@@ -1,6 +1,6 @@
 {#
-Dashboards Store - Helping students, one dashboard at a time.
-Copyright (C) 2023  Sciance Inc.
+CDPVD Dashboards store
+Copyright (C) 2024 CDPVD.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,20 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-{{ config(alias="report_survival_curve") }}
-
-select age, instantaneous_death_rate, survival_rate
-from {{ ref("stg_retirement_survival_curve") }}
+select
+    fiche,
+    typeadr as type_adr,
+    dateeffect as date_effect,
+    datefin as date_fin,
+    nociv as no_civ,
+    orientrue as orient_rue,
+    genrerue as genre_rue,
+    rue,
+    app,
+    ville,
+    prov,
+    codepost as code_post,
+    envoimeq as ind_envoi_meq,
+    envoidoc as ind_envoi_doc,
+    envoitrsp as ind_envoi_trsp
+from {{ var("database_jade") }}.dbo.e_adr

@@ -1,6 +1,6 @@
 {#
-Dashboards Store - Helping students, one dashboard at a time.
-Copyright (C) 2023  Sciance Inc.
+CDPVD Dashboards store
+Copyright (C) 2024 CDPVD.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -22,7 +22,7 @@ with
         where
             y_stud.ordre_ens = '4'  -- Secondaire
             and type_parcours in ('08')  -- 08 = FMS
-            and y_stud.annee < {{ get_current_year() }} + 1  -- Enlève l'année prévisionnelle de GPI
+            and y_stud.annee < {{ core_dashboards_store.get_current_year() }} + 1  -- Enlève l'année prévisionnelle de GPI
     )
 
 select *
