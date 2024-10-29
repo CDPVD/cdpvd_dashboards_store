@@ -3,4 +3,4 @@ packages:
   #   version: 1.0.0
   # - local: ../core.dashboards_store
   - git: git@github.com:Sciance-Inc/core.dashboards_store.git
-    revision: feature/fork_integration_clean
+    revision: develop
