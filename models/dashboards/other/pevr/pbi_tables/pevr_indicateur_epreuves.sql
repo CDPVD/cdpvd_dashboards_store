@@ -66,8 +66,8 @@ with
             and res.no_comp = ind.no_competence
         where
             res.annee
-            between {{ store.get_current_year() }}
-            - 3 and {{ store.get_current_year() }}
+            between {{ core_dashboards_store.get_current_year() }}
+            - 3 and {{ core_dashboards_store.get_current_year() }}
             and etape = 'EX'
             and id_indicateur_cdpvd in ('4')  -- Au cas-où qu'on utilise le champs code_matière pour d'autre indicateur
     ),

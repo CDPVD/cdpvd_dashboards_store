@@ -48,8 +48,8 @@ with
         where
             ordre_ens = 4
             and sch.annee
-            between {{ store.get_current_year() }}
-            - 3 and {{ store.get_current_year() }}
+            between {{ core_dashboards_store.get_current_year() }}
+            - 3 and {{ core_dashboards_store.get_current_year() }}
     ),
 
     ind_pevr as (
@@ -71,7 +71,7 @@ with
             distribution
         from src
         inner join
-            "tbe_dev"."busquef_dashboard_pevr"."dim_indicateurs_pevr" as ind
+            {{ ref("pevr_dim_indicateurs") }} as ind
             on src.id_indicateur = ind.id_indicateur_cdpvd
     ),
 
