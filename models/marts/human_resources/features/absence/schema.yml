@@ -1,0 +1,76 @@
+﻿version: 2
+
+models:
+  - name: fact_nbr_jours_travailles
+    description: >
+
+    columns:
+      - name: an_budg
+        description: 
+      - name: gr_paie
+        description: 
+      - name: jour_trav
+        description: 
+
+  - name: fact_liste_absence
+    description: >
+     
+    columns:
+      - name: annee
+        description: 
+      - name: matricule
+        description: 
+      - name: date
+        description: 
+      - name: motif_abs
+        description: 
+      - name: duree
+        description: 
+      - name: lieu_trav
+        description: 
+      - name: pourc_sal
+        description: 
+      - name: gr_paie
+        description: 
+      - name: ref_empl
+        description: 
+      - name: reg_abs
+        description:
+      - name: corp_empl
+        description:                 
+
+  - name: fact_absence_consecutive
+    description: >
+
+    columns:
+      - name: annee
+        description:
+      - name: matricule
+        description:
+      - name: corp_empl
+        description:
+      - name: gr_paie
+        description:
+      - name: motif_abs
+        description:
+      - name: lieu_trav
+        description:
+      - name: group_id
+        description:
+      - name: ref_empl
+        description:
+      - name: startdate
+        description:
+      - name: enddate
+        description:
+      - name: numberofdays
+        description:
+      - name: duree
+        description:
+      - name: reg_abs
+        description:
+      - name: pourc_sal        
+        description:
+
+
+
