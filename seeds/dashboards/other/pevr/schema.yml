@@ -84,6 +84,10 @@ seeds:
         description: Le pourcentage lié à l'indicateur et l'année scolaire
         tests:
           - not_null
+      - name: cible
+        description: Pourcentage ciblé
+        tests:
+          - not_null
     config:
       tags:
         - pevr
@@ -92,3 +96,4 @@ seeds:
         id_indicateur: nvarchar(max)
         annee_scolaire: nvarchar(max)
         taux: decimal(5,3)
+        cible: float
