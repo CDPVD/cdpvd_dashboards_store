@@ -33,10 +33,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 SELECT 
     pop.code_perm
     , el.fiche
-    , pop.population
     , freq.client
+    , pop.population
     , pop.annee
     , pop.freq
+    , floor(datediff(day, convert(date, el.date_naissance, 112), cast(concat(pop.annee, '0630') as date)) / 365.25) AS age_30_juin      -- format 112 = yyyymmdd
+    , floor(datediff(day, convert(date, el.date_naissance, 112), cast(concat(pop.annee, '0930') as date)) / 365.25) as age_30_septembre -- format 112 = yyyymmdd
     , freq.org
     , freq.eco_cen
     , freq.bat
