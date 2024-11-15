@@ -35,6 +35,7 @@ select
     type_prog_part,
     regrp_ehdaa,
     motif_depart,
+    motif_fin_mels,
     type_parcours,
     date_deb as date_debut,
     date_depart,
