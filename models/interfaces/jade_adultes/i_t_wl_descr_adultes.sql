@@ -15,5 +15,4 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select ecocen as eco_cen, orghor as org_hor, descr
-from {{ var("database_cbm") }}.dbo.o_orghor
+select code, cf_descr, nom_table from {{ var("database_jade_adultes") }}.dbo.wl_descr
