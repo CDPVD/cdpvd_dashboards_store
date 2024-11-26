@@ -22,12 +22,6 @@ seeds:
     core_dashboards_store:
         +enabled: true
     ### <<< END
-    cdpvd_dashboards_store:
-        dashboards:
-            other:
-                pevr:
-                    +tags: ["pevr"]
-                    +schema: "dashboard_pevr"
 models:
     ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
     # >>> BEGIN
@@ -43,27 +37,20 @@ models:
 
         interfaces:
             gpi:
+                +enabled: true
                 i_gpm_e_dan:
                     +enabled: false
             jade:
-                i_e_ri_mentions:
-                    +enabled: false
+                +enabled: true
                 i_t_prog:
+                    +enabled: false
+                i_e_adr:
                     +enabled: false
     ### <<< END
 
     # This code block can be safely overriden in the cssXX_dashboards_store.
     # There is no need for code duplication here
     cdpvd_dashboards_store:
-        +materialized: table
-        dashboards:
-            other:
-                pevr:
-                    +tags: ["pevr"]
-                    +schema: "dashboard_pevr"
-                    pbi_tables:
-                        +post-hook:
-                            - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
         interfaces:
             +materialized: ephemeral
 
