@@ -40,7 +40,8 @@ with
             dan.type_prog_part as type_programme_particulier,
             mes.type_mesure,
             mes.is_francisation,
-            des_mes.cf_descr_abreg as description_type_mesure
+            des_mes.cf_descr_abreg as description_type_mesure,
+            dan.grille
         from {{ ref("spine") }} as spi
         inner join
             {{ ref("i_gpm_e_dan") }} as dan  -- Niv scolaire
@@ -199,5 +200,6 @@ select
     case when categorie_programme_particulier is not null then 1 else 0 end as is_ppp,
     type_mesure,
     case when is_francisation = 1 then 1 else 0 end as is_francisation,
-    description_type_mesure
+    description_type_mesure,
+    grille
 from step1

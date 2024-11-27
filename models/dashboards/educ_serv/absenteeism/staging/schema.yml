@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: cdpvd_abstsm_stg_padding
+    description: >
+      A padding table identifying per year, school and grid the active calendars days.
+      The padding table is later as a backbone for computing daily rate, even in the case of no-absences.
+    tests:
+      - resolution:
+          combination_of_columns:
+            - id_eco
+            - date_evenement
+            - event_kind
+            - etape
+            - grille
+            
+  - name: cdpvd_abstsm_stg_daily_metrics
+    description: The daily absence rate and number of active students.
+    tests:
+      - resolution:
+          combination_of_columns:
+            - annee
+            - school_friendly_name
+            - date_evenement
+            - etape_friendly
+            - event_kind
+
+  - name: cdpvd_abstsm_stg_daily_students
+    description: Compute the daily number of active students.
+    tests:
+      - resolution:
+          combination_of_columns:
+            - date_evenement
+            - id_eco
+            - groupe
+            - grille
+            - etape
+
