@@ -1,0 +1,10 @@
+﻿version: 2
+
+models:
+  - name: elq_report
+    description: >
+      Table qui permet d'afficher les données en lien avec la qualification des enseignant(e)s
+    tests:
+      - resolution:
+          combination_of_columns:
+            - matr

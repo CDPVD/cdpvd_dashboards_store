@@ -475,7 +475,7 @@ Co-authored-by: hugo juhel &lt;juhel.hugo@stratemia.com&gt; ([`608d260`](https:/
 
 This PR refactors the RH mart and introduces new tables than can be used to ease future downstream computations.
 
-* This PR firsts adds a new **historical** `stg_activity_history` tables. This table is a consolidated version of `pai_hemp`
+* This PR firsts adds a new **historicalfact_absence_consecutive `stg_activity_history` tables. This table is a consolidated version of `pai_hemp`
 * The main job history of employees, which was previously unavailable, is built by parsing the XML payload of `hcha_pai_dos_empl`.
 * A **historical**, table with point-in-time metadata is derived from precedings table. This `fact_activity_yearly` provide the point-in-time following attributes :
     * workplace
