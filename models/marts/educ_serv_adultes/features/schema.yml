@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: fact_freq_adultes
+    config:
+      tags:
+        - educ_serv_adultes
+        - populations_adultes
+      schema: "educ_serv_adultes"
+    description: >
+      Table de fait pour la population adulte 
+    tests:
+      - resolution:
+          combination_of_columns:
+            - fiche
+            - code_perm
+            - annee
+            - freq
+            - population
+    columns:
+      - name: code_perm
+        description: Code de l'école adulte
+        tests:
+          - not_null
+      - name: fiche
+        description: fiche de l'éleve adulte
+        tests:
+          - not_null
+      - name: annee
+        description: Année scolaire de l'école adulte
+        tests:
+          - not_null
+      - name: freq
+        description: incrément pour identifier les fréquentations au cours d'une même année
+        tests:
+          - not_null
+      - name: population
+        description: Identifie si c'est de la FP ou de la FGA
+        tests:
+          - not_null
