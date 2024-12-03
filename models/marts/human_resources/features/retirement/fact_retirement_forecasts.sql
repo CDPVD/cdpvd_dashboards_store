@@ -25,15 +25,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     About the horizon 0 forecast : 
     * The horizon 0 represent the current year. 
  #}
+
 {{
     config(
         post_hook=[
-            core_dashboards_store.create_clustered_index(
+             core_dashboards_store.create_clustered_index(
                 "{{ this }}", ["school_year"]
             ),
         ]
     )
 }}
+
 
 -- Compute the age of the active employes at the start of the year
 with
@@ -58,7 +60,7 @@ with
             (
                 select
                     concat(
-                        {{ store.get_current_year() }},
+                        {{ core_dashboards_store.get_current_year() }},
                         '-',
                         {{ var("mois_reference") }},
                         '-01'
@@ -156,7 +158,7 @@ with
             convert(
                 date,
                 concat(
-                    {{ store.get_current_year() }} + hrz.horizon,
+                    {{ core_dashboards_store.get_current_year() }} + hrz.horizon,
                     '-',
                     {{ var("mois_reference") }},
                     '-01'

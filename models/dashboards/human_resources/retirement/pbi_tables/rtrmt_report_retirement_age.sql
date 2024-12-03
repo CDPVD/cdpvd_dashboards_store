@@ -75,8 +75,8 @@ select
     lieu_trav,
     stat_eng,
     convert(
-        date, concat(school_year, '-', {{ var("mois_reference") }}, '-01'), 102
-    ) as school_year,
+        date, concat(school_year, '-', {{ var("mois_reference")}}, '-01')
+        , 102) as school_year,
     case
         when {{ core_dashboards_store.get_current_year() }} = school_year then 1 else 0
     end as is_current_year,

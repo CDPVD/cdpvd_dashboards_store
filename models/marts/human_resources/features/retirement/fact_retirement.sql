@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {# 
     Extract the first retirement date for all of the employees.
 #}
+
 {{
     config(
         post_hook=[

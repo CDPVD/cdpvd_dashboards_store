@@ -64,6 +64,13 @@ models:
                     pbi_tables:
                         +post-hook:
                             - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
+            human_resources:                        
+                retirement:
+                    +tags: ["retirement"]
+                    +schema: "dashboard_retirement"
+                    pbi_tables:
+                        +post-hook:
+                            - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
         interfaces:
             +materialized: ephemeral
 

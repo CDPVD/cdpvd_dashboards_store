@@ -27,7 +27,7 @@ with
     current_year as (
         select
             concat(
-                {{ store.get_current_year() }}, '-', {{ var("mois_reference") }}, '-01'
+                {{ core_dashboards_store.get_current_year() }}, '-', {{ var("mois_reference") }}, '-01'
             ) as current_year
 
     -- Add the birth date and the genre to the active employes table
