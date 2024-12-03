@@ -1,4 +1,3 @@
--- depends_on: {{ ref('dim_mapper_workplace') }}
 {#
 Dashboards Store - Helping students, one dashboard at a time.
 Copyright (C) 2023  Sciance Inc.
@@ -50,11 +49,26 @@ select
     stat.stateng_name as stat_eng,
     case when qualif.code is null then 'Aucune' else qualif.descr end as qualification,
     state.descr as etat_empl,
-    --
     case when emp.sex_friendly_name = 'femme' then 1 end as total_femme,
     case when emp.sex_friendly_name = 'homme' then 1 end as total_homme,
     case when qualif.is_qualified = 1 then 1 end as total_elq,
-    case when ensq.matr is not null then 1 end as total_ens
+    case when ensq.matr is not null then 1 end as total_ens,
+    CASE 
+        WHEN 
+            ensq.stat_eng = 'E1' 
+            or ensq.stat_eng = 'E2' 
+        THEN 'Titulaire'
+        WHEN 
+            ensq.stat_eng = 'E3' 
+            or ensq.stat_eng = 'E9' 
+        THEN 'Remplaçant'
+        WHEN 
+            ensq.stat_eng = 'E4' 
+            or ensq.stat_eng = 'E5' 
+            or ensq.stat_eng = 'E6' 
+            or ensq.stat_eng = 'E7' 
+        THEN 'Suppléant'
+    end as 'statut_ens'
 
 from {{ ref("fact_ens_qualif") }} as ensq
 

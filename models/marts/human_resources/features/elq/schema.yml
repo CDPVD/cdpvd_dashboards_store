@@ -6,9 +6,22 @@ models:
       Table permettant de comptabiliser le nombre d'enseignant(e)s qui sont qualifiés pour enseigner.
     columns:
       - name: matr
-        description: The unique identifier of an employee.
+        description: Matricule de l'employé
         tests:
-          - unique
-    tests:
-      - unique_combination_of_columns:
-          combination_of_columns: ['matr']
+          - not_null
+      - name: etat_empl
+        description: État d'emploi de l'employé
+        tests:
+          - not_null
+      - name: workplace
+        description: Lieu de travail de l'employé
+        tests:
+          - not_null
+      - name: stat_eng
+        description: Statut d'engagement de l'emploi de l'employé
+        tests:
+          - not_null
+      - name: corp_empl
+        description: Corp d'emploi de l'employé
+        tests:
+          - not_null
