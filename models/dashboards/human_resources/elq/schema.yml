@@ -1,7 +1,7 @@
 ﻿version: 2
 
 models:
-  - name: elq_report
+  - name: cdpvd_pbi_elq_rapport
     description: >
       Table qui permet d'afficher les données des enseignant(e)s actifs
     columns:
@@ -29,10 +29,6 @@ models:
         description: Description du corps d'emploi de l'employé
         tests:
           - not_null
-      - name: stat_eng
-        description: Description du statut d'engagement de l'employé
-        tests:
-          - not_null
       - name: qualification
         description: Qualification / certification de l'employé
         tests:
@@ -41,20 +37,22 @@ models:
         description: Description de l'état d'emploi de l'employé
         tests:
           - not_null
-      - name: total_femme
+      - name: femme
         description: Nombre de femmes
-      - name: total_homme
+      - name: homme
         description: Nombre d'hommes
-      - name: total_elq
+      - name: elq
         description: Nombre d'enseignant(e)s qualifié(e)s
-      - name: total_ens
-        description: Nombre total d'enseignant)(e)s
-        tests:
-          - not_null
-      - name: statut_ens
+      - name: statut_enseignant
         description: Statut de l'enseignant --> Titulaire, suppléant, remplaçant
-    tests:
-      - resolution:
-          combination_of_columns:
+
+    tests: 
+      - core_dashboards_store.resolution: 
+          combination_of_columns: 
             - matricule
             - nom_legal
+            - tranche_age
+            - statut_enseignant
+            - etat_empl
+            - qualification
+            - corp_empl

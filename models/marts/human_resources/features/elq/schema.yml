@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: fact_ens_qualif
+  - name: cdpvd_fact_elq_liste
     description: >
       Table permettant de comptabiliser le nombre d'enseignant(e)s qui sont qualifiés pour enseigner.
     columns:
@@ -25,3 +25,4 @@ models:
         description: Corp d'emploi de l'employé
         tests:
           - not_null
+  
