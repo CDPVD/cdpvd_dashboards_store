@@ -20,6 +20,7 @@ with
     _mentions as (
         select
             mentions.fiche,
+            mentions.code_perm,
             mentions.prog_charl,
             cast(left(mentions.date_exec_sanct, 4) as int) as annee_brute,
             cast(right(left(mentions.date_exec_sanct, 6), 2) as int) as mois_brut,
@@ -33,6 +34,7 @@ with
     mentions_annee as (
         select
             mentions.fiche,
+            mentions.code_perm,
             mentions.prog_charl,
             mentions.regime_sanct_charl,
             mentions.date_exec_sanct,
@@ -50,9 +52,17 @@ with
             case when prog.type_diplome = 'CFMS' then 1.0 else 0.0 end as 'indice_Cfms'
         from _mentions as mentions
         inner join {{ ref("i_t_prog") }} as prog on mentions.prog_charl = prog.prog_meq
+    ),
+
+    _row_num as (
+        Select
+            *,
+            row_number() over ( partition by code_perm, fiche, annee order by annee asc) as seqid
+        from mentions_annee
     )
 
 select
+    code_perm,
     fiche,
     prog_charl,
     annee,
@@ -62,4 +72,5 @@ select
     indice_des,
     indice_cfpt,
     indice_cfms
-from mentions_annee
+from _row_num
+where seqid = 1

@@ -1,0 +1,17 @@
+version: 2
+
+models:
+- name: fact_ri_mentions
+  description: >
+    Table contenant les informations des qualification et des diplômes obtenus.
+  config:
+    tags:
+      - pevr
+  column_types:
+      annee: nvarchar(max)
+  tests:
+    - core_dashboards_store.resolution:
+        combination_of_columns:
+          - code_perm
+          - fiche
+          - annee
