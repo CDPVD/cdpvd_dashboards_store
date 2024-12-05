@@ -22,7 +22,7 @@ with tri AS (select
     emp.lieu_trav as workplace,         -- Code du lieu de travail
     emp.stat_eng,                       -- Code du statut dengagement
     emp.corp_empl,                      -- Corp demploi
-    qa.type_qualif AS type_qualif,  -- Qualification / Certification
+    qa.type_qualif AS type_qualif,      -- Qualification / Certification
     ROW_NUMBER() OVER(PARTITION BY util.matr ORDER BY util.matr, date_expir DESC) AS row_number    
 from {{ ref("dim_employees") }} as util
 inner join {{ ref("i_pai_dos_empl") }} as emp on util.matr = emp.matr

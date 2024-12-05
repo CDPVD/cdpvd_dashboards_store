@@ -56,5 +56,6 @@ inner join {{ ref("dim_mapper_workplace") }} lieu on ens.workplace = lieu.workpl
 inner join {{ ref("etat_empl") }} state on ens.etat_empl = state.etat_empl
 inner join {{ ref("dim_mapper_job_class") }} as job_class on job_class.code_job = ens.corp_empl
 inner join {{ ref("statut_enseignant") }} as statut_ens on ens.stat_eng = statut_ens.code
+
 -- LEFT JOIN requis pour assurer une bonne représentation de la population
 left join {{ ref("ens_qualification") }} qualif on ens.type_qualif = qualif.code
