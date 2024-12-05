@@ -16,14 +16,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
-select
+with tri AS (select
     util.matr,                          -- Matricule
     emp.etat as etat_empl,              -- Code de létat demploi
     emp.lieu_trav as workplace,         -- Code du lieu de travail
     emp.stat_eng,                       -- Code du statut dengagement
     emp.corp_empl,                      -- Corp demploi
-    MIN(qa.type_qualif) AS type_qualif  -- Qualification / Certification
-        
+    qa.type_qualif AS type_qualif,  -- Qualification / Certification
+    ROW_NUMBER() OVER(PARTITION BY util.matr ORDER BY util.matr, date_expir DESC) AS row_number    
 from {{ ref("dim_employees") }} as util
 inner join {{ ref("i_pai_dos_empl") }} as emp on util.matr = emp.matr
 inner join {{ ref("etat_empl") }}  as etat on emp.etat = etat.etat_empl
@@ -37,4 +37,15 @@ where
     and emp.ind_empl_princ = 1          -- Prendre en considération uniquement sont emploi principal
     and emp.corp_empl like '3%'         -- Enseignant(e)
 
-group by util.matr, emp.etat, emp.lieu_trav, emp.stat_eng, emp.corp_empl, qa.type_qualif    
+group by util.matr, emp.etat, emp.lieu_trav, emp.stat_eng, emp.corp_empl, qa.type_qualif, qa.date_expir
+)
+
+select 
+    matr, 
+    etat_empl, 
+    workplace, 
+    stat_eng, 
+    corp_empl, 
+    type_qualif 
+from tri 
+where row_number = 1

@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
 {{ config
-    (alias="cdpvd_pbit_elq_rapport",
+    (alias="cdpvd_pbi_elq_rapport",
         post_hook=[
             core_dashboards_store.create_nonclustered_index(
                 "{{ this }}", ["matricule","nom_legal","tranche_age","genre"]

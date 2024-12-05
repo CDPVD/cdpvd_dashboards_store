@@ -25,4 +25,11 @@ models:
         description: Corp d'emploi de l'employé
         tests:
           - not_null
-  
+    tests: 
+      - core_dashboards_store.resolution: 
+          combination_of_columns: 
+            - matr
+            - etat_empl
+            - workplace
+            - stat_eng
+            - corp_empl
