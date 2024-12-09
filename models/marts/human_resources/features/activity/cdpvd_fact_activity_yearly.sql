@@ -43,7 +43,7 @@ with
             hst.lieu_trav,
             hst.date_eff,
             hst.date_fin
-        from {{ ref("stg_activity_history") }} as hst
+        from {{ ref("cdpvd_stg_activity_history") }} as hst
         inner join
             {{ ref("dim_employment_status_yearly") }} as dm
             on hst.school_year = dm.school_year
@@ -144,7 +144,7 @@ with
                     case when mn.main_job is null then 0 else 1 end as is_main_job
                 from up_to_date as src
                 left join
-                    {{ ref("fact_main_job_yearly") }} as mn
+                    {{ ref("cdpvd_fact_main_job_yearly") }} as mn
                     on src.matr = mn.matr
                     and src.school_year = mn.school_year
                     and src.ref_empl = mn.main_job

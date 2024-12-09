@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {# 
     Compute the running number of forecasted retiring employees and combine the forecast with the past values
 #}
+{{ config(alias="cdpvd_report_retirement_forcast") }}
+
 with
     observed as (
         select
@@ -40,7 +42,7 @@ with
                         else year(src.retirement_date)
                     end as school_year,
                     job.job_group_category
-                from {{ ref("fact_retirement") }} as src
+                from {{ ref("cdpvd_fact_retirement") }} as src
                 left join
                     {{ ref("dim_mapper_job_group") }} as job
                     on src.corp_empl = job.job_group  -- Add the job group category here as I want to aggreagte by job group categories and not by job group.
@@ -60,7 +62,7 @@ select
         rows between unbounded preceding and current row
     ) as running_forecast_retiring_employees,
     1 as is_forecast
-from {{ ref("fact_retirement_forecasts") }}
+from {{ ref("cdpvd_fact_retirement_forecasts") }}
 union all
 select
     school_year,

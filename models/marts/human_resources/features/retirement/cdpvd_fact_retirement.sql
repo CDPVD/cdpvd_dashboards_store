@@ -41,7 +41,7 @@ with
             stat_eng,
             date_eff as retirement_date,
             row_number() over (partition by matr order by date_eff desc) as seqid
-        from {{ ref("stg_activity_history") }} as empl
+        from {{ ref("cdpvd_stg_activity_history") }} as empl
         inner join
             (
                 select etat_empl, school_year

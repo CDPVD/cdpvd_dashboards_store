@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-{{ config(alias="report_survival_curve") }}
+{{ config(alias="cdpvd_report_survival_curve") }}
 
 select age, instantaneous_death_rate, survival_rate
 from {{ ref("stg_retirement_survival_curve") }}

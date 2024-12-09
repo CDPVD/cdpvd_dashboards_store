@@ -47,12 +47,12 @@ with
         from
             (
                 select src.matr, job.job_group_category, dos.date_nais
-                from {{ ref("fact_activity_current") }} as src
+                from {{ ref("cdpvd_fact_activity_current") }} as src
                 left join {{ ref("i_pai_dos") }} as dos on src.matr = dos.matr
                 left join
                     {{ ref("dim_mapper_job_group") }} as job
                     on src.corp_empl = job.job_group
-                where src.matr not in (select matr from {{ ref("fact_retirement") }})  -- Remove the already retired employes
+                where src.matr not in (select matr from {{ ref("cdpvd_fact_retirement") }})  -- Remove the already retired employes
             ) as src
         -- Add the current_year date to compute the age at semptember the first of the
         -- current scholar year
@@ -122,7 +122,7 @@ with
             ) as n_cumulated_retired
         from aged_cohorts as src
         inner join
-            {{ ref("stg_retirement_survival_curve") }} as surv on src.age = surv.age
+            {{ ref("cdpvd_stg_retirement_survival_curve") }} as surv on src.age = surv.age
 
     -- Differentiate the cumulated number of retiring employees with respect to the
     -- cohort_ID to the forecast horizon to get the instantenous retiring employees

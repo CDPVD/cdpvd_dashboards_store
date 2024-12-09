@@ -37,6 +37,7 @@ models:
             human_resources:
                 features:
                 staging:
+
             educ_serv:
                 features:
                 staging:
@@ -56,6 +57,21 @@ models:
     # There is no need for code duplication here
     cdpvd_dashboards_store:
         +materialized: table
+        +enabled: true # By default, all models in the core schould be enabled
+        marts:
+            human_resources:
+                +tags:
+                    - "human_resources"
+                    - "mart_human_resources"
+                +schema: human_resources                
+                +enabled: true
+                features:
+                    +schema: human_resources_features
+                staging:
+                    +schema: human_resources_staging
+            educ_serv:
+                features:
+                staging:
         dashboards:
             other:
                 pevr:

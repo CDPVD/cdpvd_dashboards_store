@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     
     That's gross.
 #}
-{{ config(alias="report_filters") }}
+{{ config(alias="cdpvd_report_filters") }}
 
 
 with
@@ -46,7 +46,7 @@ with
                     job_group_category,
                     'active' as filter_source,
                     filter_key
-                from {{ ref("rtmrt_report_active_employees_age") }}
+                from {{ ref("cdpvd_rtmrt_report_active_employees_age") }}
                 union all
                 select
                     genre,
@@ -56,7 +56,7 @@ with
                     job_group_category,
                     'retirement' as filter_source,
                     filter_key
-                from {{ ref("rtrmt_report_retirement_age") }}
+                from {{ ref("cdpvd_rtrmt_report_retirement_age") }}
             ) as src
         group by
             src.genre,
@@ -70,7 +70,7 @@ with
 
 -- Join the friendly name
 select
-    src.genre as sex,
+    src.genre,
     empl.etat_empl as employment_status_name,
     eng.stat_eng as engagement_status_name,
     work.workplace_name,

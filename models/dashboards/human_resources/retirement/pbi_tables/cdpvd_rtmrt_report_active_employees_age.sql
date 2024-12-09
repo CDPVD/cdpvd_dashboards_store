@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
     Because of the double-granularity difference (age and school_year) with the rtmrt_report_retirement_age table, a surrogate key is generated to allow the user to filter on both dimensions at the same time
 #}
-{{ config(alias="report_employees_age") }}
+{{ config(alias="cdpvd_report_employees_age") }}
 
 -- Create the start-of-year date
 with
@@ -41,9 +41,9 @@ with
             src.stat_eng,
             dos.birth_date,
             dos.genre
-        from {{ ref("fact_activity_current") }} as src
+        from {{ ref("cdpvd_fact_activity_current") }} as src
         left join {{ ref("dim_employees") }} as dos on src.matr = dos.matr
-        where src.matr not in (select matr from {{ ref("fact_retirement") }})  -- Remove the already retired employes
+        where src.matr not in (select matr from {{ ref("cdpvd_fact_retirement") }})  -- Remove the already retired employes
 
     -- Get the age of the employes currently active
     ),

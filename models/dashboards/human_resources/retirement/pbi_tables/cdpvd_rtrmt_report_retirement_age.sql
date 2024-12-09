@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
     Because of the double-granularity difference (age and school_year) with the rtmrt_report_active_employees_age table, a surrogate key is generated to allow the user to filter on both dimensions at the same time
 #}
-{{ config(alias="report_retirement_age") }}
+{{ config(alias="cdpvd_report_retirement_age") }}
 
 -- Add some metadata : the school year and the job group
 with
@@ -38,7 +38,7 @@ with
             coalesce(src.stat_eng, 'Inconnu') as stat_eng,
             coalesce(src.etat, 'Inconnu') as etat,
             src.retirement_age
-        from {{ ref("fact_retirement") }} as src
+        from {{ ref("cdpvd_fact_retirement") }} as src
         left join
             {{ ref("dim_mapper_job_group") }} as job on src.corp_empl = job.job_group  -- Add the job group category here as I want to aggreagte by job group categories and not by job group.
         left join {{ ref("i_pai_dos") }} as dos on src.matr = dos.matr

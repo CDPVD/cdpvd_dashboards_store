@@ -43,7 +43,7 @@ with
             base.school_year + seq.seq_value as school_year,
             base.valid_from,
             base.valid_until
-        from {{ ref("stg_main_job_history") }} as base
+        from {{ ref("cdpvd_stg_main_job_history") }} as base
         cross join
             (
                 select seq_value
