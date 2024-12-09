@@ -43,7 +43,7 @@ models:
       - populations_adultes
     description: >
       Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'T_motif' de la base de données source.
-  - name: i_e_o_orghor
+  - name: i_e_o_orghor_adultes
     tags: 
       - interface
       - educ_serv_adultes
