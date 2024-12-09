@@ -32,9 +32,10 @@ with
       org_hor,
       descr_org_hor,
       case
-      when date_fin_sifca is not null then 'terminé'
-        else 'en cours'
-      END AS etat_formation,
+      when date_fin_sifca is null or date_fin_sifca = '' then 'en cours'
+        else 'terminé'
+      END as etat_formation,
+      genre,
       prog,
       prog_meq,
       descr_prog,
@@ -49,32 +50,33 @@ with
       count(code_perm) as total_ele
   from {{ ref("fact_freq_adultes") }}
   group by
-      client,
-      population,
-      annee,
-      freq,
-      age_30_juin,
-      age_30_septembre,
-      org,
-      eco_cen,
-      bat,
-      org_hor,
-      descr_org_hor,
-      case
-      when date_fin_sifca is not null then 'terminé'
-        else 'en cours'
-      END,
-      prog,
-      prog_meq,
-      descr_prog,
-      type_diplome,
-      type_activ,
-      descr_type_parcours,
-      descr_service_enseign,
-      motif_depart,
-      descr_motif_dep,
-      raison_depart,
-      desc_raison_depart
+    client,
+    population,
+    annee,
+    freq,
+    age_30_juin,
+    age_30_septembre,
+    org,
+    eco_cen,
+    bat,
+    org_hor,
+    descr_org_hor,
+    case
+    when date_fin_sifca is null or date_fin_sifca = '' then 'en cours'
+      else 'terminé'
+    END,
+    genre,
+    prog,
+    prog_meq,
+    descr_prog,
+    type_diplome,
+    type_activ,
+    descr_type_parcours,
+    descr_service_enseign,
+    motif_depart,
+    descr_motif_dep,
+    raison_depart,
+    desc_raison_depart
   )
 select
   centre.descr as nom_centre,
@@ -90,6 +92,7 @@ select
   org_hor,
   descr_org_hor,
   etat_formation,
+  genre,
   prog,
   prog_meq,
   descr_prog,
