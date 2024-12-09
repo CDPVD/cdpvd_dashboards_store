@@ -49,6 +49,7 @@ select
         / 365.25
     ) as age_30_septembre,
     /* format 112 = yyyymmdd */
+    el.genre,
     freq.org,
     freq.eco_cen,
     freq.bat,
