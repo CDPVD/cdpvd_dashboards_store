@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: eff_report_effectif_css_adultes
+    config:
+      alias: report_effectif_css_adultes
+      tags:
+        - educ_serv_adultes
+        - populations_adultes
+        - effectif_css_adultes
+      schema: dashboard_effectif_css_adultes
+    description: >
+        Table de rapports qui comptabilise la population adultes au sein du CSS selon l'année, le centre, le programme.
+    tests:
+      - resolution:
+          combination_of_columns:
+            - nom_centre
+            - client
+            - population
+            - annee
+            - freq
+            - age_30_juin
+            - age_30_septembre
+            - org
+            - eco_cen
+            - bat
+            - org_hor
+            - descr_org_hor
+            - etat_formation
+            - prog
+            - prog_meq
+            - descr_prog
+            - type_diplome
+            - type_activ
+            - descr_type_parcours
+            - descr_service_enseign
+            - motif_depart
+            - descr_motif_dep
+            - raison_depart
+            - desc_raison_depart

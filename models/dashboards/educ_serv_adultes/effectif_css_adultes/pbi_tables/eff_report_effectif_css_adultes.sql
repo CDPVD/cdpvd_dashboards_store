@@ -15,99 +15,94 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-{{ config(alias="report_effectif_css_adultes",tags=["effectif_css_adultes","populations_adultes","educ_serv_adultes"],schema="dashboard_effectif_css_adultes",
-post_hook=[stamp_model("dashboard_effectif_css_adultes")]) }}
+{{ config(post_hook=[stamp_model("dashboard_effectif_css_adultes")]) }}
 
-    
 with
-    agg as (
-        select
-            client,
-            population,
-            annee,
-            freq,
-            age_30_juin,
-            age_30_septembre,
-            org,
-            eco_cen,
-            bat,
-            org_hor,
-            descr_org_hor,
-            date_deb,
-            date_fin_sifca,
-            prog,
-            prog_meq,
-            descr_prog,
-            type_diplome,
-            type_activ,
-            type_parcours,
-            descr_type_parcours,
-            service_enseign,
-            descr_service_enseign,
-            motif_depart,
-            descr_motif_dep,
-            raison_depart,
-            desc_raison_depart,
-            count(code_perm) as total_ele
-        from {{ ref("fact_freq_adultes") }}
-        group by
-            client,
-            population,
-            annee,
-            freq,
-            age_30_juin,
-            age_30_septembre,
-            org,
-            eco_cen,
-            bat,
-            org_hor,
-            descr_org_hor,
-            date_deb,
-            date_fin_sifca,
-            prog,
-            prog_meq,
-            descr_prog,
-            type_diplome,
-            type_activ,
-            type_parcours,
-            descr_type_parcours,
-            service_enseign,
-            descr_service_enseign,
-            motif_depart,
-            descr_motif_dep,
-            raison_depart,
-            desc_raison_depart
-    )
+  agg as (
+    select
+      client,
+      population,
+      annee,
+      freq,
+      age_30_juin,
+      age_30_septembre,
+      org,
+      eco_cen,
+      bat,
+      org_hor,
+      descr_org_hor,
+      case
+      when date_fin_sifca is not null then 'terminé'
+        else 'en cours'
+      END AS etat_formation,
+      prog,
+      prog_meq,
+      descr_prog,
+      type_diplome,
+      type_activ,
+      descr_type_parcours,
+      descr_service_enseign,
+      motif_depart,
+      descr_motif_dep,
+      raison_depart,
+      desc_raison_depart,
+      count(code_perm) as total_ele
+  from {{ ref("fact_freq_adultes") }}
+  group by
+      client,
+      population,
+      annee,
+      freq,
+      age_30_juin,
+      age_30_septembre,
+      org,
+      eco_cen,
+      bat,
+      org_hor,
+      descr_org_hor,
+      case
+      when date_fin_sifca is not null then 'terminé'
+        else 'en cours'
+      END,
+      prog,
+      prog_meq,
+      descr_prog,
+      type_diplome,
+      type_activ,
+      descr_type_parcours,
+      descr_service_enseign,
+      motif_depart,
+      descr_motif_dep,
+      raison_depart,
+      desc_raison_depart
+  )
 select
-    centre.descr as nom_centre,
-    client,
-    population,
-    annee,
-    freq,
-    age_30_juin,
-    age_30_septembre,
-    org,
-    agg.eco_cen,
-    bat,
-    org_hor,
-    descr_org_hor,
-    date_deb,
-    date_fin_sifca,
-    prog,
-    prog_meq,
-    descr_prog,
-    type_diplome,
-    type_activ,
-    type_parcours,
-    descr_type_parcours,
-    service_enseign,
-    descr_service_enseign,
-    motif_depart,
-    descr_motif_dep,
-    raison_depart,
-    desc_raison_depart,
-    total_ele
+  centre.descr as nom_centre,
+  client,
+  population,
+  annee,
+  freq,
+  age_30_juin,
+  age_30_septembre,
+  org,
+  agg.eco_cen,
+  bat,
+  org_hor,
+  descr_org_hor,
+  etat_formation,
+  prog,
+  prog_meq,
+  descr_prog,
+  type_diplome,
+  type_activ,
+  descr_type_parcours,
+  descr_service_enseign,
+  motif_depart,
+  descr_motif_dep,
+  raison_depart,
+  desc_raison_depart,
+  total_ele
 from agg
 inner join
-    {{ ref("i_t_ecocen_adultes") }} as centre
-    on agg.eco_cen = centre.eco_cen
+  {{ ref("i_t_ecocen_adultes") }} as centre
+  on agg.eco_cen = centre.eco_cen
