@@ -26,6 +26,7 @@ models:
             - bat
             - org_hor
             - descr_org_hor
+            - genre
             - etat_formation
             - prog
             - prog_meq
