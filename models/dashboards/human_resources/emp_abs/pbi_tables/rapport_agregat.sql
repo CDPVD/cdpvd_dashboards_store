@@ -26,25 +26,24 @@ select distinct
     corp_empl,
     categories,
     abs.lieu_trav,
-    total,
-    nbrjour,
+    nbr_jour,
     moyenne,
-    nombre_absence_cat as nbr_abs,
     lundi,
     mardi,
     mercredi,
     jeudi,
     vendredi,
     taux,
-    -- jour_trav,
+    taux_abs,
     sec.secteur_id as secteur,
     tranche_age,
+    total,
     {{
         dbt_utils.generate_surrogate_key(
             ["annee", "abs.corp_empl", "lieu_trav", "abs.categories", "genre"]
         )
     }} as filter_key
-from {{ ref("emp_abs_fact_dash") }} as abs
+from {{ ref("fact_agregat") }} as abs
 
 inner join {{ ref("dim_mapper_workplace") }} as wk on abs.lieu_trav = wk.workplace
 

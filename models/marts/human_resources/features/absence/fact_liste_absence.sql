@@ -48,7 +48,6 @@ where
     year(absence.date) >= {{ get_current_year() - 4 }} -- Retour 5 ans en arrière
     and dure != 0 -- Dure non égale à 0
     and emp.pourc_sal != 0 -- Pour_sal non égale à 0
-
     and absence.mot_abs != '05' -- Création d'une seed **
     and absence.mot_abs != '09'
     and absence.mot_abs != '13'

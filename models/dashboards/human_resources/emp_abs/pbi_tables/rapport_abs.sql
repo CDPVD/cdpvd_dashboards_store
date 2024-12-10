@@ -20,15 +20,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 select distinct
     annee,
     abs.matricule,
-    round(age, 0) age,
     abs.corp_empl,
     genre,
     lieu_trav,
     wk.workplace_name as lieu_nom,
     sec.secteur_id as secteur,
-    motif_abs,
-    mo.descr,
-    ta.categories,
+    categories,
     startdate as date_debut,
     enddate as date_fin,
     {{
@@ -39,14 +36,5 @@ select distinct
 from {{ ref("fact_abs") }} as abs
 
 inner join {{ ref("dim_mapper_workplace") }} as wk on abs.lieu_trav = wk.workplace
-
-left join
-    {{ ref("type_absence") }} as ta  -- À modifier
-    on abs.motif_abs = ta.motif_id
-
-inner join
-    {{ ref("i_pai_tab_mot_abs") }} as mo  -- À modifier
-    on abs.motif_abs = mo.mot_abs
-    and abs.reg_abs = mo.reg_abs
 
 inner join {{ ref("secteur") }} as sec on abs.lieu_trav = sec.ua_id

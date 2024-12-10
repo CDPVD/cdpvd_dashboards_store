@@ -22,9 +22,13 @@ select
     [gr_paie], -- Groupe de paie | Pour sélectionner les employés selon leur type d'emploi 
     SUM(
         CASE 
-            WHEN an_budg = {{ get_current_year() }}{{ get_current_year() + 1 }} -- Si Année courante
+            WHEN an_budg = {{ core_dashboards_store.get_current_year() }}{{ core_dashboards_store.get_current_year() + 1 }} -- Si Année courante
             AND DATE_JOUR <= GETDATE() THEN 1 -- Calculer le nombre de jours en fonction de la date
-        ELSE 1 -- Si non, calcule le nombre de jours total des années précédentes
+                ELSE 
+            CASE 
+                WHEN DATE_JOUR < GETDATE() THEN 1 -- Si la date est antérieure à aujourd'hui
+                ELSE 0 -- Sinon, retourner 0
+            END-- Si non, calcule le nombre de jours total des années précédentes
         END
     ) AS jour_trav
 from {{ ref("i_pai_tab_cal_jour") }}
@@ -33,5 +37,5 @@ where
     and type_jour != 'E'    -- Type_jour E => Été | On ne le prend pas en compte
     and jour_sem != 0       -- jour_sem 0 => Dimanche | On ne le prend pas en compte
     and jour_sem != 6       -- jour_sem 6 => Samedi | On ne le prend pas en compte
-    and an_budg >= {{ get_current_year() - 5 }}{{ get_current_year() - 4 }} -- Retour 5 ans derrière
+    and an_budg >= {{ core_dashboards_store.get_current_year() - 5 }}{{ core_dashboards_store.get_current_year() - 4 }} -- Retour 5 ans derrière
 group by an_budg, gr_paie

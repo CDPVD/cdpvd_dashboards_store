@@ -105,7 +105,6 @@ with
             matricule,
             corp_empl,
             gr_paie,
-            motif_abs,
             lieu_trav,
             group_id,
             ref_empl,
@@ -114,13 +113,17 @@ with
             count(*) as numberofdays,
             duree,
             reg_abs,
-            pourc_sal
+            pourc_sal,
+            ta.categories
         from regroupement
+        left join
+            {{ ref("type_absence") }} as ta  -- À modifier
+            on regroupement.motif_abs = ta.motif_id        
         group by
             annee,
             matricule,
             ref_empl,
-            motif_abs,
+            categories,
             lieu_trav,
             group_id,
             gr_paie,
@@ -130,5 +133,21 @@ with
             corp_empl
     )
 
-select *
+select 
+            annee,
+            matricule,
+            corp_empl,
+            gr_paie,
+            lieu_trav,
+            group_id,
+            ref_empl,
+           startdate,
+            enddate,
+           numberofdays,
+            duree,
+            reg_abs,
+            pourc_sal,
+            categories
+
+
 from absence_consecutive

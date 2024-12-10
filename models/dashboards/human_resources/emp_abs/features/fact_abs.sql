@@ -22,13 +22,15 @@ select
     al.matricule,
     al.corp_empl,
     ref_empl,
-    motif_abs,
+    categories,
     reg_abs,
     lieu_trav,
     birth_date,
     emp.sex_friendly_name as genre,
     startdate,
-    enddate
+    enddate,
+    duree,
+    pourc_sal
 from {{ ref("fact_absence_consecutive") }} as al
 
 inner join
@@ -42,7 +44,7 @@ group by
     annee,
     matricule,
     ref_empl,
-    motif_abs,
+    categories,
     lieu_trav,
     startdate,
     enddate,
@@ -51,4 +53,6 @@ group by
     emp.birth_date,
     emp.sex_friendly_name,
     reg_abs,
-    birth_date
+    birth_date,
+    duree,
+    pourc_sal
