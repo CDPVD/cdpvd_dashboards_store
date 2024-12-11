@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-{{ config(post_hook=[stamp_model("dashboard_effectif_css_adultes")]) }}
+{{ config(post_hook=[core_dashboards_store.stamp_model("dashboard_effectif_css_adultes")]) }}
 
 with
   agg as (
@@ -35,7 +35,7 @@ with
       when date_fin_sifca is null or date_fin_sifca = '' then 'en cours'
         else 'terminé'
       END as etat_formation,
-      genre,
+      el.genre,
       prog,
       prog_meq,
       descr_prog,
@@ -47,8 +47,9 @@ with
       descr_motif_dep,
       raison_depart,
       desc_raison_depart,
-      count(code_perm) as total_ele
-  from {{ ref("fact_freq_adultes") }}
+      count(fac.code_perm) as total_ele
+  from {{ ref("fact_freq_adultes") }} as fac
+  inner join {{ ref("dim_eleve_adultes") }} as el on el.code_perm = fac.code_perm
   group by
     client,
     population,
@@ -65,7 +66,7 @@ with
     when date_fin_sifca is null or date_fin_sifca = '' then 'en cours'
       else 'terminé'
     END,
-    genre,
+    el.genre,
     prog,
     prog_meq,
     descr_prog,
