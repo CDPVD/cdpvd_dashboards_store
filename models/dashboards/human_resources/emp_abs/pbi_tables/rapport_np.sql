@@ -15,25 +15,23 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-{{ config(alias="emp_abs_report_abs") }}
+{{ config(alias="emp_abs_report_people") }}
 
 select distinct
     annee,
-    abs.matricule,
     abs.corp_empl,
     genre,
     lieu_trav,
     wk.workplace_name as lieu_nom,
     sec.secteur_id as secteur,
-    categories,
-    startdate as date_debut,
-    enddate as date_fin,
+    tranche_age,
+    nbr,
     {{
         dbt_utils.generate_surrogate_key(
-            ["annee", "abs.corp_empl", "lieu_trav", "categories", "genre"]
+            ["annee", "abs.corp_empl", "lieu_trav", "tranche_age", "genre"]
         )
-    }} as filter_key
-from {{ ref("fact_abs") }} as abs
+    }} as filter_key    
+from {{ ref("fact_nombre_personne") }} as abs
 
 inner join {{ ref("dim_mapper_workplace") }} as wk on abs.lieu_trav = wk.workplace
 

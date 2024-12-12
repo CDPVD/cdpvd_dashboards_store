@@ -43,7 +43,6 @@ inner join
     and absence.corp_empl = emp.corp_empl
     and absence.date between emp.date_eff and emp.date_fin
     and absence.sect = emp.sect
-
 where
     year(absence.date) >= {{ get_current_year() - 4 }} -- Retour 5 ans en arrière
     and dure != 0 -- Dure non égale à 0

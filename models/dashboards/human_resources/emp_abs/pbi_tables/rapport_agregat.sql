@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {{ config(alias="emp_abs_report_final") }}
 
 select distinct
-    annee,
+    LEFT(annee,4) as annee,
     matricule,
     -- ref_empl,
     -- gr_paie,
@@ -34,15 +34,15 @@ select distinct
     jeudi,
     vendredi,
     taux,
-    taux_abs,
     sec.secteur_id as secteur,
     tranche_age,
-    total,
+    jour_trav,
+    nbr,
     {{
         dbt_utils.generate_surrogate_key(
-            ["annee", "abs.corp_empl", "lieu_trav", "abs.categories", "genre"]
+            ["annee", "abs.corp_empl", "lieu_trav", "tranche_age", "genre"]
         )
-    }} as filter_key
+    }} as filter_key     
 from {{ ref("fact_agregat") }} as abs
 
 inner join {{ ref("dim_mapper_workplace") }} as wk on abs.lieu_trav = wk.workplace

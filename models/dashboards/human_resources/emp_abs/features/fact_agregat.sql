@@ -43,7 +43,6 @@ WITH donnees_precalculees AS (
         ON al.matricule = emp.matr
     WHERE cal.jour_sem NOT IN (6, 0)
 ),
-
 agregat AS (
     SELECT
         annee,
@@ -62,8 +61,15 @@ agregat AS (
             WHEN DATEDIFF(year, birth_date, CAST(LEFT(annee, 4) + '-07-01' AS DATE)) BETWEEN 45 AND 54 THEN '45 à 54 ans'
             WHEN DATEDIFF(year, birth_date, CAST(LEFT(annee, 4) + '-07-01' AS DATE)) BETWEEN 55 AND 64 THEN '55 à 64 ans'
             ELSE '65 ans et plus'
-        END AS tranche_age,				
-        SUM(CASE WHEN jour_sem = 1 THEN adjusted_duration END) / 7 AS total_lundi,
+        END AS tranche_age,
+        SUM(CASE 
+        WHEN corp_empl LIKE '3%' THEN 
+            CASE WHEN jour_sem = 1 THEN adjusted_duration END / 6.5
+        WHEN corp_empl LIKE '5%' THEN 
+            CASE WHEN jour_sem = 1 THEN adjusted_duration END / 7.75
+        ELSE 
+            CASE WHEN jour_sem = 1 THEN adjusted_duration END / 7
+        END) AS total_lundi,
         SUM(CASE WHEN jour_sem = 2 THEN adjusted_duration END) / 7 AS total_mardi,
         SUM(CASE WHEN jour_sem = 3 THEN adjusted_duration END) / 7 AS total_mercredi,
         SUM(CASE WHEN jour_sem = 4 THEN adjusted_duration END) / 7 AS total_jeudi,
@@ -72,18 +78,7 @@ agregat AS (
     FROM donnees_precalculees
     GROUP BY
         annee, matricule, genre, ref_empl, categories, lieu_trav, reg_abs, corp_empl, jour_trav, birth_date
-),
-
-total AS (
-    SELECT 
-    annee, matricule, 
-	ref_empl, 
-	lieu_trav, 
-	COALESCE(SUM(adjusted_duration) / NULLIF(7, 0), 0) AS total
-    FROM donnees_precalculees
-    GROUP BY annee, matricule, lieu_trav, ref_empl, adjusted_duration
 )
-
 SELECT 
     agg.annee,
     agg.matricule,
@@ -98,12 +93,17 @@ SELECT
     agg.total_jeudi AS jeudi, 
     agg.total_vendredi AS vendredi, 
     agg.nbr_jour,     
-    total,
-    COALESCE(SUM(agg.nbr_jour) / NULLIF(agg.jour_trav, 0), 0) AS taux,
-    COALESCE((agg.jour_trav - SUM(agg.nbr_jour)) / NULLIF(agg.jour_trav, 0), 0) AS taux_abs,
-    COALESCE(SUM(agg.nbr_jour) / NULLIF(agg.jour_trav, 0), 0) AS moyenne
+    COALESCE(SUM(agg.nbr_jour) / NULLIF(Sum(agg.jour_trav), 0), 0) / 100 AS taux,
+    agg.jour_trav,
+    fnp.nbr
 FROM agregat AS agg
-INNER JOIN total ON agg.annee = total.annee AND agg.matricule = total.matricule
+inner join {{ ref("fact_nombre_personne")}} as fnp 
+    on 
+    LEFT(agg.annee,4) = fnp.annee 
+    and agg.lieu_trav = fnp.lieu_trav 
+    and agg.corp_empl = fnp.corp_empl 
+    and agg.genre = fnp.genre
+where categories is not null
 GROUP BY 
     agg.annee, 
     agg.matricule,
@@ -114,4 +114,4 @@ GROUP BY
     agg.categories, 
     agg.tranche_age,
     agg.jour_trav,
-    total_lundi, total_mardi, total_mercredi, total_jeudi, total_vendredi, nbr_jour, total;
+    total_lundi, total_mardi, total_mercredi, total_jeudi, total_vendredi, nbr_jour, fnp.nbr;
