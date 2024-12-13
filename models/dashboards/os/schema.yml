@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: eff_etablissements_prim
+    description: List of all css registrations
+    tests:
+      - resolution:
+          combination_of_columns:
+            - annee
+            - eco
+            - population
+            - niveau_scolaire
