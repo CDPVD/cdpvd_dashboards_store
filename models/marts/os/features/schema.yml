@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: fact_register_prim
+    description: List of all css registrations
+    tests:
+      - resolution:
+          combination_of_columns:
+            - annee
+            - eco
+            - fiche
+            - population
+            - niveau_scolaire
+            - type_freq
