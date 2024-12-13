@@ -1,0 +1,17 @@
+version: 2
+
+models:
+
+  - name: cdpvd_rtmrt_report_filters
+    description: >
+      The set of filters to be applied on the report.
+      This table exists because of a double granularity difference between the report_retirement_age and the report_active_employees_age tables.
+    tests:
+      - resolution:
+          combination_of_columns:
+            - genre
+            - employment_status_name
+            - engagement_status_name
+            - workplace_name
+            - job_group_category
+            - filter_key
