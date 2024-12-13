@@ -50,12 +50,21 @@ models:
                     +enabled: false
                 i_t_prog:
                     +enabled: false
+                i_e_freq:
+                    +enabled: false
     ### <<< END
 
     # This code block can be safely overriden in the cssXX_dashboards_store.
     # There is no need for code duplication here
     cdpvd_dashboards_store:
         +materialized: table
+        marts:
+            os:
+                +tags:
+                    - "os"
+                    - "mart_os"
+                +schema: os
+
         dashboards:
             other:
                 pevr:
