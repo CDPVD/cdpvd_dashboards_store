@@ -50,6 +50,8 @@ models:
                     +enabled: false
                 i_t_prog:
                     +enabled: false
+                i_e_freq:
+                    +enabled: false
     ### <<< END
 
     # This code block can be safely overriden in the cssXX_dashboards_store.
@@ -79,6 +81,11 @@ models:
             educ_serv_adultes:
                 features:
                 dimensions:
+            os:
+                +tags:
+                    - "os"
+                    - "mart_os"
+                +schema: os
 
         dashboards:
             #+enabled: true
