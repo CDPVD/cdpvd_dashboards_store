@@ -94,3 +94,4 @@ left join
     {{ ref("i_e_o_orghor_adultes") }} org
     on org.eco_cen = freq.eco_cen
     and org.org_hor = freq.org_hor
+where pop.annee >=2020
