@@ -50,27 +50,30 @@ with
             max(case when jour_cycle is null then 0 else 1 end) as is_school_day
         from {{ ref("i_gpm_t_cal") }} as cal
         where
-            date_evenement <= getdate()
-            and year(date_evenement)
-            >= {{ core_dashboards_store.get_current_year() }} - 5  -- Limit the dashboards to the last 5 years
+            date_evenement <= getdate() and id_eco = '1102'
+            {# and year(date_evenement)
+            >= {{ core_dashboards_store.get_current_year() }} - 5  -- Limit the dashboards to the last 5 years #}
         group by id_eco, date_evenement, grille
 
     -- Extract all the absences event kind 
     ),
     kinds as (
-        select distinct event_kind from {{ ref("cdpvd_fact_absences_retards_daily") }}
+        select distinct event_kind from {{ ref("cdpvd_fact_absences_daily") }}
+        union
+        select distinct event_kind from {{ ref("cdpvd_fact_absences_periodes") }}
 
     -- Extract all the etapes per grid, eco and day
     ),
     etapes as (
         select
             id_eco,
+			groupe,
             grille,
             etape,
             min(etape_date_debut) as etape_date_debut,
             max(etape_date_fin) as etape_date_fin
         from {{ ref("cdpvd_abstsm_stg_daily_students") }}
-        group by id_eco, grille, etape
+        group by id_eco, groupe, grille, etape
 
     -- Combine all the dimensions into one padding table (to rule them all and in the
     -- shadows bind them, tout ca, tout ca)
@@ -78,6 +81,7 @@ with
     padding as (
         select
             cal.id_eco,
+            etp.groupe,
             cal.date_evenement,
             cal.grille,
             cal.is_school_day,
@@ -102,6 +106,7 @@ with
             pad.etape,
             pad.etape_date_debut,
             pad.etape_date_fin,
+			pad.groupe,
             dly.n_students_daily
         from padding as pad
         left join
@@ -110,6 +115,7 @@ with
             and pad.date_evenement = dly.date_evenement
             and pad.grille = dly.grille
             and pad.etape = dly.etape
+			and pad.groupe = dly.groupe
 
     -- Backfill the number of daily students
     ),
@@ -117,6 +123,7 @@ with
         select
             src.id_eco,
             src.date_evenement,
+			src.groupe,
             src.grille,
             src.is_school_day,
             src.event_kind,
@@ -126,7 +133,7 @@ with
             src.backfill_partition,
             src.n_students_daily as n_students_daily_ctrl,
             max(src.n_students_daily) over (
-                partition by id_eco, grille, etape, backfill_partition
+                partition by id_eco, grille, groupe, etape, backfill_partition
                 order by date_evenement
                 rows between unbounded preceding and unbounded following
             ) as n_students_daily
@@ -135,6 +142,7 @@ with
                 select
                     id_eco,
                     date_evenement,
+                    groupe,
                     grille,
                     is_school_day,
                     event_kind,
@@ -143,7 +151,7 @@ with
                     etape_date_fin,
                     n_students_daily,
                     sum(case when n_students_daily is not null then 1 else 0 end) over (
-                        partition by id_eco, grille, etape
+                        partition by id_eco, grille, groupe, etape
                         order by date_evenement
                         rows between unbounded preceding and current row
                     ) as backfill_partition
@@ -156,6 +164,8 @@ with
 select
     src.id_eco,
     src.date_evenement,
+    DATENAME(WEEKDAY, date_evenement) AS jour_semaine,
+    src.groupe,
     src.grille,
     src.is_school_day,
     src.event_kind,

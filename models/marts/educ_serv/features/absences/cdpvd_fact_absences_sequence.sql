@@ -77,7 +77,7 @@ with
             abs.seq_etape
         from expected_cal_with_id as exp
         inner join
-            {{ ref("cdpvd_fact_absences_retards_daily") }} as abs
+            {{ ref("cdpvd_fact_absences_daily") }} as abs
             on exp.id_eco = abs.id_eco
             and exp.date_evenement = abs.date_abs
             and exp.grille = abs.grille

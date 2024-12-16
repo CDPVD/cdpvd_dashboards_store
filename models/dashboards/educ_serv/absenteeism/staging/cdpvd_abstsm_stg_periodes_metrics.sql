@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 {{
     config(
-        alias="cdpvd_stg_daily_metrics",
+        alias="cdpvd_stg_periodes_metrics",
         post_hook=[
             core_dashboards_store.create_clustered_index(
                 "{{ this }}", ["annee", "school_friendly_name", "date_evenement"]
@@ -43,17 +43,19 @@ with
             date_abs as date_evenement,
             id_eco,
             grille,
-			jour_semaine,         
+			jour_semaine,
+			code_matiere,   
             groupe,         
             case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
             event_kind,
             count(distinct fiche) as n_events
-        from {{ ref("cdpvd_fact_absences_daily") }}
+        from {{ ref("cdpvd_fact_absences_periodes") }}
         group by
             date_abs,
             id_eco,
             grille,
 			jour_semaine,
+			code_matiere,   
             groupe,         
             case when etape in ('1', '2', '3') then etape else 0 end,
             event_kind
@@ -65,8 +67,9 @@ with
         select
             padd.id_eco,
             padd.date_evenement,
-            padd.jour_semaine,
+			padd.jour_semaine,
 			padd.groupe,
+			abs_.code_matiere,
             padd.grille,
             padd.event_kind,
             padd.etape,
@@ -78,10 +81,10 @@ with
             on padd.id_eco = abs_.id_eco
             and padd.date_evenement = abs_.date_evenement
             and padd.grille = abs_.grille
+            and padd.groupe = abs_.groupe            
             and padd.etape = abs_.etape
-            and padd.groupe = abs_.groupe
             and padd.event_kind = abs_.event_kind
-        where padd.is_school_day = 1 and padd.event_kind = 'absence (journée complète)'
+        where padd.is_school_day = 1 and padd.event_kind = 'absence (période)'
 
     -- Get rid of the grille dimensions, add add the school friendly name
     ),
@@ -89,8 +92,9 @@ with
         select
             id_eco,
             date_evenement,
-            jour_semaine,
+			jour_semaine,
 			groupe,
+			code_matiere,
             etape,
             event_kind,
             -- By orthogonality of the grids (ath the time the ETL run, one student as
@@ -98,7 +102,7 @@ with
             sum(n_events) as n_events,
             sum(n_students_daily) as n_students_daily
         from augmented as aug
-        group by id_eco, date_evenement, jour_semaine, etape, groupe, event_kind
+        group by id_eco, date_evenement, jour_semaine, groupe, code_matiere, etape, event_kind
 
     -- Compute the absence rate
     ),
@@ -106,8 +110,9 @@ with
         select
             id_eco,
             date_evenement,
-            jour_semaine,
+			jour_semaine,
 			groupe,
+			code_matiere,
             etape,
             event_kind,
             n_events,
@@ -124,8 +129,9 @@ with
         select
             id_eco,
             date_evenement,
-            jour_semaine,
-            groupe,
+			jour_semaine,
+			groupe,
+			code_matiere,
             case
                 when etape = 0 then 'inconnue' else cast(etape as varchar)
             end as etape_friendly,
@@ -140,8 +146,9 @@ select
     annee,
     school_friendly_name,
     date_evenement,
-    jour_semaine,
-    groupe,
+	jour_semaine,
+	groupe,
+	coalesce(code_matiere, '-') as code_matiere,
     concat('étape : ', etape_friendly) as etape_friendly,
     event_kind,
     n_events,
