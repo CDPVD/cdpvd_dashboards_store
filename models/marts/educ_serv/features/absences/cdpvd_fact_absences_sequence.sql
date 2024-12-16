@@ -34,7 +34,7 @@ with
     expected_cal as (
         select
             case
-                when month(date_evenement) <= 7
+                when month(date_evenement) < 7
                 then year(date_evenement) - 1
                 else year(date_evenement)
             end as school_year,
@@ -77,11 +77,10 @@ with
             abs.seq_etape
         from expected_cal_with_id as exp
         inner join
-            {{ ref("cdpvd_fact_absences_retards_daily") }} as abs
+            {{ ref("cdpvd_fact_absences_daily") }} as abs
             on exp.id_eco = abs.id_eco
             and exp.date_evenement = abs.date_abs
             and exp.grille = abs.grille
-            and code_matiere = 'tout'
 
     -- Get the between-sequences-of-absences breaks by checking if the previous day
     -- was a day of absence too (with respect to the event kind)

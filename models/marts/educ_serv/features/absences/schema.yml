@@ -16,7 +16,7 @@ models:
             - absence_sequence_id
             - event_kind
 
-  - name: cdpvd_fact_absences_retards_daily
+  - name: cdpvd_fact_absences_daily
     description: >
       Compute the aggregated number of absences and delay per day, for each student with at LEAST one absence for a given period.
       Only computed for the past 10 years.
@@ -26,5 +26,5 @@ models:
             - fiche
             - date_abs
             - id_eco
-            - code_matiere
             - event_kind
+            - code_matiere

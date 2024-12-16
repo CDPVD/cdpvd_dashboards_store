@@ -10,6 +10,7 @@ models:
           combination_of_columns:
             - id_eco
             - date_evenement
+            - groupe
             - event_kind
             - etape
             - grille
@@ -20,10 +21,12 @@ models:
       - resolution:
           combination_of_columns:
             - annee
+            - groupe
             - school_friendly_name
             - date_evenement
             - etape_friendly
             - event_kind
+            - code_matiere
 
   - name: cdpvd_abstsm_stg_daily_students
     description: Compute the daily number of active students.

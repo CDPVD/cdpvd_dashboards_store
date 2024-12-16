@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 {{
     config(
-        alias="stg_daily_absences_rate",
+        alias="cdpvd_stg_daily_metrics",
         post_hook=[
             core_dashboards_store.create_clustered_index(
                 "{{ this }}", ["annee", "school_friendly_name", "date_evenement"]
@@ -44,17 +44,17 @@ with
             id_eco,
             grille,
 			jour_semaine,
-			code_matiere,            
+            groupe,         
             case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
             event_kind,
             count(distinct fiche) as n_events
-        from {{ ref("cdpvd_fact_absences_retards_daily") }}
+        from {{ ref("cdpvd_fact_absences_daily") }}
         group by
             date_abs,
             id_eco,
             grille,
 			jour_semaine,
-			code_matiere,            
+            groupe,         
             case when etape in ('1', '2', '3') then etape else 0 end,
             event_kind
 
@@ -65,6 +65,8 @@ with
         select
             padd.id_eco,
             padd.date_evenement,
+			padd.jour_semaine,
+			padd.groupe,
             padd.grille,
             padd.event_kind,
             padd.etape,
@@ -76,9 +78,10 @@ with
             on padd.id_eco = abs_.id_eco
             and padd.date_evenement = abs_.date_evenement
             and padd.grille = abs_.grille
+            and padd.groupe = abs_.groupe            
             and padd.etape = abs_.etape
             and padd.event_kind = abs_.event_kind
-        where padd.is_school_day = 1
+        where padd.is_school_day = 1 
 
     -- Get rid of the grille dimensions, add add the school friendly name
     ),
@@ -86,6 +89,8 @@ with
         select
             id_eco,
             date_evenement,
+			jour_semaine,
+			groupe,
             etape,
             event_kind,
             -- By orthogonality of the grids (ath the time the ETL run, one student as
@@ -93,7 +98,39 @@ with
             sum(n_events) as n_events,
             sum(n_students_daily) as n_students_daily
         from augmented as aug
-        group by id_eco, date_evenement, etape, event_kind
+        group by id_eco, date_evenement, jour_semaine, groupe, etape, event_kind
+      ),  
+    -- aggreger les matieres
+    matiere_aggregated as (
+        select
+            date_abs,
+            id_eco,
+			jour_semaine,
+			code_matiere,   
+            groupe,         
+            case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
+            event_kind,
+            count(distinct fiche) as n_events_matiere
+        from {{ ref("cdpvd_fact_absences_daily") }}
+        group by
+            date_abs,
+            id_eco,
+			jour_semaine,
+			code_matiere,   
+            groupe,         
+            case when etape in ('1', '2', '3') then etape else 0 end,
+            event_kind
+    
+    -- récuperer les matieres    
+    ), matiere as (
+		select src.*, n_events_matiere, absc.code_matiere 
+		from aggregated as src 
+		left join matiere_aggregated as absc 
+			on src.id_eco = absc.id_eco
+            and src.date_evenement = absc.date_abs
+            and src.groupe = absc.groupe            
+            and src.etape = absc.etape
+            and src.event_kind = absc.event_kind
 
     -- Compute the absence rate
     ),
@@ -101,14 +138,18 @@ with
         select
             id_eco,
             date_evenement,
+			jour_semaine,
+			groupe,
+			code_matiere,
             etape,
             event_kind,
             n_events,
+            n_events_matiere,
             n_students_daily,
             case
                 when n_students_daily = 0 then 0. else n_events * 1.0 / n_students_daily
             end as absence_rate
-        from aggregated
+        from matiere
         where n_students_daily > 0  -- Avoid division by 0
 
     -- Handle the smôôôôl percentage of degenerates cases, and reformat the dimensions
@@ -117,10 +158,14 @@ with
         select
             id_eco,
             date_evenement,
+			jour_semaine,
+			groupe,
+			code_matiere,
             case
                 when etape = 0 then 'inconnue' else cast(etape as varchar)
             end as etape_friendly,
             event_kind,
+            n_events_matiere,
             n_events,
             n_students_daily,
             case when absence_rate > 1. then 1. else absence_rate end as absence_rate
@@ -131,10 +176,17 @@ select
     annee,
     school_friendly_name,
     date_evenement,
+	jour_semaine,
+	groupe,
+	coalesce(code_matiere, '-') as code_matiere,
     concat('étape : ', etape_friendly) as etape_friendly,
     event_kind,
     n_events,
+    n_events_matiere,
     n_students_daily,
-    absence_rate
+    absence_rate,
+        -- RLS hooks:
+    src.id_eco,
+    eco.eco
 from corrected as src
 left join {{ ref("dim_mapper_schools") }} as eco on src.id_eco = eco.id_eco

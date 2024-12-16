@@ -96,7 +96,7 @@ with
         select
             base.fiche,
             base.id_eco,
-            base.groupe,            
+            coalesce(base.groupe, '-') as groupe,            
             base.date_debut,
             base.date_depart,
             base.grille,
@@ -162,6 +162,7 @@ with
             and ing.id_eco = eg.id_eco
             and ing.etape = eg.etape
             and ing.grille = eg.grille
+            and ing.groupe = eg.groupe
 
     -- Compute the daily number of students by cumulating the delta
     -- The computation can be safely done grid * etape, without reporting the
