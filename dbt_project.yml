@@ -37,6 +37,7 @@ models:
             human_resources:
                 features:
                 staging:
+
             educ_serv:
                 features:
                 staging:
@@ -134,3 +135,6 @@ vars:
             groupe_primaire: replaceme 
             groupe_secondaire: replaceme
             nbre_annee_a_extraire: replaceme
+
+    # Le mois de référence pour le début de l'année -- Indiquez en 2 caractères comme, 01, 02, 03, ..., 10, 11, 12
+    mois_reference: 07
