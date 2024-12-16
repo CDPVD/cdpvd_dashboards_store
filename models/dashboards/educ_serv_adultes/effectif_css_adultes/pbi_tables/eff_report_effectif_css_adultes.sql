@@ -24,6 +24,14 @@ with
       population,
       annee,
       freq,
+      case
+      when age_30_juin < 16 then 'Moins de 16 ans'
+      when age_30_juin BETWEEN 16 and 17 then '16-17 ans'
+      when age_30_juin BETWEEN 18 and 21 then '18-21 ans'
+      when age_30_juin BETWEEN 22 and 25 then '22-25 ans'
+      when age_30_juin >= 26 then 'Plus de 26 ans'
+        else null
+      END as interv_age,
       age_30_juin,
       age_30_septembre,
       org,
@@ -47,7 +55,7 @@ with
       descr_motif_dep,
       raison_depart,
       desc_raison_depart,
-      count(fac.code_perm) as total_ele
+      count( distinct(fac.code_perm)) as total_ele
   from {{ ref("fact_freq_adultes") }} as fac
   inner join {{ ref("dim_eleve_adultes") }} as el on el.code_perm = fac.code_perm
   group by
@@ -55,6 +63,14 @@ with
     population,
     annee,
     freq,
+    case
+      when age_30_juin < 16 then 'Moins de 16 ans'
+      when age_30_juin BETWEEN 16 and 17 then '16-17 ans'
+      when age_30_juin BETWEEN 18 and 21 then '18-21 ans'
+      when age_30_juin BETWEEN 22 and 25 then '22-25 ans'
+      when age_30_juin >= 26 then 'Plus de 26 ans'
+        else null
+      END,
     age_30_juin,
     age_30_septembre,
     org,
@@ -80,10 +96,10 @@ with
     desc_raison_depart
   )
 select
-  centre.descr as nom_centre,
+  concat('(',agg.eco_cen,') - ',centre.descr) as [Nom du centre],
   client,
   population,
-  annee,
+  annee as Année,
   freq,
   age_30_juin,
   age_30_septembre,
@@ -91,16 +107,17 @@ select
   agg.eco_cen,
   bat,
   org_hor,
-  descr_org_hor,
-  etat_formation,
-  genre,
+  interv_age,
+  descr_org_hor as [Organisation horaire],
+  etat_formation as [Etat de la Formation],
+  genre as Genre,
   prog,
   prog_meq,
-  descr_prog,
-  type_diplome,
+  descr_prog as Programme,
+  type_diplome as [Type de diplôme],
   type_activ,
-  descr_type_parcours,
-  descr_service_enseign,
+  descr_type_parcours [Type de parcours],
+  descr_service_enseign as [Service enseignement],
   motif_depart,
   descr_motif_dep,
   raison_depart,

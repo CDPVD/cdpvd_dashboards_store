@@ -14,10 +14,10 @@ models:
     tests:
       - resolution:
           combination_of_columns:
-            - nom_centre
+            - "[Nom du centre]"
             - client
             - population
-            - annee
+            - Année
             - freq
             - age_30_juin
             - age_30_septembre
@@ -25,16 +25,17 @@ models:
             - eco_cen
             - bat
             - org_hor
-            - descr_org_hor
+            - interv_age
+            - "[Organisation horaire]"
             - genre
-            - etat_formation
+            - "[Etat de la Formation]"
             - prog
             - prog_meq
-            - descr_prog
-            - type_diplome
+            - Programme
+            - "[Type de diplôme]"
             - type_activ
-            - descr_type_parcours
-            - descr_service_enseign
+            - "[Type de parcours]"
+            - "[Service enseignement]"
             - motif_depart
             - descr_motif_dep
             - raison_depart
