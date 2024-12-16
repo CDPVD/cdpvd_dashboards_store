@@ -37,6 +37,7 @@ models:
             human_resources:
                 features:
                 staging:
+
             educ_serv:
                 features:
                 staging:
@@ -56,6 +57,21 @@ models:
     # There is no need for code duplication here
     cdpvd_dashboards_store:
         +materialized: table
+        +enabled: true # By default, all models in the core schould be enabled
+        marts:
+            human_resources:
+                +tags:
+                    - "human_resources"
+                    - "mart_human_resources"
+                +schema: human_resources                
+                +enabled: true
+                features:
+                    +schema: human_resources_features
+                staging:
+                    +schema: human_resources_staging
+            educ_serv:
+                features:
+                staging:
         dashboards:
             other:
                 pevr:
@@ -64,6 +80,13 @@ models:
                     pbi_tables:
                         +post-hook:
                             - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
+            human_resources:                        
+                retirement:
+                    +tags: ["retirement"]
+                    +schema: "dashboard_retirement"
+                    pbi_tables:
+                        +post-hook:
+                            - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
         interfaces:
             +materialized: ephemeral
 
@@ -88,3 +111,6 @@ vars:
     dashboards:
         res_epreuves:
             cod_css: replaceme # The code of the CSS to use for the res_epreuves dashboard. A regex like placeholder. Something like '866%'
+
+    # Le mois de référence pour le début de l'année -- Indiquez en 2 caractères comme, 01, 02, 03, ..., 10, 11, 12
+    mois_reference: 07
