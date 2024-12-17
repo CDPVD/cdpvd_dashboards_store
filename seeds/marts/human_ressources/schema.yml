@@ -12,6 +12,10 @@ seeds:
         description: The description of the etat_employe.
         tests:
           - not_null
+      - name: secteur_Descr
+        description: The description of the etat_employe.
+        tests:
+          - not_null          
 
     config:
       tags:
@@ -19,7 +23,8 @@ seeds:
       schema: human_resources_seeds
       column_types:
         ua_Id: int
-        secteur_Id: nvarchar(50)
+        secteur_Id: int
+        secteur_Descr: nvarchar(32)
 
   - name: type_absence
     description: Regroupement des motifs d'absence sous des catégories plus parlantes
@@ -28,6 +33,8 @@ seeds:
         description: L'ID du motif
       - name: categories
         description: Catégories 
+      - name: statut
+        description: Statut
 
     config:
       tags:
@@ -35,4 +42,5 @@ seeds:
       schema: human_resources_seeds
       column_types:
         motif_id: nvarchar(2)
-        categories: nvarchar(50)                
+        categories: nvarchar(50)
+        statut: bit                

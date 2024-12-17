@@ -27,17 +27,18 @@ select distinct
     categories,
     abs.lieu_trav,
     nbr_jour,
-    moyenne,
     lundi,
     mardi,
     mercredi,
     jeudi,
     vendredi,
     taux,
-    sec.secteur_id as secteur,
+    sec.secteur_Descr as secteur,
     tranche_age,
     jour_trav,
+    wk.workplace_name as lieu_nom,
     nbr,
+    jg.job_group_category as cat_emp,
     {{
         dbt_utils.generate_surrogate_key(
             ["annee", "abs.corp_empl", "lieu_trav", "tranche_age", "genre"]
@@ -48,3 +49,4 @@ from {{ ref("fact_agregat") }} as abs
 inner join {{ ref("dim_mapper_workplace") }} as wk on abs.lieu_trav = wk.workplace
 
 inner join {{ ref("secteur") }} as sec on abs.lieu_trav = sec.ua_id
+inner join {{ ref("dim_mapper_job_group") }} as jg on abs.corp_empl = jg.job_group

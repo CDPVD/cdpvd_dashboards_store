@@ -43,12 +43,11 @@ inner join
     and absence.corp_empl = emp.corp_empl
     and absence.date between emp.date_eff and emp.date_fin
     and absence.sect = emp.sect
+    left join
+        {{ ref("type_absence") }} as type_abs  -- À modifier
+        on absence.mot_abs = type_abs.motif_id      
 where
     year(absence.date) >= {{ get_current_year() - 4 }} -- Retour 5 ans en arrière
-    and dure != 0 -- Dure non égale à 0
+    and dure != 0 -- Durée non égale à 0
     and emp.pourc_sal != 0 -- Pour_sal non égale à 0
-    and absence.mot_abs != '05' -- Création d'une seed **
-    and absence.mot_abs != '09'
-    and absence.mot_abs != '13'
-    and absence.mot_abs != '14'
-    and absence.mot_abs != '16'
+    and type_abs.statut = 0

@@ -25,6 +25,7 @@ with
             src.genre,
             src.lieu_trav,
             src.secteur,
+            src.cat_emp,
             src.filter_key,
             max(src.filter_source) as filter_source
         from
@@ -36,6 +37,7 @@ with
                     genre,
                     secteur,
                     tranche_age,
+                    cat_emp,
                     'agregat' as filter_source,
                     filter_key
                 from {{ ref("rapport_agregat") }}
@@ -47,6 +49,7 @@ with
                     genre,
                     secteur,
                     tranche_age,
+                    cat_emp,
                     'absemce' as filter_source,
                     filter_key
                 from {{ ref("rapport_np") }}
@@ -57,6 +60,7 @@ with
             src.lieu_trav,
             src.genre,
             src.secteur,
+            src.cat_emp,
             src.filter_key
     )
 
@@ -65,8 +69,10 @@ select
     src.annee,
     src.corp_empl,
     src.lieu_trav,
-    src.genre,
     src.secteur,
+    src.genre,
+    src.cat_emp,
     src.filter_key,
     src.filter_source
 from one_for_all as src
+
