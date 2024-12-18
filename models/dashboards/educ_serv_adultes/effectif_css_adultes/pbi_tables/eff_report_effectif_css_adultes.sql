@@ -25,11 +25,11 @@ with
       annee,
       freq,
       case
-      when age_30_juin < 16 then 'Moins de 16 ans'
+      when age_30_juin < 16 then '- de 16 ans'
       when age_30_juin BETWEEN 16 and 17 then '16-17 ans'
       when age_30_juin BETWEEN 18 and 21 then '18-21 ans'
       when age_30_juin BETWEEN 22 and 25 then '22-25 ans'
-      when age_30_juin >= 26 then 'Plus de 26 ans'
+      when age_30_juin >= 26 then '+ de 26 ans'
         else null
       END as interv_age,
       age_30_juin,
@@ -39,10 +39,7 @@ with
       bat,
       org_hor,
       descr_org_hor,
-      case
-      when date_fin_sifca is null or date_fin_sifca = '' then 'en cours'
-        else 'terminé'
-      END as etat_formation,
+      etat_formation,
       el.genre,
       prog,
       prog_meq,
@@ -55,7 +52,7 @@ with
       descr_motif_dep,
       raison_depart,
       desc_raison_depart,
-      count( distinct(fac.code_perm)) as total_ele
+      count(fac.code_perm) as total_ele
   from {{ ref("fact_freq_adultes") }} as fac
   inner join {{ ref("dim_eleve_adultes") }} as el on el.code_perm = fac.code_perm
   group by
@@ -64,11 +61,11 @@ with
     annee,
     freq,
     case
-      when age_30_juin < 16 then 'Moins de 16 ans'
+      when age_30_juin < 16 then '- de 16 ans'
       when age_30_juin BETWEEN 16 and 17 then '16-17 ans'
       when age_30_juin BETWEEN 18 and 21 then '18-21 ans'
       when age_30_juin BETWEEN 22 and 25 then '22-25 ans'
-      when age_30_juin >= 26 then 'Plus de 26 ans'
+      when age_30_juin >= 26 then '+ de 26 ans'
         else null
       END,
     age_30_juin,
@@ -78,10 +75,7 @@ with
     bat,
     org_hor,
     descr_org_hor,
-    case
-    when date_fin_sifca is null or date_fin_sifca = '' then 'en cours'
-      else 'terminé'
-    END,
+    etat_formation,
     el.genre,
     prog,
     prog_meq,
@@ -100,6 +94,7 @@ select
   client,
   population,
   annee as Année,
+  concat(annee, '-', annee + 1)as [Année scolaire],
   freq,
   age_30_juin,
   age_30_septembre,
