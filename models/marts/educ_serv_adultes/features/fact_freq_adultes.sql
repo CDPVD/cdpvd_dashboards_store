@@ -56,6 +56,10 @@ select
     org.descr as descr_org_hor,
     freq.date_deb,
     freq.date_fin_sifca,
+    case
+        when freq.date_fin_sifca is null or freq.date_fin_sifca = '' then 'en cours'
+        else 'terminé'
+    END as etat_formation,
     freq.prog,
     prog.prog_meq,
     prog.descr_prog,
