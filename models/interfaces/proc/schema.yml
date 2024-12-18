@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: i_pro_art_emprunt
+    tags: 
+      - interface
+      - rf
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'pro_art_emprunt' de la base de données source.
