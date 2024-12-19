@@ -57,8 +57,8 @@ select
     freq.date_deb,
     freq.date_fin_sifca,
     case
-        when freq.date_fin_sifca is null or freq.date_fin_sifca = '' then 'en cours'
-        else 'terminé'
+        when freq.date_fin_sifca is null or freq.date_fin_sifca = '' then 'En cours'
+        else 'Terminé'
     END as etat_formation,
     freq.prog,
     prog.prog_meq,
@@ -70,7 +70,7 @@ select
     freq.service_enseign,
     wld.cf_descr as descr_service_enseign,
     freq.motif_depart,
-    mot.descr as descr_motif_dep,
+    mot.cf_descr as descr_motif_dep,
     freq.raison_depart,
     wl.cf_descr desc_raison_depart
 from {{ ref("stg_populations_adultes") }} as pop
@@ -85,7 +85,8 @@ left join
     {{ ref("i_t_wl_descr_adultes") }} wld
     on wld.code = freq.service_enseign
     and wld.nom_table = 'X_ServiceEnseign'
-left join {{ ref("i_t_motif_adultes") }} mot on mot.motif = freq.motif_depart
+left join {{ ref("i_t_wl_descr_adultes") }} mot on mot.code = freq.motif_depart 
+    and mot.nom_table = 'X_MotifDep'
 left join
     {{ ref("i_t_wl_descr_adultes") }} wl
     on wl.code = freq.raison_depart

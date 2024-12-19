@@ -28,6 +28,7 @@ models:
             - interv_age
             - "[Organisation horaire]"
             - genre
+            - lang_matern
             - "[Etat de la Formation]"
             - prog
             - prog_meq
