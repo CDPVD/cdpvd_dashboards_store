@@ -29,6 +29,7 @@ models:
             - "[Organisation horaire]"
             - genre
             - lang_matern
+            - "[Langue maternelle]"
             - "[Etat de la Formation]"
             - prog
             - prog_meq
