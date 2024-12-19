@@ -27,6 +27,7 @@ select
     max(el.date_naissance) as date_naissance,
     max(el.ind_lieu_naissance_n) as ind_lieu_naissance_n,
     max(el.lang_matern) as lang_matern,
+    max(wlt.cf_descr) as desc_lang_matern,
     max(
         case
             when el.genre = 'F'
@@ -38,4 +39,8 @@ select
     ) as genre
 from {{ ref("stg_populations_adultes") }} as pop
 inner join {{ ref("i_e_ele_adultes") }} as el on pop.code_perm = el.code_perm
+left join
+    {{ ref("i_t_wl_descr_adultes") }} wlt
+    on wlt.code = el.lang_matern
+    and wlt.nom_table = 'X_Lang'
 group by pop.code_perm
