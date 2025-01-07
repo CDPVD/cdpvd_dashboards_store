@@ -20,6 +20,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 with
   agg as (
     select
+      fac.code_perm,
+      fac.fiche,
       client,
       population,
       annee,
@@ -53,49 +55,15 @@ with
       motif_depart,
       descr_motif_dep,
       raison_depart,
-      desc_raison_depart,
-      count(fac.code_perm) as total_ele
+      desc_raison_depart
   from {{ ref("fact_freq_adultes") }} as fac
   inner join {{ ref("dim_eleve_adultes") }} as el on el.code_perm = fac.code_perm
-  group by
-    client,
-    population,
-    annee,
-    freq,
-    case
-      when age_30_juin < 16 then '- de 16 ans'
-      when age_30_juin BETWEEN 16 and 17 then '16-17 ans'
-      when age_30_juin BETWEEN 18 and 21 then '18-21 ans'
-      when age_30_juin BETWEEN 22 and 25 then '22-25 ans'
-      when age_30_juin >= 26 then '+ de 26 ans'
-        else null
-      END,
-    age_30_juin,
-    age_30_septembre,
-    org,
-    eco_cen,
-    bat,
-    org_hor,
-    descr_org_hor,
-    etat_formation,
-    el.genre,
-    el.lang_matern,
-    el.desc_lang_matern,
-    prog,
-    prog_meq,
-    descr_prog,
-    type_diplome,
-    type_activ,
-    descr_type_parcours,
-    descr_service_enseign,
-    motif_depart,
-    descr_motif_dep,
-    raison_depart,
-    desc_raison_depart
   )
 select
   concat('(',agg.eco_cen,') - ',centre.descr) as [Nom du centre],
   client,
+  code_perm,
+  fiche,
   population,
   annee as Année,
   concat(annee, '-', annee + 1)as [Année scolaire],
@@ -120,10 +88,9 @@ select
   descr_type_parcours [Type de parcours],
   descr_service_enseign as [Service enseignement],
   motif_depart,
-  descr_motif_dep,
+  descr_motif_dep as [Motif de départ],
   raison_depart,
-  desc_raison_depart,
-  total_ele
+  desc_raison_depart as [Raison de départ]
 from agg
 inner join
   {{ ref("i_t_ecocen_adultes") }} as centre
