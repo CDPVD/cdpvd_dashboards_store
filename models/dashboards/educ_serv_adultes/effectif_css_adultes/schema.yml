@@ -14,31 +14,8 @@ models:
     tests:
       - resolution:
           combination_of_columns:
-            - "[Nom du centre]"
-            - client
+            - code_perm
             - population
             - Année
             - freq
-            - age_30_juin
-            - age_30_septembre
-            - org
-            - eco_cen
-            - bat
-            - org_hor
-            - interv_age
-            - "[Organisation horaire]"
-            - genre
-            - lang_matern
-            - "[Langue maternelle]"
-            - "[Etat de la Formation]"
-            - prog
-            - prog_meq
-            - Programme
-            - "[Type de diplôme]"
-            - type_activ
-            - "[Type de parcours]"
-            - "[Service enseignement]"
-            - motif_depart
-            - descr_motif_dep
-            - raison_depart
-            - desc_raison_depart
+            - fiche
