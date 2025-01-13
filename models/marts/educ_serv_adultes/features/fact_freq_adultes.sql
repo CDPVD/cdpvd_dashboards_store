@@ -56,6 +56,11 @@ select
     org.descr as descr_org_hor,
     freq.date_deb,
     freq.date_fin_sifca,
+    freq.ActivForm,
+    freq.Cohorte,
+    freq.DonPers,
+    freq.CondAdmiss,
+    wlcon.cf_descr as descr_condadmiss,
     case
         when freq.date_fin_sifca is null or freq.date_fin_sifca = '' then 'En cours'
         else 'Terminé'
@@ -95,6 +100,11 @@ left join
     {{ ref("i_t_wl_descr_adultes") }} wlt
     on wlt.code = freq.type_parcours
     and wlt.nom_table = 'X_TypeParcours'
+left join
+    {{ ref
+("i_t_wl_descr_adultes") }} wlcon
+    on wlcon.code = freq.CondAdmiss
+    and wlcon.nom_table = 'X_CondAdmiss'
 left join
     {{ ref("i_e_o_orghor_adultes") }} org
     on org.eco_cen = freq.eco_cen
