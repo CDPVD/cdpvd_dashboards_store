@@ -34,6 +34,14 @@ with
       when age_30_juin >= 26 then '+ de 26 ans'
         else null
       END as interv_age,
+      case
+      when age_30_septembre < 16 then '- de 16 ans'
+      when age_30_septembre BETWEEN 16 and 17 then '16-17 ans'
+      when age_30_septembre BETWEEN 18 and 21 then '18-21 ans'
+      when age_30_septembre BETWEEN 22 and 25 then '22-25 ans'
+      when age_30_septembre >= 26 then '+ de 26 ans'
+        else null
+      END as interv_age_fp,
       age_30_juin,
       age_30_septembre,
       org,
@@ -45,11 +53,21 @@ with
       el.genre,
       el.lang_matern,
       el.desc_lang_matern,
+      ActivForm,
+      Cohorte,
+      DonPers,
+      case
+      when CondAdmiss in (22,23) then 'Oui'
+        else 'Non'
+      END as Concomitance,
+      CondAdmiss,
+      descr_condadmiss,
       prog,
       prog_meq,
       descr_prog,
       type_diplome,
       type_activ,
+      type_parcours,
       descr_type_parcours,
       descr_service_enseign,
       motif_depart,
@@ -75,6 +93,13 @@ select
   bat,
   org_hor,
   interv_age,
+  interv_age_fp,
+  ActivForm [Groupe horaire],
+  Cohorte,
+  DonPers,
+  Concomitance,
+  CondAdmiss,
+  descr_condadmiss as [Condition d'admission],
   descr_org_hor as [Organisation horaire],
   etat_formation as [Etat de la Formation],
   genre as Genre,
@@ -85,6 +110,7 @@ select
   descr_prog as Programme,
   type_diplome as [Type de diplôme],
   type_activ,
+  type_parcours,
   descr_type_parcours [Type de parcours],
   descr_service_enseign as [Service enseignement],
   motif_depart,

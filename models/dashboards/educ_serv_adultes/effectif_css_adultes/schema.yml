@@ -10,7 +10,7 @@ models:
         - effectif_css_adultes
       schema: dashboard_effectif_css_adultes
     description: >
-        Table de rapports qui comptabilise la population adultes au sein du CSS selon l'année, le centre, le programme.
+        Table de rapports qui comptabilise la population adulte au sein du CSS selon le centre, le batisse, l'année, l'état de la formation, le type de parcours, le genre et le motif/raison de départ.
     tests:
       - resolution:
           combination_of_columns:
