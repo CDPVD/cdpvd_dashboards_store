@@ -43,4 +43,20 @@ seeds:
       column_types:
         motif_id: nvarchar(2)
         categories: nvarchar(50)
-        statut: bit                
+        statut: bit
+
+  - name: heures_travaillees
+    description: Heures travaillées selon les catégories d'emplois
+    columns:
+      - name: cat_emploi
+        description: Catégorie d'emploi
+      - name: heures
+        description: Heures travaillées par jour
+
+    config:
+      tags:
+        - human_resources
+      schema: human_resources_seeds
+      column_types:
+        cat_emploi: nvarchar(1)
+        heures: float        

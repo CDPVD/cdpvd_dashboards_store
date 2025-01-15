@@ -23,9 +23,11 @@ with
             src.annee,
             src.corp_empl,
             src.genre,
+            src.categories,
             src.lieu_trav,
             src.secteur,
             src.cat_emp,
+            src.tranche_age,
             src.filter_key,
             max(src.filter_source) as filter_source
         from
@@ -38,21 +40,23 @@ with
                     secteur,
                     tranche_age,
                     cat_emp,
-                    'agregat' as filter_source,
+                    categories,
+                    'absemce' as filter_source,
                     filter_key
-                from {{ ref("rapport_agregat") }}
+                from {{ ref("rapport_absence") }}
                 union all
                 select
-                    annee,
+                    annee,  
                     lieu_trav,
                     corp_empl,
                     genre,
                     secteur,
                     tranche_age,
                     cat_emp,
+                    categories,
                     'absemce' as filter_source,
                     filter_key
-                from {{ ref("rapport_np") }}
+                from {{ ref("rapport_nbr_jour_absence_semaine") }}                                
             ) as src
         group by
             src.annee,
@@ -61,6 +65,8 @@ with
             src.genre,
             src.secteur,
             src.cat_emp,
+            src.categories,
+            src.tranche_age,
             src.filter_key
     )
 
@@ -69,9 +75,11 @@ select
     src.annee,
     src.corp_empl,
     src.lieu_trav,
+    src.genre,    
     src.secteur,
-    src.genre,
+    src.tranche_age,
     src.cat_emp,
+    src.categories,
     src.filter_key,
     src.filter_source
 from one_for_all as src

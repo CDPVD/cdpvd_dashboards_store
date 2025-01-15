@@ -22,13 +22,17 @@ with
         select distinct -- ** Vérifier si important
         liste.*, -- Tous les champs de fact_liste_absence
         jour_sem, -- Jour de la semaine (0,1,2,3,4,5,6)
-        bal_jour_ouv -- Jour de l'année scolaire
+        bal_jour_ouv, -- Jour de l'année scolaire
+        ta.categories
         from {{ ref("fact_liste_absence") }} as liste
         inner join
             {{ ref("i_pai_tab_cal_jour") }} as cal
             on liste.annee = cal.an_budg
             and liste.gr_paie = cal.gr_paie
             and liste.date = cal.date_jour
+        inner join
+            {{ ref("type_absence") }} as ta  -- À modifier
+            on liste.motif_abs = ta.motif_id                    
     ),
 
     -- Calculer la différence entre chacune des absences
@@ -39,7 +43,7 @@ with
             gr_paie,
             matricule,
             absence.corp_empl,
-            motif_abs,
+            categories,
             lieu_trav,
             bal_jour_ouv,
             reg_abs,
@@ -49,18 +53,16 @@ with
             datediff(
                 day,
                 lag(date) over (
-                    partition by annee, matricule, motif_abs, lieu_trav order by date
+                    partition by annee, matricule, categories, lieu_trav order by date, bal_jour_ouv
                 ),
                 date
             ) as diff_days,
             bal_jour_ouv - lag(bal_jour_ouv) over (
-                partition by annee, matricule, motif_abs, lieu_trav order by date
+                partition by annee, matricule, categories, lieu_trav  order by date, bal_jour_ouv
             ) as diff_bal_jour,
             datepart(weekday, date) as weekday
         from absence
     ),
-
-
 
     -- Permet d'identifier les absences consécutives en ayant le même motif
     regroupement as (
@@ -69,7 +71,7 @@ with
             matricule,
             corp_empl,
             gr_paie,
-            motif_abs,
+            categories,
             lieu_trav,
             bal_jour_ouv,
             date,
@@ -91,7 +93,7 @@ with
                     else 0
                 end
             ) over (
-                partition by annee, matricule, motif_abs, lieu_trav
+                partition by annee, matricule, categories, lieu_trav
                 order by date
                 rows unbounded preceding
             ) as group_id
@@ -110,15 +112,12 @@ with
             ref_empl,
             min(date) as startdate,
             max(date) as enddate,
-            count(*) as numberofdays,
+            count(*) as nombre_jours,
             duree,
             reg_abs,
             pourc_sal,
-            ta.categories
+            categories
         from regroupement
-        left join
-            {{ ref("type_absence") }} as ta  -- À modifier
-            on regroupement.motif_abs = ta.motif_id        
         group by
             annee,
             matricule,
@@ -143,11 +142,12 @@ select
             ref_empl,
            startdate,
             enddate,
-           numberofdays,
+           nombre_jours,
             duree,
             reg_abs,
             pourc_sal,
             categories
+
 
 
 from absence_consecutive
