@@ -25,7 +25,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
     The integration of delta is of O(N) complexity.
     The alternative would be to use a fan-out then aggregate pattern, through a cross join on the seq_int_0_to_1000 table. This would have had something like a O(360*N) complexity. 
-
 #}
 {{
     config(

@@ -19,7 +19,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 	Compute the number of absences and delay for each students by day of absence / delay.
     Events are further qualified by the number of periods impacted (full day / partial day).
     Each absence is mapped to the student's etape.
-
 #}
 {{ 
     config( 
