@@ -22,6 +22,16 @@ models:
             - date_evenement
             - event_description
 
+  - name: cdpvd_abstsm_report_daily_absences_matiere_distribution
+    description: >
+      Aggregate the absence events by category for the past two years. Used to drill down and better understand the absences reasons.
+    tests:
+      - resolution:
+          combination_of_columns:
+            - filter_key
+            - date_evenement
+            - code_matiere
+
   - name: cdpvd_abstsm_report_daily_absences_rate
     description: >
       Compute the daily absence rate for various king of absenteeisme events (full day absence, partial absences, ...).

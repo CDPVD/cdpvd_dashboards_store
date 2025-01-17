@@ -71,6 +71,7 @@ with
             abs.fiche,
             abs.event_kind,
             abs.event_description,
+            abs.remarque,
             abs.prct_observed_periods_over_expected,
             abs.etape,
             abs.etape_description,
@@ -94,6 +95,7 @@ with
             fiche,
             event_kind,
             event_description,
+            remarque,
             prct_observed_periods_over_expected,
             etape,
             etape_description,
@@ -121,6 +123,7 @@ with
             fiche,
             event_kind,
             event_description,
+            remarque,
             prct_observed_periods_over_expected,
             etape,
             etape_description,
@@ -155,6 +158,11 @@ with
                 order by day_id
                 rows between unbounded preceding and unbounded following
             ) as last_event_description,
+            last_value(remarque) over (
+                partition by school_year, fiche, id_eco, absence_sequence_id, event_kind
+                order by day_id
+                rows between unbounded preceding and unbounded following
+            ) as last_remarque,            
             absence_sequence_id
         from sequences
 
@@ -170,6 +178,7 @@ with
             absence_sequence_id,
             event_kind,
             min(last_event_description) as last_event_description,  -- Dummy aggregation
+            min(last_remarque) as last_remarque,  -- Dummy aggregation
             min(date_evenement) as event_start_date,
             max(date_evenement) as event_end_date,
             max(day_id) - min(day_id) + 1 as events_sequence_length,
@@ -186,6 +195,7 @@ select
     src.id_eco,
     src.event_kind,
     src.last_event_description,
+    src.last_remarque,
     src.absence_sequence_id,
     src.event_start_date,
     src.event_end_date,

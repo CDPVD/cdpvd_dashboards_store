@@ -59,6 +59,9 @@ with
     ),
     kinds as (
         select distinct event_kind from {{ ref("cdpvd_fact_absences_daily") }}
+    ),
+    matieres as (
+        select distinct id_eco, groupe, code_matiere from "tbe_dev"."sadqimo_educ_serv"."cdpvd_fact_absences_daily"
 
     -- Extract all the etapes per grid, eco and day
     ),
@@ -83,13 +86,15 @@ with
             cal.date_evenement,
             cal.grille,
             cal.is_school_day,
-            kind.event_kind,
+            mat.code_matiere,
+			kind.event_kind,
             etp.etape,
             etp.etape_date_debut,
             etp.etape_date_fin
-        from padding_cal as cal
+        from padding_cal as cal 
         cross join kinds as kind
         inner join etapes as etp on cal.id_eco = etp.id_eco and cal.grille = etp.grille
+		inner join matieres as mat on cal.id_eco = mat.id_eco and mat.groupe = etp.groupe
     -- DO NOT restrict to the etape's date range. We want to backfill the data for the
     -- whole year.
     -- Add the daily number of students
@@ -101,6 +106,7 @@ with
             pad.grille,
             pad.is_school_day,
             pad.event_kind,
+            pad.code_matiere,
             pad.etape,
             pad.etape_date_debut,
             pad.etape_date_fin,
@@ -125,6 +131,7 @@ with
             src.grille,
             src.is_school_day,
             src.event_kind,
+            src.code_matiere,
             src.etape,
             src.etape_date_debut,
             src.etape_date_fin,
@@ -144,6 +151,7 @@ with
                     grille,
                     is_school_day,
                     event_kind,
+                    code_matiere,
                     etape,
                     etape_date_debut,
                     etape_date_fin,
@@ -167,6 +175,7 @@ select
     src.grille,
     src.is_school_day,
     src.event_kind,
+    src.code_matiere,
     src.etape,
     src.etape_date_debut,
     src.etape_date_fin,

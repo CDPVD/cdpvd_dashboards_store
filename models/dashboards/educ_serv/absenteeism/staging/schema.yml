@@ -12,6 +12,7 @@ models:
             - date_evenement
             - groupe
             - event_kind
+            - code_matiere
             - etape
             - grille
             

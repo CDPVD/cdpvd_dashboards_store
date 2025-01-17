@@ -60,6 +60,7 @@ with
             fct.fiche,
             fct.id_eco,
 			fct.motif_abs,
+            fct.remarque,
 			coalesce(mat, '-') as code_matiere
 		from {{ ref("i_gpm_e_abs") }} as fct
 		left join {{ ref("i_gpm_t_mat_grp") }} as mat 
@@ -75,7 +76,8 @@ with
             coalesce(src.code_matiere, 'Tout') as code_matiere,
             coalesce(dim.is_absence, 1) as is_absence,  -- Default to 0 if the absence is not qualified (prefer false positive over false negative)
             count(*) as n_periods_events,
-            coalesce(min(dim.description_abs), 'inconnue') as event_description  -- Take the first one, in lexicographic order. It's completely arbitrary ;) A better proxy would be the most common occurence
+            coalesce(min(dim.description_abs), 'inconnue') as event_description,  -- Take the first one, in lexicographic order. It's completely arbitrary ;) A better proxy would be the most common occurence
+            min(src.remarque) as remarque
         from matiere as src
         inner join
             {{ ref("cdpvd_stg_dim_absences_retards_inclusion") }} as dim
@@ -97,6 +99,7 @@ with
             dan.grille,
             src.is_absence,
             src.n_periods_events,
+            src.remarque,
             src.event_description
         from src
         join
@@ -137,6 +140,7 @@ with
             src.n_periods_events,
             grid.n_periods_expected,
             src.event_description,
+            src.remarque,
             src.n_periods_events
             * 100.0
             / grid.n_periods_expected as prct_observed_periods_over_expected
@@ -162,6 +166,7 @@ with
 			n_periods_events,
 			n_periods_expected,
 			event_description,
+            remarque,
 			prct_observed_periods_over_expected,
 			sum(prct_observed_periods_over_expected) over(partition by date_abs, fiche, id_eco) as prct_observed_daily_over_expected
 		from src_with_expected_periodes
@@ -178,6 +183,7 @@ with
 			n_periods_events,
 			n_periods_expected,
 			event_description,
+            remarque,
 			fiche,
 			date_abs,
 			prct_observed_periods_over_expected,
@@ -205,9 +211,11 @@ with
             case
                 when event_kind is null then null else min(is_absence)
             end as is_absence,
+            min(remarque) as remarque,
             case
                 when event_kind is null then 'tous types' else min(event_description)
             end as event_description,  -- arbitrary : first description in lexicographic order
+            
             sum(
                 prct_observed_periods_over_expected
             ) as prct_observed_periods_over_expected,
@@ -235,6 +243,7 @@ with
             is_aggregate_kind,
             is_absence,
             event_description,
+            remarque,
             case
                 when prct_observed_periods_over_expected > 100.0
                 then 100.0
@@ -263,6 +272,7 @@ select
     src.is_aggregate_kind,
     src.is_absence,
     src.event_description,
+    src.remarque,
     src.prct_observed_periods_over_expected,
     src.prct_observed_daily_over_expected,
     etp.etape,

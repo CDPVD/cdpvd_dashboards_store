@@ -26,15 +26,17 @@ with
             fiche,
             id_eco,
             last_event_description,
+            last_remarque,
             event_start_date,
             event_end_date,
             events_sequence_length,
+            event_kind,
             coalesce(etape_description, 'inconnue') as etape_description
         from {{ ref("cdpvd_fact_absences_sequence") }}
         where
-            event_kind = 'journée complète'  -- bris de service
+            --event_kind = 'journée complète'  -- bris de service
             --and events_sequence_length > 8
-            and school_year = {{ core_dashboards_store.get_current_year() }}  -- Only consider the current school year
+            school_year = {{ core_dashboards_store.get_current_year() }}  -- Only consider the current school year
 
     -- Add some metadata to better identify the sutdent
     ),
@@ -49,7 +51,9 @@ with
             event_start_date,
             event_end_date,
             events_sequence_length,
-            last_event_description
+            event_kind,
+            last_event_description,
+            last_remarque
         from src
         join {{ ref("i_gpm_e_ele") }} as ele on src.fiche = ele.fiche
         left join {{ ref("dim_mapper_schools") }} as eco on src.id_eco = eco.id_eco
@@ -62,8 +66,16 @@ select
     etape_description,
     cast(event_start_date as date) as event_start_date,
     cast(event_end_date as date) as event_end_date,
+    case
+        when events_sequence_length < 10 then 'Moins de 10 jours'
+        when events_sequence_length between 10 and 19 then 'entre 10 et 19 jours'
+        when events_sequence_length between 20 and 29 then 'entre 20 et 29 jours'
+        else 'plus de 30 jours'
+    end as events_sequence_interval,
     events_sequence_length,
+    event_kind,
     last_event_description,
+    last_remarque,
     -- RLS hooks 
     id_eco,
     eco
