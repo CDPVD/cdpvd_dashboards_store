@@ -34,26 +34,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 {% set max_periodes = var("interfaces")["gpi"]["max_periodes"] + 1 %}
 
-{% set groupe_primaire = var("dashboards")["absenteeism"]["groupe_primaire"] %}
-{% if not cod_css %}
-    {{
-        log(
-            "The groupe_primaire variable must be set for the absenteeism dashboards to work. Please set it.",
-            true,
-        )
-    }}
-{% endif %}
+{% if execute %}
+    {% set dict = {
+    'grp_rep': 'Le groupe repère',
+    'dist': 'La distribution',
+    'class': 'La classification'} %}
+    {% if "groupe_primaire" in var("dashboards")["absenteeism"] %}
+        {% set groupe_primaire = var("dashboards")["absenteeism"]["groupe_primaire"] %}
+        {{ log("Le groupe primaire sélectionné pour le tableau de bord d'absentéisme est : " ~ dict[groupe_primaire], info=True) }}
+    {% else %}
+        {% set groupe_primaire = 'grp_rep' %}
+        {{ log('La variable "groupe_primaire" est par défaut : ' ~ dict[groupe_primaire] ~ ', elle peut être modifié dans le dbt_project pour le tableau de bord d\'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.',true )
+        }}
+    {% endif %}
 
-{% set groupe_secondaire = var("dashboards")["absenteeism"]["groupe_secondaire"] %}
-{% if not cod_css %}
-    {{
-        log(
-            "The groupe_secondaire variable must be set for the absenteeism dashboards to work. Please set it.",
-            true,
-        )
-    }}
+    {% if "groupe_secondaire" in var("dashboards")["absenteeism"] %}
+        {% set groupe_secondaire = var("dashboards")["absenteeism"]["groupe_secondaire"] %}
+        {{ log("Le groupe secondaire sélectionné pour le tableau de bord d'absentéisme est : " ~ dict[groupe_secondaire], info=True) }}
+    {% else %}
+        {% set groupe_secondaire = 'dist' %}
+        {{ log('La variable "groupe_secondaire" est par défaut : ' ~ dict[groupe_secondaire] ~ ', elle peut être modifié dans le dbt_project pour le tableau de bord d\'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.',true )
+        }}
+    {% endif %}
 {% endif %}
-
 
 with
     -- Extract all the qualified absences / retards 

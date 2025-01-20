@@ -123,3 +123,4 @@ vars:
         absenteeism:
             groupe_primaire: replaceme 
             groupe_secondaire: replaceme
+            nbre_annee_a_extraire: replaceme

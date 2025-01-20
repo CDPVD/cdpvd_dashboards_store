@@ -25,6 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
     The integration of delta is of O(N) complexity.
     The alternative would be to use a fan-out then aggregate pattern, through a cross join on the seq_int_0_to_1000 table. This would have had something like a O(360*N) complexity. 
+
 #}
 {{
     config(
@@ -40,46 +41,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     )
 }}
 
-{% set groupe_primaire = var("dashboards")["absenteeism"]["groupe_primaire"] %}
-{% set is_groupe_primaire_default = groupe_primaire == 'grp_rep' %}
-
-{% set groupe_secondaire = var("dashboards")["absenteeism"]["groupe_secondaire"] %}
-{% set is_groupe_secondaire_default = groupe_secondaire == 'dist' %}
-
-{% set dict = {
+{% if execute %}
+    {% set dict = {
     'grp_rep': 'Le groupe repère',
     'dist': 'La distribution',
-    'class': 'La classification'
-} %}
-
-{% if execute %}
-    {% if is_groupe_primaire_default %}
-        {{
-            log(
-                'La variable "groupe_primaire" est par défaut : ' ~ dict[groupe_primaire] ~ ', elle peut être modifié dans le dbt_project pour le tableau de bord d\'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.',
-                    true
-                    )
-        }}
+    'class': 'La classification'} %}
+    {% if "groupe_primaire" in var("dashboards")["absenteeism"] %}
+        {% set groupe_primaire = var("dashboards")["absenteeism"]["groupe_primaire"] %}
+        {{ log("Le groupe primaire sélectionné pour le tableau de bord d'absentéisme est : " ~ dict[groupe_primaire], info=True) }}
     {% else %}
-        {{ 
-            log("Le groupe primaire sélectionné est : " ~ dict[groupe_primaire], info=True) 
+        {% set groupe_primaire = 'grp_rep' %}
+        {{ log('La variable "groupe_primaire" est par défaut : ' ~ dict[groupe_primaire] ~ ', elle peut être modifié dans le dbt_project pour le tableau de bord d\'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.',true )
         }}
     {% endif %}
 
-    {% if is_groupe_secondaire_default %}
-        {{
-            log(
-                'La variable "groupe_secondaire" est par défaut : ' ~ dict[groupe_secondaire] ~ ', elle peut être modifié dans le dbt_project pour le tableau de bord d\'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.',
-                    true
-                    )
-        }}
+    {% if "groupe_secondaire" in var("dashboards")["absenteeism"] %}
+        {% set groupe_secondaire = var("dashboards")["absenteeism"]["groupe_secondaire"] %}
+        {{ log("Le groupe secondaire sélectionné pour le tableau de bord d'absentéisme est : " ~ dict[groupe_secondaire], info=True) }}
     {% else %}
-        {{ 
-            log("Le groupe secondaire sélectionné est : " ~ dict[groupe_secondaire], info=True) 
+        {% set groupe_secondaire = 'dist' %}
+        {{ log('La variable "groupe_secondaire" est par défaut : ' ~ dict[groupe_secondaire] ~ ', elle peut être modifié dans le dbt_project pour le tableau de bord d\'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.',true )
         }}
     {% endif %}
 {% endif %}
-
 
 -- Extract the DAN
 with

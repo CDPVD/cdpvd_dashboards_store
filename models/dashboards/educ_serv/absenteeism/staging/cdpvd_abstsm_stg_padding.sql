@@ -39,6 +39,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     )
 }}
 
+{% if execute %}
+    {% if "nbre_annee_a_extraire" in var("dashboards")["absenteeism"] %}
+        {% set nbre_annee_a_extraire = var("dashboards")["absenteeism"]["nbre_annee_a_extraire"] %}
+        {{ log("Le nombre d'années de données à extraire pour le tableau de bord d'absentéisme est : " ~ nbre_annee_a_extraire, true) }}
+    {% else %}
+        {% set nbre_annee_a_extraire = 5 %}
+        {{ log("Le nombre d'années de données à extraire pour le tableau de bord d'absentéisme est par défaut : " ~ nbre_annee_a_extraire, true) }}
+    {% endif %}
+    {% set years_of_data_absences = var("marts")["educ_serv"]["recency"]["years_of_data_absences"] %}
+    {{ log("Le nombre d'années de données à extraire pour le comptoir d'absentéisme est : " ~ years_of_data_absences, true) }}
+{% endif %}
 
 -- Extract all the dates and grid to padd the data with
 with
@@ -52,7 +63,7 @@ with
         where
             date_evenement <= getdate() and id_eco in (select id_eco from {{ ref("cdpvd_fact_absences_daily") }})
             and year(date_evenement)
-            >= {{ core_dashboards_store.get_current_year() }} - 5  -- Limit the dashboards to the last 5 years
+            >= {{ core_dashboards_store.get_current_year() }} - {{ nbre_annee_a_extraire }}
         group by id_eco, date_evenement, grille
 
     -- Extract all the absences event kind 
@@ -61,7 +72,7 @@ with
         select distinct event_kind from {{ ref("cdpvd_fact_absences_daily") }}
     ),
     matieres as (
-        select distinct id_eco, groupe, code_matiere from "tbe_dev"."sadqimo_educ_serv"."cdpvd_fact_absences_daily"
+        select distinct id_eco, groupe, code_matiere from {{ ref("cdpvd_fact_absences_daily") }}
 
     -- Extract all the etapes per grid, eco and day
     ),
