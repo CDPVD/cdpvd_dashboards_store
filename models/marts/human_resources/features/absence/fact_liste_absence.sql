@@ -33,7 +33,8 @@ select
     emp.gr_paie, -- Groupe de paie
     absence.ref_empl, -- Référence d'emploi
     absence.reg_abs, -- Règle d'absence
-    absence.corp_empl -- Corp d'emploi
+    absence.corp_empl,
+    dure -- Corp d'emploi
 from {{ ref("i_pai_habs") }} as absence
 
 inner join
