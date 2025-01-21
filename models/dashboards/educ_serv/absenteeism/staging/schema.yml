@@ -3,8 +3,8 @@ version: 2
 models:
   - name: cdpvd_abstsm_stg_padding
     description: >
-      A padding table identifying per year, school and grid the active calendars days.
-      The padding table is later as a backbone for computing daily rate, even in the case of no-absences.
+      Une table de padding identifiant par année, école et grille les jours de calendrier actifs.
+      La table de padding est ensuite utilisée comme colonne vertébrale pour calculer le taux quotidien, même en cas d'absence.
     tests:
       - resolution:
           combination_of_columns:
@@ -17,7 +17,7 @@ models:
             - grille
             
   - name: cdpvd_abstsm_stg_daily_metrics
-    description: The daily absence rate and number of active students.
+    description: Le taux d'absence quotidien et le nombre d'élèves actifs.
     tests:
       - resolution:
           combination_of_columns:
@@ -30,7 +30,7 @@ models:
             - code_matiere
 
   - name: cdpvd_abstsm_stg_daily_students
-    description: Compute the daily number of active students.
+    description: Calculer le nombre quotidien d'élèves actifs.
     tests:
       - resolution:
           combination_of_columns:
@@ -39,4 +39,3 @@ models:
             - groupe
             - grille
             - etape
-

@@ -3,7 +3,7 @@ version: 2
 models:
   - name: cdpvd_stg_dim_absences_retards_inclusion
     description: >
-      Ancillary table selecting the absences and retards reasons you wan't to include in the computation.
+      Table auxiliaire sélectionnant les raisons d'absences et de retards que vous souhaitez inclure dans le calcul.
     tests:
       - resolution:
           combination_of_columns:

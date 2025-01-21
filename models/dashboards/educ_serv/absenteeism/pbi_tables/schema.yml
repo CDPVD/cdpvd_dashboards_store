@@ -3,8 +3,8 @@ version: 2
 models:
   - name: cdpvd_abstsm_report_bris_service
     description: >
-      Identify the students with a sequence of complete (full day) absence of more than 8 days (bris de service).
-      The table only compute the absence sequences for the current school year.
+      Identifie les élèves avec une séquence d'absence complète (journée entière) de plus de 8 jours (bris de service).
+      Le tableau ne calcule les séquences d'absence que pour l'année scolaire en cours.
     tests:
       - resolution:
           combination_of_columns:
@@ -14,7 +14,7 @@ models:
 
   - name: cdpvd_abstsm_report_daily_absences_kind_distribution
     description: >
-      Aggregate the absence events by category for the past two years. Used to drill down and better understand the absences reasons.
+      Agrége les événements d'absence par catégorie pour les deux dernières années. Utiliser pour approfondir et mieux comprendre les raisons des absences.
     tests:
       - resolution:
           combination_of_columns:
@@ -24,7 +24,7 @@ models:
 
   - name: cdpvd_abstsm_report_daily_absences_matiere_distribution
     description: >
-      Aggregate the absence events by category for the past two years. Used to drill down and better understand the absences reasons.
+      Agrége les événements d'absence par matiere pour les deux dernières années. Utiliser pour approfondir et mieux comprendre les raisons des absences.
     tests:
       - resolution:
           combination_of_columns:
@@ -34,20 +34,20 @@ models:
 
   - name: cdpvd_abstsm_report_daily_absences_rate
     description: >
-      Compute the daily absence rate for various king of absenteeisme events (full day absence, partial absences, ...).
-      The rate is computed at a day * school * absence kind level.
+      Calcule le taux d'absence quotidien pour divers types d'événements d'absentéisme (absence de journée complète, absences partielles, ...).
+      Le taux est calculé au niveau jour * école * type d'absence.
     tests:
       - resolution:
           combination_of_columns:
             - filter_key
-            - jour_semaine   
+            - jour_semaine
             - date_evenement
 
   - name: cdpvd_abstsm_report_etape_absences_rate
     description: >
-      Compute the aggregate absence rate for various king of absenteeisme events (full day absence, partial absences, ...).
-      The absence rate is aggregated by etape. 
-      The rate is computed at a etape * school * absence kind level.
+      Calcule le taux d'absence agrégé pour divers types d'événements d'absentéisme (absence de journée complète, absences partielles, ...).
+      Le taux d'absence est agrégé par étape.
+      Le taux est calculé au niveau étape * école * type d'absence.
     tests:
       - resolution:
           combination_of_columns:
@@ -55,7 +55,7 @@ models:
             - etape_friendly
 
   - name: cdpvd_abstsm_report_filters
-    description: Ancillary table used to sync the filters between the different absenteeism reports.
+    description: Tableau auxiliaire utilisé pour synchroniser les filtres entre les différents rapports d'absentéisme.
     tests:
       - resolution:
           combination_of_columns:
