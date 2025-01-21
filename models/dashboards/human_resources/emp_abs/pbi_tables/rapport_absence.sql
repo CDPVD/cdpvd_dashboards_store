@@ -55,9 +55,9 @@ select
     LEFT(abs.annee,4) as annee,
     abs.matricule,
     emp.first_name + ' ' + emp.last_name as nom,
-    abs.corp_empl,
     emp.sex_friendly_name AS genre,
-    jc.descr as lieu_trav,
+    jc.code_job_name AS corp_empl,
+    wp.workplace_name as lieu_trav,
     sec.secteur_Descr as secteur,
     jg.job_group_category as cat_emp,
     abs.startdate,
@@ -82,7 +82,8 @@ from {{ ref("fact_absence_consecutive") }} as abs
         ON abs.matricule = emp.matr
 inner join {{ ref("secteur") }} as sec on abs.lieu_trav = sec.ua_id
 inner join {{ ref("dim_mapper_job_group") }} as jg on abs.corp_empl = jg.job_group
-inner join {{ ref("dim_mapper_job_class")}} as jc on abs.corp_empl = jc.corp_empl
+inner join {{ ref("dim_mapper_job_class") }} as jc on abs.corp_empl = jc.code_job
+inner join {{ ref("dim_mapper_workplace") }} as wp on abs.lieu_trav = wp.workplace
 
 LEFT JOIN age AS a
     ON 
