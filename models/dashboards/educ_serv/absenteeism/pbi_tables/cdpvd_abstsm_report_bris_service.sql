@@ -45,7 +45,7 @@ with
             eco.school_friendly_name,
             eco.id_eco,
             eco.eco,
-            ele.fiche
+            ele.fiche,
             concat(ele.nom, ' ', ele.pnom) as full_name,
             etape_description,
             event_start_date,

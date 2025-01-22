@@ -9,7 +9,7 @@ models:
       - resolution:
           combination_of_columns:
             - school_friendly_name
-            - code_permanent
+            - fiche
             - event_start_date
 
   - name: cdpvd_abstsm_report_daily_absences_kind_distribution
