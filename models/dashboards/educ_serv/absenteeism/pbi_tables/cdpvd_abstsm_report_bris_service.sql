@@ -45,7 +45,7 @@ with
             eco.school_friendly_name,
             eco.id_eco,
             eco.eco,
-            ele.code_perm as code_permanent,
+            ele.fiche
             concat(ele.nom, ' ', ele.pnom) as full_name,
             etape_description,
             event_start_date,
@@ -61,7 +61,7 @@ with
 
 select
     school_friendly_name,
-    code_permanent,
+    fiche,
     full_name,
     etape_description,
     cast(event_start_date as date) as event_start_date,

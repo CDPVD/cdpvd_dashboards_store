@@ -191,7 +191,7 @@ with
 			date_abs,
 			prct_observed_periods_over_expected,
 			prct_observed_daily_over_expected,
-			case when prct_observed_daily_over_expected < 100 then 'périodes' else 'journée complète' end as event_kind
+			case when prct_observed_daily_over_expected < 100 then 'Périodes' else 'Journée complète' end as event_kind
 		from src_with_expected_daily
 	    ),
     rolledup as (
