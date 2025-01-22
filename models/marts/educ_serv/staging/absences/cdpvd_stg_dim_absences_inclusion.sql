@@ -43,7 +43,7 @@ select
     motif_abs,
     descr as description_abs,
     case
-        when cpt_abs in (1, 2) then 'absence' else null  -- Test hook.
+        when cpt_abs in (1, 2) then 'Absence' else null  -- Test hook.
     end as category_abs,
     case when cpt_abs in (1, 2) then 1 else 0 end as is_absence  -- Flag for complete absence
 from {{ ref("i_gpm_t_motif_abs") }}
