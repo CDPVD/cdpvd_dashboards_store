@@ -83,7 +83,7 @@ with
             min(src.remarque) as remarque
         from matiere as src
         inner join
-            {{ ref("cdpvd_stg_dim_absences_retards_inclusion") }} as dim
+            {{ ref("cdpvd_stg_dim_absences_inclusion") }} as dim
             on src.id_eco = dim.id_eco
             and src.motif_abs = dim.motif_abs
         group by src.date_abs, src.fiche, src.id_eco, dim.is_absence, code_matiere
