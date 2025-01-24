@@ -3,7 +3,7 @@ version: 2
 models:
   - name: cdpvd_abstsm_report_bris_service
     description: >
-      Identifie les élèves avec une séquence d'absence complète (journée entière) de plus de 8 jours (bris de service).
+      Identifie les élèves avec une séquence d'absence (bris de service).
       Le tableau ne calcule les séquences d'absence que pour l'année scolaire en cours.
     tests:
       - resolution:
@@ -35,7 +35,7 @@ models:
   - name: cdpvd_abstsm_report_daily_absences_rate
     description: >
       Calcule le taux d'absence quotidien pour divers types d'événements d'absentéisme (absence de journée complète, absences partielles, ...).
-      Le taux est calculé au niveau jour * école * type d'absence.
+      Le taux est calculé au niveau jour * école * groupe * type d'absence.
     tests:
       - resolution:
           combination_of_columns:
@@ -47,7 +47,7 @@ models:
     description: >
       Calcule le taux d'absence agrégé pour divers types d'événements d'absentéisme (absence de journée complète, absences partielles, ...).
       Le taux d'absence est agrégé par étape.
-      Le taux est calculé au niveau étape * école * type d'absence.
+      Le taux est calculé au niveau étape * école * groupe * type d'absence.
     tests:
       - resolution:
           combination_of_columns:
