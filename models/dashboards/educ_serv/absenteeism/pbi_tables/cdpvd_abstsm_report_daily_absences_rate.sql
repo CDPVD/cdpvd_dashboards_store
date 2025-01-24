@@ -28,30 +28,40 @@ with
             annee,
             school_friendly_name,
             date_evenement,
-			jour_semaine,
-			groupe,            
+            jour_semaine,
+            groupe,
             event_kind,
             max(n_events) as n_events,
-			max(n_students_daily) as n_students_daily,
-			max(absence_rate) as absence_rate 
+            max(n_students_daily) as n_students_daily,
+            max(absence_rate) as absence_rate
         from {{ ref("cdpvd_abstsm_stg_daily_metrics") }} as src
-        group by annee,  school_friendly_name, groupe,date_evenement,jour_semaine, event_kind
-	), agg as (		
+        group by
+            annee,
+            school_friendly_name,
+            groupe,
+            date_evenement,
+            jour_semaine,
+            event_kind
+    ),
+    agg as (
         select
             annee,
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
             date_evenement,
-			jour_semaine,
-            coalesce(groupe, 'Tout') as groupe,            
-			--coalesce(code_matiere, 'Tout') as code_matiere,
+            jour_semaine,
+            coalesce(groupe, 'Tout') as groupe,
+            -- coalesce(code_matiere, 'Tout') as code_matiere,
             event_kind,
             -- The daily is rate is compute as the weighted average of the etapes rates.
             sum(n_events) as n_events,
             sum(n_students_daily) as n_students_daily,
             sum(absence_rate * n_students_daily) / sum(n_students_daily) as absence_rate
-		from source as src
-        group by annee,  cube (school_friendly_name, groupe),date_evenement,jour_semaine, event_kind
-        
+        from source as src
+        group by
+            annee, cube (school_friendly_name, groupe),
+            date_evenement,
+            jour_semaine,
+            event_kind
 
     -- Compute the absence_rate at the CSS level (use the weighted absence_rate to
     -- avoid having to re apply corrections on the raw metrics)
@@ -60,7 +70,7 @@ with
         select
             annee,
             date_evenement,
-			jour_semaine,
+            jour_semaine,
             event_kind,
             sum(absence_rate * n_students_daily)
             / sum(n_students_daily) as absence_rate_css
@@ -86,11 +96,11 @@ with
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
             event_kind,
             jour_semaine,
-            coalesce(groupe, 'Tout') as groupe,            
+            coalesce(groupe, 'Tout') as groupe,
             sum(absence_rate * n_students_daily)
             / sum(n_students_daily) as avg_absence_rate_jour
         from source
-        group by annee,  cube (school_friendly_name, groupe),jour_semaine, event_kind
+        group by annee, cube (school_friendly_name, groupe), jour_semaine, event_kind
 
     -- add the css and school metrics to the table
     ),
@@ -98,8 +108,8 @@ with
         select
             src.annee,
             src.school_friendly_name,
-			src.groupe,
-			src.jour_semaine,
+            src.groupe,
+            src.jour_semaine,
             src.date_evenement,
             src.n_students_daily,
             src.event_kind,
@@ -139,7 +149,7 @@ select
             ["annee", "school_friendly_name", "event_kind", "groupe"]
         )
     }} as filter_key,
-    jour_semaine,   
+    jour_semaine,
     cast(date_evenement as date) as date_evenement,
     n_events,
     absence_rate,

@@ -47,8 +47,9 @@ select
     end as category_abs,
     case when cpt_abs in (1, 2) then 1 else 0 end as is_absence  -- Flag for complete absence
 from {{ ref("i_gpm_t_motif_abs") }}
-where cpt_abs is not null  -- Filter out the motiveless absences / lateness
-    and cpt_abs != 3       -- exclude the retard  
+where
+    cpt_abs is not null  -- Filter out the motiveless absences / lateness
+    and cpt_abs != 3  -- exclude the retard  
 group by
     id_eco,
     motif_abs,
@@ -57,5 +58,4 @@ group by
 
     -- For instance if you want to exclude the retard from the downstream
     -- computation, you can, for instance, add the following where clause:
-    
     

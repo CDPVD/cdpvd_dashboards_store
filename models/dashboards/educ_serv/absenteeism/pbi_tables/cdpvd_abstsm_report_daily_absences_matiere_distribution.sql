@@ -22,23 +22,45 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 {% if execute %}
     {% if "nbre_annee_a_extraire" in var("dashboards")["absenteeism"] %}
-        {% set nbre_annee_a_extraire = var("dashboards")["absenteeism"]["nbre_annee_a_extraire"] %}
-        {{ log("Le nombre d'années de données à extraire pour le tableau de bord d'absentéisme est : " ~ nbre_annee_a_extraire, true) }}
+        {% set nbre_annee_a_extraire = var("dashboards")["absenteeism"][
+            "nbre_annee_a_extraire"
+        ] %}
+        {{
+            log(
+                "Le nombre d'années de données à extraire pour le tableau de bord d'absentéisme est : "
+                ~ nbre_annee_a_extraire,
+                true,
+            )
+        }}
     {% else %}
         {% set nbre_annee_a_extraire = 5 %}
-        {{ log("Le nombre d'années de données à extraire pour le tableau de bord d'absentéisme est par défaut : " ~ nbre_annee_a_extraire, true) }}
+        {{
+            log(
+                "Le nombre d'années de données à extraire pour le tableau de bord d'absentéisme est par défaut : "
+                ~ nbre_annee_a_extraire,
+                true,
+            )
+        }}
     {% endif %}
-    {% set years_of_data_absences = var("marts")["educ_serv"]["recency"]["years_of_data_absences"] %}
-    {{ log("Le nombre d'années de données à extraire pour le comptoir d'absentéisme est : " ~ years_of_data_absences, true) }}
+    {% set years_of_data_absences = var("marts")["educ_serv"]["recency"][
+        "years_of_data_absences"
+    ] %}
+    {{
+        log(
+            "Le nombre d'années de données à extraire pour le comptoir d'absentéisme est : "
+            ~ years_of_data_absences,
+            true,
+        )
+    }}
 {% endif %}
 
 with
     abs_aggregated as (
         select
             date_abs as date_evenement,
-			jour_semaine,
+            jour_semaine,
             id_eco,
-			groupe,
+            groupe,
             grille,
             case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
             code_matiere,
@@ -46,13 +68,15 @@ with
             count(fiche) as n_events
         from {{ ref("cdpvd_fact_absences_daily") }}
         where
-            school_year >= {{ core_dashboards_store.get_current_year() }} - {{ nbre_annee_a_extraire }}
+            school_year
+            >= {{ core_dashboards_store.get_current_year() }}
+            - {{ nbre_annee_a_extraire }}
             and is_aggregate_kind = 0  -- Do not consider the aggregated type
         group by
             date_abs,
-			jour_semaine,
+            jour_semaine,
             id_eco,
-			groupe,
+            groupe,
             grille,
             case when etape in ('1', '2', '3') then etape else 0 end,
             code_matiere,
@@ -61,10 +85,24 @@ with
     -- Create a variation of the padding table without the etape 
     ),
     padding as (
-        select id_eco, groupe, date_evenement, jour_semaine, code_matiere, event_kind, grille
+        select
+            id_eco,
+            groupe,
+            date_evenement,
+            jour_semaine,
+            code_matiere,
+            event_kind,
+            grille
         from {{ ref("cdpvd_abstsm_stg_padding") }} as padd
         where padd.is_school_day = 1
-        group by id_eco, groupe, date_evenement, jour_semaine, code_matiere, event_kind, grille
+        group by
+            id_eco,
+            groupe,
+            date_evenement,
+            jour_semaine,
+            code_matiere,
+            event_kind,
+            grille
 
     -- Inner join on the padding table to reduce to the work days only (so the table
     -- is not a padding table anymore)
@@ -73,8 +111,8 @@ with
         select
             padd.id_eco,
             padd.date_evenement,
-			padd.jour_semaine,
-			padd.groupe,
+            padd.jour_semaine,
+            padd.groupe,
             padd.code_matiere,
             padd.event_kind,
             n_events
@@ -83,7 +121,7 @@ with
             abs_aggregated as abs_
             on padd.id_eco = abs_.id_eco
             and padd.date_evenement = abs_.date_evenement
-            and padd.groupe = abs_.groupe            
+            and padd.groupe = abs_.groupe
             and padd.grille = abs_.grille
             and padd.code_matiere = abs_.code_matiere
             and padd.event_kind = abs_.event_kind
@@ -123,6 +161,5 @@ select
     description_abreg,
     n_events
 from aggregated as agg
-left join {{ ref("stg_descr_mat") }} as mat
-    on agg.code_matiere = mat.mat 
+left join {{ ref("stg_descr_mat") }} as mat on agg.code_matiere = mat.mat
 where code_matiere != '-'

@@ -19,7 +19,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     "years_of_data_absences"
 ] %}
 
-select src.date_abs, src.fiche, src.id_eco, src.motif_abs, src.rem as remarque, src.id_mat_grp
+select
+    src.date_abs,
+    src.fiche,
+    src.id_eco,
+    src.motif_abs,
+    src.rem as remarque,
+    src.id_mat_grp
 from {{ var("database_gpi") }}.dbo.gpm_e_abs as src
 -- Filter on the last n years of data through a join on the school year table, to get
 -- 'school year like' year.

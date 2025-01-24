@@ -26,21 +26,22 @@ with
         select
             annee,
             school_friendly_name,
-			groupe,        
+            groupe,
             etape_friendly,
             event_kind,
             max(n_events) as n_events,
-			max(n_students_daily) as n_students_daily,
-			max(absence_rate) as absence_rate 
+            max(n_students_daily) as n_students_daily,
+            max(absence_rate) as absence_rate
         from {{ ref("cdpvd_abstsm_stg_daily_metrics") }} as src
-        group by annee, school_friendly_name ,groupe,etape_friendly, event_kind
-	), agg as (		
+        group by annee, school_friendly_name, groupe, etape_friendly, event_kind
+    ),
+    agg as (
         select
             annee,
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
             etape_friendly,
             event_kind,
-            coalesce(groupe, 'Tout') as groupe,   
+            coalesce(groupe, 'Tout') as groupe,
             sum(n_events) as n_events,
             sum(n_students_daily) as n_students_daily,
             -- The per etape absence rate is computed as the weighted average of the
@@ -49,7 +50,7 @@ with
             / sum(n_students_daily) as avg_absence_rate_etape,
             avg(cast(n_students_daily as float)) as weight_etape
         from source as src
-        group by annee,  cube (school_friendly_name, groupe), etape_friendly, event_kind
+        group by annee, cube (school_friendly_name, groupe), etape_friendly, event_kind
 
     -- Estimate the per etape average absence_rate at the CSS level as the weighted
     -- average of the school's etape absence rate
@@ -61,7 +62,7 @@ with
             event_kind,
             sum(absence_rate * n_students_daily)
             / sum(n_students_daily) as avg_absence_rate_etape_css
-            {# sum(avg_absence_rate_etape * weight_etape)
+        {# sum(avg_absence_rate_etape * weight_etape)
             / sum(weight_etape) as avg_absence_rate_etape_css #}
         from source
         group by annee, etape_friendly, event_kind
@@ -116,7 +117,7 @@ select
         )
     }} as filter_key,
     etape_friendly,
-	n_events,
+    n_events,
     n_students_daily,
     avg_absence_rate_etape,
     avg_absence_rate_etape_css,

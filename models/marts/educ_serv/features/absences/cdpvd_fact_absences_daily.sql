@@ -20,57 +20,84 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     Events are further qualified by the number of periods impacted (full day / partial day).
     Each absence is mapped to the student's etape.
 #}
-{{ 
-    config( 
-        post_hook=[ 
-            core_dashboards_store.create_clustered_index( 
-                "{{ this }}", ["fiche", "id_eco", "school_year","groupe"] 
-            ), 
-            core_dashboards_store.create_nonclustered_index("{{ this }}", ["fiche"]), 
-        ] 
-    ) 
-}} 
+{{
+    config(
+        post_hook=[
+            core_dashboards_store.create_clustered_index(
+                "{{ this }}", ["fiche", "id_eco", "school_year", "groupe"]
+            ),
+            core_dashboards_store.create_nonclustered_index("{{ this }}", ["fiche"]),
+        ]
+    )
+}}
 {% set max_periodes = var("interfaces")["gpi"]["max_periodes"] + 1 %}
 
 {% if execute %}
     {% set dict = {
-    'grp_rep': 'Le groupe repère',
-    'dist': 'La distribution',
-    'class': 'La classification'} %}
+        "grp_rep": "Le groupe repère",
+        "dist": "La distribution",
+        "class": "La classification",
+    } %}
     {% if "groupe_primaire" in var("dashboards")["absenteeism"] %}
         {% set groupe_primaire = var("dashboards")["absenteeism"]["groupe_primaire"] %}
-        {{ log("Le groupe primaire sélectionné pour le tableau de bord d'absentéisme est : " ~ dict[groupe_primaire], info=True) }}
+        {{
+            log(
+                "Le groupe primaire sélectionné pour le tableau de bord d'absentéisme est : "
+                ~ dict[groupe_primaire],
+                info=True,
+            )
+        }}
     {% else %}
-        {% set groupe_primaire = 'grp_rep' %}
-        {{ log('La variable "groupe_primaire" est par défaut : ' ~ dict[groupe_primaire] ~ ', elle peut être modifié dans le dbt_project pour le tableau de bord d\'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.',true )
+        {% set groupe_primaire = "grp_rep" %}
+        {{
+            log(
+                'La variable "groupe_primaire" est par défaut : '
+                ~ dict[groupe_primaire]
+                ~ ", elle peut être modifié dans le dbt_project pour le tableau de bord d'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.",
+                true,
+            )
         }}
     {% endif %}
 
     {% if "groupe_secondaire" in var("dashboards")["absenteeism"] %}
-        {% set groupe_secondaire = var("dashboards")["absenteeism"]["groupe_secondaire"] %}
-        {{ log("Le groupe secondaire sélectionné pour le tableau de bord d'absentéisme est : " ~ dict[groupe_secondaire], info=True) }}
+        {% set groupe_secondaire = var("dashboards")["absenteeism"][
+            "groupe_secondaire"
+        ] %}
+        {{
+            log(
+                "Le groupe secondaire sélectionné pour le tableau de bord d'absentéisme est : "
+                ~ dict[groupe_secondaire],
+                info=True,
+            )
+        }}
     {% else %}
-        {% set groupe_secondaire = 'dist' %}
-        {{ log('La variable "groupe_secondaire" est par défaut : ' ~ dict[groupe_secondaire] ~ ', elle peut être modifié dans le dbt_project pour le tableau de bord d\'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.',true )
+        {% set groupe_secondaire = "dist" %}
+        {{
+            log(
+                'La variable "groupe_secondaire" est par défaut : '
+                ~ dict[groupe_secondaire]
+                ~ ", elle peut être modifié dans le dbt_project pour le tableau de bord d'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.",
+                true,
+            )
         }}
     {% endif %}
 {% endif %}
 
 with
     matiere as (
-		select 
-			fct.date_abs,
+        select
+            fct.date_abs,
             fct.fiche,
             fct.id_eco,
-			fct.motif_abs,
+            fct.motif_abs,
             fct.remarque,
-			coalesce(mat, '-') as code_matiere
-		from {{ ref("i_gpm_e_abs") }} as fct
-		left join {{ ref("i_gpm_t_mat_grp") }} as mat 
-            on fct.id_eco = mat.id_eco 
+            coalesce(mat, '-') as code_matiere
+        from {{ ref("i_gpm_e_abs") }} as fct
+        left join
+            {{ ref("i_gpm_t_mat_grp") }} as mat
+            on fct.id_eco = mat.id_eco
             and mat.id_mat_grp = fct.id_mat_grp
-)
-, -- aggregate the absences / retards by date of absence, student, school, type of event and subjects (only valid for the secondary)
+    ),  -- aggregate the absences / retards by date of absence, student, school, type of event and subjects (only valid for the secondary)
     src as (
         select
             src.date_abs,
@@ -89,16 +116,18 @@ with
         group by src.date_abs, src.fiche, src.id_eco, dim.is_absence, code_matiere
 
     -- Add the calendar grille the student follows from the DAN
-    )
-	
-	,
+    ),
     src_with_grid_id as (
         select
             src.date_abs,
             src.fiche,
             src.id_eco,
             src.code_matiere,
-            case when ordre_ens = 4 then dan.{{ groupe_secondaire }} else dan.{{ groupe_primaire }} end as groupe,
+            case
+                when ordre_ens = 4
+                then dan.{{ groupe_secondaire }}
+                else dan.{{ groupe_primaire }}
+            end as groupe,
             dan.grille,
             src.is_absence,
             src.n_periods_events,
@@ -106,7 +135,7 @@ with
             src.event_description
         from src
         join
-            {{ ref("i_gpm_e_dan") }}  as dan
+            {{ ref("i_gpm_e_dan") }} as dan
             on src.fiche = dan.fiche
             and src.id_eco = dan.id_eco
 
@@ -118,7 +147,7 @@ with
             id_eco,
             date_evenement,
             grille,
-            DATENAME(WEEKDAY, date_evenement) AS jour_semaine,
+            datename(weekday, date_evenement) as jour_semaine,
             {% for i in range(1, max_periodes) %}
                 case when max(per_{{ "%02d" % i }}) is null then 0 else 1 end
                 {%- if not loop.last %} +{% endif -%}
@@ -128,8 +157,7 @@ with
         group by id_eco, date_evenement, grille
 
     -- Add the expected number of periods to the observed events
-    )
-	,
+    ),
     src_with_expected_periodes as (
         select
             src.date_abs,
@@ -137,7 +165,7 @@ with
             src.id_eco,
             src.code_matiere,
             src.grille,
-			src.groupe,
+            src.groupe,
             grid.jour_semaine,
             src.is_absence,
             src.n_periods_events,
@@ -156,44 +184,51 @@ with
         where grid.n_periods_expected > 0  -- If no period is expected then we can't compute an absence rate.
 
     -- Add a 'tous types' category
-    ), src_with_expected_daily as (
-		select
-			date_abs,
-			fiche,
-			id_eco,
-			code_matiere,
-			grille,
-			groupe,
-			jour_semaine,
-			is_absence,
-			n_periods_events,
-			n_periods_expected,
-			event_description,
+    ),
+    src_with_expected_daily as (
+        select
+            date_abs,
+            fiche,
+            id_eco,
+            code_matiere,
+            grille,
+            groupe,
+            jour_semaine,
+            is_absence,
+            n_periods_events,
+            n_periods_expected,
+            event_description,
             remarque,
-			prct_observed_periods_over_expected,
-			sum(prct_observed_periods_over_expected) over(partition by date_abs, fiche, id_eco) as prct_observed_daily_over_expected
-		from src_with_expected_periodes
-	), event_kind as (
-		select
-			
-			
-			id_eco,
-			code_matiere,
-			grille,
-			groupe,
-			jour_semaine,
-			is_absence,
-			n_periods_events,
-			n_periods_expected,
-			event_description,
+            prct_observed_periods_over_expected,
+            sum(prct_observed_periods_over_expected) over (
+                partition by date_abs, fiche, id_eco
+            ) as prct_observed_daily_over_expected
+        from src_with_expected_periodes
+    ),
+    event_kind as (
+        select
+
+            id_eco,
+            code_matiere,
+            grille,
+            groupe,
+            jour_semaine,
+            is_absence,
+            n_periods_events,
+            n_periods_expected,
+            event_description,
             remarque,
-			fiche,
-			date_abs,
-			prct_observed_periods_over_expected,
-			prct_observed_daily_over_expected,
-			case when prct_observed_daily_over_expected < 100 then 'Périodes' else 'Journée complète' end as event_kind
-		from src_with_expected_daily
-	    ),
+            fiche,
+            date_abs,
+            prct_observed_periods_over_expected,
+            prct_observed_daily_over_expected,
+            case
+                when prct_observed_daily_over_expected < 100
+                then 'Périodes'
+                else 'Journée complète'
+            end as event_kind
+        from src_with_expected_daily
+    ),
     rolledup as (
         select
             case
@@ -203,11 +238,11 @@ with
             fiche,
             id_eco,
             groupe,
-			code_matiere,
+            code_matiere,
             max(jour_semaine) as jour_semaine,
             max(grille) as grille,  -- dymmy aggregation. Already controlled by the tuple (id_eco, fiche)
-           -- coalesce(event_kind, 'tous types') as event_kind,
-			event_kind,
+            -- coalesce(event_kind, 'tous types') as event_kind,
+            event_kind,
             case when event_kind is null then 1 else 0 end as is_aggregate_kind,  -- To flag the 'tous types' category
             -- By additivity of absences / retards : two differents events can't be
             -- registered for the same period
@@ -218,13 +253,11 @@ with
             case
                 when event_kind is null then 'tous types' else min(event_description)
             end as event_description,  -- arbitrary : first description in lexicographic order
-            
+
             sum(
                 prct_observed_periods_over_expected
             ) as prct_observed_periods_over_expected,
-            sum(
-                prct_observed_daily_over_expected
-            ) as prct_observed_daily_over_expected
+            sum(prct_observed_daily_over_expected) as prct_observed_daily_over_expected
 
         from event_kind
         group by date_abs, jour_semaine, fiche, id_eco, groupe, code_matiere, event_kind  -- Superseed is_absence
@@ -240,7 +273,7 @@ with
             fiche,
             id_eco,
             groupe,
-			code_matiere,
+            code_matiere,
             grille,
             event_kind,
             is_aggregate_kind,
@@ -269,7 +302,7 @@ select
     src.fiche,
     src.id_eco,
     groupe,
-	code_matiere,
+    code_matiere,
     src.grille,
     src.event_kind,
     src.is_aggregate_kind,
@@ -282,7 +315,8 @@ select
     etp.etape_description,
     etp.seq_etape
 from corrected as src
-left join {{ ref("stg_fact_fiche_etapes") }} as etp
+left join
+    {{ ref("stg_fact_fiche_etapes") }} as etp
     on src.fiche = etp.fiche
     and src.id_eco = etp.id_eco
     and src.date_abs between etp.date_debut and etp.date_fin

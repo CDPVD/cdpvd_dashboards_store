@@ -41,14 +41,36 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 {% if execute %}
     {% if "nbre_annee_a_extraire" in var("dashboards")["absenteeism"] %}
-        {% set nbre_annee_a_extraire = var("dashboards")["absenteeism"]["nbre_annee_a_extraire"] %}
-        {{ log("Le nombre d'années de données à extraire pour le tableau de bord d'absentéisme est : " ~ nbre_annee_a_extraire, true) }}
+        {% set nbre_annee_a_extraire = var("dashboards")["absenteeism"][
+            "nbre_annee_a_extraire"
+        ] %}
+        {{
+            log(
+                "Le nombre d'années de données à extraire pour le tableau de bord d'absentéisme est : "
+                ~ nbre_annee_a_extraire,
+                true,
+            )
+        }}
     {% else %}
         {% set nbre_annee_a_extraire = 5 %}
-        {{ log("Le nombre d'années de données à extraire pour le tableau de bord d'absentéisme est par défaut : " ~ nbre_annee_a_extraire, true) }}
+        {{
+            log(
+                "Le nombre d'années de données à extraire pour le tableau de bord d'absentéisme est par défaut : "
+                ~ nbre_annee_a_extraire,
+                true,
+            )
+        }}
     {% endif %}
-    {% set years_of_data_absences = var("marts")["educ_serv"]["recency"]["years_of_data_absences"] %}
-    {{ log("Le nombre d'années de données à extraire pour le comptoir d'absentéisme est : " ~ years_of_data_absences, true) }}
+    {% set years_of_data_absences = var("marts")["educ_serv"]["recency"][
+        "years_of_data_absences"
+    ] %}
+    {{
+        log(
+            "Le nombre d'années de données à extraire pour le comptoir d'absentéisme est : "
+            ~ years_of_data_absences,
+            true,
+        )
+    }}
 {% endif %}
 
 -- Extract all the dates and grid to padd the data with
@@ -61,25 +83,26 @@ with
             max(case when jour_cycle is null then 0 else 1 end) as is_school_day
         from {{ ref("i_gpm_t_cal") }} as cal
         where
-            date_evenement <= getdate() and id_eco in (select id_eco from {{ ref("cdpvd_fact_absences_daily") }})
+            date_evenement <= getdate()
+            and id_eco in (select id_eco from {{ ref("cdpvd_fact_absences_daily") }})
             and year(date_evenement)
-            >= {{ core_dashboards_store.get_current_year() }} - {{ nbre_annee_a_extraire }}
+            >= {{ core_dashboards_store.get_current_year() }}
+            - {{ nbre_annee_a_extraire }}
         group by id_eco, date_evenement, grille
 
     -- Extract all the absences event kind 
     ),
-    kinds as (
-        select distinct event_kind from {{ ref("cdpvd_fact_absences_daily") }}
-    ),
+    kinds as (select distinct event_kind from {{ ref("cdpvd_fact_absences_daily") }}),
     matieres as (
-        select distinct id_eco, groupe, code_matiere from {{ ref("cdpvd_fact_absences_daily") }}
+        select distinct id_eco, groupe, code_matiere
+        from {{ ref("cdpvd_fact_absences_daily") }}
 
     -- Extract all the etapes per grid, eco and day
     ),
     etapes as (
         select
             id_eco,
-			groupe,
+            groupe,
             grille,
             etape,
             min(etape_date_debut) as etape_date_debut,
@@ -98,14 +121,15 @@ with
             cal.grille,
             cal.is_school_day,
             mat.code_matiere,
-			kind.event_kind,
+            kind.event_kind,
             etp.etape,
             etp.etape_date_debut,
             etp.etape_date_fin
-        from padding_cal as cal 
+        from padding_cal as cal
         cross join kinds as kind
         inner join etapes as etp on cal.id_eco = etp.id_eco and cal.grille = etp.grille
-		inner join matieres as mat on cal.id_eco = mat.id_eco and mat.groupe = etp.groupe
+        inner join
+            matieres as mat on cal.id_eco = mat.id_eco and mat.groupe = etp.groupe
     -- DO NOT restrict to the etape's date range. We want to backfill the data for the
     -- whole year.
     -- Add the daily number of students
@@ -121,7 +145,7 @@ with
             pad.etape,
             pad.etape_date_debut,
             pad.etape_date_fin,
-			pad.groupe,
+            pad.groupe,
             dly.n_students_daily
         from padding as pad
         left join
@@ -130,7 +154,7 @@ with
             and pad.date_evenement = dly.date_evenement
             and pad.grille = dly.grille
             and pad.etape = dly.etape
-			and pad.groupe = dly.groupe
+            and pad.groupe = dly.groupe
 
     -- Backfill the number of daily students
     ),
@@ -138,7 +162,7 @@ with
         select
             src.id_eco,
             src.date_evenement,
-			src.groupe,
+            src.groupe,
             src.grille,
             src.is_school_day,
             src.event_kind,
@@ -181,7 +205,7 @@ with
 select
     src.id_eco,
     src.date_evenement,
-    DATENAME(WEEKDAY, date_evenement) AS jour_semaine,
+    datename(weekday, date_evenement) as jour_semaine,
     src.groupe,
     src.grille,
     src.is_school_day,

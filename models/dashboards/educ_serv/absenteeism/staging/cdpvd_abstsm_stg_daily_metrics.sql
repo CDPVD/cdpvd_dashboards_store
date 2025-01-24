@@ -34,8 +34,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         ],
     )
 }}
-{#  #}
-
+{# #}
 -- Aggregate the number of absences / retards so it can be joined with the daily metrics
 with
     abs_aggregated as (
@@ -43,8 +42,8 @@ with
             date_abs as date_evenement,
             id_eco,
             grille,
-			jour_semaine,
-            groupe,         
+            jour_semaine,
+            groupe,
             case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
             event_kind,
             count(distinct fiche) as n_events
@@ -53,8 +52,8 @@ with
             date_abs,
             id_eco,
             grille,
-			jour_semaine,
-            groupe,         
+            jour_semaine,
+            groupe,
             case when etape in ('1', '2', '3') then etape else 0 end,
             event_kind
 
@@ -65,8 +64,8 @@ with
         select
             padd.id_eco,
             padd.date_evenement,
-			padd.jour_semaine,
-			padd.groupe,
+            padd.jour_semaine,
+            padd.groupe,
             padd.grille,
             padd.event_kind,
             padd.etape,
@@ -78,10 +77,10 @@ with
             on padd.id_eco = abs_.id_eco
             and padd.date_evenement = abs_.date_evenement
             and padd.grille = abs_.grille
-            and padd.groupe = abs_.groupe            
+            and padd.groupe = abs_.groupe
             and padd.etape = abs_.etape
             and padd.event_kind = abs_.event_kind
-        where padd.is_school_day = 1 
+        where padd.is_school_day = 1
 
     -- Get rid of the grille dimensions, add add the school friendly name
     ),
@@ -89,8 +88,8 @@ with
         select
             id_eco,
             date_evenement,
-			jour_semaine,
-			groupe,
+            jour_semaine,
+            groupe,
             etape,
             event_kind,
             -- By orthogonality of the grids (ath the time the ETL run, one student as
@@ -99,15 +98,15 @@ with
             sum(n_students_daily) as n_students_daily
         from augmented as aug
         group by id_eco, date_evenement, jour_semaine, groupe, etape, event_kind
-      ),  
+    ),
     -- aggreger les matieres
     matiere_aggregated as (
         select
             date_abs,
             id_eco,
-			jour_semaine,
-			code_matiere,   
-            groupe,         
+            jour_semaine,
+            code_matiere,
+            groupe,
             case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
             event_kind,
             count(distinct fiche) as n_events_matiere
@@ -115,20 +114,22 @@ with
         group by
             date_abs,
             id_eco,
-			jour_semaine,
-			code_matiere,   
-            groupe,         
+            jour_semaine,
+            code_matiere,
+            groupe,
             case when etape in ('1', '2', '3') then etape else 0 end,
             event_kind
-    
+
     -- récuperer les matieres    
-    ), matiere as (
-		select src.*, n_events_matiere, absc.code_matiere 
-		from aggregated as src 
-		left join matiere_aggregated as absc 
-			on src.id_eco = absc.id_eco
+    ),
+    matiere as (
+        select src.*, n_events_matiere, absc.code_matiere
+        from aggregated as src
+        left join
+            matiere_aggregated as absc
+            on src.id_eco = absc.id_eco
             and src.date_evenement = absc.date_abs
-            and src.groupe = absc.groupe            
+            and src.groupe = absc.groupe
             and src.etape = absc.etape
             and src.event_kind = absc.event_kind
 
@@ -138,9 +139,9 @@ with
         select
             id_eco,
             date_evenement,
-			jour_semaine,
-			groupe,
-			code_matiere,
+            jour_semaine,
+            groupe,
+            code_matiere,
             etape,
             event_kind,
             n_events,
@@ -158,9 +159,9 @@ with
         select
             id_eco,
             date_evenement,
-			jour_semaine,
-			groupe,
-			code_matiere,
+            jour_semaine,
+            groupe,
+            code_matiere,
             case
                 when etape = 0 then 'inconnue' else cast(etape as varchar)
             end as etape_friendly,
@@ -176,16 +177,16 @@ select
     annee,
     school_friendly_name,
     date_evenement,
-	jour_semaine,
-	groupe,
-	coalesce(code_matiere, '-') as code_matiere,
+    jour_semaine,
+    groupe,
+    coalesce(code_matiere, '-') as code_matiere,
     concat('étape : ', etape_friendly) as etape_friendly,
     event_kind,
     n_events,
     n_events_matiere,
     n_students_daily,
     absence_rate,
-        -- RLS hooks:
+    -- RLS hooks:
     src.id_eco,
     eco.eco
 from corrected as src

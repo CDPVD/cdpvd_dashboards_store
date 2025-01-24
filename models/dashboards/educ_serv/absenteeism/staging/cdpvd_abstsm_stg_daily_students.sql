@@ -43,24 +43,51 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 {% if execute %}
     {% set dict = {
-    'grp_rep': 'Le groupe repère',
-    'dist': 'La distribution',
-    'class': 'La classification'} %}
+        "grp_rep": "Le groupe repère",
+        "dist": "La distribution",
+        "class": "La classification",
+    } %}
     {% if "groupe_primaire" in var("dashboards")["absenteeism"] %}
         {% set groupe_primaire = var("dashboards")["absenteeism"]["groupe_primaire"] %}
-        {{ log("Le groupe primaire sélectionné pour le tableau de bord d'absentéisme est : " ~ dict[groupe_primaire], info=True) }}
+        {{
+            log(
+                "Le groupe primaire sélectionné pour le tableau de bord d'absentéisme est : "
+                ~ dict[groupe_primaire],
+                info=True,
+            )
+        }}
     {% else %}
-        {% set groupe_primaire = 'grp_rep' %}
-        {{ log('La variable "groupe_primaire" est par défaut : ' ~ dict[groupe_primaire] ~ ', elle peut être modifié dans le dbt_project pour le tableau de bord d\'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.',true )
+        {% set groupe_primaire = "grp_rep" %}
+        {{
+            log(
+                'La variable "groupe_primaire" est par défaut : '
+                ~ dict[groupe_primaire]
+                ~ ", elle peut être modifié dans le dbt_project pour le tableau de bord d'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.",
+                true,
+            )
         }}
     {% endif %}
 
     {% if "groupe_secondaire" in var("dashboards")["absenteeism"] %}
-        {% set groupe_secondaire = var("dashboards")["absenteeism"]["groupe_secondaire"] %}
-        {{ log("Le groupe secondaire sélectionné pour le tableau de bord d'absentéisme est : " ~ dict[groupe_secondaire], info=True) }}
+        {% set groupe_secondaire = var("dashboards")["absenteeism"][
+            "groupe_secondaire"
+        ] %}
+        {{
+            log(
+                "Le groupe secondaire sélectionné pour le tableau de bord d'absentéisme est : "
+                ~ dict[groupe_secondaire],
+                info=True,
+            )
+        }}
     {% else %}
-        {% set groupe_secondaire = 'dist' %}
-        {{ log('La variable "groupe_secondaire" est par défaut : ' ~ dict[groupe_secondaire] ~ ', elle peut être modifié dans le dbt_project pour le tableau de bord d\'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.',true )
+        {% set groupe_secondaire = "dist" %}
+        {{
+            log(
+                'La variable "groupe_secondaire" est par défaut : '
+                ~ dict[groupe_secondaire]
+                ~ ", elle peut être modifié dans le dbt_project pour le tableau de bord d'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.",
+                true,
+            )
         }}
     {% endif %}
 {% endif %}
@@ -71,7 +98,11 @@ with
         select
             dan.fiche,
             dan.id_eco,
-            case when ordre_ens = 4 then dan.{{ groupe_secondaire }} else dan.{{ groupe_primaire }} end as groupe,
+            case
+                when ordre_ens = 4
+                then dan.{{ groupe_secondaire }}
+                else dan.{{ groupe_primaire }}
+            end as groupe,
             dan.date_debut,
             coalesce(dan.date_depart, oa.date_fin) as date_depart,  -- Impute the date_depart with the end of the year if it is missing. 
             coalesce(dan.grille, 'unknown') as grille,
@@ -99,7 +130,7 @@ with
         select
             base.fiche,
             base.id_eco,
-            coalesce(base.groupe, '-') as groupe,            
+            coalesce(base.groupe, '-') as groupe,
             base.date_debut,
             base.date_depart,
             base.grille,
@@ -151,7 +182,7 @@ with
     daily_students as (
         select
             coalesce(ing.id_eco, eg.id_eco) as id_eco,
-            coalesce(ing.groupe, eg.groupe) as groupe,            
+            coalesce(ing.groupe, eg.groupe) as groupe,
             coalesce(ing.grille, eg.grille) as grille,
             coalesce(ing.date_evenement, eg.date_evenement) as date_evenement,
             coalesce(ing.n_students, 0) - coalesce(eg.n_students, 0) as delta,

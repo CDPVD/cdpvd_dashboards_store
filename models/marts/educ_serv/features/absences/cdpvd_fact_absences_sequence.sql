@@ -162,7 +162,7 @@ with
                 partition by school_year, fiche, id_eco, absence_sequence_id, event_kind
                 order by day_id
                 rows between unbounded preceding and unbounded following
-            ) as last_remarque,            
+            ) as last_remarque,
             absence_sequence_id
         from sequences
 
