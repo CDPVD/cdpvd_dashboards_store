@@ -16,25 +16,20 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 select
-    fiche,
-    annee,
-    datedeb as date_deb,
-    datefin as date_fin,
-    statut,
-    org,
-    ecocen as eco_cen,
-    bat,
-    client,
-    freq,
-    prog,
-    ActivForm,
-    CondAdmiss,
-    serviceenseign as service_enseign,
-    orghor as org_hor,
-    typeactiv as type_activ,
-    datefinsifca as date_fin_sifca,
-    motifdep as motif_depart,
-    raisondepart as raison_depart,
-    raisongratscol as raison_grat_scol,
-    typeparcours as type_parcours
-from {{ var("database_jade_adultes") }}.dbo.e_freq
+  fiche
+  ,annee
+  ,freq
+  ,mat
+  ,grp
+  ,ecocen as eco_cen
+  ,noseqmat
+  ,indmatetei
+  ,grh
+  ,disc
+  ,ordchrono
+  ,nbhresprev
+  ,nbminrea
+  ,datefin as date_fin
+  ,statutprofil
+  ,resens
+from {{ var("database_jade_adultes") }}.dbo.e_elematfpfga
