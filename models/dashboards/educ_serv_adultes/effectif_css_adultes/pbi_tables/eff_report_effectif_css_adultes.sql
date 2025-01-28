@@ -26,41 +26,29 @@ with
       population,
       annee,
       freq,
-      case
-      when age_30_juin < 16 then '- de 16 ans'
-      when age_30_juin BETWEEN 16 and 17 then '16-17 ans'
-      when age_30_juin BETWEEN 18 and 21 then '18-21 ans'
-      when age_30_juin BETWEEN 22 and 25 then '22-25 ans'
-      when age_30_juin >= 26 then '+ de 26 ans'
-        else null
-      END as interv_age,
-      case
-      when age_30_septembre < 16 then '- de 16 ans'
-      when age_30_septembre BETWEEN 16 and 17 then '16-17 ans'
-      when age_30_septembre BETWEEN 18 and 21 then '18-21 ans'
-      when age_30_septembre BETWEEN 22 and 25 then '22-25 ans'
-      when age_30_septembre >= 26 then '+ de 26 ans'
-        else null
-      END as interv_age_fp,
+      interv_age,
+      interv_age_fp,
       age_30_juin,
       age_30_septembre,
       org,
       eco_cen,
+      [Nom du centre],
       bat,
       org_hor,
       descr_org_hor,
       etat_formation,
       el.genre,
+      concat(el.prenom, ' ', el.nom) as prenom_nom,
       el.lang_matern,
       el.desc_lang_matern,
       ActivForm,
       CondAdmiss,
       descr_condadmiss,
       prog,
-      prog_meq,
       descr_prog,
       type_diplome,
-      type_activ,
+      raison_grat_scol,
+      descr_raison_grat_scol,
       type_parcours,
       descr_type_parcours,
       service_enseign,
@@ -73,8 +61,9 @@ with
   inner join {{ ref("dim_eleve_adultes") }} as el on el.code_perm = fac.code_perm
   )
 select
-  concat('(',agg.eco_cen,') - ',centre.descr) as [Nom du centre],
+  [Nom du centre],
   client,
+  prenom_nom,
   code_perm,
   fiche,
   population,
@@ -84,7 +73,7 @@ select
   age_30_juin,
   age_30_septembre,
   org,
-  agg.eco_cen,
+  eco_cen,
   bat,
   org_hor,
   interv_age,
@@ -98,19 +87,22 @@ select
   lang_matern as lang_matern,
   desc_lang_matern as [Langue maternelle],
   prog,
-  prog_meq,
-  descr_prog as Programme,
+  case
+    when descr_prog is null then descr_prog
+    else concat (prog, ' - ', descr_prog )
+  end as Programme,
   type_diplome as [Type de diplôme],
-  type_activ,
+  raison_grat_scol,
+  descr_raison_grat_scol as [Raison de gratuité scolaire],
   type_parcours,
-  descr_type_parcours [Type de parcours],
+  concat (type_parcours, ' - ', descr_type_parcours) as [Type de parcours],
   service_enseign,
-  descr_service_enseign as [Service enseignement],
+  case
+    when descr_service_enseign is null then descr_service_enseign
+    else concat (service_enseign, ' - ', descr_service_enseign )
+  end as [Service enseignement],
   motif_depart,
   descr_motif_dep as [Motif de départ],
   raison_depart,
   desc_raison_depart as [Raison de départ]
 from agg
-inner join
-  {{ ref("i_t_ecocen_adultes") }} as centre
-  on agg.eco_cen = centre.eco_cen
