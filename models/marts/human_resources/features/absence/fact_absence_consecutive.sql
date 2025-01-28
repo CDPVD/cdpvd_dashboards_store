@@ -22,7 +22,7 @@ with
         select distinct -- ** Vérifier si important
         liste.*, -- Tous les champs de fact_liste_absence
         jour_sem, -- Jour de la semaine (0,1,2,3,4,5,6)
-        bal_jour_ouv, -- Jour de l'année scolaire
+        cal.bal_jour_ouv, -- Jour de l'année scolaire
         ta.categories
         from {{ ref("fact_liste_absence") }} as liste
         inner join
@@ -132,24 +132,24 @@ with
     ),
 
 abd as ( select 
-            ac.annee,
-            ac.matricule,
-            ac.corp_empl,
-            ac.gr_paie,
-            ac.lieu_trav,
-            ac.group_id,
-            ac.ref_empl,
-            ac.startdate,
-             ac.enddate,
-            ac.reg_abs,
-            ac.pourc_sal,
-            ac.categories,
-            dure,
-        CAST(ROUND(SUM(CASE WHEN cal.jour_sem = 1 THEN 1.0 / 7 ELSE 0 END), 0) AS INT) AS lundi,    
-        CAST(ROUND(SUM(CASE WHEN cal.jour_sem = 2 THEN 1.0 / 7 ELSE 0 END), 0) AS INT) AS mardi,    
-        CAST(ROUND(SUM(CASE WHEN cal.jour_sem = 3 THEN 1.0 / 7 ELSE 0 END), 0) AS INT) AS mercredi,
-        CAST(ROUND(SUM(CASE WHEN cal.jour_sem = 4 THEN 1.0 / 7 ELSE 0 END), 0) AS INT) AS jeudi,    
-        CAST(ROUND(SUM(CASE WHEN cal.jour_sem = 5 THEN 1.0 / 7 ELSE 0 END), 0) AS INT) AS vendredi,
+        ac.annee,
+        ac.matricule,
+        ac.corp_empl,
+        ac.gr_paie,
+        ac.lieu_trav,
+        ac.group_id,
+        ac.ref_empl,
+        ac.startdate,
+        ac.enddate,
+        ac.reg_abs,
+        ac.pourc_sal,
+        ac.categories,
+        dure,
+    SUM(CASE WHEN cal.jour_sem = 1 THEN ((ac.pourc_sal * dure ) /100 ) / 7 ELSE 0 END) AS lundi,
+    SUM(CASE WHEN cal.jour_sem = 2 THEN ((ac.pourc_sal * dure ) /100 ) / 7 ELSE 0 END) AS mardi,
+    SUM(CASE WHEN cal.jour_sem = 3 THEN ((ac.pourc_sal * dure ) /100 ) / 7 ELSE 0 END) AS mercredi,
+    SUM(CASE WHEN cal.jour_sem = 4 THEN ((ac.pourc_sal * dure ) /100 ) / 7 ELSE 0 END) AS jeudi,
+    SUM(CASE WHEN cal.jour_sem = 5 THEN ((ac.pourc_sal * dure ) /100 ) / 7 ELSE 0 END) AS vendredi,
         CAST(ROUND(SUM(CASE WHEN cal.jour_sem != 0 AND cal.jour_sem != 6 THEN 1.0 / 7 ELSE 0 END), 0) AS INT) AS nbr_jours
  from absence_consecutive as ac
     INNER JOIN {{ ref("i_pai_tab_cal_jour") }} AS cal 
@@ -193,10 +193,10 @@ abd as ( select
         vendredi,
         reg_abs,
         pourc_sal,
+                    COUNT(*) as events,
         (nbr_jours * ht.heures) / 7 as absence_normalisee,
         CAST(((pourc_sal * SUM(dure)) * nbr_jours) AS FLOAT) / 100.0 AS duree_abs,
-        CAST(((pourc_sal * SUM(dure)) * ((nbr_jours * ht.heures) / 7)) AS FLOAT) / 100.0 AS duree_abs_n,
-        left(abd.corp_empl,4) as asdfsdf
+        CAST(((pourc_sal * SUM(dure)) * ((nbr_jours * ht.heures) / 7)) AS FLOAT) / 100.0 AS duree_abs_n
 FROM abd
 inner join {{ ref('heures_travaillees') }} as ht
 ON ht.cat_emploi = left(abd.corp_empl,1)
@@ -222,49 +222,37 @@ GROUP BY
     ht.heures
 )
 
-select distinct
-            fac.annee,
-            matricule,
-            corp_empl,
-            fac.gr_paie,
-            lieu_trav,
-            group_id,
-            ref_empl,
-           startdate,
-            enddate,
-            total_dure as absence_duree,
-            nbr_jours as absence_jours,
-            absence_normalisee,
-            lundi, mardi, mercredi, jeudi, vendredi,
-            reg_abs,
-            pourc_sal,
-            categories,
-            jr_tr.jour_trav,
-            duree_abs AS absence_jour_duree,
-            duree_abs_n AS absence_jour_duree_normalisee,
-        ROUND(COALESCE(CAST(((pourc_sal * total_dure) * nbr_jours) AS FLOAT) / 100.0, 0) / NULLIF(CAST(jr_tr.jour_trav AS FLOAT), 0),24) AS taux,
-        ROUND(COALESCE(CAST(((pourc_sal * total_dure) * absence_normalisee) AS FLOAT) / 100.0, 0) / NULLIF(CAST(jr_tr.jour_trav AS FLOAT), 0),24) AS taux_normalise
+select 
+    fac.annee,
+    matricule,
+    corp_empl,
+    --fac.gr_paie,
+    lieu_trav,
+    --ref_empl,
+    AVG(total_dure) as absence_duree,
+    SUM(nbr_jours) as absence_jours,
+    --absence_normalisee,
+    SUM(lundi) as lundi_total, 
+    SUM(mardi) as mardi_total, 
+    SUM(mercredi) as mercredi_total, 
+    SUM(jeudi) as jeudi_total, 
+    SUM(vendredi) as vendredi_total,
+    categories,
+    jr_tr.jour_trav,
+    (SUM(pourc_sal * total_dure * nbr_jours) / jour_trav) / 100 AS taux,
+    SUM(duree_abs) AS absence_jour_duree, 
+    SUM(duree_abs) /  SUM(events) as moyenne,
+    SUM(events) AS evenements,
+    SUM(pourc_sal * total_dure * nbr_jours) AS abs
 from test as fac
-        INNER JOIN {{ ref("fact_nbr_jours_travailles") }} AS jr_tr 
-        ON fac.annee = jr_tr.an_budg AND fac.gr_paie = jr_tr.gr_paie
-        --where rn = 1
-        group by
-            fac.annee,
-            fac.matricule,
-            fac.corp_empl,
-            fac.gr_paie,
-            fac.lieu_trav,
-            fac.group_id,
-            fac.ref_empl,
-            fac.startdate,
-            fac.enddate,
-            fac.total_dure,
-            fac.nbr_jours,
-            lundi, mardi, mercredi, jeudi, vendredi,
-            fac.reg_abs,
-            fac.pourc_sal,
-            fac.categories,
-            jr_tr.jour_trav,
-            duree_abs,
-            duree_abs_n,
-            absence_normalisee
+
+    INNER JOIN {{ ref("fact_nbr_jours_travailles") }} AS jr_tr 
+    ON fac.annee = jr_tr.an_budg AND fac.gr_paie = jr_tr.gr_paie
+    group by
+        fac.annee,
+        fac.matricule,
+        fac.corp_empl,
+        fac.lieu_trav,
+        fac.categories,
+        jr_tr.jour_trav
+        
