@@ -147,7 +147,8 @@ with
             id_eco,
             date_evenement,
             grille,
-            datename(weekday, date_evenement) as jour_semaine,
+            FORMAT(date_evenement, 'dddd', 'fr-FR') AS jour_semaine,
+            --datename(weekday, date_evenement) as jour_semaine,
             {% for i in range(1, max_periodes) %}
                 case when max(per_{{ "%02d" % i }}) is null then 0 else 1 end
                 {%- if not loop.last %} +{% endif -%}
