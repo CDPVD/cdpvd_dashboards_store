@@ -1,6 +1,6 @@
 {#
-Dashboards Store - Helping students, one dashboard at a time.
-Copyright (C) 2023  Sciance Inc.
+CDPVD Dashboards store
+Copyright (C) 2024 CDPVD.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
+
 {{ config(post_hook=[core_dashboards_store.stamp_model("dashboard_effectif_css_adultes")]) }}
 
 with
