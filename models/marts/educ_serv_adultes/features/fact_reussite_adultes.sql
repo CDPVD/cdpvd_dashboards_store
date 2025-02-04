@@ -19,19 +19,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 config(
   post_hook=[
     create_clustered_index(
-      "{{ this }}", ["code_perm", "fiche", "annee", "freq", "population", "mat", "grp"]),
+      "{{ this }}", ["code_perm","fiche", "annee", "freq", "population", "mat", "grp"]),
     create_nonclustered_index(
       "{{ this }}", ["noseqmat"])
       ])
 }}
+
 select
-  fac.code_perm,
+  pop.code_perm,
+  pop.population,
   matfpfga.fiche,
   matfpfga.annee,
   matfpfga.freq,
   matfpfga.mat,
   matfpfga.grp,
-  fac.eco_cen,
+  -- fac.eco_cen,
   matfpfga.noseqmat,
   matfpfga.indmatetei,
   matfpfga.grh,
@@ -50,35 +52,36 @@ select
   matele.service,
   matele.res,
   matele.nbhresstage,
-  fac.client,
-  fac.population,
-  fac.interv_age,
-  fac.interv_age_fp,
-  fac.org_hor,
-  fac.descr_org_hor,
-  fac.activform,
-  fac.condadmiss,
-  fac.descr_condadmiss,
-  fac.etat_formation,
-  fac.prog,
-  fac.descr_prog,
-  fac.type_diplome,
-  fac.raison_grat_scol,
-  fac.descr_raison_grat_scol,
-  fac.type_parcours,
-  fac.descr_type_parcours,
-  fac.service_enseign,
-  fac.descr_service_enseign,
-  fac.motif_depart,
-  fac.descr_motif_dep,
-  fac.raison_depart,
-  fac.desc_raison_depart,
+  -- fac.client,
+  -- fac.population,
+  -- fac.interv_age,
+  -- fac.interv_age_fp,
+  -- fac.org_hor,
+  -- fac.descr_org_hor,
+  -- fac.activform,
+  -- fac.condadmiss,
+  -- fac.descr_condadmiss,
+  -- fac.etat_formation,
+  -- fac.prog,
+  -- fac.descr_prog,
+  -- fac.type_diplome,
+  -- fac.raison_grat_scol,
+  -- fac.descr_raison_grat_scol,
+  -- fac.type_parcours,
+  -- fac.descr_type_parcours,
+  -- fac.service_enseign,
+  -- fac.descr_service_enseign,
+  -- fac.motif_depart,
+  -- fac.descr_motif_dep,
+  -- fac.raison_depart,
+  -- fac.desc_raison_depart,
   matd.descrmat
 from {{ ref("i_e_elematfpfga_adultes") }} as matfpfga
-inner join {{ ref("fact_freq_adultes") }} as fac
-  on fac.fiche = matfpfga.fiche
-  and fac.annee = matfpfga.annee
-  and fac.freq = matfpfga.freq
+inner join
+  {{ ref("stg_populations_adultes") }} as pop
+  on pop.fiche = matfpfga.fiche
+  and pop.annee = matfpfga.annee
+  and pop.freq = matfpfga.freq
 inner join {{ ref("i_e_matele_adultes") }} as matele
   on matfpfga.noseqmat = matele.noseqmat
 inner join {{ ref("i_t_mat_adultes") }} as matd
