@@ -197,22 +197,19 @@ select
 	lieu_trav,
 	jr_tr.jour_trav,
 	categories,
-	AVG(total_dure) as absence_duree,
-	SUM(nbr_jours) as absence_jours,
-	SUM(lundi) as lundi_total, 
-	SUM(mardi) as mardi_total, 
-	SUM(mercredi) as mercredi_total, 
-	SUM(jeudi) as jeudi_total, 
-	SUM(vendredi) as vendredi_total,
+	SUM(lundi) as lundi, 
+	SUM(mardi) as mardi, 
+	SUM(mercredi) as mercredi, 
+	SUM(jeudi) as jeudi, 
+	SUM(vendredi) as vendredi,
 	(SUM(pourc_sal * total_dure * nbr_jours) / jour_trav) / 100 AS taux,
 	SUM(duree_abs) AS absence_jour_duree, 
-	SUM(duree_abs) / SUM(events) as moyenne,
 	SUM(events) AS evenements,
 	SUM(pourc_sal * total_dure * nbr_jours) AS abs
 from e3
 
 INNER JOIN {{ ref("fact_nbr_jours_travailles") }} AS jr_tr 
-	ON e3.annee = jr_tr.an_budg AND e3.gr_paie = jr_tr.gr_paie
+	ON e3.annee = jr_tr.annee AND e3.gr_paie = jr_tr.gr_paie
 
 group by
 e3.annee,

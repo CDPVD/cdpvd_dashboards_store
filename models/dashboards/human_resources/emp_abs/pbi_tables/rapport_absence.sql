@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 select 
-	LEFT(abs.annee,4) as annee,
+	concat(LEFT(abs.annee,4),'-',LEFT(abs.annee,4) + 1) as annee,
 	abs.matricule,
 	emp.first_name + ' ' + emp.last_name as nom,
 	emp.sex_friendly_name AS genre,
@@ -42,18 +42,16 @@ select
 	sec.secteur_Descr as secteur,
 	jg.job_group_category as cat_emp,
 	abs.categories,
-	absence_jours,
 	jour_trav,
-	absence_jour_duree,
+	duree_abs,
 	taux,
-	lundi_total, 
-	mardi_total, 
-	mercredi_total, 
-	jeudi_total, 
-	vendredi_total,
-	moyenne,
-evenements,
-abs
+	lundi, 
+	mardi, 
+	mercredi, 
+	jeudi, 
+	vendredi,
+	evenements,
+	abs
 from {{ ref("fact_absence") }} as abs
 
 INNER JOIN {{ ref("dim_employees") }} AS emp 

@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {{ config(alias="fact_abs_cal") }}
 
 select 
-    [an_budg], -- Année budgétaire
+    [an_budg] AS annee, -- Année budgétaire
     [gr_paie], -- Groupe de paie | Pour sélectionner les employés selon leur type d'emploi 
     SUM(
         CASE 
