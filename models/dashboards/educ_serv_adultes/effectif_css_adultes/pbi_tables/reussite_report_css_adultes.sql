@@ -20,11 +20,10 @@ with
   cte
   as
   (
-    SELECT code_perm
-      , population
-      , fiche
-      , annee
-      , freq
+    SELECT fac.code_perm
+      , fac.fiche
+      , fac.annee
+      , fac.freq
       , mat
       , grp
       , noseqmat
@@ -34,24 +33,56 @@ with
       , ordchrono
       , nbhresprev
       , nbminrea
-      , date_fin
+      , facr.date_fin
       , statutprofil
       , resens
-      , date_deb
+      , facr.date_deb
       , annee_sanct
       , mois_sanct
       , jour_sanct
+      , CAST(CONCAT(annee_sanct, '-', 
+                RIGHT(CONCAT('0', mois_sanct), 2), '-', 
+                RIGHT(CONCAT('0', jour_sanct), 2)) AS DATE) AS date_sanct
       , indtransm
       , service
       , case
         when TRY_CAST(res AS INT) >= 60 or res = 'SU' then 'SU'
-        else 'EC'
+        else res
        END as sanc
       , res
       , nbhresstage
       , descrmat
-    FROM {{ ref("fact_reussite_adultes") }}
-    where res !='' and annee = 2024
+      ,fac.eco_cen
+      ,fac.client,
+      fac.population,
+      fac.interv_age,
+      fac.interv_age_fp,
+      fac.org_hor,
+      fac.descr_org_hor,
+      fac.activform,
+      fac.condadmiss,
+      fac.descr_condadmiss,
+      fac.etat_formation,
+      fac.prog,
+      fac.descr_prog,
+      fac.type_diplome,
+      fac.raison_grat_scol,
+      fac.descr_raison_grat_scol,
+      fac.type_parcours,
+      fac.descr_type_parcours,
+      fac.service_enseign,
+      fac.descr_service_enseign,
+      fac.motif_depart,
+      fac.descr_motif_dep,
+      fac.raison_depart,
+      fac.desc_raison_depart
+    FROM {{ ref("fact_reussite_adultes") }} facr
+    inner join {{ ref("fact_freq_adultes") }} as fac
+      on fac.code_perm = facr.code_perm
+      and fac.fiche = facr.fiche
+      and fac.annee = facr.annee
+      and fac.freq = facr.freq
+    where res !=''
   )
 select *
 from cte
