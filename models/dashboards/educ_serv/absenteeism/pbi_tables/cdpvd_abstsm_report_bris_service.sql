@@ -20,6 +20,57 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 {{ config(alias="cdpvd_report_bris_service") }}
 
+{% if execute %}
+    {% set dict = {
+        "grp_rep": "Le groupe repère",
+        "dist": "La distribution",
+        "class": "La classification",
+    } %}
+    {% if "groupe_primaire" in var("dashboards")["absenteeism"] %}
+        {% set groupe_primaire = var("dashboards")["absenteeism"]["groupe_primaire"] %}
+        {{
+            log(
+                "Le groupe primaire sélectionné pour le tableau de bord d'absentéisme est : "
+                ~ dict[groupe_primaire],
+                info=True,
+            )
+        }}
+    {% else %}
+        {% set groupe_primaire = "grp_rep" %}
+        {{
+            log(
+                'La variable "groupe_primaire" est par défaut : '
+                ~ dict[groupe_primaire]
+                ~ ", elle peut être modifié dans le dbt_project pour le tableau de bord d'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.",
+                true,
+            )
+        }}
+    {% endif %}
+
+    {% if "groupe_secondaire" in var("dashboards")["absenteeism"] %}
+        {% set groupe_secondaire = var("dashboards")["absenteeism"][
+            "groupe_secondaire"
+        ] %}
+        {{
+            log(
+                "Le groupe secondaire sélectionné pour le tableau de bord d'absentéisme est : "
+                ~ dict[groupe_secondaire],
+                info=True,
+            )
+        }}
+    {% else %}
+        {% set groupe_secondaire = "dist" %}
+        {{
+            log(
+                'La variable "groupe_secondaire" est par défaut : '
+                ~ dict[groupe_secondaire]
+                ~ ", elle peut être modifié dans le dbt_project pour le tableau de bord d'absentéisme. Les possibilités disponibles sont : grp_rep, dist et class.",
+                true,
+            )
+        }}
+    {% endif %}
+{% endif %}
+
 with
     src as (
         select
@@ -45,6 +96,11 @@ with
             eco.eco,
             ele.fiche,
             concat(ele.nom, ' ', ele.pnom) as full_name,
+            case
+                when ordre_ens = 4
+                then dan.{{ groupe_secondaire }}
+                else dan.{{ groupe_primaire }}
+            end as groupe,
             etape_description,
             event_start_date,
             event_end_date,
@@ -54,6 +110,9 @@ with
             last_remarque
         from src
         join {{ ref("i_gpm_e_ele") }} as ele on src.fiche = ele.fiche
+        join {{ ref("i_gpm_e_dan") }} as dan
+            on src.fiche = dan.fiche
+            and src.id_eco = dan.id_eco
         left join {{ ref("dim_mapper_schools") }} as eco on src.id_eco = eco.id_eco
     )
 
@@ -61,6 +120,7 @@ select
     school_friendly_name,
     fiche,
     full_name,
+    groupe,
     etape_description,
     cast(event_start_date as date) as event_start_date,
     cast(event_end_date as date) as event_end_date,
