@@ -39,22 +39,11 @@ models:
             - id_indicateur
             - id_filtre
 
-  - name: pevr_indicateur_dip_fp
+  - name: pevr_indicateur_dip_fp_charlemagne
     description: >
         Taux d'obtention d'un diplôme en formation professionnelle après 3 ans.
         Donnée provenant de charlemagne.
-        Indicateur '5' de la cpdvd.
-    tests:
-      - core_dashboards_store.resolution:
-          combination_of_columns:
-            - annee_scolaire
-            - id_indicateur
-
-  - name: pevr_indicateur_ehdaa
-    description: >
-        Taux de réussite des EHDAA.
-        Donnée local.
-        Indicateur '3' de la cpdvd.
+        Indicateur '8' de la cpdvd.
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:
@@ -66,7 +55,7 @@ models:
       Proportion d'élèves qui obtiennent entre 70% et 100% à l'épreuve  obligatoire.
       **Code matière et no_compétence modifiable**
       Donnée provenant des BD locaux.
-      Indicateur '4' de la cpdvd
+      Indicateur '4,5,6' de la cpdvd
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:
@@ -98,7 +87,30 @@ models:
             - id_indicateur
             - id_filtre
 
-  - name: pevr_indicateur_masculin
+  - name: pevr_indicateurs_ppp
+    description: >
+        Taux de participation des élèves du secondaire du réseau public  à un projet pédagogique particulier
+        Donnée provenanr des BD locaux.
+        Indicateur '11' de la CDPVD.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - annee_scolaire
+            - id_indicateur
+            - id_filtre
+
+  - name: pevr_indicateur_reussite_ehdaa
+    description: >
+        Taux de réussite des EHDAA.
+        Donnée local.
+        Indicateur '3' de la cpdvd.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - annee_scolaire
+            - id_indicateur
+
+  - name: pevr_indicateur_reussite_garcons
     description: >
         Taux de réussite des garçons.
         Donnée local.
@@ -109,7 +121,7 @@ models:
             - annee_scolaire
             - id_indicateur
 
-  - name: pevr_indicateur_obtention
+  - name: pevr_indicateur_taux_obtention
     description: >
         Taux d'obtention d'un premier diplôme ou d'une première  qualification en 7 ans après l'entrée au secondaire.
         Donnée provenant de charlemagne.
@@ -119,12 +131,3 @@ models:
           combination_of_columns:
             - annee_scolaire
             - id_indicateur
-
-  - name: pevr_indicateurs_ppp
-    description: liste des indicateurs du pevr lié aux projets pédagogiques particuliers.
-    tests:
-      - core_dashboards_store.resolution:
-          combination_of_columns:
-            - annee_scolaire
-            - id_indicateur
-            - id_filtre

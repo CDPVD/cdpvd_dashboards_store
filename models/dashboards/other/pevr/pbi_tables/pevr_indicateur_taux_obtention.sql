@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-{{ config(alias="indicateur_diplomation_7ans") }}
+{{ config(alias="indicateur_taux_obtention") }}
 
 with
     src as (
@@ -33,7 +33,7 @@ with
         inner join
             {{ ref("indicateur_pevr_charl") }} as pevr_charl
             on ind.id_indicateur_cdpvd = pevr_charl.id_indicateur_cdpvd
-        where ind.id_indicateur_cdpvd IN ('1','2','3')  -- 1 - Indicateur du taux d'obtention, 2 - Indicateur du taux des garçons, 3 - Indicateur du taux des EHDAA.
+        where ind.id_indicateur_cdpvd = '1' -- 1 - Indicateur du taux d'obtention
     )
 
 select *

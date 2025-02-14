@@ -32,7 +32,7 @@ with
         inner join
             {{ ref("indicateur_pevr_charl") }} as pevr_charl
             on ind.id_indicateur_cdpvd = pevr_charl.id_indicateur_cdpvd
-        where ind.id_indicateur_cdpvd = '5'  -- Indicateur de la dip formation prof.
+        where ind.id_indicateur_cdpvd = '8'  -- Indicateur de la dip formation prof après 3 ans.
     )
 
 select *
