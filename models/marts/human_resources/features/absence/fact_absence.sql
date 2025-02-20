@@ -33,12 +33,14 @@ e0 AS (
 		absence. [matr] as [matricule], -- Matricule
 		absence. [date], -- Date d'absence
 		absence.mot_abs as motif_abs, -- Motif d'absence
-		[dure] * emp.pourc_sal as [duree], -- Durée en fonction de la tâche de travail
 		absence.lieu_trav as lieu_trav, -- Lieu de travail
 		emp.pourc_sal, -- Pourcentage du salaire
 		emp.gr_paie, -- Groupe de paie
 		absence.corp_empl,
-		dure
+		emp.stat_eng, -- Statut d'engagement
+		dure,
+		CASE WHEN absence.code_pmnt = 103525 THEN 1 ELSE 0 END AS longue_duree,
+		CASE WHEN absence.code_pmnt != 103525 THEN 1 ELSE 0 END AS courte_duree
 	from {{ ref("i_pai_habs") }} as absence
 
 	inner join {{ ref("i_paie_hemp") }} as emp -- Historique des emplois
@@ -60,8 +62,8 @@ e0 AS (
 -- ÉTAPE 1
 ----------------------------------------------------------------------------------------------------
 
-e1 as (
-	select distinct -- ** Vérifier si important
+e1 as(
+	select -- ** Vérifier si important
 		e0.*, -- Tous les champs de fact_liste_absence
 		jour_sem, -- Jour de la semaine (0,1,2,3,4,5,6)
 		ta.categories
@@ -77,6 +79,20 @@ e1 as (
 ),
 
 ----------------------------------------------------------------------------------------------------
+-- ÉTAPE 1.1
+----------------------------------------------------------------------------------------------------
+
+e1_1 as (
+	SELECT 
+		*
+	FROM e1
+	UNPIVOT (
+		valeur FOR type_duree IN (longue_duree, courte_duree)
+	) AS unpvt
+	where valeur != 0
+),
+
+----------------------------------------------------------------------------------------------------
 -- ÉTAPE 2
 ----------------------------------------------------------------------------------------------------
 
@@ -85,11 +101,13 @@ e2 as (
 		annee,
 		matricule,
 		corp_empl,
-		e1.gr_paie,
+		e1_1.gr_paie,
 		lieu_trav,
 		pourc_sal,
 		categories,
 		dure,
+		stat_eng,
+		type_duree,
 		SUM(
 			CASE WHEN cal.jour_sem = 1 
 			THEN ((pourc_sal * dure ) /100 ) / 7 
@@ -125,8 +143,8 @@ e2 as (
 						END
 					), 0
 			) AS INT
-		) AS nbr_jours
-	from e1
+		) AS nbr_jours		
+	from e1_1
 
 	INNER JOIN {{ ref("i_pai_tab_cal_jour") }} AS cal 
 	ON cal.date_jour = date
@@ -135,7 +153,9 @@ e2 as (
 	annee,
 	matricule,
 	corp_empl,
-	e1.gr_paie,
+	e1_1.gr_paie,
+	stat_eng,
+	type_duree,
 	lieu_trav,
 	pourc_sal,
 	categories,
@@ -161,13 +181,11 @@ e3 as (
 		jeudi,
 		vendredi,
 		pourc_sal,
+		type_duree,
 		COUNT(*) as events,
 		SUM(dure) AS total_dure,
 		CAST(((pourc_sal * SUM(dure)) * nbr_jours) AS FLOAT) / 100.0 AS duree_abs
 	FROM e2
-
-	inner join {{ ref('heures_travaillees') }} as ht
-		ON ht.cat_emploi = left(e2.corp_empl,1)
 
 	GROUP BY 
 	annee,
@@ -176,14 +194,14 @@ e3 as (
 	gr_paie,
 	lieu_trav,
 	categories,
+	type_duree,
 	nbr_jours,
 	lundi,
 	mardi,
 	mercredi,
 	jeudi,
 	vendredi,
-	pourc_sal,
-	ht.heures
+	pourc_sal
 )
 
 ----------------------------------------------------------------------------------------------------
@@ -195,17 +213,18 @@ select
 	matricule,
 	corp_empl,
 	lieu_trav,
-	jr_tr.jour_trav,
+	jour_trav,
 	categories,
-	SUM(lundi) as lundi, 
-	SUM(mardi) as mardi, 
-	SUM(mercredi) as mercredi, 
-	SUM(jeudi) as jeudi, 
-	SUM(vendredi) as vendredi,
-	(SUM(pourc_sal * total_dure * nbr_jours) / jour_trav) / 100 AS taux,
-	SUM(duree_abs) AS absence_jour_duree, 
-	SUM(events) AS evenements,
-	SUM(pourc_sal * total_dure * nbr_jours) AS abs
+	lundi,
+	mardi,
+	mercredi,
+	jeudi,
+	vendredi,
+	(pourc_sal * total_dure * nbr_jours) / jour_trav / 100 AS taux,
+	duree_abs, 
+	events AS evenements,
+	(pourc_sal * total_dure * nbr_jours) / 100 AS abs,
+	type_duree
 from e3
 
 INNER JOIN {{ ref("fact_nbr_jours_travailles") }} AS jr_tr 
@@ -213,8 +232,16 @@ INNER JOIN {{ ref("fact_nbr_jours_travailles") }} AS jr_tr
 
 group by
 e3.annee,
-e3.matricule,
-e3.corp_empl,
-e3.lieu_trav,
-e3.categories,
-jr_tr.jour_trav
+matricule,
+corp_empl,
+lieu_trav,
+type_duree,
+categories,
+jour_trav,
+lundi,
+mardi,
+mercredi,
+jeudi,
+vendredi,
+duree_abs,
+events,nbr_jours,total_dure,pourc_sal
