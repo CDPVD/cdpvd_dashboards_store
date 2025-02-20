@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 select
     empr,
     type_empr,
+    motif_fact,
     id_eco,
+    annee,
     solde
 from {{ var("database_gpi") }}.dbo.gpm_n_fact

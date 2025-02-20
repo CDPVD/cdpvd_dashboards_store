@@ -39,69 +39,41 @@ with
     from fgj
     full join fp on fgj.code_perm = fp.code_perm and fgj.annee = fp.annee
 	-- soldes GPI
-	), car_gpi as (
+	), soldes_gpi as (
 		select 
 			fgj.code_perm 
 			, fgj.fiche
 			, fgj.annee
 			, fgj.eco
-			, isnull(sum(f.solde), 0.0) as car_gpi
+			, isnull(sum(f.solde), 0.0) as solde_gpi
         from fgj
-		left join {{ ref("i_gpm_n_fact") }} f on f.empr = fgj.fiche and f.id_eco = fgj.id_eco and f.annee = fgj.annee
+		left join {{ ref("i_gpm_n_fact") }} f on f.empr = fgj.fiche and f.id_eco = fgj.id_eco
         -- BESOIN????
 		--left join [192.168.207.153].[GPIPRIM].dbo.gpm_t_projet p on f.projet = p.projet and f.id_eco = p.id_eco
 		where 
 			f.type_empr = 'E'
-			and f.motif_fact = 'F'
 			-- valider les descr et org (l. 91 à 93)
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
-	), trp_gpi as (
-		select 
-			fgj.code_perm 
-			, fgj.fiche
-			, fgj.annee
-			, fgj.eco
-			, isnull(sum(f.solde), 0.0) as trp_gpi
-        from fgj
-		left join {{ ref("i_gpm_n_fact") }} f on f.empr = fgj.fiche and f.id_eco = fgj.id_eco and f.annee = fgj.annee
-        -- BESOIN????
-		--left join [192.168.207.153].[GPIPRIM].dbo.gpm_t_projet p on f.projet = p.projet and f.id_eco = p.id_eco
-		where 
-			f.type_empr = 'E'
-			and f.motif_fact = 'A'
-			-- valider les descr et org (l. 91 à 93)
-		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
+	
 	-- soldes AG
-	), car_ag as (
+	), soldes_ag as (
 		select 
 			fgj.code_perm 
 			, fgj.fiche
 			, fgj.annee
 			, fgj.eco
-			, isnull(sum(f.solde), 0.0) as car_ag
+			, isnull(sum(cdan.sum_solde_fac_cour), 0.0) as car_ag
+			, isnull(sum(cdan.trop_percu_an_cour), 0.0) as tp_ag
+			, isnull(sum(cdan.sum_solde_fac_cour-cdan.trop_percu_an_cour), 0.0) as solde_ag
         from fgj
-		left join {{ ref("i_sdg_eco") }} s on fgj.eco = s.eco
-		left join {{ ref("i_sdg_e_fact") }} f on f.fiche = fgj.fiche and f.id_sdg = s.id_sdg AND f.annee = fgj.annee
-		
-		-- valider les ecos (l. 112)
-		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
-	), trp_ag as (
-		select 
-			fgj.code_perm 
-			, fgj.fiche
-			, fgj.annee
-			, fgj.eco
-			, isnull(sum(tp.MNT), 0.0) as trp_ag
-        from fgj
-		left join {{ ref("i_sdg_eco") }} s on fgj.eco = s.eco
-		left join {{ ref("i_sdg_e_trop_percus") }} tp on tp.fiche = fgj.fiche and tp.id_sdg = s.id_sdg AND tp.annee = fgj.annee
-		
+		left join {{ ref("i_sdg_e_dan") }} as dan on dan.fiche = fgj.fiche and dan.id_sdg = fgj.eco AND dan.annee = fgj.annee
+		left join {{ ref("i_sdg_e_cumul_dan") }} as cdan on cdan.fiche = dan.fiche and cdan.id_sdg = dan.id_sdg and cdan.annee = dan.annee
 		-- valider les ecos (l. 112)
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 
 	-- soldes PROCURE
     -- le cast force les fiches a etre des varchar car mes fiche FP/FGA le sont et sinon ca pete (cas specifique vdc)
-	), car_proc as (
+	), soldes_proc as (
 		select 
 			fp.code_perm 
 			--, left(fp.fiche, charindex('_', fp.fiche)-1) as fiche
@@ -129,18 +101,17 @@ select
     perim.annee,
     perim.eco
 	-- GPI
-	, sum(isnull(car_gpi.car_gpi, 0.0)) as car_gpi
-	, sum(isnull(trp_gpi.trp_gpi, 0.0)) as trp_gpi
+	, sum(isnull(gpi.solde_gpi, 0.0)) as solde_gpi
 	-- AG
-	, sum(isnull(car_ag.car_ag, 0.0)) as car_ag
-	, sum(isnull(trp_ag.trp_ag, 0.0)) as trp_ag
+	, sum(isnull(ag.car_ag, 0.0)) as car_ag
+	, sum(isnull(ag.tp_ag, 0.0)) as tp_ag
+	, sum(isnull(ag.solde_ag, 0.0)) as solde_ag
 	-- PROCURE
-	, sum(isnull(car_proc.car_fpfga, 0.0)) as car_fpfga
-
+	, sum(isnull(prc.car_fpfga, 0.0)) as car_fpfga
+	, sum(isnull(prc.tp_fpfga, 0.0)) as tp_fpfga
+	, sum(isnull(prc.solde_fpfga, 0.0)) as solde_fpfga
 from perim
-left join car_gpi on car_gpi.code_perm = perim.code_perm and car_gpi.annee = perim.annee and car_gpi.eco = perim.eco
-left join trp_gpi on trp_gpi.code_perm = perim.code_perm and trp_gpi.annee = perim.annee and trp_gpi.eco = perim.eco
-left join car_ag on car_ag.code_perm = perim.code_perm and car_ag.annee = perim.annee and car_ag.eco = perim.eco
-left join trp_ag on trp_ag.code_perm = perim.code_perm and trp_ag.annee = perim.annee and trp_ag.eco = perim.eco
-left join car_proc on car_proc.code_perm = perim.code_perm and car_proc.annee = perim.annee and car_proc.eco = perim.eco
+left join soldes_gpi as gpi on gpi.code_perm = perim.code_perm and gpi.annee = perim.annee and gpi.eco = perim.eco
+left join soldes_ag as ag on ag.code_perm = perim.code_perm and ag.annee = perim.annee and ag.eco = perim.eco
+left join soldes_proc as prc on prc.code_perm = perim.code_perm and prc.annee = perim.annee and prc.eco = perim.eco
 group by perim.code_perm, perim.annee, perim.eco
