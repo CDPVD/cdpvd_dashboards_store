@@ -120,7 +120,7 @@ select
     school_friendly_name,
     fiche,
     full_name,
-    groupe,
+    coalesce(groupe, '-') as groupe,
     etape_description,
     cast(event_start_date as date) as event_start_date,
     cast(event_end_date as date) as event_end_date,

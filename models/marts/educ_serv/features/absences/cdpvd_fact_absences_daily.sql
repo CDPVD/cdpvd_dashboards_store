@@ -166,7 +166,7 @@ with
             src.id_eco,
             src.code_matiere,
             src.grille,
-            src.groupe,
+            coalesce(groupe, '-') as groupe,
             grid.jour_semaine,
             src.is_absence,
             src.n_periods_events,

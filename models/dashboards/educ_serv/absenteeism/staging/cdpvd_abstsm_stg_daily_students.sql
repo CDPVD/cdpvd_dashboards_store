@@ -130,7 +130,7 @@ with
         select
             base.fiche,
             base.id_eco,
-            coalesce(base.groupe, '-') as groupe,
+            coalesce(groupe, '-') as groupe,
             base.date_debut,
             base.date_depart,
             base.grille,
