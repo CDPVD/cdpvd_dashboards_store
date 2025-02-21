@@ -113,7 +113,7 @@ with
 			, isnull(sum(f.depot_paye), 0.0) as depot_paye_fpfga
 			, isnull(sum(f.solde), 0.0) as solde_fpfga
         from fp
-		left join {{ ref("i_pro_art_emprunt") }} as f on try_cast(f.code_emprunt as int) = fp.fiche and f.eco_cen = fp.eco and f.annee = fp.annee
+		left join {{ ref("i_pro_art_emprunt") }} as f on f.code_emprunt = try_cast(fp.fiche as nvarchar) and f.eco_cen = fp.eco and f.annee = fp.annee
 		--BESOIN????
         --left join [192.168.207.153].[PROCCRIF].dbo.PRO_PAIEMNT as c on c.code_emprunt = cast(fp.fiche as nvarchar(7)) and c.ecocen = fp.eco
 		where 
