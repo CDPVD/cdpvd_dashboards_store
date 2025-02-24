@@ -86,7 +86,6 @@ with cte as
       and fac.annee = facr.annee
       and fac.freq = facr.freq
     inner join {{ ref("dim_eleve_adultes") }} as el on el.code_perm = facr.code_perm
-    where res !=''
   )
 select *
 from cte
