@@ -299,7 +299,7 @@ cssxx_store:
   target: dev
   outputs:
     dev:
-      type: sqlserver
+      type: fabric
       driver: 'ODBC Driver 17 for SQL Server'
       server: <your server's IP >
       port: <your server's port>
@@ -417,7 +417,7 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 | [emp_actif](#empl_actif) | List all employees currently enroled in the CSS | (CSSSDGS) Nicolas Pham |
 | [effectif_css](#effectif_css) | Track the population count in each school in the CSS | (CSSVT) Frédéryk Busque , Mohamed Sadqi (CSSVDC)
 | [retirement](#retirement) | Tracks the number of retired employees by job categories and workplace. Forecast, for up to five years, the number of retiring employees | (Sciance) Hugo Juhel
-| [chronic_absenteeism](#chronic_absenteeism) | Display general metrics abunt the student's absenteeism assessed through the number of days with at least one absence for every students. | (Sciance) Hugo Juhel
+| [absenteeism](#absenteeism) | Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | (Sciance) Hugo Juhel, Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
 
 
 > The following section describe the specific for each dashboard. Bear with me, we are gonna drill down into the specifics of each dashboard ! Stay focused ! In each of the following section, you will learn how to tame a specific dashboard.
@@ -813,57 +813,48 @@ models:
 ```
 
 > This dashboard requiers the specification of the `human_resources` seeds.
-### Chronic_absenteeism
-> Display general metrics about the student's absenteeism assessed through the number of days with at least one absence for every students. | (Sciance) Hugo Juhel
+### Absentéisme 
+> Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | (Sciance) Hugo Juhel, Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
 
 | Interfaces  | Marts 	| Marts seeds     | Dashboard seeds | Additional config |
 |-------------|---------|-----------------|-----------------| ------------------|
-| gpi         |educ_serv|NO             	| No              | Yes 	              |
+| gpi         |educ_serv|Non             	| Non              | Oui 	              |
 
-##### Populating the marts
-> This dashboard requiers the definition of the specicied population in the `educ_serv` mart. 
+##### Déploiement
 
-The marts must be populated in `cssXX.data.tbe/models/marts/educ_serv/populations/` and as per the definition of the `core.data.tbe/marts/educ_serv/adapters.yml`.
+:badge[tag:absenteeism]{type="success"}
+:badge[new in v0.11.0]
 
-#### Dbt project specification
-> Update your `cssxx_tbe/dbt_project.yml` file with the following snippet
+repartition_brackets## Bases de données
 
-```yaml
-# cssXX.data.tbe/dbt_project.yml
-models:
-    tbe:
-        marts:
-            educ_serv:
-                +enabled: True                  
-        dashboards:                                   
-            chronic_absenteeism:
-                +enabled: True
-        interfaces:
-            gpi:
-                +enabled: True
-```
+La base de données `gpi` doit être liée au projet. Veuillez vous référer à la section [linking a database](/using/configuration/databases) pour plus d'informations sur la façon de lier une base de données.
 
-#### Additional configuration
-> These steps are optional. 
+##### Marts
 
-##### Overriding the default list of tracked courses
-> By default, the dashboard will group up absences using the brackets from `core.data.tbe/seeds/dashboard/chronic_absenteeism/repartition_brackets.csv`
+Les marts suivants doivent être activés pour que le tableau de bord fonctionne. Veuillez vous référer à la section [enabling a mart](/using/configuration/enabling) pour plus d'informations sur la façon d'activer un mart.
 
-To get a custom bracketing strategy, you can provide your own implementation of `repartition_brackets`. To do so :
-1. Write a CSV file named `repartition_brackets` in the `cssXX.data.dbe/seeds/dashboards/chronic_absenteeism` folder populated as per the `core.data.tbe/seeds/dashboards/chronic_absenteis,/schema.yml`'s definition.
-2. Disable the default seed by using the the following snippet in your `dbt_project.yml` file : 
+- `educ_serv`
+
+##### RLS
+
+Les tables `report_filters` et `report_bris_de_service` exposent les variables `id_eco` et `eco` comme hook RLS.
+Toutes les tables de rapport sauf  `report_bris_de_serve` dépendent de la table `report_filters`, donc en ajoutant RLS à la table `report_filters`, toutes les autres tables seront filtrées en conséquence.
+
+##### Variable
+
+Le tableau de bord utilise deux sortes de variables qui permettent de personnaliser le nombre d'année à prendre en compte dans la visualisation des données et les champs à utiliser pour identifier les groupes au primaire et secondaire. 
+
+Pour surcharger la valeur par défaut des deux variables, il faut spécifier la valeur des deux variables dans votre fichier `cssxx_store/dbt_project.yml`: 
 
 ```yaml
-#cssXX.data.dbe/dbt_project.yml
-seeds:
-  tbe:
+# cssXX.data.store/dbt_project.yml
+vars:
     dashboards:
-      chronic_absenteeism:
-        repartition_brackets:
-          +enabled: False
+        absenteeism:
+            groupe_primaire: votre_groupe
+            groupe_secondaire: votre_groupe
+            nbre_annee_a_extraire: votre_nombre_annee
 ```
-
-__When overriding the repartition bracket, you will need to manualy update the `lorenz` measures from the Dahsboard's concentration page.__
 
 # Developer guidelines
 
