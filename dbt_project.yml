@@ -68,6 +68,7 @@ models:
                     - "mart_human_resources"
                 +schema: human_resources
                 features:
+                    +schema: human_resources_features                
                 staging:
                     +schema: human_resources_staging
             educ_serv:
@@ -96,6 +97,15 @@ models:
                         pbi_tables:
                             +post-hook:
                                 - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
+            human_resources:                        
+                retirement:
+                    +tags: ["retirement"]
+                    +schema: "dashboard_retirement"
+                    pbi_tables:
+                        +post-hook:
+                            - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
+          
+
         interfaces:
             +materialized: ephemeral
 
