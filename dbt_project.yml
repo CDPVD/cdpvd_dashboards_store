@@ -61,8 +61,10 @@ models:
     # This code block can be safely overriden in the cssXX_dashboards_store.
     # There is no need for code duplication here
     cdpvd_dashboards_store:
+        +enabled: false
         +materialized: table
         marts:
+            #+enabled: true
             human_resources:
                 +tags:
                     - "human_resources"
@@ -82,6 +84,7 @@ models:
                     +schema: educ_serv_staging
 
         dashboards:
+            #+enabled: true
             educ_serv:
                 absenteeism:
                     +tags: ["absenteeism"]
@@ -108,6 +111,7 @@ models:
           
 
         interfaces:
+            +enabled: true
             +materialized: ephemeral
 
 vars:

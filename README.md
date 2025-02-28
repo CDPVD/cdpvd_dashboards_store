@@ -6,7 +6,7 @@
 
 1 - Il faut clôner le répertoire suivant: https://github.com/CDPVD/cdpvd_dashboards_store.
 
-2 - Il faut configurer votre dbt_project dans votre répertoire cssxx_dashboards_store selon le gabarit suivant:
+2 - Le répertoire cdpvd_dashboards_store est désactivé par défaut. Il faut activer les comptoirs et TDBs que vous voulez avoir en configurant votre dbt_project dans votre répertoire cssxx_dashboards_store selon le gabarit suivant:
 
 ```bash
 name: cssxxx_dashboards_store
@@ -91,6 +91,29 @@ models:
                     +enabled: false
         rls:
             +enabled: false
+
+    cdpvd_dashboards_store:
+        marts:
+            human_resources:
+                +enabled: false/true
+            educ_serv:
+                +enabled: false/true
+        dashboards:
+            other:
+                pevr:
+                    +enabled: false/true
+                    pbi_tables:
+                        +enabled: false/true                             
+        interfaces:
+            gpi:
+                i_gpm_e_dan:
+                    +enabled: true
+                i_gpm_e_abs:
+                    +enabled: true                         
+            jade:
+                +enabled: true
+            jade_adultes:
+                +enabled: true
 
         cssxxx_dashboards_store:
             +materialized: table # The default materialization for all models in this project
