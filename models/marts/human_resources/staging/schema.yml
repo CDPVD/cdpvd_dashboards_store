@@ -1,0 +1,30 @@
+
+
+version: 2
+
+models:
+  - name: cdpvd_stg_seniority
+    config:
+      tags:
+        - human_resources
+    description: this table contains de seniority of each employes
+      
+    columns:
+      - name: school_year
+        description: The school year (from september the first to august the 31 of the following year) for which the status mapping is valid.
+        tests:
+          - not_null
+      - name: matr
+        description: The unique identifier of an employee.
+        tests:
+          - not_null
+
+      - name: job_group_category
+        description: The job group
+
+      - name: running_experience
+        description: the running experience
+
+      - name: valid_until
+        description: the date valid unitl.
+ 
