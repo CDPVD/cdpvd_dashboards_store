@@ -8,7 +8,7 @@ models:
       Une séquence d'absences correspond à un ensemble de jours d'école consécutifs avec au moins une absence chaque jour.
       Une séquence d'absences est caractérisée par sa date de début, sa date de fin et les absences dans cette séquence.
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - school_year
             - fiche

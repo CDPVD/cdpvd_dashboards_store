@@ -21,7 +21,7 @@ models:
         tests:
           - not_null
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - matr
             - school_year
@@ -51,7 +51,7 @@ models:
       - name: is_main_job
         description: Is the employment the main job of the employee for the given school year ?
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - matr
             - school_year

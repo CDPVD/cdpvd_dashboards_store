@@ -22,7 +22,7 @@ models:
       tags:
         - retirement
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - school_year
             - job_group_category

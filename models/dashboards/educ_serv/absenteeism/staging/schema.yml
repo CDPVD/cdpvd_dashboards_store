@@ -6,7 +6,7 @@ models:
       Une table de padding identifiant par année, école et grille les jours de calendrier actifs.
       La table de padding est ensuite utilisée comme colonne vertébrale pour calculer le taux quotidien, même en cas d'absence.
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - id_eco
             - date_evenement
@@ -19,7 +19,7 @@ models:
   - name: cdpvd_abstsm_stg_daily_metrics
     description: Le taux d'absence quotidien et le nombre d'élèves actifs.
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - annee
             - groupe
@@ -32,7 +32,7 @@ models:
   - name: cdpvd_abstsm_stg_daily_students
     description: Calculer le nombre quotidien d'élèves actifs.
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - date_evenement
             - id_eco

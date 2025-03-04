@@ -6,7 +6,7 @@ models:
     description: >
       Table auxiliaire sélectionnant les raisons d'absences et de retards que vous souhaitez inclure dans le calcul.
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - id_eco
             - motif_abs

@@ -10,7 +10,7 @@ models:
     description: >
       Table de fait pour la population adulte 
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - fiche
             - code_perm
