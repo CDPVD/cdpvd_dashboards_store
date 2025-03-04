@@ -6,7 +6,7 @@ models:
       Aggregated data about retirement age.
       Drill-down by engagement status, worplace, job category, and employment status.
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - genre
             - school_year
@@ -21,7 +21,7 @@ models:
       The number of active employees by age group.
       Drill-down by engagement status, worplace, job category, and employment status.
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - genre
             - etat
@@ -40,7 +40,7 @@ models:
       The set of filters to be applied on the report.
       This table exists because of a double granularity difference between the report_retirement_age and the report_active_employees_age tables.
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - genre
             - employment_status_name
