@@ -52,6 +52,7 @@ with cte as
       , nbhresstage
       , descrmat
       ,fac.eco_cen
+      ,fac.bat
       ,fac.client,
       fac.population,
       fac.interv_age,
