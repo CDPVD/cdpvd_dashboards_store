@@ -25,7 +25,7 @@ models:
       tags:
         - educ_serv_adultes
         - populations_adultes
-        - effectif_css_adultes
+        - reussite_adultes
       schema: dashboard_effectif_css_adultes
     description: >
         Table de rapports qui comptabilise la population adulte au sein du CSS selon le centre, le batisse, l'année, l'état de la formation, le type de parcours, le genre et le motif/raison de départ.
@@ -35,7 +35,7 @@ models:
       tags:
         - educ_serv_adultes
         - populations_adultes
-        - effectif_css_adultes
+        - reussite_adultes
       schema: dashboard_effectif_css_adultes
     description: >
         Table de rapports qui comptabilise la population adulte au sein du CSS selon le centre, le batisse, l'année, l'état de la formation, le type de parcours, le genre et le motif/raison de départ.
