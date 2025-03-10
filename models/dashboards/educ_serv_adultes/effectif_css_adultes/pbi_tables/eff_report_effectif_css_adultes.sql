@@ -33,7 +33,7 @@ with
       age_30_septembre,
       org,
       eco_cen,
-      [Nom du centre],
+      nom_centre,
       bat,
       org_hor,
       descr_org_hor,
@@ -62,14 +62,14 @@ with
   inner join {{ ref("dim_eleve_adultes") }} as el on el.code_perm = fac.code_perm
   )
 select
-  [Nom du centre],
+  nom_centre,
   client,
   prenom_nom,
   code_perm,
   fiche,
   population,
   annee as Année,
-  concat(annee, '-', annee + 1)as [Année scolaire],
+  concat(annee, '-', annee + 1)as annnee_scolaire,
   freq,
   age_30_juin,
   age_30_septembre,
@@ -79,31 +79,31 @@ select
   org_hor,
   interv_age,
   interv_age_fp,
-  ActivForm [Groupe horaire],
+  ActivForm as groupe_horaire,
   CondAdmiss,
-  concat (CondAdmiss, ' - ', descr_condadmiss) as [Condition d'admission],
-  descr_org_hor as [Organisation horaire],
-  etat_formation as [Etat de la Formation],
+  concat (CondAdmiss, ' - ', descr_condadmiss) as condition_admission,
+  descr_org_hor as organisation_horaire,
+  etat_formation as etat_formation,
   genre as Genre,
   lang_matern as lang_matern,
-  desc_lang_matern as [Langue maternelle],
+  desc_lang_matern as langue_maternelle,
   prog,
   case
     when descr_prog is null then descr_prog
     else concat (prog, ' - ', descr_prog )
   end as Programme,
-  type_diplome as [Type de diplôme],
+  type_diplome,
   raison_grat_scol,
-  descr_raison_grat_scol as [Raison de gratuité scolaire],
+  descr_raison_grat_scol,
   type_parcours,
-  concat (type_parcours, ' - ', descr_type_parcours) as [Type de parcours],
+  concat (type_parcours, ' - ', descr_type_parcours) as desc_type_parcours,
   service_enseign,
   case
     when descr_service_enseign is null then descr_service_enseign
     else concat (service_enseign, ' - ', descr_service_enseign )
-  end as [Service enseignement],
+  end as service_enseignement,
   motif_depart,
-  descr_motif_dep as [Motif de départ],
+  descr_motif_dep,
   raison_depart,
-  desc_raison_depart as [Raison de départ]
+  desc_raison_depart
 from agg
