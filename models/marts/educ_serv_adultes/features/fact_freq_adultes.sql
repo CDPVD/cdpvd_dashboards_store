@@ -33,7 +33,7 @@ with
       pop.population,
       pop.annee,
       pop.freq,
-      concat('(',freq.eco_cen,') - ',centre.descr) as [Nom du centre],
+      concat('(',freq.eco_cen,') - ',centre.descr) as nom_centre,
       floor(
           datediff(
               day,
@@ -126,7 +126,7 @@ select
   population,
   annee,
   freq,
-  [Nom du centre],
+  nom_centre,
   case
     when age_30_juin < 16 then '- de 16 ans'
     when age_30_juin BETWEEN 16 and 17 then '16-17 ans'

@@ -38,12 +38,17 @@ with cte as
       , annee_sanct
       , mois_sanct
       , jour_sanct
-      , CAST(CONCAT(annee_sanct, '-', 
+      , case 
+        when res = '' or res is null 
+        then null 
+        else CAST(CONCAT(annee_sanct, '-', 
                 RIGHT(CONCAT('0', mois_sanct), 2), '-', 
-                RIGHT(CONCAT('0', jour_sanct), 2)) AS DATE) AS date_sanct
+                RIGHT(CONCAT('0', jour_sanct), 2)) AS DATE)
+        end as date_sanct
       , indtransm
       , service
       , case
+        when res = '' then null
         when TRY_CAST(res AS INT) >= 60 or res = 'SU' then 'SU'
         when TRY_CAST(res AS INT) < 60 then 'EC'
         else res
@@ -87,7 +92,7 @@ with cte as
       and fac.annee = facr.annee
       and fac.freq = facr.freq
     inner join {{ ref("dim_eleve_adultes") }} as el on el.code_perm = facr.code_perm
-    where res !=''
+    -- where res !=''
   )
 select *
 from cte
