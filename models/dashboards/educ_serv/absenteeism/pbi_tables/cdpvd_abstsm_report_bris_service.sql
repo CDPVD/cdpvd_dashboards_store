@@ -84,8 +84,7 @@ with
             event_kind,
             coalesce(etape_description, 'inconnue') as etape_description
         from {{ ref("cdpvd_fact_absences_sequence") }}
-        where
-            school_year = {{ core_dashboards_store.get_current_year() }}  -- Only consider the current school year
+        where school_year = {{ core_dashboards_store.get_current_year() }}  -- Only consider the current school year
 
     -- Add some metadata to better identify the sutdent
     ),
@@ -110,7 +109,8 @@ with
             last_remarque
         from src
         join {{ ref("i_gpm_e_ele") }} as ele on src.fiche = ele.fiche
-        join {{ ref("i_gpm_e_dan") }} as dan
+        join
+            {{ ref("i_gpm_e_dan") }} as dan
             on src.fiche = dan.fiche
             and src.id_eco = dan.id_eco
         left join {{ ref("dim_mapper_schools") }} as eco on src.id_eco = eco.id_eco
