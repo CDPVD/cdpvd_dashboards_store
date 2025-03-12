@@ -50,12 +50,35 @@ models:
             - annee_scolaire
             - id_indicateur
 
-  - name: pevr_indicateurs_epreuves
+  - name: pevr_indicateur_epreuve_2ES
     description: >
-      Proportion d'élèves qui obtiennent entre 70% et 100% à l'épreuve  obligatoire.
-      **Code matière et no_compétence modifiable**
+      Proportion d'élèves qui obtiennent entre 70% et 100% à l'épreuve obligatoire secondaire 2 écriture.
       Donnée provenant des BD locaux.
-      Indicateur '4,5,6' de la cpdvd
+      Indicateur '6' de la cpdvd
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - annee_scolaire
+            - id_indicateur
+            - id_filtre
+
+  - name: pevr_indicateur_epreuve_4LP
+    description: >
+      Proportion d'élèves qui obtiennent entre 70% et 100% à l'épreuve  obligatoire primaire 4 lecture.
+      Donnée provenant des BD locaux.
+      Indicateur '4' de la cpdvd
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - annee_scolaire
+            - id_indicateur
+            - id_filtre
+
+  - name: pevr_indicateur_epreuve_6MP
+    description: >
+      Proportion d'élèves qui obtiennent entre 70% et 100% à l'épreuve obligatoire primaire 6 résoudre.
+      Donnée provenant des BD locaux.
+      Indicateur '5' de la cpdvd
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:

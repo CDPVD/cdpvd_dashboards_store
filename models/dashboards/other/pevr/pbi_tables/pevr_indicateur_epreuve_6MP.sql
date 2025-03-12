@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-{{ config(alias="indicateur_epreuves") }}
+{{ config(alias="indicateur_epreuves_6MP") }}
 
 
 with
@@ -69,7 +69,7 @@ with
             between {{ core_dashboards_store.get_current_year() }}
             - 3 and {{ core_dashboards_store.get_current_year() }}
             and etape = 'EX'
-            and id_indicateur_cdpvd in ('4','5','6')  -- Au cas-où qu'on utilise le champs code_matière pour d'autre indicateur
+            and id_indicateur_cdpvd in ('5')  -- Au cas-où qu'on utilise le champs code_matière pour d'autre indicateur
     ),
 
     agg as (
