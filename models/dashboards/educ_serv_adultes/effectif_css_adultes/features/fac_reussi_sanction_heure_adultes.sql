@@ -21,7 +21,9 @@ with cte as
     SELECT fac.code_perm
       , fac.fiche
       , fac.annee
+      , concat(fac.annee, '-', fac.annee + 1)as annnee_scolaire
       , fac.freq
+      , fac.nom_centre
       , mat
       , grp
       , noseqmat
@@ -66,16 +68,25 @@ with cte as
       fac.descr_org_hor,
       fac.activform,
       fac.condadmiss,
+      concat (fac.condadmiss, ' - ', fac.descr_condadmiss) as condition_admission,
       fac.descr_condadmiss,
       fac.etat_formation,
       fac.prog,
+      case
+        when descr_prog is null then descr_prog
+        else concat (prog, ' - ', descr_prog )
+      end as Programme,
       fac.descr_prog,
       fac.type_diplome,
       fac.raison_grat_scol,
       fac.descr_raison_grat_scol,
       fac.type_parcours,
-      fac.descr_type_parcours,
+      concat (type_parcours, ' - ', descr_type_parcours) as desc_type_parcours,
       fac.service_enseign,
+      case
+        when descr_service_enseign is null then descr_service_enseign
+        else concat (service_enseign, ' - ', descr_service_enseign )
+      end as service_enseignement,
       fac.descr_service_enseign,
       fac.motif_depart,
       fac.descr_motif_dep,
