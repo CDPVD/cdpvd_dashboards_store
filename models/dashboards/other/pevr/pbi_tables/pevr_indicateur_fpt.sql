@@ -99,8 +99,8 @@ with
             id_indicateur,
             description_indicateur,
             count(fiche) nb_resultat,
-            cast(avg(ind_obtention) as decimal(5, 3)) as taux_qualification_fpt,
-            cast(((avg(ind_obtention)) - cible) as decimal(5, 3)) as ecart_cible,
+            cast(avg(ind_obtention) as decimal(5, 2)) as taux_qualification_fpt,
+            cast(((avg(ind_obtention)) - cible) as decimal(5, 2)) as ecart_cible,
             cible
         from _filtre
         group by
@@ -141,6 +141,7 @@ select
     annee_scolaire,
     nb_resultat,
     taux_qualification_fpt,
+    CONCAT(taux_qualification_fpt * 100, ' (', nb_resultat, ' El.) ') AS taux_nbEleve,
     ecart_cible,
     cible,
     {{

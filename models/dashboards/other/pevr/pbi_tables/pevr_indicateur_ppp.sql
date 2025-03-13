@@ -88,7 +88,7 @@ with
             description_indicateur,
             sum(is_ppp) as nb_ppp,
             avg(is_ppp) as taux_ppp,
-            cast(((avg(is_ppp)) - cible) as decimal(5, 3)) as ecart_cible,
+            cast(((avg(is_ppp)) - cible) as decimal(5, 2)) as ecart_cible,
             cible
         from ind_pevr
         group by
@@ -129,6 +129,7 @@ select
     annee_scolaire,
     nb_ppp,
     taux_ppp,
+    CONCAT(taux_ppp * 100, ' (', nb_ppp, ' El.) ') AS taux_nbEleve,
     ecart_cible,
     cible,
     {{
