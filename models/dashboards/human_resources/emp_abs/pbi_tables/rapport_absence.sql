@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 select 
 	concat(LEFT(abs.annee,4),'-',LEFT(abs.annee,4) + 1) as annee,
 	abs.matricule,
-	emp.first_name + ' ' + emp.last_name as nom,
+	emp.legal_name as 'nom',
 	emp.sex_friendly_name AS genre,
 	CASE
 		WHEN DATEDIFF(year, emp.birth_date, CAST(LEFT(annee, 4) + '-07-01' AS DATE)) < 25 

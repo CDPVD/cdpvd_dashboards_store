@@ -63,7 +63,7 @@ e0 AS (
 ----------------------------------------------------------------------------------------------------
 
 e1 as(
-	select -- ** Vérifier si important
+	select 
 		e0.*, -- Tous les champs de fact_liste_absence
 		jour_sem, -- Jour de la semaine (0,1,2,3,4,5,6)
 		ta.categories
