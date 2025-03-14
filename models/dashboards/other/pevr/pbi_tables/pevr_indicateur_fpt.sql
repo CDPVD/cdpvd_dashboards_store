@@ -141,7 +141,7 @@ select
     annee_scolaire,
     nb_resultat,
     taux_qualification_fpt,
-    CONCAT(taux_qualification_fpt * 100, ' (', nb_resultat, ' El.) ') AS taux_nbEleve,
+    CONCAT(taux_qualification_fpt * 100, ' (', nb_resultat, ' él.) ') AS taux_nbEleve,
     ecart_cible,
     cible,
     {{

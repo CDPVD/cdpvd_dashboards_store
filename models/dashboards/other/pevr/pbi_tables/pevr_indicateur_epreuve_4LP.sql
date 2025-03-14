@@ -128,7 +128,7 @@ select
     annee_scolaire,
     nb_resultat,
     taux_maitrise,  -- Possibilité d'avoir un null à cause du res_etape_num peut être nulle. A voir.
-    CONCAT(taux_maitrise * 100, ' (', nb_resultat, ' El.) ') AS taux_nbEleve,
+    CONCAT(taux_maitrise * 100, ' (', nb_resultat, ' él.) ') AS taux_nbEleve,
     ecart_cible,  -- Même affaire.
     cible,
     {{
