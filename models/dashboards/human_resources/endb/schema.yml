@@ -1,0 +1,68 @@
+﻿version: 2
+
+models:
+  - name: pbi_endb_rapport
+    description: >
+      Table qui permet d'afficher les données des enseignant(e)s actifs.
+    columns:
+      - name: matricule
+        description: Matricule de l'employé.
+        tests:
+          - not_null
+      - name: nom_legal
+        description: Nom légal de l'employé.
+        tests:
+          - not_null
+      - name: genre
+        description: Genre de l'employé.
+        tests:
+          - not_null
+      - name: tranche_age
+        description: Tranche d'âge de l'employé.
+        tests:
+          - not_null
+      - name: lieu_principal
+        description: Description du lieu de travail principal de l'employé.
+        tests:
+          - not_null 
+      - name: corp_empl
+        description: Description du corps d'emploi de l'employé.
+        tests:
+          - not_null
+      - name: qualification
+        description: Qualification / certification de l'employé.
+        tests:
+          - not_null
+      - name: etat_empl
+        description: Description de l'état d'emploi de l'employé.
+        tests:
+          - not_null
+      - name: femme
+        description: Nombre de femmes.
+      - name: homme
+        description: Nombre d'hommes.
+      - name: edb
+        description: Nombre d'enseignant(e)s qualifié(e)s.
+      - name: endb
+        description: Nombre d'enseignant(e)s non qualifié(e)s.        
+      - name: statut_enseignant
+        description: Statut de l'enseignant (Titulaire, Suppléant, Remplaçant).
+        tests:
+          - not_null
+      - name: ordre_Ens
+        description: Secteur d'enseignement (FGA, FP, FGJ).
+        tests:
+          - not_null
+
+    tests: 
+      - core_dashboards_store.resolution: 
+          combination_of_columns: 
+            - matricule
+            - nom_legal
+            - tranche_age
+            - lieu_principal
+            - corp_empl
+            - qualification
+            - etat_empl
+            - statut_enseignant
+            - ordre_Ens
