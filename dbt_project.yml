@@ -101,13 +101,22 @@ models:
                         pbi_tables:
                             +post-hook:
                                 - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
-            human_resources:                        
+            human_resources: 
+                +enabled: true
                 retirement:
                     +tags: ["retirement"]
                     +schema: "dashboard_retirement"
                     pbi_tables:
                         +post-hook:
                             - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
+                endb:
+                    +tags: ["endb"]
+                    +schema: "dashboard_endb"
+                    pbi_tables:
+                        +post-hook:
+                            [
+                                "{{ core_dashboards_store.stamp_model('endb') }}",
+                            ]                                     
           
 
         interfaces:
