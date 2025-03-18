@@ -16,9 +16,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
-{% set years_of_data_student = var("marts")["educ_serv"]["recency"][
-    "years_of_data_student"
-] %}
+{% if "years_of_data_student" in var("marts")["educ_serv"]["recency"] %}
+    {% set years_of_data_student = var("marts")["educ_serv"]["recency"]["years_of_data_student"] %}
+{% else %}
+    {% set years_of_data_student = 10 %}
+{% endif %}
+ 
 
 with
     step1 as (
