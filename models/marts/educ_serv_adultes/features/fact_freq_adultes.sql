@@ -66,6 +66,7 @@ with
           when freq.date_fin_sifca is null or freq.date_fin_sifca = '' then 'En cours'
           else 'Terminé'
       END as etat_formation,
+      freq.indtransm,
       freq.prog,
       prog.descr_prog,
       prog.type_diplome,
@@ -149,6 +150,11 @@ select
   eco_cen,
   bat,
   org_hor,
+  case
+    when indtransm = 1 then 'Transmissible'
+    when indtransm = 0 then 'Non-transmissible'
+    else null
+  END as indtransm,
   descr_org_hor,
   date_deb,
   date_fin_sifca,

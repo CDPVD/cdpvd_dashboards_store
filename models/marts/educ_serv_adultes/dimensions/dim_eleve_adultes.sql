@@ -28,6 +28,7 @@ select
     max(el.ind_lieu_naissance_n) as ind_lieu_naissance_n,
     max(el.lang_matern) as lang_matern,
     max(wlt.cf_descr) as desc_lang_matern,
+    max(adr.ville) as ville,
     max(
         case
             when el.genre = 'F'
@@ -39,6 +40,7 @@ select
     ) as genre
 from {{ ref("stg_populations_adultes") }} as pop
 inner join {{ ref("i_e_ele_adultes") }} as el on pop.code_perm = el.code_perm
+left join {{ ref("i_e_adr_adultes") }} as adr on pop.fiche = adr.fiche and adr.envoimeq = '1' and adr.date_fin =''
 left join
     {{ ref("i_t_wl_descr_adultes") }} wlt
     on wlt.code = el.lang_matern
