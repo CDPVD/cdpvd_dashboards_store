@@ -17,25 +17,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 select
     fiche,
-    annee,
-    datedeb as date_deb,
-    datefin as date_fin,
-    statut,
-    org,
-    ecocen as eco_cen,
-    bat,
-    client,
-    freq,
-    prog,
-    ActivForm,
-    CondAdmiss,
-    serviceenseign as service_enseign,
-    orghor as org_hor,
-    typeactiv as type_activ,
-    datefinsifca as date_fin_sifca,
-    motifdep as motif_depart,
-    raisondepart as raison_depart,
-    raisongratscol as raison_grat_scol,
-    typeparcours as type_parcours,
-    indtransm
-from {{ var("database_jade_adultes") }}.dbo.e_freq
+    typeadr,
+    genrerue
+    ,rue
+    ,app
+    ,ville
+    ,casierpost
+    ,prov
+    ,codepost
+    ,pays
+    ,envoimeq
+    ,datefin date_fin
+from {{ var("database_jade_adultes") }}.dbo.e_adr
