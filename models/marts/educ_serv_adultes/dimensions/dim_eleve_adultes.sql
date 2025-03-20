@@ -29,6 +29,7 @@ select
     max(el.lang_matern) as lang_matern,
     max(wlt.cf_descr) as desc_lang_matern,
     max(adr.ville) as ville,
+    max(adr.codepost) as codepost,
     max(
         case
             when el.genre = 'F'
