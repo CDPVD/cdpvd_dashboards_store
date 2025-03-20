@@ -47,7 +47,7 @@ with cte as
                 RIGHT(CONCAT('0', mois_sanct), 2), '-', 
                 RIGHT(CONCAT('0', jour_sanct), 2)) AS DATE)
         end as date_sanct
-      , indtransm
+      , facr.indtransm
       , service
       , case
         when res = '' then null
