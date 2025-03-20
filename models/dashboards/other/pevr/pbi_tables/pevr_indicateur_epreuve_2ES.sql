@@ -86,8 +86,8 @@ with
             distribution,
             code_matiere,
             count(fiche) nb_resultat,
-            cast(avg(is_maitrise) as decimal(5, 2)) as taux_maitrise,
-            cast(((avg(is_maitrise)) - cible) as decimal(5, 2)) as ecart_cible
+            CAST(ROUND(AVG(is_maitrise), 4) AS FLOAT) AS taux_maitrise,
+            CAST(ROUND(AVG(is_maitrise) - cible, 3) AS FLOAT) AS ecart_cible
         from src
         group by
             id_indicateur,
@@ -128,7 +128,7 @@ select
     annee_scolaire,
     nb_resultat,
     taux_maitrise,  -- Possibilité d'avoir un null à cause du res_etape_num peut être nulle. A voir.
-    CONCAT(taux_maitrise * 100, ' (', nb_resultat, ' él.) ') AS taux_nbEleve,
+    CONCAT(taux_maitrise * 100, '% (', nb_resultat, ' él.) ') AS taux_nbEleve,
     ecart_cible,  -- Même affaire.
     cible,
     {{
