@@ -15,7 +15,12 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-
-{{ config(post_hook=[core_dashboards_store.stamp_model("dashboard_effectif_css_adultes")]) }}
+{{
+    config(
+        post_hook=[
+            core_dashboards_store.stamp_model("dashboard_effectif_css_adultes")
+        ]
+    )
+}}
 
 SELECT * FROM {{ ref("fac_reussi_sanction_heure_adultes") }} facr
