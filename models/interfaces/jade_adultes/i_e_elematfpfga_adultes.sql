@@ -16,20 +16,20 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 select
-  fiche
-  ,annee
-  ,freq
-  ,mat
-  ,grp
-  ,ecocen as eco_cen
-  ,noseqmat
-  ,indmatetei
-  ,grh
-  ,disc
-  ,ordchrono
-  ,nbhresprev
-  ,nbminrea
-  ,datefin as date_fin
-  ,statutprofil
-  ,resens
+    fiche,
+    annee,
+    freq,
+    mat,
+    grp,
+    ecocen as eco_cen,
+    noseqmat,
+    indmatetei,
+    grh,
+    disc,
+    ordchrono,
+    nbhresprev,
+    nbminrea,
+    datefin as date_fin,
+    statutprofil,
+    resens
 from {{ var("database_jade_adultes") }}.dbo.e_elematfpfga

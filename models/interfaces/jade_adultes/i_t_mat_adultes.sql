@@ -16,19 +16,19 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 select
-  mat
-  ,descrmat
-  ,descrabregee
-  ,credit
-  ,genreform
-  ,regimesanct
-  ,typecred
-  ,seuilreuss
-  ,nbhrestheo
-  ,nbhresrev
-  ,siglesimca
-  ,typecours
-  ,anneecycle
-  ,secteurform
-  ,descrmatlongue
+    mat,
+    descrmat,
+    descrabregee,
+    credit,
+    genreform,
+    regimesanct,
+    typecred,
+    seuilreuss,
+    nbhrestheo,
+    nbhresrev,
+    siglesimca,
+    typecours,
+    anneecycle,
+    secteurform,
+    descrmatlongue
 from {{ var("database_jade_adultes") }}.dbo.t_mat
