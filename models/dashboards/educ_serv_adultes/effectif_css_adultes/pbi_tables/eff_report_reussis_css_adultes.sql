@@ -15,9 +15,14 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
+{{
+    config(
+        post_hook=[
+            core_dashboards_store.stamp_model("dashboard_effectif_css_adultes")
+        ]
+    )
+}}
 
-{{ config(post_hook=[core_dashboards_store.stamp_model("dashboard_effectif_css_adultes")]) }}
-
-select * 
+select *
 from {{ ref("eff_report_effectif_css_adultes") }} as fac
-where raison_depart in (22,12,04,02)
+where raison_depart in (22, 12, 04, 02)
