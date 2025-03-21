@@ -18,14 +18,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 select
     fiche,
     typeadr,
-    genrerue
-    ,rue
-    ,app
-    ,ville
-    ,casierpost
-    ,prov
-    ,codepost
-    ,pays
-    ,envoimeq
-    ,datefin date_fin
+    genrerue,
+    rue,
+    app,
+    ville,
+    casierpost,
+    prov,
+    codepost,
+    pays,
+    envoimeq,
+    datefin date_fin
 from {{ var("database_jade_adultes") }}.dbo.e_adr

@@ -16,20 +16,20 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 select
-  fiche
-  ,annee
-  ,freq
-  ,mat
-  ,grp
-  ,datedeb as date_deb
-  ,anneesanct as annee_sanct
-  ,moissanct as mois_sanct
-  ,joursanct as jour_sanct
-  ,indtransm
-  ,etat
-  ,service
-  ,res
-  ,noseqmat
-  ,dateinscriptionres
-  ,nbhresstage
+    fiche,
+    annee,
+    freq,
+    mat,
+    grp,
+    datedeb as date_deb,
+    anneesanct as annee_sanct,
+    moissanct as mois_sanct,
+    joursanct as jour_sanct,
+    indtransm,
+    etat,
+    service,
+    res,
+    noseqmat,
+    dateinscriptionres,
+    nbhresstage
 from {{ var("database_jade_adultes") }}.dbo.e_matele
