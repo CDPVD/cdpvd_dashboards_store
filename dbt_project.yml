@@ -88,3 +88,4 @@ vars:
     dashboards:
         res_epreuves:
             cod_css: replaceme # The code of the CSS to use for the res_epreuves dashboard. A regex like placeholder. Something like '866%'
+
