@@ -176,11 +176,19 @@ with
 			adr_mere,
 			adr_tuteur
 		from {{ ref("eleves_contacts_adresses") }}
+	), 
+
+	statuts as (
+		select dan.fiche, eco.eco, eco.annee, dan.statut_don_an from {{ ref("i_gpm_e_dan") }} dan
+		inner join {{ ref("i_gpm_t_eco") }} eco on dan.id_eco = eco.id_eco
 	)
 
 -- REQUETE FINALE
 select 
     perim.code_perm,
+	st.statut_don_an,
+	ele.nom,
+	ele.pnom,
 	string_agg(perim.fiche, ', ') AS fiche, -- pour considerer les eleves avec 1 CP, 2 fiches la meme annee
     perim.annee,
     perim.eco,
@@ -208,6 +216,8 @@ select
 	, sum(isnull(trp_proc.trp_proc, 0.0)) as trp_proc
 
 from perim
+inner join {{ ref("i_gpm_e_ele") }} ele on ele.fiche = perim.fiche
+left join statuts st on st.fiche = perim.fiche and st.eco = perim.eco and st.annee = perim.annee
 left join car_gpi on car_gpi.code_perm = perim.code_perm and car_gpi.annee = perim.annee and car_gpi.eco = perim.eco
 left join trp_gpi on trp_gpi.code_perm = perim.code_perm and trp_gpi.annee = perim.annee and trp_gpi.eco = perim.eco
 left join car_ag on car_ag.code_perm = perim.code_perm and car_ag.annee = perim.annee and car_ag.eco = perim.eco
@@ -215,7 +225,7 @@ left join trp_ag on trp_ag.code_perm = perim.code_perm and trp_ag.annee = perim.
 left join car_proc on car_proc.code_perm = perim.code_perm and car_proc.annee = perim.annee and car_proc.eco = perim.eco
 left join trp_proc on trp_proc.code_perm = perim.code_perm and trp_proc.annee = perim.annee and trp_proc.eco = perim.eco
 left join contacts c on perim.fiche = c.fiche
-group by perim.code_perm, perim.annee, perim.eco,
+group by perim.code_perm, st.statut_don_an, ele.nom, ele.pnom, perim.annee, perim.eco,
 c.nom_pere,
 c.pnom_pere,
 c.adr_electr_pere,
