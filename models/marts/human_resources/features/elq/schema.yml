@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: cdpvd_fact_elq_liste
+    description: >
+      Table permettant de comptabiliser le nombre d'enseignant(e)s qui sont qualifiés pour enseigner.
+    columns:
+      - name: matr
+        description: Matricule de l'employé
+        tests:
+          - not_null
+      - name: etat_empl
+        description: État d'emploi de l'employé
+        tests:
+          - not_null
+      - name: workplace
+        description: Lieu de travail de l'employé
+        tests:
+          - not_null
+      - name: stat_eng
+        description: Statut d'engagement de l'emploi de l'employé
+        tests:
+          - not_null
+      - name: corp_empl
+        description: Corp d'emploi de l'employé
+        tests:
+          - not_null
+      - name: type_qualif
+        description: Qualification de l'enseignant(e)
+        tests:
+          - not_null          
+    tests: 
+      - core_dashboards_store.resolution: 
+          combination_of_columns: 
+            - matr
+            - etat_empl
+            - workplace
+            - stat_eng
+            - corp_empl
+            - type_qualif

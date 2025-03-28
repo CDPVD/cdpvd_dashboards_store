@@ -1,6 +1,183 @@
+# cdpvd_dashboards_store
 
-# Core.store
-> Helping students, one dashboard at a time.
+---
+
+### Étapes pour l'intégration du magasin:
+
+1 - Il faut clôner le répertoire suivant: https://github.com/CDPVD/cdpvd_dashboards_store.
+
+2 - Le répertoire cdpvd_dashboards_store est désactivé par défaut. Il faut activer les comptoirs et TDBs que vous voulez avoir en configurant votre dbt_project dans votre répertoire cssxx_dashboards_store selon le gabarit suivant:
+
+```bash
+name: cssxxx_dashboards_store
+profile: [votre profil]
+
+version: "1.0.0"
+config-version: 2
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+    - "target"
+    - "dbt_packages"
+
+on-run-start:
+    - "{{ core_dashboards_store.init_metadata_table() }}"
+on-run-end:
+    - "{{ core_dashboards_store.purge_metadata_table() }}"
+
+seeds:
+    ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
+    # >>> BEGIN
+    core_dashboards_store:
+        +enabled: true
+    ### <<< END
+    cdpvd_dashboards_store:
+
+models:
+    core_dashboards_store:
+        +enabled: true
+        marts:
+            human_resources:
+                features:
+                staging:
+            educ_serv:
+                features:
+                staging:
+
+        dashboards:
+            human_resources:
+                +enabled: false
+# >>> Activer ou désactiver les tableaux que vous voulez avec un true ou un false
+            educ_serv:
+                effectif_css:
+                    +enabled: True
+                res_epreuves:
+                    +enabled: True
+                res_scolaires:
+                    +enabled: True
+                suivi_resultats:
+                    +enabled: True
+                chronic_absenteeism:
+                    +enabled: True
+                absenteeism:
+                    +enabled: True
+                predictive_view_aggregated:
+                    +enabled: True
+
+        interfaces:
+            prodrome:
+                +enabled: True
+            paie:
+                +enabled: True
+            gpi:
+                +enabled: true
+                # >>> Overridden by cdpvd_dashboards_store
+                i_gpm_e_dan:
+                    +enabled: false
+            jade:
+                +enabled: True
+                # >>> Overridden by cdpvd_dashboards_store
+                i_e_ri_mentions:
+                    +enabled: false
+                # >>> Overridden by cdpvd_dashboards_store
+                i_t_prog:
+                    +enabled: false
+        rls:
+            +enabled: false
+
+    cdpvd_dashboards_store:
+        marts:
+            human_resources:
+                +enabled: false/true
+            educ_serv:
+                +enabled: false/true
+        dashboards:
+            other:
+                pevr:
+                    +enabled: false/true
+                    pbi_tables:
+                        +enabled: false/true                             
+        interfaces:
+            gpi:
+                i_gpm_e_dan:
+                    +enabled: true
+                i_gpm_e_abs:
+                    +enabled: true                         
+            jade:
+                +enabled: true
+            jade_adultes:
+                +enabled: true
+
+        cssxxx_dashboards_store:
+            +materialized: table # The default materialization for all models in this project
+            interfaces:
+                +materialized: ephemeral # Interface's data schould not be duplicated
+
+vars:
+    # As the code is excuted from the inherited repo, sources schould behave as if there were refs.
+    is_context_core: false
+
+    # The source database to pull the data for a css.
+    database_bi: "[SERVEUR_IP].[BI_DISTRIBUTION]"
+    database_paie: "[SERVEUR_IP].[PAIE]"
+    database_gpi: "[SERVEUR_IP].[GPIP]"
+    database_jade: "[SERVEUR_IP].[JADE]"
+    database_prodrome: "[SERVEUR_IP]"
+
+    interfaces:
+        gpi:
+            max_etapes: 30 # Must be set to the number of etapes, as found in gpm_t_obj_mat_grp
+            max_periodes: 20 # Must be set to the number of periodes, as identified in gpm_t_cal
+
+    marts:
+        educ_serv:
+            recency:
+                years_of_data_absences: 10 # How many years of data to keep for the 'absences' centric dashboards.
+                years_of_data_grades: 10 # How many years of data to keep for the 'grades' centric dashboards.
+
+    dashboards:
+        res_epreuves:
+            cod_css: 866%
+```
+
+3 - Modifiez le contenu du fichier packages.yml en s'inspirant de l'exemple suivant: 
+
+```bash
+
+packages:
+  # - local: ../cdpvd_dashboards_store (On choisi cette option si on veut exécuter la version local)
+  # - git: git@github.com:CDPVD/cdpvd_dashboards_store.git (On cette option si on veut exécuter la version en ligne en précisant la version)
+  #   revision: [Choisir la version]
+
+```
+
+4 - Se déplacer dans le répertoire cdpvd_dashboards_store et exécuter les commandes suivantes: 
+
+```bash
+
+-> poetry shell
+-> poetry install
+
+```
+
+5 - Se déplacer dans le répertoire cssxx_dashboard_store et exécuter les commandes suivants:
+
+```bash
+
+-> dbt clean
+-> dbt deps
+
+```
+
+---
+
 
 ## README's readme : read-it before anythinge else
 
@@ -67,12 +244,12 @@ The `readme` is organized as follow :
 
 ## A tale of two repos
 
-> Once upon a time, in the CdeP, a little `core.data.store` repo was born. The repo tried very hard to provide ETLs for all the CSS belonging to the CdeP. But the CSS were many and the SQL capabilites to retrofit itself to the CSS's context were few. So the `core.data.store` repo decided to split itself into many little repos, one for each CSS.And the `cssXX.data.store` repo was born. And the `cssXX.data.store` repo was granted the power to override anything from `core.data.store`. And the `core.data.store` repo was happy. And the `cssXX.data.store` repo was happy. And the CdeP was happy. And they all merged develop into master happily ever after. 
+> Once upon a time, in the CdeP, a little `cdpvd_dashboards_store` repo was born. The repo tried very hard to provide ETLs for all the CSS belonging to the CdeP. But the CSS were many and the SQL capabilites to retrofit itself to the CSS's context were few. So the `cdpvd_dashboards_store` repo decided to split itself into many little repos, one for each CSS.And the `cssXX.data.store` repo was born. And the `cssXX.data.store` repo was granted the power to override anything from `cdpvd_dashboards_store`. And the `cdpvd_dashboards_store` repo was happy. And the `cssXX.data.store` repo was happy. And the CdeP was happy. And they all merged develop into master happily ever after. 
 
-The moral of the story is that the `core.data.store` repo is the parent repo of all the `cssXX.data.store` repos. The `core.data.store` repo contains all the ETLs that are common to all the CSS. The `cssXX.data.store` repo contains all the ETLs' code that are specific to the CSS XX. I you have already been exposed to some Object-Oriented Programing, the `core.data.store` repo is the parent class and the `cssXX.data.store` repo is the child class. Yes, that's that simple.
+The moral of the story is that the `cdpvd_dashboards_store` repo is the parent repo of all the `cssXX.data.store` repos. The `cdpvd_dashboards_store` repo contains all the ETLs that are common to all the CSS. The `cssXX.data.store` repo contains all the ETLs' code that are specific to the CSS XX. I you have already been exposed to some Object-Oriented Programing, the `cdpvd_dashboards_store` repo is the parent class and the `cssXX.data.store` repo is the child class. Yes, that's that simple.
 
 Hence every CSS will end WITH TWO REPOS : 
-* `core.data.store` : the parent repo providing sensitive default for all CSS
+* `cdpvd_dashboards_store` : the parent repo providing sensitive default for all CSS
 * `cssXX.data.store` : the child repo containing the ETLs specifics to the CSS XX
   * `XX` schould be replaced with the friendly name of your CSS (ex: cssdgs.data.store for Des-Grandes-Seigneuries)
 
@@ -92,11 +269,11 @@ We have got you covered, there is `cookiecutter` template ready for you to use.
 1. Create a templated repo from the core's template
 
 ```bash
-# Assuming you are in the <working_directory>, containing the `core.data.store` cloned repo
-cd core.data.store
+# Assuming you are in the <working_directory>, containing the `cdpvd_dashboards_store` cloned repo
+cd cdpvd_dashboards_store
 poetry shell & poetry install
 cd ../
-cookiecutter core.data.store/template/
+cookiecutter cdpvd_dashboards_store/template/
 ```
 
 2. Git-init the repo you have just created 
@@ -121,7 +298,7 @@ git push -u origin master
 We assume the reader as already set-up :
 * A working computer from the last decade (or a Potato (a Minitel won't work) connected to internet with a screen and a keyboard)
 * A working environement with `Python`, `Pyodbc`, `Poetry`, `wsl2` as per the wiki
-* The two repositories `core.data.store` and `cssXX.data.store` cloned on his computer in the `<working directory>` of his choice. 
+* The two repositories `cdpvd_dashboards_store` and `cssXX.data.store` cloned on his computer in the `<working directory>` of his choice. 
   * The *Tale of two repos* explains why you need two repos : the core is common, the child is specific to your CSS. If you haven't read it yet, do-it ! It's a nice bedtime story.
 
 
@@ -131,7 +308,7 @@ We assume the reader as already set-up :
 * Activate an configure the _Poetry_ environement with the following snippet and install the required dependencies
 
 ```bash
-cd <working_directory>/core.data.store
+cd <working_directory>/cdpvd_dashboards_store
 poetry shell
 poetry install
 ```
@@ -145,7 +322,7 @@ cssxx_store:
   target: dev
   outputs:
     dev:
-      type: sqlserver
+      type: fabric
       driver: 'ODBC Driver 17 for SQL Server'
       server: <your server's IP >
       port: <your server's port>
@@ -163,7 +340,7 @@ cssxx_store:
 > The ETLs schould be executed **from** your **css** package/project. 
 
 **Why schould ETLs being executed from your CSS repo ?**
-Remember the *Tale of Two Repos* and how little `cssXX.data.store` was granted the right to override everything ? Well that's it ! Since you are executing the ETLs from `cssXX.data.store` what you are overriding in your CSS WILL HAVE PRIORITY OVER what is defined in `core.data.store` **Including what you are defining in `<working_directory>/cssXX.data.store/dbt_project.yml`**. That's the magic of the `dbt_project.yml` file.
+Remember the *Tale of Two Repos* and how little `cssXX.data.store` was granted the right to override everything ? Well that's it ! Since you are executing the ETLs from `cssXX.data.store` what you are overriding in your CSS WILL HAVE PRIORITY OVER what is defined in `cdpvd_dashboards_store` **Including what you are defining in `<working_directory>/cssXX.data.store/dbt_project.yml`**. That's the magic of the `dbt_project.yml` file.
 
 Let's get wild and run the ETL, with the following snippet :
 
@@ -200,7 +377,7 @@ models:
 * ETLs won't run well if there is no data for them to transform.
 * In the `store`, raw datas are accessed through `interfaces`.
 * By default, interfaces expects data to be exposed through *linked server*. If your CSS doesn't expose it's data through linked server, you will have to override the interfaces, in your `cssXX.data.store` repo.
-* Interfaces are implemented in the `core.data.store` as a basic `SELECT * FROM my_table`.
+* Interfaces are implemented in the `cdpvd_dashboards_store` as a basic `SELECT * FROM my_table`.
 * Interfaces have for sole purpose to be overrided to fit the way your CSS exposes it's data.
 
 
@@ -263,7 +440,7 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 | [emp_actif](#empl_actif) | List all employees currently enroled in the CSS | (CSSSDGS) Nicolas Pham |
 | [effectif_css](#effectif_css) | Track the population count in each school in the CSS | (CSSVT) Frédéryk Busque , Mohamed Sadqi (CSSVDC)
 | [retirement](#retirement) | Tracks the number of retired employees by job categories and workplace. Forecast, for up to five years, the number of retiring employees | (Sciance) Hugo Juhel
-| [chronic_absenteeism](#chronic_absenteeism) | Display general metrics abunt the student's absenteeism assessed through the number of days with at least one absence for every students. | (Sciance) Hugo Juhel
+| [absenteeism](#absenteeism) | Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | (Sciance) Hugo Juhel, Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
 
 
 > The following section describe the specific for each dashboard. Bear with me, we are gonna drill down into the specifics of each dashboard ! Stay focused ! In each of the following section, you will learn how to tame a specific dashboard.
@@ -280,13 +457,13 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 #### Populating the `source`
 > This dashboard requiers the specification of the source file in your `cssXX.data.store` project.
 
-The source's code must be populated in `cssXX.data.store/models/dashboards/transport/staging/trnsprt_stg_sectors.sql` and as per the definition of the `core.data.store/models/dashboards/transport/adapters.yml` file. Your file must be aliased to `stg_sectors`. Please, add the following config cartouche at the top of your file.
+The source's code must be populated in `cssXX.data.store/models/dashboards/transport/staging/trnsprt_stg_sectors.sql` and as per the definition of the `cdpvd_dashboards_store/models/dashboards/transport/adapters.yml` file. Your file must be aliased to `stg_sectors`. Please, add the following config cartouche at the top of your file.
 
 ```sql
 {{ config(alias='stg_sectors') }}
 ```
 
-Please refer to the `core.data.store/models/dashboards/transport/adapters.yml`file to get the concrete implementation of the file. Make sure your implementation matches the one described in the file, including for the columns data types. 
+Please refer to the `cdpvd_dashboards_store/models/dashboards/transport/adapters.yml`file to get the concrete implementation of the file. Make sure your implementation matches the one described in the file, including for the columns data types. 
 
 #### Dbt project specification
 > Update your `cssxx_store/dbt_project.yml` file with the following snippet.
@@ -477,9 +654,9 @@ dbt seed --full-refresh
 ##### Populating the marts seed
 > This dashboard requiers the specification of the seeds in the `human_resources` mart.  
 
-The seed must be populated in `cssXX.data.store/seeds/marts/human_resources/` and as per the definition of the `core.data.store/seeds/marts/human_resources/schema.yml` mart. 
+The seed must be populated in `cssXX.data.store/seeds/marts/human_resources/` and as per the definition of the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart. 
 
-Please refer to the `core.data.store/seeds/marts/human_resources/schema.yml` mart documentation to get the concrete implementation.
+Please refer to the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart documentation to get the concrete implementation.
 
 Do not forget to refresh your seeds with the `dbt seeds --select tag:human_resources --full-refresh` command.
 
@@ -499,7 +676,7 @@ models:
 ```
 
 ##### Using the Report builder: empl_actif.rdl
-> An SSRS report is available to export the list of active employees of the CSS. The `emp_actif.rdl` can be found in a `core.data.store/reporting/emp_actif/emp_actif.rdl`
+> An SSRS report is available to export the list of active employees of the CSS. The `emp_actif.rdl` can be found in a `cdpvd_dashboards_store/reporting/emp_actif/emp_actif.rdl`
 
 ### suivi_resultats
 > Monitor the grades of students (s1 to s3) in maths and french . The dashboard displays, for each students currently enrolled in s1 to s3, the history of it's grades for all courses belonging to the same group of courses (maths or french). The dashboard conditionally renders the student status. Only the last grade for a given course code is taken into considerations.
@@ -539,10 +716,10 @@ vars:
 > These steps are optional. 
 
 ##### Overriding the default list of tracked courses
-> By default, the dashboard will only monitor the courses listed in `core.data.store/seeds/dashboard/suivi_resultats/tracked_courses.csv`
+> By default, the dashboard will only monitor the courses listed in `cdpvd_dashboards_store/seeds/dashboard/suivi_resultats/tracked_courses.csv`
 
 You can provide your own implementation of `tracked_courses`. To do so :
-1. Write a CSV file named `tracked_courses` in the `cssXX.data.dbe/seeds/dashboards/suivi_resultats` folder populated as per the `core.data.store/seeds/dashboards/suivi_resultats/schema.yml`'s definition.
+1. Write a CSV file named `tracked_courses` in the `cssXX.data.dbe/seeds/dashboards/suivi_resultats` folder populated as per the `cdpvd_dashboards_store/seeds/dashboards/suivi_resultats/schema.yml`'s definition.
 2. Disable the default seed by using the the following snippet in your `dbt_project.yml` file : 
 
 ```yaml
@@ -558,7 +735,7 @@ seeds:
 __When overriding the tracked courses, you might want to override the tracked level as well.__
 
 ##### Overriding the default list of tracked levels
-> This step is optional. By default, the dashboard will only monitor the students currently enrolled in the livels listed in `core.data.store/seeds/dashboards/suivi_resultats/tracked_level.csv`
+> This step is optional. By default, the dashboard will only monitor the students currently enrolled in the livels listed in `cdpvd_dashboards_store/seeds/dashboards/suivi_resultats/tracked_level.csv`
 
 You can provide you own list of `tracked_levels`. If, for instance, you add a new tracked course in sec 4, you will want to add the level 4 to the list of tracked levels. To do so, just write a CSV file named `tracked_levels` in the `cssXX/seeds/dashboards/suivi_resultats` folder and disable the default one by adding the following line in your `dbt_project.yml` file.
 
@@ -583,9 +760,9 @@ seeds:
 ##### Populating the marts seed
 > This dashboard requiers the specification of the seeds in the `human_resources` mart.  
 
-The seed must be populated in `cssXX.data.store/seeds/marts/human_resources/` and as per the definition of the `core.data.store/seeds/marts/human_resources/schema.yml` mart. 
+The seed must be populated in `cssXX.data.store/seeds/marts/human_resources/` and as per the definition of the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart. 
 
-Please refer to the `core.data.store/seeds/marts/human_resources/schema.yml` mart documentation to get the concrete implementation.
+Please refer to the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart documentation to get the concrete implementation.
 
 Do not forget to refresh your seeds with the `dbt seeds --select tag:human_resources --full-refresh` command.
 
@@ -614,7 +791,7 @@ models:
 ##### Populating the marts
 > This dashboard requiers the definition of a specicied population in the `educ_serv` mart.
 
-The marts must be populated in `cssXX.data.store/models/marts/educ_serv/populations/` and as per the definition of the `core.data.store/marts/educ_serv/adapters.yml`.
+The marts must be populated in `cssXX.data.store/models/marts/educ_serv/populations/` and as per the definition of the `cdpvd_dashboards_store/marts/educ_serv/adapters.yml`.
 
 In order to build your population, you must define for each population the business rules for the previous years, including the current year, and for the forecast year. 
 
@@ -656,60 +833,59 @@ models:
     interfaces:
       paie:
         +enabled: True
-```
 
-> This dashboard requiers the specification of the `human_resources` seeds.
-### Chronic_absenteeism
-> Display general metrics about the student's absenteeism assessed through the number of days with at least one absence for every students. | (Sciance) Hugo Juhel
-
-| Interfaces  | Marts 	| Marts seeds     | Dashboard seeds | Additional config |
-|-------------|---------|-----------------|-----------------| ------------------|
-| gpi         |educ_serv|NO             	| No              | Yes 	              |
-
-##### Populating the marts
-> This dashboard requiers the definition of the specicied population in the `educ_serv` mart. 
-
-The marts must be populated in `cssXX.data.tbe/models/marts/educ_serv/populations/` and as per the definition of the `core.data.tbe/marts/educ_serv/adapters.yml`.
-
-#### Dbt project specification
-> Update your `cssxx_tbe/dbt_project.yml` file with the following snippet
-
-```yaml
-# cssXX.data.tbe/dbt_project.yml
-models:
-    tbe:
-        marts:
-            educ_serv:
-                +enabled: True                  
-        dashboards:                                   
-            chronic_absenteeism:
-                +enabled: True
-        interfaces:
-            gpi:
-                +enabled: True
-```
-
-#### Additional configuration
-> These steps are optional. 
-
-##### Overriding the default list of tracked courses
-> By default, the dashboard will group up absences using the brackets from `core.data.tbe/seeds/dashboard/chronic_absenteeism/repartition_brackets.csv`
-
-To get a custom bracketing strategy, you can provide your own implementation of `repartition_brackets`. To do so :
-1. Write a CSV file named `repartition_brackets` in the `cssXX.data.dbe/seeds/dashboards/chronic_absenteeism` folder populated as per the `core.data.tbe/seeds/dashboards/chronic_absenteis,/schema.yml`'s definition.
-2. Disable the default seed by using the the following snippet in your `dbt_project.yml` file : 
+2. Le mois de référence pour le début de l'année
 
 ```yaml
 #cssXX.data.dbe/dbt_project.yml
-seeds:
-  tbe:
-    dashboards:
-      chronic_absenteeism:
-        repartition_brackets:
-          +enabled: False
+vars:
+    # Le mois de référence pour le début de l'année -- Indiquez en 2 caractères comme, 01, 02, 03, ..., 10, 11, 12
+    mois_reference: #indiquez le mois de votre année scolaire
 ```
 
-__When overriding the repartition bracket, you will need to manualy update the `lorenz` measures from the Dahsboard's concentration page.__
+> This dashboard requiers the specification of the `human_resources` seeds.
+### Absentéisme 
+> Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | (Sciance) Hugo Juhel, Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
+
+| Interfaces  | Marts 	| Marts seeds     | Dashboard seeds | Additional config |
+|-------------|---------|-----------------|-----------------| ------------------|
+| gpi         |educ_serv|Non             	| Non              | Oui 	              |
+
+##### Déploiement
+
+:badge[tag:absenteeism]{type="success"}
+:badge[new in v0.11.0]
+
+repartition_brackets## Bases de données
+
+La base de données `gpi` doit être liée au projet. Veuillez vous référer à la section [linking a database](/using/configuration/databases) pour plus d'informations sur la façon de lier une base de données.
+
+##### Marts
+
+Les marts suivants doivent être activés pour que le tableau de bord fonctionne. Veuillez vous référer à la section [enabling a mart](/using/configuration/enabling) pour plus d'informations sur la façon d'activer un mart.
+
+- `educ_serv`
+
+##### RLS
+
+Les tables `report_filters` et `report_bris_de_service` exposent les variables `id_eco` et `eco` comme hook RLS.
+Toutes les tables de rapport sauf  `report_bris_de_serve` dépendent de la table `report_filters`, donc en ajoutant RLS à la table `report_filters`, toutes les autres tables seront filtrées en conséquence.
+
+##### Variable
+
+Le tableau de bord utilise deux sortes de variables qui permettent de personnaliser le nombre d'année à prendre en compte dans la visualisation des données et les champs à utiliser pour identifier les groupes au primaire et secondaire. 
+
+Pour surcharger la valeur par défaut des deux variables, il faut spécifier la valeur des deux variables dans votre fichier `cssxx_store/dbt_project.yml`: 
+
+```yaml
+# cssXX.data.store/dbt_project.yml
+vars:
+    dashboards:
+        absenteeism:
+            groupe_primaire: votre_groupe
+            groupe_secondaire: votre_groupe
+            nbre_annee_a_extraire: votre_nombre_annee
+```
 
 # Developer guidelines
 
@@ -721,7 +897,7 @@ __When overriding the repartition bracket, you will need to manualy update the `
 > Pre-commit hooks will help you to keep your code clean and tidy. It will also help you to avoid some common mistakes.
 
 ```
-cd core.data.store
+cd cdpvd_dashboards_store
 poetry shell
 poetry install 
 pre-commit install
@@ -790,8 +966,8 @@ Where :
 ### Integration test and the nightly build
 > The nightly build is an automated check on the repo happening at the end (the night ^^) of each day
 
-When introducting a new **NON-OPTIONAL** seed in the `core.data.store` repo, you must add it into `core.data.store/nightly/dbt/seeds` folder, so the next Nightly build won't fail because of a missing seed. The seed must be populated with data from CSSVDC, as the CSSVDC is used as a target database for the integration tests.
-You can also run the integration suit locally. Please, refer to the `core.data.store/nightly/README.md` file for more details.
+When introducting a new **NON-OPTIONAL** seed in the `cdpvd_dashboards_store` repo, you must add it into `cdpvd_dashboards_store/nightly/dbt/seeds` folder, so the next Nightly build won't fail because of a missing seed. The seed must be populated with data from CSSVDC, as the CSSVDC is used as a target database for the integration tests.
+You can also run the integration suit locally. Please, refer to the `cdpvd_dashboards_store/nightly/README.md` file for more details.
 
 ### Marts
 
@@ -834,9 +1010,9 @@ __Developers : when creating a new dashboard using the population mechanism, you
 ##### Populating the marts seed
 > This dashboard requiers the specification of the seeds in the `human_resources` mart.  
 
-The seed must be populated in `cssXX.data.store/seeds/marts/human_resources/` and as per the definition of the `core.data.store/seeds/marts/human_resources/schema.yml` mart. 
+The seed must be populated in `cssXX.data.store/seeds/marts/human_resources/` and as per the definition of the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart. 
 
-Please refer to the `core.data.store/seeds/marts/human_resources/schema.yml` mart documentation to get the concrete implementation.
+Please refer to the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart documentation to get the concrete implementation.
 
 Do not forget to refresh your seeds with the `dbt seeds --select tag:human_resources --full-refresh` command.
 

@@ -15,6 +15,23 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-
-select corp_empl as code_job, concat(corp_empl, ' - (', descr, ')') as code_job_name
-from {{ ref("i_pai_tab_corp_empl") }}
+select
+    fiche,
+    annee,
+    datedeb as date_deb,
+    datefin as date_fin,
+    statut,
+    org,
+    ecocen as eco_cen,
+    bat,
+    client,
+    freq,
+    prog,
+    serviceenseign as service_enseign,
+    orghor as org_hor,
+    typeactiv as type_activ,
+    datefinsifca as date_fin_sifca,
+    motifdep as motif_depart,
+    raisondepart as raison_depart,
+    typeparcours as type_parcours
+from {{ var("database_jade_adultes") }}.dbo.e_freq
