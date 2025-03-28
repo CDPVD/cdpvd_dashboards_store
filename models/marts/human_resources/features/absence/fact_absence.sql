@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {{ config(alias="fact_absence") }}
 
 with
-
 ----------------------------------------------------------------------------------------------------
 -- ÉTAPE 0 
 ----------------------------------------------------------------------------------------------------
@@ -39,23 +38,24 @@ e0 AS (
 		absence.corp_empl,
 		emp.stat_eng, -- Statut d'engagement
 		dure,
-		CASE WHEN absence.code_pmnt = 103525 THEN 1 ELSE 0 END AS longue_duree,
-		CASE WHEN absence.code_pmnt != 103525 THEN 1 ELSE 0 END AS courte_duree
-	from {{ ref("i_pai_habs") }} as absence
+	CASE 
+			WHEN absence.code_pmnt = 103525 or etat.duree = 1 THEN 1 
+			ELSE 0 
+	END AS dl,
+	CASE 
+			WHEN absence.code_pmnt != 103525 AND etat.duree != 1 THEN 1 
+			ELSE 0 
+	END AS cl
+		from {{ ref("i_pai_habs") }} as absence
 
-	inner join {{ ref("i_paie_hemp") }} as emp -- Historique des emplois
-		on absence.matr = emp.matr
-			and absence.corp_empl = emp.corp_empl
-			and absence.date between emp.date_eff and emp.date_fin
-			and absence.sect = emp.sect
-
-	left join {{ ref("type_absence") }} as type_abs  -- À modifier
-		on absence.mot_abs = type_abs.motif_id      
-
-	where year(absence.date) >= {{ get_current_year() - 4 }} -- Retour 5 ans en arrière
-		and dure != 0 -- Durée non égale à 0
-		and emp.pourc_sal != 0 -- Pour_sal non égale à 0
-		and type_abs.statut = 0
+		inner join {{ ref("i_paie_hemp") }} as emp -- Historique des emplois
+			on absence.matr = emp.matr
+				and absence.corp_empl = emp.corp_empl
+				and absence.date between emp.date_eff and emp.date_fin
+				and absence.sect = emp.sect
+				and absence.ref_empl = emp.ref_empl
+		inner join {{ ref("etat_empl")}} as etat 
+			on emp.etat = etat.etat_empl
 ),
 
 ----------------------------------------------------------------------------------------------------
@@ -76,6 +76,8 @@ e1 as(
 
 	inner join {{ ref("type_absence") }} as ta  -- À modifier
 		on e0.motif_abs = ta.motif_id 
+
+	where ta.Statut = 0
 ),
 
 ----------------------------------------------------------------------------------------------------
@@ -87,7 +89,7 @@ e1_1 as (
 		*
 	FROM e1
 	UNPIVOT (
-		valeur FOR type_duree IN (longue_duree, courte_duree)
+		valeur FOR type_duree IN (dl, cl)
 	) AS unpvt
 	where valeur != 0
 ),
@@ -224,7 +226,15 @@ select
 	duree_abs, 
 	events AS evenements,
 	(pourc_sal * total_dure * nbr_jours) / 100 AS abs,
-	type_duree
+	CASE 
+		WHEN type_duree = 'dl' and duree_abs >= 30 and events = 1 then 1 
+		WHEN type_duree = 'dl' and duree_abs < 30 then 0 
+		WHEN 
+		--categories = 'Maladie' and 
+		duree_abs >= 30 and events = 1 then 1
+		WHEN type_duree = 'cl' then 0 
+	END AS duree_type,
+	type_duree	
 from e3
 
 INNER JOIN {{ ref("fact_nbr_jours_travailles") }} AS jr_tr 
@@ -244,4 +254,7 @@ mercredi,
 jeudi,
 vendredi,
 duree_abs,
-events,nbr_jours,total_dure,pourc_sal
+events,
+nbr_jours,
+total_dure,
+pourc_sal

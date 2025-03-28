@@ -52,7 +52,7 @@ select
 	vendredi,
 	evenements,
 	abs,
-	Case when type_duree = 'longue_duree' then 'Longue durée' else 'Courte durée' end as type_duree
+	CASE WHEN duree_type = 1 THEN 'Longue durée' else 'Courte durée' END AS type_duree
 from {{ ref("fact_absence") }} as abs
 
 INNER JOIN {{ ref("dim_employees") }} AS emp 
