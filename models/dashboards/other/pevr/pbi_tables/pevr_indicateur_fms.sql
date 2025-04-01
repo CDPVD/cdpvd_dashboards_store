@@ -101,7 +101,7 @@ with
             id_indicateur,
             description_indicateur,
             count(fiche) nb_resultat,
-            CAST(ROUND(AVG(ind_obtention), 4) AS FLOAT) AS taux_qualification_fms,
+            CAST(ROUND(AVG(ind_obtention), 3) AS FLOAT) AS taux_qualification_fms,
             CAST(ROUND(AVG(ind_obtention) - cible, 3) AS FLOAT) AS ecart_cible,
             cible
         from _filtre
@@ -144,7 +144,7 @@ select
     annee_scolaire,
     nb_resultat,
     taux_qualification_fms,
-    CONCAT(taux_qualification_fms * 100, '% (', nb_resultat, 'él.) ') AS taux_nbEleve,
+    CONCAT(taux_qualification_fms * 100, '%', CHAR(10), '(', nb_resultat, 'él.) ') AS taux_nbEleve,
     ecart_cible,
     cible,
     {{

@@ -129,7 +129,7 @@ select
     annee_scolaire,
     nb_ppp,
     taux_ppp,
-    CONCAT(taux_ppp * 100, '% (', nb_ppp, ' él.) ') AS taux_nbEleve,
+    CONCAT(taux_ppp * 100, '%', CHAR(10), '(', nb_ppp, ' él.) ') AS taux_nbEleve,
     ecart_cible,
     cible,
     {{

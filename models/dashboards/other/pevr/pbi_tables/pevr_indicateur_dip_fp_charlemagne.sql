@@ -27,7 +27,8 @@ with
             end as id_indicateur,
             ind.description_indicateur,
             pevr_charl.annee_scolaire,
-            pevr_charl.taux
+            pevr_charl.taux,
+            pevr_charl.cible
         from {{ ref("pevr_dim_indicateurs") }} as ind
         inner join
             {{ ref("indicateur_pevr_charl") }} as pevr_charl

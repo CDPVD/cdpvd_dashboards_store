@@ -17,7 +17,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 {{ config(alias="indicateur_epreuves_2ES") }}
 
-
 with
     src as (
         select
@@ -86,7 +85,7 @@ with
             distribution,
             code_matiere,
             count(fiche) nb_resultat,
-            CAST(ROUND(AVG(is_maitrise), 4) AS FLOAT) AS taux_maitrise,
+            CAST(ROUND(AVG(is_maitrise), 3) AS FLOAT) AS taux_maitrise,
             CAST(ROUND(AVG(is_maitrise) - cible, 3) AS FLOAT) AS ecart_cible
         from src
         group by
@@ -128,7 +127,7 @@ select
     annee_scolaire,
     nb_resultat,
     taux_maitrise,  -- Possibilité d'avoir un null à cause du res_etape_num peut être nulle. A voir.
-    CONCAT(taux_maitrise * 100, '% (', nb_resultat, ' él.) ') AS taux_nbEleve,
+    CONCAT(taux_maitrise * 100, '%', CHAR(10), '(', nb_resultat, ' él.) ') AS taux_nbEleve,
     ecart_cible,  -- Même affaire.
     cible,
     {{
