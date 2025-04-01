@@ -19,7 +19,7 @@ with
     -- Recuperer l'ensemble des eleves qui ont des inscriptions ces 10 dernieres annees en FGJ
     fgj as (
         select distinct code_perm, fiche, annee, eco, id_eco
-        from {{ ref("spine") }}
+        from {{ ref("spine_all") }}
 		where annee between {{ core_dashboards_store.get_current_year() }}-10 and {{ core_dashboards_store.get_current_year() }}
 
     ), 
@@ -178,15 +178,25 @@ with
 		from {{ ref("eleves_contacts_adresses") }}
 	), 
 
-	statuts as (
-		select dan.fiche, eco.eco, eco.annee, dan.statut_don_an from {{ ref("i_gpm_e_dan") }} dan
-		inner join {{ ref("i_gpm_t_eco") }} eco on dan.id_eco = eco.id_eco
+	actifs as (
+		select 		dan.fiche, eco.eco
+		from 		{{ ref("i_gpm_e_dan") }} dan
+		inner join 	{{ ref("i_gpm_t_eco") }} eco on dan.id_eco = eco.id_eco
+		where		eco.annee = {{ core_dashboards_store.get_current_year() }} and dan.statut_don_an = 'A'
+		union all
+		select		f.fiche, f.EcoCen as eco
+		from		{{ var("database_jade_adultes") }}.dbo.e_freq f
+		left join	{{ var("database_jade_adultes") }}.dbo.t_ecocen ec on f.ecocen = ec.ecocen
+		where		((MONTH(CURRENT_TIMESTAMP) < 8 and annee = YEAR(CURRENT_TIMESTAMP)-1)
+					OR (MONTH(CURRENT_TIMESTAMP) > 8 and annee = YEAR(CURRENT_TIMESTAMP)))
+				and (ec.CfpOff <> '' or ec.CenOff <> '')
+				and f.DateFin <> ''
 	)
 
 -- REQUETE FINALE
 select 
     perim.code_perm,
-	st.statut_don_an,
+	IIF(a.fiche IS NOT NULL, 'A', 'I') as statut,
 	ele.nom,
 	ele.pnom,
 	string_agg(perim.fiche, ', ') AS fiche, -- pour considerer les eleves avec 1 CP, 2 fiches la meme annee
@@ -217,7 +227,7 @@ select
 
 from perim
 inner join {{ ref("i_gpm_e_ele") }} ele on ele.fiche = perim.fiche
-left join statuts st on st.fiche = perim.fiche and st.eco = perim.eco and st.annee = perim.annee
+inner join actifs a on a.fiche = perim.fiche and a.eco = perim.eco
 left join car_gpi on car_gpi.code_perm = perim.code_perm and car_gpi.annee = perim.annee and car_gpi.eco = perim.eco
 left join trp_gpi on trp_gpi.code_perm = perim.code_perm and trp_gpi.annee = perim.annee and trp_gpi.eco = perim.eco
 left join car_ag on car_ag.code_perm = perim.code_perm and car_ag.annee = perim.annee and car_ag.eco = perim.eco
@@ -225,7 +235,7 @@ left join trp_ag on trp_ag.code_perm = perim.code_perm and trp_ag.annee = perim.
 left join car_proc on car_proc.code_perm = perim.code_perm and car_proc.annee = perim.annee and car_proc.eco = perim.eco
 left join trp_proc on trp_proc.code_perm = perim.code_perm and trp_proc.annee = perim.annee and trp_proc.eco = perim.eco
 left join contacts c on perim.fiche = c.fiche
-group by perim.code_perm, st.statut_don_an, ele.nom, ele.pnom, perim.annee, perim.eco,
+group by perim.code_perm, a.fiche, ele.nom, ele.pnom, perim.annee, perim.eco,
 c.nom_pere,
 c.pnom_pere,
 c.adr_electr_pere,
