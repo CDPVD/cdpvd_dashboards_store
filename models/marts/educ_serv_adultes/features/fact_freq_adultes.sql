@@ -106,8 +106,7 @@ with
             on wlt.code = freq.type_parcours
             and wlt.nom_table = 'X_TypeParcours'
         left join
-            {{ ref
-  ("i_t_wl_descr_adultes") }} wlcon
+            {{ ref("i_t_wl_descr_adultes") }} wlcon
             on wlcon.code = freq.condadmiss
             and wlcon.nom_table = 'X_CondAdmiss'
         left join
