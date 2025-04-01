@@ -16,13 +16,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 {{
-config(
-  post_hook=[
-    create_clustered_index(
-      "{{ this }}", ["code_perm","fiche", "annee", "freq", "population", "mat", "grp"]),
-    create_nonclustered_index(
-      "{{ this }}", ["noseqmat"])
-      ])
+    config(
+        post_hook=[
+            create_clustered_index(
+                "{{ this }}",
+                ["code_perm", "fiche", "annee", "freq", "population", "mat", "grp"],
+            ),
+            create_nonclustered_index("{{ this }}", ["noseqmat"]),
+        ]
+    )
 }}
 
 select
