@@ -71,50 +71,43 @@ with
     )
 select
     nom_centre,
-    client,
+    freq,
     prenom_nom,
     code_perm,
     fiche,
     population,
     annee as année,
     concat(annee, '-', annee + 1) as annnee_scolaire,
-    freq,
-    age_30_juin,
-    age_30_septembre,
-    org,
     eco_cen,
     bat,
-    org_hor,
     indtransm,
     ville,
-    codepost,
     interv_age,
     interv_age_fp,
     activform as groupe_horaire,
-    condadmiss,
     concat(condadmiss, ' - ', descr_condadmiss) as condition_admission,
     descr_org_hor as organisation_horaire,
     etat_formation as etat_formation,
     genre as genre,
-    lang_matern as lang_matern,
     desc_lang_matern as langue_maternelle,
     prog,
     case
         when descr_prog is null then descr_prog else concat(prog, ' - ', descr_prog)
     end as programme,
     type_diplome,
-    raison_grat_scol,
     descr_raison_grat_scol,
     type_parcours,
     concat(type_parcours, ' - ', descr_type_parcours) as desc_type_parcours,
-    service_enseign,
     case
         when descr_service_enseign is null
         then descr_service_enseign
         else concat(service_enseign, ' - ', descr_service_enseign)
     end as service_enseignement,
-    motif_depart,
     descr_motif_dep,
     raison_depart,
-    desc_raison_depart
+    case
+        when desc_raison_depart is null
+        then desc_raison_depart
+        else concat(raison_depart, ' - ', desc_raison_depart)
+    end as desc_raison_depart
 from agg

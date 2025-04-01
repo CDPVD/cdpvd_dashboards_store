@@ -16,7 +16,7 @@ models:
           combination_of_columns:
             - code_perm
             - population
-            - Année
+            - année
             - freq
             - fiche
   - name: eff_report_reussis_css_adultes
