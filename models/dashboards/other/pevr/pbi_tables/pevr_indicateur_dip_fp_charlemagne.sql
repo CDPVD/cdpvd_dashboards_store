@@ -27,6 +27,8 @@ with
             end as id_indicateur,
             ind.description_indicateur,
             pevr_charl.annee_scolaire,
+            pevr_charl.cohorte,
+            CONCAT(pevr_charl.annee_scolaire, '%', CHAR(10), ' (', pevr_charl.cohorte, ') ') as an_sco_cohorte,
             pevr_charl.taux,
             pevr_charl.cible
         from {{ ref("pevr_dim_indicateurs") }} as ind
