@@ -37,14 +37,20 @@ models:
             human_resources:
                 features:
                 staging:
+
             educ_serv:
                 features:
                 staging:
-
+        dashboards:
+            educ_serv:
+                absenteeism:
+                    +enabled: false
         interfaces:
             gpi:
                 i_gpm_e_dan:
                     +enabled: false
+                i_gpm_e_abs:
+                    +enabled: false                    
             jade:
                 i_e_ri_mentions:
                     +enabled: false
@@ -55,16 +61,57 @@ models:
     # This code block can be safely overriden in the cssXX_dashboards_store.
     # There is no need for code duplication here
     cdpvd_dashboards_store:
+        +enabled: false
         +materialized: table
+        marts:
+            #+enabled: true
+            human_resources:
+                +tags:
+                    - "human_resources"
+                    - "mart_human_resources"
+                +schema: human_resources
+                features:
+                    +schema: human_resources_features                
+                staging:
+                    +schema: human_resources_staging
+            educ_serv:
+                +tags:
+                    - "educ_serv"
+                    - "mart_educ_serv"
+                +schema: educ_serv
+                features:
+                staging:
+                    +schema: educ_serv_staging
+
         dashboards:
-            other:
-                pevr:
-                    +tags: ["pevr"]
-                    +schema: "dashboard_pevr"
+            #+enabled: true
+            educ_serv:
+                absenteeism:
+                    +tags: ["absenteeism"]
+                    +schema: "dashboard_absenteeism"
                     pbi_tables:
                         +post-hook:
-                            - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
+                            [
+                                "{{ core_dashboards_store.stamp_model('dashboard_absenteeism') }}",
+                            ]        
+                other:
+                    pevr:
+                        +tags: ["pevr"]
+                        +schema: "dashboard_pevr"
+                        pbi_tables:
+                            +post-hook:
+                                - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
+            human_resources:                        
+                retirement:
+                    +tags: ["retirement"]
+                    +schema: "dashboard_retirement"
+                    pbi_tables:
+                        +post-hook:
+                            - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
+          
+
         interfaces:
+            +enabled: true
             +materialized: ephemeral
 
 vars:
@@ -85,6 +132,14 @@ vars:
             recency:
                 years_of_data_absences: 10 # How many years of data to keep for the 'absences' centric dashboards.
                 years_of_data_grades: 10 # How many years of data to keep for the 'grades' centric dashboards.
+                years_of_data_student: 10 # How many years of data to keep for the students data.   
     dashboards:
         res_epreuves:
             cod_css: replaceme # The code of the CSS to use for the res_epreuves dashboard. A regex like placeholder. Something like '866%'
+        absenteeism:
+            groupe_primaire: replaceme 
+            groupe_secondaire: replaceme
+            nbre_annee_a_extraire: replaceme
+
+    # Le mois de référence pour le début de l'année -- Indiquez en 2 caractères comme, 01, 02, 03, ..., 10, 11, 12
+    mois_reference: 07
