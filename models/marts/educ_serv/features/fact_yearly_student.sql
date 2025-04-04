@@ -20,7 +20,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         "years_of_data_student"
     ] %}
 {% else %} {% set years_of_data_student = 10 %}
+    {% set years_of_data_student = var("marts")["educ_serv"]["recency"][
+        "years_of_data_student"
+    ] %}
+{% else %} {% set years_of_data_student = 10 %}
 {% endif %}
+
 
 with
     step1 as (
@@ -67,6 +72,9 @@ with
             and nom_table = 'type_mesure'
         where
             seqid = 1
+            and spi.annee
+            >= {{ core_dashboards_store.get_current_year() }}
+            - {{ years_of_data_student }}  -- On garde un max de 10 ans dans nos données d'étudiants / Limite par défaut
             and spi.annee
             >= {{ core_dashboards_store.get_current_year() }}
             - {{ years_of_data_student }}  -- On garde un max de 10 ans dans nos données d'étudiants / Limite par défaut
