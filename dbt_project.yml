@@ -121,6 +121,7 @@ vars:
     database_paie: "Replace me in the CSS repositery"
     database_gpi: "Replace me in the CSS repositery"
     database_jade: "Replace me in the CSS repositery"
+    database_jade_adultes: "Replace me in the CSS repositery"
     database_prodrome: "Replace me in the CSS repositery" # Modelling output from the Sciance's models.
 
     interfaces:
