@@ -30,6 +30,7 @@ with
             date_evenement,
             jour_semaine,
             groupe,
+            etape_friendly,
             event_kind,
             max(n_events) as n_events,
             max(n_students_daily) as n_students_daily,
@@ -41,6 +42,7 @@ with
             groupe,
             date_evenement,
             jour_semaine,
+            etape_friendly,
             event_kind
     ),
     agg as (
@@ -51,6 +53,7 @@ with
             jour_semaine,
             coalesce(groupe, 'Tout') as groupe,
             -- coalesce(code_matiere, 'Tout') as code_matiere,
+            etape_friendly,
             event_kind,
             -- The daily is rate is compute as the weighted average of the etapes rates.
             sum(n_events) as n_events,
@@ -61,6 +64,7 @@ with
             annee, cube (school_friendly_name, groupe),
             date_evenement,
             jour_semaine,
+            etape_friendly,
             event_kind
 
     -- Compute the absence_rate at the CSS level (use the weighted absence_rate to
@@ -71,11 +75,12 @@ with
             annee,
             date_evenement,
             jour_semaine,
+            etape_friendly,
             event_kind,
             sum(absence_rate * n_students_daily)
             / sum(n_students_daily) as absence_rate_css
         from agg
-        group by annee, date_evenement, jour_semaine, event_kind
+        group by annee, date_evenement, jour_semaine, etape_friendly, event_kind
 
     -- Compute the Average (past and future) absence rate for each school
     ),
@@ -83,24 +88,30 @@ with
         select
             annee,
             school_friendly_name,
+            etape_friendly,
             event_kind,
             sum(absence_rate * n_students_daily)
             / sum(n_students_daily) as avg_absence_rate_school
         from agg
-        group by annee, school_friendly_name, event_kind
+        group by annee, school_friendly_name, etape_friendly, event_kind
     -- Compute the Average (past and future) absence rate for each school
     ),
     jour as (
         select
             annee,
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
+            etape_friendly,
             event_kind,
             jour_semaine,
             coalesce(groupe, 'Tout') as groupe,
             sum(absence_rate * n_students_daily)
             / sum(n_students_daily) as avg_absence_rate_jour
         from source
-        group by annee, cube (school_friendly_name, groupe), jour_semaine, event_kind
+        group by
+            annee, cube (school_friendly_name, groupe),
+            jour_semaine,
+            etape_friendly,
+            event_kind
 
     -- add the css and school metrics to the table
     ),
@@ -112,6 +123,7 @@ with
             src.jour_semaine,
             src.date_evenement,
             src.n_students_daily,
+            src.etape_friendly,
             src.event_kind,
             src.n_events,
             src.absence_rate,
@@ -127,11 +139,13 @@ with
             on src.annee = css.annee
             and src.date_evenement = css.date_evenement
             and src.event_kind = css.event_kind
+            and src.etape_friendly = css.etape_friendly
         left join
             school
             on src.annee = school.annee
             and src.school_friendly_name = school.school_friendly_name
             and src.event_kind = school.event_kind
+            and src.etape_friendly = school.etape_friendly
         left join
             jour
             on src.annee = jour.annee
@@ -139,6 +153,7 @@ with
             and src.groupe = jour.groupe
             and src.jour_semaine = jour.jour_semaine
             and src.event_kind = jour.event_kind
+            and src.etape_friendly = jour.etape_friendly
 
     )
 
@@ -146,7 +161,7 @@ select
     -- Add a filter key to sync filters accross vues
     {{
         dbt_utils.generate_surrogate_key(
-            ["annee", "school_friendly_name", "event_kind", "groupe"]
+            ["annee", "school_friendly_name", "etape_friendly", "event_kind", "groupe"]
         )
     }} as filter_key,
     jour_semaine,

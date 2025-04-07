@@ -61,5 +61,6 @@ models:
           combination_of_columns:
             - annee
             - school_friendly_name
+            - etape_friendly
             - event_kind
             - groupe

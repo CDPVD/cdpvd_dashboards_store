@@ -15,7 +15,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-
 {% set years_of_data_student = var("marts")["educ_serv"]["recency"][
     "years_of_data_student"
 ] %}
@@ -65,9 +64,9 @@ with
             and nom_table = 'type_mesure'
         where
             seqid = 1
-            and spi.annee >= 
-            {{ core_dashboards_store.get_current_year() }} 
-            - {{ years_of_data_student }} -- On garde un max de 10 ans dans nos données d'étudiants / Limite par défaut
+            and spi.annee
+            >= {{ core_dashboards_store.get_current_year() }}
+            - {{ years_of_data_student }}  -- On garde un max de 10 ans dans nos données d'étudiants / Limite par défaut
     )
 select
     code_perm,
