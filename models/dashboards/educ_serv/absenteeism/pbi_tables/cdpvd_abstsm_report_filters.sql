@@ -25,8 +25,7 @@ with
         select
             annee,
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
-            concat
-('étape : ', aug.etape_friendly) as etape_friendly,
+            etape_friendly,
             event_kind,
             coalesce(groupe, 'Tout') as groupe
         from {{ ref("cdpvd_abstsm_stg_daily_metrics") }} dly
