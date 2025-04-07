@@ -108,7 +108,13 @@ models:
                     pbi_tables:
                         +post-hook:
                             - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
-          
+
+                resignation:
+                    +tags: ["resignation"]
+                    +schema: "dashboard_resignation"
+                    pbi_tables:
+                        +post-hook:
+                            ["{{ store.stamp_model('dashboard_resignation') }}"]          
 
         interfaces:
             +enabled: true
