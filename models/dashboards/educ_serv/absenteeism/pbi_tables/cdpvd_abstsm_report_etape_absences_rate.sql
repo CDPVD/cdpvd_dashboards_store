@@ -74,10 +74,12 @@ with
             annee,
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
             etape_friendly,
+            etape_friendly,
             event_kind,
             sum(absence_rate * n_students_daily)
             / sum(n_students_daily) as avg_absence_rate_school
         from source as src
+        group by annee, rollup (school_friendly_name), etape_friendly, event_kind
         group by annee, rollup (school_friendly_name), etape_friendly, event_kind
 
     -- add the css and school metrics to the table
@@ -108,6 +110,7 @@ with
             on src.annee = school.annee
             and src.school_friendly_name = school.school_friendly_name
             and src.etape_friendly = school.etape_friendly
+            and src.etape_friendly = school.etape_friendly
             and src.event_kind = school.event_kind
     )
 
@@ -115,13 +118,7 @@ select
     -- Add a filter key to sync filters accross vues
     {{
         dbt_utils.generate_surrogate_key(
-            [
-                "annee",
-                "school_friendly_name",
-                "etape_friendly",
-                "event_kind",
-                "groupe",
-            ]
+            ["annee", "school_friendly_name", "etape_friendly", "event_kind", "groupe"]
         )
     }} as filter_key,
     etape_friendly,

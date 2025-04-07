@@ -92,6 +92,7 @@ with
             jour_semaine,
             code_matiere,
             etape,
+            etape,
             event_kind,
             grille
         from {{ ref("cdpvd_abstsm_stg_padding") }} as padd
@@ -102,6 +103,7 @@ with
             date_evenement,
             jour_semaine,
             code_matiere,
+            etape,
             etape,
             event_kind,
             grille
@@ -117,7 +119,7 @@ with
             padd.groupe,
             padd.code_matiere,
             padd.event_kind,
-            concat('étape : ', padd.etape) as etape_friendly,
+            abs_.etape as etape_friendly,
             n_events
         from padding as padd
         inner join
@@ -127,6 +129,7 @@ with
             and padd.groupe = abs_.groupe
             and padd.grille = abs_.grille
             and padd.code_matiere = abs_.code_matiere
+            and padd.etape = abs_.etape
             and padd.etape = abs_.etape
             and padd.event_kind = abs_.event_kind
         where abs_.n_events is not null
@@ -141,7 +144,7 @@ with
             aug.date_evenement,
             aug.jour_semaine,
             aug.code_matiere,
-            coalesce(aug.etape_friendly, 'Tout') as etape_friendly,
+            concat('étape : ', aug.etape_friendly) as etape_friendly,
             aug.event_kind,
             sum(n_events) as n_events
         from augmented as aug
@@ -151,19 +154,14 @@ with
             aug.date_evenement,
             aug.jour_semaine,
             aug.code_matiere,
+            aug.etape_friendly,
             aug.event_kind
     )
 
 select
     {{
         dbt_utils.generate_surrogate_key(
-            [
-                "annee",
-                "school_friendly_name",
-                "etape_friendly",
-                "event_kind",
-                "groupe",
-            ]
+            ["annee", "school_friendly_name", "etape_friendly", "event_kind", "groupe"]
         )
     }} as filter_key,
     cast(date_evenement as date) as date_evenement,

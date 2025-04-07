@@ -93,8 +93,17 @@ with
             etape as etape_friendly,
             event_kind,
             grille
+        select
+            id_eco,
+            groupe,
+            date_evenement,
+            jour_semaine,
+            etape as etape_friendly,
+            event_kind,
+            grille
         from {{ ref("cdpvd_abstsm_stg_padding") }} as padd
         where padd.is_school_day = 1
+        group by id_eco, groupe, date_evenement, jour_semaine, event_kind, grille, etape
         group by id_eco, groupe, date_evenement, jour_semaine, event_kind, grille, etape
 
     -- Inner join on the padding table to reduce to the work days only (so the table
@@ -108,7 +117,7 @@ with
             padd.groupe,
             padd.event_kind,
             event_description,
-            concat('étape : ', padd.etape_friendly) as etape_friendly,
+            padd.etape_friendly,
             n_events
         from padding as padd
         inner join
@@ -117,6 +126,7 @@ with
             and padd.date_evenement = abs_.date_evenement
             and padd.groupe = abs_.groupe
             and padd.grille = abs_.grille
+            and padd.etape_friendly = abs_.etape
             and padd.etape_friendly = abs_.etape
             and padd.event_kind = abs_.event_kind
         where abs_.n_events is not null
@@ -130,7 +140,7 @@ with
             coalesce(aug.groupe, 'Tout') as groupe,
             aug.date_evenement,
             aug.jour_semaine,
-            coalesce(aug.etape_friendly, 'Tout') as etape_friendly,
+            concat('étape : ', aug.etape_friendly) as etape_friendly,
             aug.event_kind,
             aug.event_description,
             sum(n_events) as n_events
@@ -140,6 +150,7 @@ with
             eco.annee, cube (eco.school_friendly_name, aug.groupe, aug.etape_friendly),
             aug.date_evenement,
             aug.jour_semaine,
+            aug.etape_friendly,
             aug.event_kind,
             aug.event_description
     )
@@ -147,13 +158,7 @@ with
 select
     {{
         dbt_utils.generate_surrogate_key(
-            [
-                "annee",
-                "school_friendly_name",
-                "etape_friendly",
-                "event_kind",
-                "groupe",
-            ]
+            ["annee", "school_friendly_name", "etape_friendly", "event_kind", "groupe"]
         )
     }} as filter_key,
     cast(date_evenement as date) as date_evenement,
