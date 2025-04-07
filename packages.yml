@@ -1,4 +1,6 @@
 packages:
-  - local: ../core.dashboards_store
-  # - git: git@github.com:Sciance-Inc/core.dashboards_store.git
-  #   revision: develop
+  # - package: dbt-labs/dbt_utils
+  #   version: 1.0.0
+  # - local: ../core.dashboards_store
+  - git: git@github.com:Sciance-Inc/core.dashboards_store.git
+    revision: develop
