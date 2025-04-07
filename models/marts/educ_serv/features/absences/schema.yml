@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: cdpvd_fact_absences_retards_sequence
+    tags: ["absenteeism"]
+    description: >
+      Lister les séquences d'absences pour chaque étudiant.
+      Une séquence d'absences correspond à un ensemble de jours d'école consécutifs avec au moins une absence chaque jour.
+      Une séquence d'absences est caractérisée par sa date de début, sa date de fin et les absences dans cette séquence.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - school_year
+            - fiche
+            - id_eco
+            - absence_sequence_id
+            - event_kind
+
+  - name: cdpvd_fact_absences_daily
+    tags: ["absenteeism"]
+    description: >
+      Calculer le nombre agrégé d'absences et de retards par jour, pour chaque étudiant ayant au MOINS une absence pour une période donnée.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - fiche
+            - date_abs
+            - id_eco
+            - event_kind
+            - code_matiere
