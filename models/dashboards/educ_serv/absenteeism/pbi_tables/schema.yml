@@ -59,8 +59,6 @@ models:
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:
-            - annee
-            - school_friendly_name
-            - etape_friendly
-            - event_kind
-            - groupe
+            - filter_key
+            - eco
+            - id_eco
