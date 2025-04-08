@@ -117,7 +117,7 @@ with
             padd.groupe,
             padd.code_matiere,
             padd.event_kind,
-            abs_.etape as etape_friendly,
+            padd.etape as etape_friendly,
             n_events
         from padding as padd
         inner join
