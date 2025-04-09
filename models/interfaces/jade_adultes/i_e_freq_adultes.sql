@@ -27,8 +27,8 @@ select
     client,
     freq,
     prog,
-    activform,
-    condadmiss,
+    activform as activ_form,
+    condadmiss as cond_admiss,
     serviceenseign as service_enseign,
     orghor as org_hor,
     typeactiv as type_activ,
@@ -37,5 +37,5 @@ select
     raisondepart as raison_depart,
     raisongratscol as raison_grat_scol,
     typeparcours as type_parcours,
-    indtransm
+    indtransm as ind_transm
 from {{ var("database_jade_adultes") }}.dbo.e_freq
