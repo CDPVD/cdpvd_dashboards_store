@@ -24,7 +24,7 @@ select
     ville,
     casierpost,
     prov,
-    codepost,
+    codepost as code_post,
     pays,
     envoimeq,
     datefin date_fin
