@@ -50,24 +50,4 @@ models:
       - populations_adultes
     description: >
       Table d'interface. Utilisée uniquement pour pallier la table 'o_orghor' de la base de données source.
-  - name: i_e_elematfpfga_adultes
-    tags: 
-      - interface
-      - educ_serv_adultes
-      - reussite_adultes
-    description: >
-      Table d'interface. Utilisée uniquement pour pallier la table 'e_elematfpfga' de la base de données source.
-  - name: i_e_matele_adultes
-    tags: 
-      - interface
-      - educ_serv_adultes
-      - reussite_adultes
-    description: >
-      Table d'interface. Utilisée uniquement pour pallier la table 'e_matele' de la base de données source.
-  - name: i_t_mat_adultes
-    tags: 
-      - interface
-      - educ_serv_adultes
-      - reussite_adultes
-    description: >
-      Table d'interface. Utilisée uniquement pour pallier la table 'i_t_mat_adultes' de la base de données source.
+      
