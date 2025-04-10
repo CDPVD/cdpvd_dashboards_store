@@ -132,7 +132,7 @@ vars:
             recency:
                 years_of_data_absences: 10 # How many years of data to keep for the 'absences' centric dashboards.
                 years_of_data_grades: 10 # How many years of data to keep for the 'grades' centric dashboards.
-                years_of_data_student: 10 # How many years of data to keep for the students data.   
+                years_of_data_student: 10 # How many years of data to keep for the students data.
     dashboards:
         res_epreuves:
             cod_css: replaceme # The code of the CSS to use for the res_epreuves dashboard. A regex like placeholder. Something like '866%'
