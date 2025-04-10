@@ -98,7 +98,12 @@ models:
                 +enabled: false/true
             educ_serv:
                 +enabled: false/true
+            educ_serv_adultes:
+                +enabled: false/true
         dashboards:
+            educ_serv_adultes:
+                effectif_css_adultes
+                    +enabled: false/true
             other:
                 pevr:
                     +enabled: false/true
@@ -129,6 +134,7 @@ vars:
     database_paie: "[SERVEUR_IP].[PAIE]"
     database_gpi: "[SERVEUR_IP].[GPIP]"
     database_jade: "[SERVEUR_IP].[JADE]"
+    database_jade_adultes: "[SERVEUR_IP].[JADE_ADULTES]"
     database_prodrome: "[SERVEUR_IP]"
 
     interfaces:
@@ -441,9 +447,91 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 | [effectif_css](#effectif_css) | Track the population count in each school in the CSS | (CSSVT) Frédéryk Busque , Mohamed Sadqi (CSSVDC)
 | [retirement](#retirement) | Tracks the number of retired employees by job categories and workplace. Forecast, for up to five years, the number of retiring employees | (Sciance) Hugo Juhel
 | [absenteeism](#absenteeism) | Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | (Sciance) Hugo Juhel, Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
+| [effectif_css_adultes](#effectif_css_adultes) | Une vue d'ensemble en fonction des objectifs et des types de formation suivis par les élèves inscrits à notre centre de service scolaire. | Martin Legault (CSSMV), Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
 
 
 > The following section describe the specific for each dashboard. Bear with me, we are gonna drill down into the specifics of each dashboard ! Stay focused ! In each of the following section, you will learn how to tame a specific dashboard.
+
+### Effectif_css_adultes
+> Suivi des population définie au sein d'un centre de services scolaires. Le tableau de bord affiche le nombre total d'élèves dans chaque école, ainsi que les taux de réussite et les sanctions disciplinaires.
+
+| Interfaces  | Marts         	| Marts seeds     | Dashboard seeds | Additional config |
+|-------------|-----------------|-----------------|-----------------| ------------------|
+| jade_adultes|educ_serv_adultes|NO             	| No              | No 	              |
+
+##### Populer les comptoirs de données (marts)
+> Ce tableau de bord requiert la définition des populations spécifiques dans le comptoir de données `educ_serv_adultes`.
+
+Les comptoirs de données(marts) doivent être populés dans `cssXX.data.store/models/marts/educ_serv_adultes/populations/staging/` conformement à la définition du fichier  `cssXX.data.store/models/marts/educ_serv_adultes/populations/staging/schema.yml`.
+
+```yaml
+# cssXX.data.store/models/marts/educ_serv_adultes/populations/staging/schema.yml
+version: 2
+
+models:
+  - name: stg_populations_adultes
+    config:    
+      tags:
+        - population
+        - educ_serv_adultes
+    description: table de fait qui identifie les fréquentations FP-FGA
+    tests:
+      - resolution:
+          combination_of_columns:
+            - code_perm
+            - fiche
+            - annee
+            - freq
+  - name:  stg_ele_fga
+    config:    
+      tags:
+        - population
+        - educ_serv_adultes
+    description: >
+          Identifier les inscriptions en FGA
+    tests: 
+      - resolution: 
+          combination_of_columns: 
+            - code_perm
+            - fiche
+            - annee
+            - freq
+  - name:  stg_ele_fp
+    config:   
+      tags:
+        - population
+        - educ_serv_adultes
+    description: >
+          Identifier les inscriptions en FP
+    tests: 
+      - resolution: 
+          combination_of_columns: 
+            - code_perm
+            - fiche
+            - annee
+            - freq
+```
+
+Afin de construire votre population, vous devez définir pour chaque population les règles d'affaire pour les années précedente y compris l'année en cours. 
+
+#### Spécification du Dbt project
+> Mettez à jour votre fichier `cssxx_store/dbt_project.yml` avec l'extrait suivant
+
+```yaml
+# cssXX.data.store/dbt_project.yml
+models: 
+  store:
+    marts:
+      educ_serv_adultes:
+        +enabled: True 
+    dashboards:
+      educ_serv_adultes:
+        effectif_css_adultes:
+          +enabled: true
+    interfaces:
+      jade_adultes:
+        +enabled: true
+```
 
 ### Transport
 > Get operational data about the Transport system of the school board. KPI include the number of circuits per parcours, etc..
@@ -1003,7 +1091,21 @@ models:
 ```
 
 __Developers : when creating a new dashboard using the population mechanism, you must register it's tag in the `marts/educ_serv/adapters.yml` file, for it trigger the population computation.__
+
+#### `educ_serv_adultes`
+> Ce comptoir de données (mart) regroupe toutes les données liées à la formation des adultes.
+
+##### Populations
+Les `Populations` sont des ensembles d'élèves utilisées comme filtre par les tableaux de bord. __Vous pouvez vous reférer à section [### Guide effectif_css_adultes](#effectif_css_adultes).__
+
+Les populations suivantes sont obligatoires et doivent être définies : 
+* `stg_ele_fp`
+* `stg_ele_fga`
+* `stg_populations_adultes` __Vous devez créer ce fichier sql pour unioniser tes populations.__
+
+__Développeurs : lors de la création d'un nouveau tableau de bord utilisant les populations, vous devez enregistrer son tag `populations_adultes` dans les fichiers `*/schema.yml` , afin de déclencher la calcul de la population.__
   
+
 ### human resources
 > This mart gather all the data related to the human resources departement
 > 
