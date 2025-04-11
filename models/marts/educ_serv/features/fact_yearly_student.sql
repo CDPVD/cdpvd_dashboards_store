@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {% else %} {% set years_of_data_student = 10 %}
 {% endif %}
 
-
 with
     step1 as (
         select
