@@ -119,7 +119,7 @@ with
             padd.groupe,
             padd.code_matiere,
             padd.event_kind,
-            padd.etape as etape_friendly,
+            concat('étape : ', padd.etape) as etape_friendly,
             n_events
         from padding as padd
         inner join
@@ -144,7 +144,7 @@ with
             aug.date_evenement,
             aug.jour_semaine,
             aug.code_matiere,
-            concat('étape : ', aug.etape_friendly) as etape_friendly,
+            coalesce(aug.etape_friendly, 'Tout') as etape_friendly,
             aug.event_kind,
             sum(n_events) as n_events
         from augmented as aug
@@ -154,7 +154,6 @@ with
             aug.date_evenement,
             aug.jour_semaine,
             aug.code_matiere,
-            aug.etape_friendly,
             aug.event_kind
     )
 

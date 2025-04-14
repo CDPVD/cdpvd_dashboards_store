@@ -117,7 +117,7 @@ with
             padd.groupe,
             padd.event_kind,
             event_description,
-            padd.etape_friendly,
+            concat('étape : ', padd.etape_friendly) as etape_friendly,
             n_events
         from padding as padd
         inner join
@@ -140,7 +140,7 @@ with
             coalesce(aug.groupe, 'Tout') as groupe,
             aug.date_evenement,
             aug.jour_semaine,
-            concat('étape : ', aug.etape_friendly) as etape_friendly,
+            coalesce(aug.etape_friendly, 'Tout') as etape_friendly,
             aug.event_kind,
             aug.event_description,
             sum(n_events) as n_events
@@ -150,7 +150,6 @@ with
             eco.annee, cube (eco.school_friendly_name, aug.groupe, aug.etape_friendly),
             aug.date_evenement,
             aug.jour_semaine,
-            aug.etape_friendly,
             aug.event_kind,
             aug.event_description
     )
