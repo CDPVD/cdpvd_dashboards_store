@@ -29,6 +29,16 @@ models:
       schema: dashboard_effectif_css_adultes
     description: >
         Table de rapports qui comptabilise la population adulte au sein du CSS selon le centre, le batisse, l'année, l'état de la formation, le type de parcours, le genre et le motif/raison de départ.
+  - name: metric_report_reussis_css_fp
+    config:
+      alias: metric_report_reussis_css_fp
+      tags:
+        - educ_serv_adultes
+        - populations_adultes
+        - reussite_adultes
+      schema: dashboard_effectif_css_adultes
+    description: >
+        Table de rapports qui comptabilise la population adulte au sein du CSS selon le centre, le batisse, l'année, l'état de la formation, le type de parcours, le genre et le motif/raison de départ.
   - name: report_sanction_adultes
     config:
       alias: report_sanction_adultes_reussis
