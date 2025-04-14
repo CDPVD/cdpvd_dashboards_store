@@ -53,7 +53,7 @@ with
             jour_semaine,
             coalesce(groupe, 'Tout') as groupe,
             -- coalesce(code_matiere, 'Tout') as code_matiere,
-            etape_friendly,
+            coalesce(etape_friendly, 'Tout') as etape_friendly,
             event_kind,
             -- The daily is rate is compute as the weighted average of the etapes rates.
             sum(n_events) as n_events,
@@ -61,10 +61,9 @@ with
             sum(absence_rate * n_students_daily) / sum(n_students_daily) as absence_rate
         from source as src
         group by
-            annee, cube (school_friendly_name, groupe),
+            annee, cube (school_friendly_name, groupe, etape_friendly),
             date_evenement,
             jour_semaine,
-            etape_friendly,
             event_kind
 
     -- Compute the absence_rate at the CSS level (use the weighted absence_rate to
@@ -100,7 +99,7 @@ with
         select
             annee,
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
-            etape_friendly,
+            coalesce(etape_friendly, 'Tout') as etape_friendly,
             event_kind,
             jour_semaine,
             coalesce(groupe, 'Tout') as groupe,
@@ -108,9 +107,8 @@ with
             / sum(n_students_daily) as avg_absence_rate_jour
         from source
         group by
-            annee, cube (school_friendly_name, groupe),
+            annee, cube (school_friendly_name, groupe, etape_friendly),
             jour_semaine,
-            etape_friendly,
             event_kind
 
     -- add the css and school metrics to the table

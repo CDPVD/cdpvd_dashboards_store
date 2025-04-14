@@ -25,14 +25,14 @@ with
         select
             annee,
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
-            etape_friendly,
+            coalesce(etape_friendly, 'Tout') as etape_friendly,
             event_kind,
             coalesce(groupe, 'Tout') as groupe,
             -- RLS hooks : 
             max(id_eco) as id_eco,
             max(eco) as eco
         from {{ ref("cdpvd_abstsm_stg_daily_metrics") }} dly
-        group by annee, cube (school_friendly_name, groupe), etape_friendly, event_kind
+        group by annee, cube (school_friendly_name, groupe, etape_friendly), event_kind
     )
 
 select
@@ -50,3 +50,4 @@ select
     id_eco,
     eco
 from source
+
