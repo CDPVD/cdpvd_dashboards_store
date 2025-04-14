@@ -29,8 +29,7 @@ with
             event_kind,
             coalesce(groupe, 'Tout') as groupe,
             -- RLS hooks : 
-            max(id_eco) as id_eco,
-            max(eco) as eco
+            max(id_eco) as id_eco
         from {{ ref("cdpvd_abstsm_stg_daily_metrics") }} dly
         group by annee, cube (school_friendly_name, groupe, etape_friendly), event_kind
     )
@@ -47,7 +46,17 @@ select
         )
     }} as filter_key,
     -- RLS hooks :
-    id_eco,
-    eco
+    case
+        when school_friendly_name != 'Tout le CSS'
+        then
+            substring(
+                school_friendly_name,
+                charindex('(', school_friendly_name) + 1,
+                charindex(')', school_friendly_name)
+                - charindex('(', school_friendly_name)
+                - 1
+            )
+        else ''
+    end as eco,
+    id_eco
 from source
-
