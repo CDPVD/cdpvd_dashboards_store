@@ -117,7 +117,7 @@ with
             padd.groupe,
             padd.code_matiere,
             padd.event_kind,
-            padd.etape as etape_friendly,
+            concat('étape : ', padd.etape) as etape_friendly,
             n_events
         from padding as padd
         inner join
@@ -141,17 +141,16 @@ with
             aug.date_evenement,
             aug.jour_semaine,
             aug.code_matiere,
-            concat('étape : ', aug.etape_friendly) as etape_friendly,
+            coalesce(aug.etape_friendly, 'Tout') as etape_friendly,
             aug.event_kind,
             sum(n_events) as n_events
         from augmented as aug
         left join {{ ref("dim_mapper_schools") }} as eco on aug.id_eco = eco.id_eco
         group by
-            eco.annee, cube (eco.school_friendly_name, aug.groupe),
+            eco.annee, cube (eco.school_friendly_name, aug.groupe, aug.etape_friendly),
             aug.date_evenement,
             aug.jour_semaine,
             aug.code_matiere,
-            aug.etape_friendly,
             aug.event_kind
     )
 
