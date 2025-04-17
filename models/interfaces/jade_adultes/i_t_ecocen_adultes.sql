@@ -15,5 +15,5 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select ecocen as eco_cen, descr, vpdclient, cal
+select ecocen as eco_cen, descr, vpdclient, cal, CfpOff, CenOff
 from {{ var("database_jade_adultes") }}.dbo.t_ecocen

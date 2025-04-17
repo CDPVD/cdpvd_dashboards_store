@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 with
     -- Recuperer l'ensemble des eleves qui ont des inscriptions ces 10 dernieres annees en FGJ
     fgj as (
-        select distinct code_perm, fiche, annee, eco, id_eco
+        select distinct code_perm, cast(fiche as nvarchar) as fiche, annee, eco, id_eco
         from {{ ref("spine_all") }}
 		where annee between {{ core_dashboards_store.get_current_year() }}-10 and {{ core_dashboards_store.get_current_year() }}
 
@@ -27,7 +27,7 @@ with
 	-- Recuperer l'ensemble des eleves qui ont des inscriptions ces 10 dernieres annees en FP/FGA
     -- Possible qu'il y ai le cas 1 code_perm -> 2 fiches la meme annee (si 2 centres dans un meme CSS / 2 BD adultes...)
 	fp as (
-        select code_perm, fiche, annee, eco_cen as eco
+        select code_perm, cast(fiche as nvarchar) as fiche, annee, eco_cen as eco
         from {{ ref("fact_freq_adultes") }}
 		where annee BETWEEN {{ core_dashboards_store.get_current_year() }}-10 AND {{ core_dashboards_store.get_current_year() }}
 
@@ -162,7 +162,7 @@ with
 	contacts as (
 		select 
 			code_perm, 
-			fiche,
+			cast(fiche as nvarchar) as fiche,
 			nom_pere, 
 			pnom_pere,
 			adr_electr_pere, 
@@ -179,24 +179,24 @@ with
 	), 
 
 	actifs as (
-		select 		dan.fiche, eco.eco
+		select 		cast(dan.fiche as nvarchar) as fiche, eco.eco
 		from 		{{ ref("i_gpm_e_dan") }} dan
 		inner join 	{{ ref("i_gpm_t_eco") }} eco on dan.id_eco = eco.id_eco
 		where		eco.annee = {{ core_dashboards_store.get_current_year() }} and dan.statut_don_an = 'A'
 		union all
-		select		f.fiche, f.EcoCen as eco
-		from		{{ var("database_jade_adultes") }}.dbo.e_freq f
-		left join	{{ var("database_jade_adultes") }}.dbo.t_ecocen ec on f.ecocen = ec.ecocen
+		select		cat(f.fiche as nvarchar), f.eco_cen as eco
+		from		{{ ref("i_e_freq_adultes") }} f
+		left join	{{ ref("i_t_ecocen_adultes") }} ec on f.eco_cen = ec.eco_cen
 		where		((MONTH(CURRENT_TIMESTAMP) < 8 and annee = YEAR(CURRENT_TIMESTAMP)-1)
 					OR (MONTH(CURRENT_TIMESTAMP) > 8 and annee = YEAR(CURRENT_TIMESTAMP)))
 				and (ec.CfpOff <> '' or ec.CenOff <> '')
-				and f.DateFin <> ''
+				and f.Date_Fin <> ''
 	)
 
 -- REQUETE FINALE
 select 
     perim.code_perm,
-	IIF(a.fiche IS NOT NULL, 'A', 'I') as statut,
+	IIF(cast(a.fiche as nvarchar) IS NOT NULL, 'A', 'I') as statut,
 	ele.nom,
 	ele.pnom,
 	string_agg(perim.fiche, ', ') AS fiche, -- pour considerer les eleves avec 1 CP, 2 fiches la meme annee
