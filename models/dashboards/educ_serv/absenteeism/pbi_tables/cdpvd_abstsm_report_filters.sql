@@ -24,27 +24,44 @@ with
     source as (
         select
             annee,
-            coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
+            eco,
+            coalesce(etape_friendly, 'Tout') as etape_friendly,
             event_kind,
-            coalesce(groupe, 'Tout') as groupe,
-            -- RLS hooks : 
-            max(id_eco) as id_eco,
-            max(eco) as eco
+            coalesce(groupe, 'Tout') as groupe
         from {{ ref("cdpvd_abstsm_stg_daily_metrics") }} dly
-        group by annee, cube (school_friendly_name, groupe), event_kind
+        group by annee, cube (eco, groupe, etape_friendly), event_kind
+    ),
+    nomeco as (
+        select
+            src.annee,
+            src.eco,
+            groupe,
+            etape_friendly,
+            event_kind,
+            coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name
+        from source src
+        left join
+            {{ ref("dim_mapper_schools") }} as eco
+            on src.eco = eco.eco
+            and src.annee = eco.annee
     )
-
 select
     annee,
     school_friendly_name,
+    etape_friendly,
     event_kind,
     groupe,
     {{
         dbt_utils.generate_surrogate_key(
-            ["annee", "school_friendly_name", "event_kind", "groupe"]
+            [
+                "annee",
+                "school_friendly_name",
+                "etape_friendly",
+                "event_kind",
+                "groupe",
+            ]
         )
     }} as filter_key,
     -- RLS hooks :
-    id_eco,
     eco
-from source
+from nomeco
