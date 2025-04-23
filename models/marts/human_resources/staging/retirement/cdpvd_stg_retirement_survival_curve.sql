@@ -15,7 +15,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-
 {# 
     This table estimate the survival curves through a Kaplan-Meier estimation.
     Survival is defined as the probability of not being retired at a given age.

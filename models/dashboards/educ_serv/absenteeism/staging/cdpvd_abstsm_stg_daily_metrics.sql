@@ -15,7 +15,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-
 {#
     Compute the backfilled and padded version of the daily number of students and absences
     Backfilled is done by / etape.
