@@ -19,24 +19,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 with
     src as (
-        select
-            case
-                when ind.id_indicateur_css is null
-                then ind.id_indicateur_cdpvd  -- Permet d'utiliser l'indicateur défaut de la CDPVD
-                else ind.id_indicateur_css
-            end as id_indicateur,
-            ind.description_indicateur,
-            pevr_charl.annee_scolaire,
-            pevr_charl.cohorte,
-            CONCAT(pevr_charl.annee_scolaire, '%', CHAR(10), ' (', pevr_charl.cohorte, ') ') as an_sco_cohorte,
-            pevr_charl.taux,
-            pevr_charl.cible
-        from {{ ref("pevr_dim_indicateurs") }} as ind
-        inner join
-            {{ ref("indicateur_pevr_charl") }} as pevr_charl
-            on ind.id_indicateur_cdpvd = pevr_charl.id_indicateur_cdpvd
-        where ind.id_indicateur_cdpvd = '8'  -- Indicateur de la dip formation prof après 3 ans.
-    )
+    select
+        case
+            when ind.id_indicateur_css is null
+            then ind.id_indicateur_cdpvd  -- Permet d'utiliser l'indicateur défaut de la CDPVD
+            else ind.id_indicateur_css
+        end as id_indicateur,
+        ind.description_indicateur,
+        pevr_charl.annee_scolaire,
+        pevr_charl.cohorte,
+        CONCAT(pevr_charl.annee_scolaire, '%', CHAR(10), ' (', pevr_charl.cohorte, ') ') as an_sco_cohorte,
+        pevr_charl.taux,
+        pevr_charl.cible,
+        cast(left(pevr_charl.annee_scolaire, 4) as int) as annee,
+        LAG(pevr_charl.taux) OVER (PARTITION BY ind.id_indicateur_cdpvd ORDER BY cast(left(pevr_charl.annee_scolaire, 4) as int)) as taux_annee_precedente
+    from {{ ref("pevr_dim_indicateurs") }} as ind
+    inner join
+        {{ ref("indicateur_pevr_charl") }} as pevr_charl
+        on ind.id_indicateur_cdpvd = pevr_charl.id_indicateur_cdpvd
+    where ind.id_indicateur_cdpvd = '8'  -- Indicateur de la dip formation prof après 3 ans.
+)
+
 
 select *
 from src
