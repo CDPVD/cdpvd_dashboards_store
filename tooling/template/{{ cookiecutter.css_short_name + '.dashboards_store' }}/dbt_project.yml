@@ -49,6 +49,8 @@ models:
                 +enabled: False
             emp_actif:
                 +enabled: False
+            endb:
+                +enabled: False                
             # >>> Overridden by cdpvd_dashboards_store
             retirement:
                 +enabled: false
