@@ -38,8 +38,39 @@ with
         {{ ref("indicateur_pevr_charl") }} as pevr_charl
         on ind.id_indicateur_cdpvd = pevr_charl.id_indicateur_cdpvd
     where ind.id_indicateur_cdpvd = '8'  -- Indicateur de la dip formation prof après 3 ans.
+),
+
+_variation as (
+    select
+        id_indicateur,
+        description_indicateur,
+        annee_scolaire,
+        cohorte,
+        an_sco_cohorte,
+        taux,
+        cible,
+        annee,
+        taux_annee_precedente,
+        CASE 
+            WHEN (taux > cible AND taux_annee_precedente IS NULL) THEN 2 -- Vert
+            WHEN (taux < cible AND taux_annee_precedente IS NULL) THEN 0 -- Rouge
+            WHEN (taux < cible AND taux > taux_annee_precedente) THEN 1 -- Jaune
+            WHEN (taux < cible AND taux < taux_annee_precedente) THEN 0 -- Rouge
+            WHEN (taux > cible) THEN 2 -- Vert
+        END AS variation
+    from src
 )
 
 
-select *
-from src
+select 
+    id_indicateur,
+    description_indicateur,
+    annee_scolaire,
+    cohorte,
+    an_sco_cohorte,
+    taux,
+    cible,
+    annee,
+    taux_annee_precedente,
+    variation
+from _variation
