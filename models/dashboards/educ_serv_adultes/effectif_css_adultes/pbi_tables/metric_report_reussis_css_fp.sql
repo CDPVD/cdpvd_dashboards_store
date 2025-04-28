@@ -35,7 +35,7 @@ with agg_filt as (
         annnee_scolaire,
         eco_cen,
         concat('batisse - ',bat) bat,
-        indtransm,
+        ind_transm,
         ville,
         interv_age,
         interv_age_fp,
