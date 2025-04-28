@@ -59,15 +59,15 @@ with
             org.descr as descr_org_hor,
             freq.date_deb,
             freq.date_fin_sifca,
-            freq.activform,
-            freq.condadmiss,
+            freq.activ_form,
+            freq.cond_admiss,
             wlcon.cf_descr as descr_condadmiss,
             case
                 when freq.date_fin_sifca is null or freq.date_fin_sifca = ''
                 then 'En cours'
                 else 'Terminé'
             end as etat_formation,
-            freq.indtransm,
+            freq.ind_transm,
             freq.prog,
             prog.descr_prog,
             prog.type_diplome,
@@ -88,38 +88,38 @@ with
             on freq.fiche = pop.fiche
             and freq.annee = pop.annee
             and freq.freq = pop.freq
-        left join {{ ref("i_t_prog_adultes") }} prog on prog.prog = freq.prog
-        left join
+        left join {{ ref("i_t_prog_adultes") }} prog on prog.prog = freq.prog  -- récupère la description des programmes
+        left join  -- récupère la description du service d'enseignement                                                              
             {{ ref("i_t_wl_descr_adultes") }} wld
             on wld.code = freq.service_enseign
             and wld.nom_table = 'X_ServiceEnseign'
-        left join
+        left join  -- récupère la description des motifs de départ
             {{ ref("i_t_wl_descr_adultes") }} mot
             on mot.code = freq.motif_depart
             and mot.nom_table = 'X_MotifDep'
-        left join
+        left join  -- récupère la description des raisons de départ
             {{ ref("i_t_wl_descr_adultes") }} wl
             on wl.code = freq.raison_depart
             and wl.nom_table = 'X_RaisonDepart'
-        left join
+        left join  -- récupère la description des type de parcours
             {{ ref("i_t_wl_descr_adultes") }} wlt
             on wlt.code = freq.type_parcours
             and wlt.nom_table = 'X_TypeParcours'
-        left join
+        left join  -- récupère la description des conditions d'admission
             {{ ref("i_t_wl_descr_adultes") }} wlcon
-            on wlcon.code = freq.condadmiss
+            on wlcon.code = freq.cond_admiss
             and wlcon.nom_table = 'X_CondAdmiss'
-        left join
+        left join  -- récupère la description des raisons de la gratuité scolaire
             {{ ref("i_t_wl_descr_adultes") }} wlgratscol
             on wlgratscol.code = freq.raison_grat_scol
             and wlgratscol.nom_table = 'X_RaisonGratScol'
-        left join
+        left join  -- récupère la description de l'organisation d'horaire
             {{ ref("i_e_o_orghor_adultes") }} org
             on org.eco_cen = freq.eco_cen
             and org.org_hor = freq.org_hor
-        inner join
+        inner join  -- récupère les noms des centres Fp et FGA
             {{ ref("i_t_ecocen_adultes") }} as centre on freq.eco_cen = centre.eco_cen
-        where pop.annee >= 2020
+        where pop.annee >= {{ core_dashboards_store.get_current_year() - 5 }}
     )
 select
     code_perm,
@@ -162,17 +162,17 @@ select
     bat,
     org_hor,
     case
-        when indtransm = 1
+        when ind_transm = 1
         then 'Transmissible'
-        when indtransm = 0
+        when ind_transm = 0
         then 'Non-transmissible'
         else null
-    end as indtransm,
+    end as ind_transm,
     descr_org_hor,
     date_deb,
     date_fin_sifca,
-    activform,
-    condadmiss,
+    activ_form,
+    cond_admiss,
     descr_condadmiss,
     etat_formation,
     prog,
