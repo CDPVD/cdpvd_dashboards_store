@@ -133,7 +133,8 @@ with
             nb_resultat,
             taux_diplomation,
             ecart_cible,
-            cible
+            cible,
+            LAG(taux_diplomation) OVER (PARTITION BY id_indicateur ORDER BY cast(left(annee_scolaire, 4) as int)) as taux_previous_year
         from agg_dip
     )
 
@@ -146,6 +147,12 @@ select
     CONCAT(taux_diplomation * 100, '%', CHAR(10), '(', nb_resultat, ' él.) ') AS taux_nbEleve,
     ecart_cible,
     cible,
+    CASE 
+        WHEN (taux_diplomation >= cible ) THEN 2 -- Vert
+        WHEN ( (taux_diplomation < taux_previous_year) AND (taux_diplomation > cible) ) THEN 2 -- Vert
+        WHEN ( (taux_diplomation > taux_previous_year) AND (taux_diplomation < cible) ) THEN 1 -- Jaune
+        WHEN (taux_diplomation < cible ) THEN 0 -- Rouge
+    END AS variation,
     {{
         dbt_utils.generate_surrogate_key(
             [

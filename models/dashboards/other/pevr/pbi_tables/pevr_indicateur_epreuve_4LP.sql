@@ -117,7 +117,8 @@ with
             nb_resultat,
             taux_maitrise,
             ecart_cible,
-            cible
+            cible,
+            LAG(taux_maitrise) OVER (PARTITION BY id_indicateur ORDER BY cast(left(annee_scolaire, 4) as int)) as taux_previous_year
         from agg
     )
 
@@ -130,6 +131,13 @@ select
     CONCAT(taux_maitrise * 100, '%', CHAR(10), '(', nb_resultat, ' él.) ') AS taux_nbEleve,
     ecart_cible,  -- Même affaire.
     cible,
+    cast(left(annee_scolaire, 4) as int) as annee,
+    CASE 
+        WHEN (taux_maitrise >= cible ) THEN 2 -- Vert
+        WHEN ( (taux_maitrise < taux_previous_year) AND (taux_maitrise > cible) ) THEN 2 -- Vert
+        WHEN ( (taux_maitrise > taux_previous_year) AND (taux_maitrise < cible) ) THEN 1 -- Jaune
+        WHEN (taux_maitrise < cible ) THEN 0 -- Rouge
+    END AS variation,
     {{
         dbt_utils.generate_surrogate_key(
             [

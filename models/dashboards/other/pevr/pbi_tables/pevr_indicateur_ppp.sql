@@ -119,7 +119,8 @@ with
             nb_ppp,
             taux_ppp,
             ecart_cible,
-            cible
+            cible,
+            LAG(taux_ppp) OVER (PARTITION BY id_indicateur ORDER BY cast(left(annee_scolaire, 4) as int)) as taux_previous_year
         from ppp
     )
 
@@ -132,6 +133,13 @@ select
     CONCAT(taux_ppp * 100, '%', CHAR(10), '(', nb_ppp, ' él.) ') AS taux_nbEleve,
     ecart_cible,
     cible,
+    cast(left(annee_scolaire, 4) as int) as annee,
+    CASE 
+        WHEN (taux_ppp >= cible ) THEN 2 -- Vert
+        WHEN ( (taux_ppp < taux_previous_year) AND (taux_ppp > cible) ) THEN 2 -- Vert
+        WHEN ( (taux_ppp > taux_previous_year) AND (taux_ppp < cible) ) THEN 1 -- Jaune
+        WHEN (taux_ppp < cible ) THEN 0 -- Rouge
+    END AS variation,
     {{
         dbt_utils.generate_surrogate_key(
             [

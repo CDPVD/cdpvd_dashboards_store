@@ -134,7 +134,8 @@ with
             nb_resultat,
             taux_qualification_fms,
             ecart_cible,
-            cible
+            cible,
+            LAG(taux_qualification_fms) OVER (PARTITION BY id_indicateur ORDER BY cast(left(annee_scolaire, 4) as int)) as taux_previous_year
         from agg_dip
     )
 
@@ -147,6 +148,13 @@ select
     CONCAT(taux_qualification_fms * 100, '%', CHAR(10), '(', nb_resultat, 'él.) ') AS taux_nbEleve,
     ecart_cible,
     cible,
+    cast(left(annee_scolaire, 4) as int) as annee,
+    CASE 
+        WHEN (taux_qualification_fms >= cible ) THEN 2 -- Vert
+        WHEN ( (taux_qualification_fms < taux_previous_year) AND (taux_qualification_fms > cible) ) THEN 2 -- Vert
+        WHEN ( (taux_qualification_fms > taux_previous_year) AND (taux_qualification_fms < cible) ) THEN 1 -- Jaune
+        WHEN (taux_qualification_fms < cible ) THEN 0 -- Rouge
+    END AS variation,
     {{
         dbt_utils.generate_surrogate_key(
             [

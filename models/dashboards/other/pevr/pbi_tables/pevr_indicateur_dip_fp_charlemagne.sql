@@ -31,8 +31,7 @@ with
         CONCAT(pevr_charl.annee_scolaire, '%', CHAR(10), ' (', pevr_charl.cohorte, ') ') as an_sco_cohorte,
         pevr_charl.taux,
         pevr_charl.cible,
-        cast(left(pevr_charl.annee_scolaire, 4) as int) as annee,
-        LAG(pevr_charl.taux) OVER (PARTITION BY ind.id_indicateur_cdpvd ORDER BY cast(left(pevr_charl.annee_scolaire, 4) as int)) as taux_annee_precedente
+        LAG(pevr_charl.taux) OVER (PARTITION BY ind.id_indicateur_cdpvd ORDER BY cast(left(pevr_charl.annee_scolaire, 4) as int)) as taux_previous_year
     from {{ ref("pevr_dim_indicateurs") }} as ind
     inner join
         {{ ref("indicateur_pevr_charl") }} as pevr_charl
@@ -49,14 +48,11 @@ _variation as (
         an_sco_cohorte,
         taux,
         cible,
-        annee,
-        taux_annee_precedente,
         CASE 
-            WHEN (taux > cible AND taux_annee_precedente IS NULL) THEN 2 -- Vert
-            WHEN (taux < cible AND taux_annee_precedente IS NULL) THEN 0 -- Rouge
-            WHEN (taux < cible AND taux > taux_annee_precedente) THEN 1 -- Jaune
-            WHEN (taux < cible AND taux < taux_annee_precedente) THEN 0 -- Rouge
-            WHEN (taux > cible) THEN 2 -- Vert
+            WHEN (taux >= cible ) THEN 2 -- Vert
+            WHEN ( (taux < taux_previous_year) AND (taux > cible) ) THEN 2 -- Vert
+            WHEN ( (taux > taux_previous_year) AND (taux < cible) ) THEN 1 -- Jaune
+            WHEN (taux < cible ) THEN 0 -- Rouge
         END AS variation
     from src
 )
@@ -70,7 +66,5 @@ select
     an_sco_cohorte,
     taux,
     cible,
-    annee,
-    taux_annee_precedente,
     variation
 from _variation
