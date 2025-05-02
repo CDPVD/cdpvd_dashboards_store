@@ -8,7 +8,7 @@ models:
         - populations_adultes
       schema: "educ_serv_adultes"
     description: >
-      Table répertoriant les informations statiques pour chaque élève.
+      Table de dimension répertoriant les informations statiques pour chaque élève dans les centres.
     columns:
       - name: code_perm
         description: code permanent de l'élève
