@@ -1,0 +1,20 @@
+version: 2
+macros:
+  - name: affich_description_code
+    description: Affiche la description des code selectionnés dans un tableau de bord
+    arguments:
+      - name: nom_table
+        type: string
+        description: Le nom de la table contenant le code
+      - name: desc_colonne
+        type: string
+        description: La colonne contenant la description du code
+      - name: code_colonne
+        type: string
+        description: La colonne contenant le code
+      - name: val_condition
+        type: string
+        description: La valeur de la condition. C'est une condition Where In(val_condition)
+      - name: nom_tableau
+        type: string
+        description: Le nom du tableau de bord
