@@ -58,9 +58,5 @@ select
             )
         else null
     end as eco,
-    case
-        when school_friendly_name != 'Tout le CSS'
-        then id_eco
-        else null
-    end as id_eco
+    case when school_friendly_name != 'Tout le CSS' then id_eco else null end as id_eco
 from source
