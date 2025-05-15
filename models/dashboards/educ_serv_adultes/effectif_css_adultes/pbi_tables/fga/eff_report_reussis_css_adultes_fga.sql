@@ -28,9 +28,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {% endif %}
 {% set dims = [
    "programme",
-   "groupe_horaire",
+   "organisation_horaire",
    "desc_type_parcours",
-   "condition_admission",
+   "service_enseignement",
    "nom_centre",
    "genre",
    "desc_raison_depart"
@@ -38,74 +38,61 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 with
     donn_filtr as (
         select
+            {% for dim in dims -%}
+                case
+                    when {{ dim }} is null or {{ dim }} = '' then '-' else {{ dim }}
+                end as {{ dim }},
+                {{ dim }} as {{ dim }}_bis,
+            {%- endfor %}
             freq,
             prenom_nom,
             code_perm,
             fiche,
             population,
             année,
-            annnee_scolaire,
+            annee_scolaire,
             eco_cen,
             bat,
             ind_transm,
             ville,
             interv_age,
             interv_age_fp,
-            organisation_horaire,
             etat_formation,
             langue_maternelle,
-            programme as prog,
             type_diplome,
             descr_raison_grat_scol,
-            desc_type_parcours as type_parcours,
-            service_enseignement,
-            descr_motif_dep,
-            desc_raison_depart as raison_depart,
-            programme,
-            groupe_horaire,
-            groupe_horaire as groupe_horaire_bis,
-            desc_type_parcours,
-            condition_admission as cond,
-            condition_admission,
-            nom_centre,
-            genre,
-            desc_raison_depart
+            descr_motif_dep
         from {{ ref("eff_report_effectif_css_adultes") }}
         where
             raison_depart in {{ criteres_reussites }}
-            and population = 'Formation professionnelle'
+            and population = 'Formation générale des adultes'
     ),
     all_combinations as (
         {% for i in range(2 ** dims | length) -%}
             select
+                {% for dim in dims -%} {{ dim }} as {{ dim }}_bis, {% endfor -%}
                 freq,
                 prenom_nom,
                 code_perm,
                 fiche,
                 population,
                 année,
-                annnee_scolaire,
+                annee_scolaire,
                 eco_cen,
                 bat,
                 ind_transm,
                 ville,
                 interv_age,
                 interv_age_fp,
-                organisation_horaire,
                 etat_formation,
                 langue_maternelle,
-                prog,
-                groupe_horaire_bis,
                 type_diplome,
                 descr_raison_grat_scol,
-                type_parcours,
-                service_enseignement,
                 descr_motif_dep,
-                raison_depart,
                 {%- for j in range(dims | length) -%}
                     {% set col = dims[j] %}
                     {%- if ((i // (2 ** j)) % 2) == 1 -%} 'Tous' as {{ col }}
-                    {%- else %} {{ col }}
+                    {%- else -%} {{ col }}
                     {%- endif -%}
                     {% if not loop.last %},{%- endif %}
                 {%- endfor %}
