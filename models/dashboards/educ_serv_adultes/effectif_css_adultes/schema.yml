@@ -21,7 +21,23 @@ models:
             - fiche
   - name: eff_report_reussis_css_adultes_fp
     config:
-      alias: report_reussis_css_adultes
+      alias: report_reussis_css_adultes_fp
+      tags:
+        - educ_serv_adultes
+        - populations_adultes
+        - reussite_adultes
+      schema: dashboard_effectif_css_adultes
+    description: >
+        Table de rapports qui comptabilise la population adulte au sein du CSS selon le centre, le batisse, l'année, l'état de la formation, le type de parcours, le genre et le motif/raison de départ.
+    tests:
+      - resolution:
+          combination_of_columns:
+            - code_perm
+            - freq
+            - id_filtre
+  - name: eff_report_reussis_css_adultes_fga
+    config:
+      alias: report_reussis_css_adultes_fga
       tags:
         - educ_serv_adultes
         - populations_adultes
@@ -38,6 +54,20 @@ models:
   - name: metric_report_reussis_css_fp
     config:
       alias: metric_report_reussis_css_fp
+      tags:
+        - educ_serv_adultes
+        - populations_adultes
+        - reussite_adultes
+      schema: dashboard_effectif_css_adultes
+    description: >
+        Table de rapports qui comptabilise la population adulte au sein du CSS selon le centre, le batisse, l'année, l'état de la formation, le type de parcours, le genre et le motif/raison de départ.
+    tests:
+      - resolution:
+          combination_of_columns:
+            - id_filtre
+  - name: metric_report_reussis_css_fga
+    config:
+      alias: metric_report_reussis_css_fga
       tags:
         - educ_serv_adultes
         - populations_adultes

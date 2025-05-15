@@ -77,7 +77,7 @@ select
     fiche,
     population,
     annee as année,
-    concat(annee, '-', annee + 1) as annnee_scolaire,
+    concat(annee, '-', annee + 1) as annee_scolaire,
     eco_cen,
     bat,
     ind_transm,
@@ -95,7 +95,8 @@ select
         when descr_prog is null then descr_prog else concat(prog, ' - ', descr_prog)
     end as programme,
     type_diplome,
-    descr_raison_grat_scol,
+    raison_grat_scol,
+    concat(raison_grat_scol, ' - ', descr_raison_grat_scol) as descr_raison_grat_scol,
     type_parcours,
     concat(type_parcours, ' - ', descr_type_parcours) as desc_type_parcours,
     case
