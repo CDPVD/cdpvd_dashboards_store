@@ -28,7 +28,7 @@ with
         ind.description_indicateur,
         pevr_charl.annee_scolaire,
         pevr_charl.cohorte,
-        CONCAT(pevr_charl.annee_scolaire, '%', CHAR(10), ' (', pevr_charl.cohorte, ') ') as an_sco_cohorte,
+        CONCAT(pevr_charl.annee_scolaire, CHAR(10), ' (', pevr_charl.cohorte, ') ') as an_sco_cohorte,
         pevr_charl.taux,
         pevr_charl.cible,
         LAG(pevr_charl.taux) OVER (PARTITION BY ind.id_indicateur_cdpvd ORDER BY cast(left(pevr_charl.annee_scolaire, 4) as int)) as taux_previous_year
