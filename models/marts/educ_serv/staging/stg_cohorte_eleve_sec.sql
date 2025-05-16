@@ -37,7 +37,11 @@ _parcours as (
         perimetre.code_perm,
 		perimetre.Fiche,
 		Annee_Sec_1,
-		MAX(fact.annee) as Annee_Courant -- On veut l'année la plus récente de l'élève. (Son parcours)
+		CASE
+			WHEN MAX(fact.annee) = {{ core_dashboards_store.get_current_year() }} + 1 -- Année prévisionnelle existante
+			THEN {{ core_dashboards_store.get_current_year() }}
+		ELSE MAX(fact.annee)
+		END AS Annee_Courant -- On veut l'année la plus récente de l'élève. (Son parcours)
 	FROM perimetre
 	INNER JOIN {{ ref("fact_yearly_student") }} as fact ON perimetre.fiche = fact.fiche
 	GROUP BY perimetre.code_perm, perimetre.fiche, Annee_Sec_1
