@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: i_executionlogstorage
+    tags: 
+      - interface
+      - reportserver
+    description: >
+      Table d'interface pour la gestion des logs d'exécution des rapports dans ReportServer.
+      Elle est utilisée pour stocker les informations relatives à l'exécution des rapports, y compris les détails sur les utilisateurs, les rapports exécutés et les résultats de l'exécution.
+  - name: i_users
+    tags: 
+      - interface
+      - reportserver
+    description: >
+      Table d'interface pour la gestion des utilisateurs dans ReportServer.
+      Elle est utilisée pour stocker les informations relatives aux utilisateurs, y compris leurs identifiants et noms.
