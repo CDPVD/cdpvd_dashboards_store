@@ -179,12 +179,12 @@ with
 	), 
 
 	actifs as (
-		select 		cast(dan.fiche as nvarchar) as fiche, eco.eco
+		select 		cast(dan.fiche as nvarchar) as fiche, eco.eco, concat('(', eco.eco, ') - ', eco.nom_eco) as nom_ecole
 		from 		{{ ref("i_gpm_e_dan") }} dan
 		inner join 	{{ ref("i_gpm_t_eco") }} eco on dan.id_eco = eco.id_eco
 		where		eco.annee = {{ core_dashboards_store.get_current_year() }} and dan.statut_don_an = 'A'
 		union all
-		select		cat(f.fiche as nvarchar), f.eco_cen as eco
+		select		cast(f.fiche as nvarchar), f.eco_cen as eco, concat('(', ec.eco_cen, ') - ', ec.descr) as nom_ecole
 		from		{{ ref("i_e_freq_adultes") }} f
 		left join	{{ ref("i_t_ecocen_adultes") }} ec on f.eco_cen = ec.eco_cen
 		where		((MONTH(CURRENT_TIMESTAMP) < 8 and annee = YEAR(CURRENT_TIMESTAMP)-1)
@@ -202,6 +202,7 @@ select
 	string_agg(perim.fiche, ', ') AS fiche, -- pour considerer les eleves avec 1 CP, 2 fiches la meme annee
     perim.annee,
     perim.eco,
+    a.nom_ecole, 
 	-- Contacts
 	c.nom_pere, 
 	c.pnom_pere,
@@ -235,7 +236,7 @@ left join trp_ag on trp_ag.code_perm = perim.code_perm and trp_ag.annee = perim.
 left join car_proc on car_proc.code_perm = perim.code_perm and car_proc.annee = perim.annee and car_proc.eco = perim.eco
 left join trp_proc on trp_proc.code_perm = perim.code_perm and trp_proc.annee = perim.annee and trp_proc.eco = perim.eco
 left join contacts c on perim.fiche = c.fiche
-group by perim.code_perm, a.fiche, ele.nom, ele.pnom, perim.annee, perim.eco,
+group by perim.code_perm, a.fiche, ele.nom, ele.pnom, perim.annee, perim.eco, a.nom_ecole,
 c.nom_pere,
 c.pnom_pere,
 c.adr_electr_pere,
