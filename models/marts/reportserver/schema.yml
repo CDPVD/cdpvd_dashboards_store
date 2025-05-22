@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: fact_metrics
+    config:
+      tags: 
+        - reportserver
+      alias: tfait_metrics
+      schema: reportserver
+    description: >
+      Table d'interface pour la gestion des métriques dans ReportServer.
+      Elle est utilisée pour stocker les informations relatives aux métriques, y compris leurs noms, types et valeurs.
+  - name: fact_metricspy
+    config:
+      tags: 
+        - reportserver
+      schema: reportserver
+    description: >
+      Table d'interface pour la gestion des métriques dans ReportServer.
+      Elle est utilisée pour stocker les informations relatives aux métriques, y compris leurs noms, types et valeurs.

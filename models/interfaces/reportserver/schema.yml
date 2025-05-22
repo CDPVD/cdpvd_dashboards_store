@@ -15,3 +15,10 @@ models:
     description: >
       Table d'interface pour la gestion des utilisateurs dans ReportServer.
       Elle est utilisée pour stocker les informations relatives aux utilisateurs, y compris leurs identifiants et noms.
+  - name: i_catalog
+    tags: 
+      - interface
+      - reportserver
+    description: >
+      Table d'interface pour la gestion du catalogue dans ReportServer.
+      Elle est utilisée pour stocker les informations relatives aux rapports, y compris leurs noms, types et emplacements dans le système de fichiers.
