@@ -92,7 +92,6 @@ with
             jour_semaine,
             code_matiere,
             etape,
-            etape,
             event_kind,
             grille
         from {{ ref("cdpvd_abstsm_stg_padding") }} as padd
@@ -103,7 +102,6 @@ with
             date_evenement,
             jour_semaine,
             code_matiere,
-            etape,
             etape,
             event_kind,
             grille
@@ -129,7 +127,6 @@ with
             and padd.groupe = abs_.groupe
             and padd.grille = abs_.grille
             and padd.code_matiere = abs_.code_matiere
-            and padd.etape = abs_.etape
             and padd.etape = abs_.etape
             and padd.event_kind = abs_.event_kind
         where abs_.n_events is not null

@@ -31,7 +31,6 @@ with
             jour_semaine,
             groupe,
             etape_friendly,
-            etape_friendly,
             event_kind,
             max(n_events) as n_events,
             max(n_students_daily) as n_students_daily,
@@ -43,7 +42,6 @@ with
             groupe,
             date_evenement,
             jour_semaine,
-            etape_friendly,
             etape_friendly,
             event_kind
     ),
@@ -77,12 +75,10 @@ with
             date_evenement,
             jour_semaine,
             etape_friendly,
-            etape_friendly,
             event_kind,
             sum(absence_rate * n_students_daily)
             / sum(n_students_daily) as absence_rate_css
         from agg
-        group by annee, date_evenement, jour_semaine, etape_friendly, event_kind
         group by annee, date_evenement, jour_semaine, etape_friendly, event_kind
 
     -- Compute the Average (past and future) absence rate for each school
@@ -92,12 +88,10 @@ with
             annee,
             school_friendly_name,
             etape_friendly,
-            etape_friendly,
             event_kind,
             sum(absence_rate * n_students_daily)
             / sum(n_students_daily) as avg_absence_rate_school
         from agg
-        group by annee, school_friendly_name, etape_friendly, event_kind
         group by annee, school_friendly_name, etape_friendly, event_kind
     -- Compute the Average (past and future) absence rate for each school
     ),
@@ -128,7 +122,6 @@ with
             src.date_evenement,
             src.n_students_daily,
             src.etape_friendly,
-            src.etape_friendly,
             src.event_kind,
             src.n_events,
             src.absence_rate,
@@ -145,13 +138,11 @@ with
             and src.date_evenement = css.date_evenement
             and src.event_kind = css.event_kind
             and src.etape_friendly = css.etape_friendly
-            and src.etape_friendly = css.etape_friendly
         left join
             school
             on src.annee = school.annee
             and src.school_friendly_name = school.school_friendly_name
             and src.event_kind = school.event_kind
-            and src.etape_friendly = school.etape_friendly
             and src.etape_friendly = school.etape_friendly
         left join
             jour
@@ -160,7 +151,6 @@ with
             and src.groupe = jour.groupe
             and src.jour_semaine = jour.jour_semaine
             and src.event_kind = jour.event_kind
-            and src.etape_friendly = jour.etape_friendly
             and src.etape_friendly = jour.etape_friendly
 
     )

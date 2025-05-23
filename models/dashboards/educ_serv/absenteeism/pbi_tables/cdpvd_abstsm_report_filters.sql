@@ -38,7 +38,6 @@ select
     annee,
     school_friendly_name,
     etape_friendly,
-    etape_friendly,
     event_kind,
     groupe,
     {{
