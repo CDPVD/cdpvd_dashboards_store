@@ -100,7 +100,12 @@ models:
                 +enabled: false/true
             educ_serv_adultes:
                 +enabled: false/true
+            educ_serv_adultes:
+                +enabled: false/true
         dashboards:
+            educ_serv_adultes:
+                effectif_css_adultes
+                    +enabled: false/true
             educ_serv_adultes:
                 effectif_css_adultes
                     +enabled: false/true
@@ -134,6 +139,7 @@ vars:
     database_paie: "[SERVEUR_IP].[PAIE]"
     database_gpi: "[SERVEUR_IP].[GPIP]"
     database_jade: "[SERVEUR_IP].[JADE]"
+    database_jade_adultes: "[SERVEUR_IP].[JADE_ADULTES]"
     database_jade_adultes: "[SERVEUR_IP].[JADE_ADULTES]"
     database_prodrome: "[SERVEUR_IP]"
 
@@ -447,6 +453,7 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 | [effectif_css](#effectif_css) | Track the population count in each school in the CSS | (CSSVT) Frédéryk Busque , Mohamed Sadqi (CSSVDC)
 | [retirement](#retirement) | Tracks the number of retired employees by job categories and workplace. Forecast, for up to five years, the number of retiring employees | (Sciance) Hugo Juhel
 | [absenteeism](#absenteeism) | Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | (Sciance) Hugo Juhel, Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
+| [effectif_css_adultes](#effectif_css_adultes) | Une vue d'ensemble en fonction des objectifs et des types de formation suivis par les élèves inscrits à notre centre de service scolaire. | Martin Legault (CSSMV), Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
 | [effectif_css_adultes](#effectif_css_adultes) | Une vue d'ensemble en fonction des objectifs et des types de formation suivis par les élèves inscrits à notre centre de service scolaire. | Martin Legault (CSSMV), Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
 
 
@@ -1106,6 +1113,21 @@ models:
 ```
 
 __Developers : when creating a new dashboard using the population mechanism, you must register it's tag in the `marts/educ_serv/adapters.yml` file, for it trigger the population computation.__
+
+#### `educ_serv_adultes`
+> Ce comptoir de données (mart) regroupe toutes les données liées à la formation des adultes.
+
+##### Populations
+Les `Populations` sont des ensembles d'élèves utilisées comme filtre par les tableaux de bord. __Vous pouvez vous reférer à section [### Guide effectif_css_adultes](#effectif_css_adultes).__
+
+Les populations suivantes sont obligatoires et doivent être définies : 
+* `stg_ele_fp`
+* `stg_ele_fga`
+* `stg_populations_adultes` __Vous devez créer ce fichier sql pour unioniser tes populations.__
+
+__Développeurs : lors de la création d'un nouveau tableau de bord utilisant les populations, vous devez enregistrer son tag `populations_adultes` dans les fichiers `*/schema.yml` , afin de déclencher la calcul de la population.__
+  
+
 
 #### `educ_serv_adultes`
 > Ce comptoir de données (mart) regroupe toutes les données liées à la formation des adultes.
