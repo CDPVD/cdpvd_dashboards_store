@@ -514,6 +514,10 @@ models:
 
 Afin de construire votre population, vous devez définir pour chaque population les règles d'affaire pour les années précedente y compris l'année en cours. 
 
+#### Module réussites 
+
+Dans ce module, l'intégrateur ou l'analyste du CSS a la possibilité de choisir les critères de réussite. Sinon, les critères de réussite par défaut seront activés.
+
 #### Spécification du Dbt project
 > Mettez à jour votre fichier `cssxx_store/dbt_project.yml` avec l'extrait suivant
 
@@ -531,6 +535,12 @@ models:
     interfaces:
       jade_adultes:
         +enabled: true
+
+vars:
+  dashboards:
+    educ_serv_adultes:
+      effectif_css_adultes:
+        criteres_reussites: (22, 12, 04, 02)
 ```
 
 ### Transport
