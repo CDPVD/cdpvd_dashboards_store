@@ -93,17 +93,8 @@ with
             etape as etape_friendly,
             event_kind,
             grille
-        select
-            id_eco,
-            groupe,
-            date_evenement,
-            jour_semaine,
-            etape as etape_friendly,
-            event_kind,
-            grille
         from {{ ref("cdpvd_abstsm_stg_padding") }} as padd
         where padd.is_school_day = 1
-        group by id_eco, groupe, date_evenement, jour_semaine, event_kind, grille, etape
         group by id_eco, groupe, date_evenement, jour_semaine, event_kind, grille, etape
 
     -- Inner join on the padding table to reduce to the work days only (so the table
@@ -126,7 +117,6 @@ with
             and padd.date_evenement = abs_.date_evenement
             and padd.groupe = abs_.groupe
             and padd.grille = abs_.grille
-            and padd.etape_friendly = abs_.etape
             and padd.etape_friendly = abs_.etape
             and padd.event_kind = abs_.event_kind
         where abs_.n_events is not null
@@ -157,7 +147,13 @@ with
 select
     {{
         dbt_utils.generate_surrogate_key(
-            ["annee", "school_friendly_name", "etape_friendly", "event_kind", "groupe"]
+            [
+                "annee",
+                "school_friendly_name",
+                "etape_friendly",
+                "event_kind",
+                "groupe",
+            ]
         )
     }} as filter_key,
     cast(date_evenement as date) as date_evenement,

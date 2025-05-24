@@ -61,4 +61,3 @@ models:
           combination_of_columns:
             - filter_key
             - eco
-            - id_eco
