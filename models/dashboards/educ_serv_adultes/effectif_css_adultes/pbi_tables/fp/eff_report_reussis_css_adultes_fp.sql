@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     )
 }}
 {% if execute %}
-    {% set criteres_reussites = var("dashboards")["educ_serv_adultes"]["effectif_css_adultes"]["criteres_reussites"] or "(22, 12, 04, 02)" %}
+    {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("effectif_css_adultes", {}).get("criteres_reussites", "(22, 12, 4, 2)")%}
     {{ affich_description_code("eff_report_effectif_css_adultes","desc_raison_depart","raison_depart",criteres_reussites,"formation des adultes ") }}
 {% endif %}
 {% set dims = [
