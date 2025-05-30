@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {{
     config(
         post_hook=[
-            core_dashboards_store.stamp_model("dashboard_effectif_css_adultes")
+            core_dashboards_store.stamp_model("dashboard_portrait_css_fpfga")
         ]
     )
 }}

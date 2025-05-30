@@ -104,10 +104,10 @@ models:
                 +enabled: false/true
         dashboards:
             educ_serv_adultes:
-                effectif_css_adultes
+                portrait_css_fpfga
                     +enabled: false/true
             educ_serv_adultes:
-                effectif_css_adultes
+                portrait_css_fpfga
                     +enabled: false/true
             other:
                 pevr:
@@ -453,13 +453,12 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 | [effectif_css](#effectif_css) | Track the population count in each school in the CSS | (CSSVT) Frédéryk Busque , Mohamed Sadqi (CSSVDC)
 | [retirement](#retirement) | Tracks the number of retired employees by job categories and workplace. Forecast, for up to five years, the number of retiring employees | (Sciance) Hugo Juhel
 | [absenteeism](#absenteeism) | Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | (Sciance) Hugo Juhel, Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
-| [effectif_css_adultes](#effectif_css_adultes) | Une vue d'ensemble en fonction des objectifs et des types de formation suivis par les élèves inscrits à notre centre de service scolaire. | Martin Legault (CSSMV), Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
-| [effectif_css_adultes](#effectif_css_adultes) | Une vue d'ensemble en fonction des objectifs et des types de formation suivis par les élèves inscrits à notre centre de service scolaire. | Martin Legault (CSSMV), Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
+| [portrait_css_fpfga](#portrait_css_fpfga) | Une vue d'ensemble en fonction des objectifs et des types de formation suivis par les élèves inscrits à notre centre de service scolaire. | Martin Legault (CSSMV), Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
 
 
 > The following section describe the specific for each dashboard. Bear with me, we are gonna drill down into the specifics of each dashboard ! Stay focused ! In each of the following section, you will learn how to tame a specific dashboard.
 
-### Effectif_css_adultes
+### portrait_css_fpfga
 > Suivi des population définie au sein d'un centre de services scolaires. Le tableau de bord affiche le nombre total d'élèves dans chaque école, ainsi que les taux de réussite et les sanctions disciplinaires.
 
 | Interfaces  | Marts         	| Marts seeds     | Dashboard seeds | Additional config |
@@ -537,7 +536,7 @@ models:
         +enabled: True 
     dashboards:
       educ_serv_adultes:
-        effectif_css_adultes:
+        portrait_css_fpfga:
           +enabled: true
     interfaces:
       jade_adultes:
@@ -546,7 +545,7 @@ models:
 vars:
   dashboards:
     educ_serv_adultes:
-      effectif_css_adultes:
+      portrait_css_fpfga:
         criteres_reussites: (22, 12, 04, 02)
 ```
 
@@ -1118,7 +1117,7 @@ __Developers : when creating a new dashboard using the population mechanism, you
 > Ce comptoir de données (mart) regroupe toutes les données liées à la formation des adultes.
 
 ##### Populations
-Les `Populations` sont des ensembles d'élèves utilisées comme filtre par les tableaux de bord. __Vous pouvez vous reférer à section [### Guide effectif_css_adultes](#effectif_css_adultes).__
+Les `Populations` sont des ensembles d'élèves utilisées comme filtre par les tableaux de bord. __Vous pouvez vous reférer à section [### Guide portrait_css_fpfga](#portrait_css_fpfga).__
 
 Les populations suivantes sont obligatoires et doivent être définies : 
 * `stg_ele_fp`
@@ -1133,7 +1132,7 @@ __Développeurs : lors de la création d'un nouveau tableau de bord utilisant le
 > Ce comptoir de données (mart) regroupe toutes les données liées à la formation des adultes.
 
 ##### Populations
-Les `Populations` sont des ensembles d'élèves utilisées comme filtre par les tableaux de bord. __Vous pouvez vous reférer à section [### Guide effectif_css_adultes](#effectif_css_adultes).__
+Les `Populations` sont des ensembles d'élèves utilisées comme filtre par les tableaux de bord. __Vous pouvez vous reférer à section [### Guide portrait_css_fpfga](#portrait_css_fpfga).__
 
 Les populations suivantes sont obligatoires et doivent être définies : 
 * `stg_ele_fp`

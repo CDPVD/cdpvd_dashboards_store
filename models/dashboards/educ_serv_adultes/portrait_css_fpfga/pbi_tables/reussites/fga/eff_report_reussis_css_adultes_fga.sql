@@ -18,14 +18,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {{
     config(
         post_hook=[
-            core_dashboards_store.stamp_model("dashboard_effectif_css_adultes")
+            core_dashboards_store.stamp_model("dashboard_portrait_css_fpfga")
         ]
     )
 }}
+-- Récupère la variable criteres_reussites depuis les variables dbt_project, avec une
+-- valeur par défaut si non définie
 {% if execute %}
-    {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("effectif_css_adultes", {}).get("criteres_reussites", "(22, 12, 4, 2)")%}
-    {{ affich_description_code("eff_report_effectif_css_adultes","desc_raison_depart","raison_depart",criteres_reussites,"formation des adultes ") }}
+    {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("criteres_reussites", "(22, 12, 4, 2)") %}
+    {#
+    Appelle la macro affich_description_code pour afficher les descriptions des raisons de réussite sélectionnées
+    #}
+    {{ affich_description_code("eff_report_portrait_css_fpfga","desc_raison_depart","raison_depart",criteres_reussites,"formation des adultes ") }}
 {% endif %}
+
+-- Définition de la liste des dimensions utilisées pour les combinaisons et l'agrégation
 {% set dims = [
    "programme",
    "organisation_horaire",
@@ -35,8 +42,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
    "genre",
    "desc_raison_depart"
 ] %}
+
 with
     donn_filtr as (
+        -- Sélectionne les données filtrées sur la population et les raisons de
+        -- réussite,et remplace les valeurs nulles ou vides par '-' pour chaque
+        -- dimension
         select
             {% for dim in dims -%}
                 case
@@ -62,15 +73,18 @@ with
             type_diplome,
             descr_raison_grat_scol,
             descr_motif_dep
-        from {{ ref("eff_report_effectif_css_adultes") }}
+        from {{ ref("eff_report_portrait_css_fpfga") }}
         where
             raison_depart in {{ criteres_reussites }}
             and population = 'Formation générale des adultes'
     ),
     all_combinations as (
+        -- Génère toutes les combinaisons possibles des dimensions en remplaçant
+        -- dynamiquement certaines par 'Tous'.
+        -- Cela simule un GROUP BY CUBE pour obtenir des agrégations à tous les niveaux.
         {% for i in range(2 ** dims | length) -%}
             select
-                {% for dim in dims -%} {{ dim }} as {{ dim }}_bis, {% endfor -%}
+                {% for dim in dims -%} {{ dim }}_bis, {% endfor -%}
                 freq,
                 prenom_nom,
                 code_perm,
@@ -102,5 +116,27 @@ with
             {% endif %}
         {%- endfor -%}
     )
-select *, {{ dbt_utils.generate_surrogate_key(["année"] + dims) }} as id_filtre
+-- Sélection finale avec génération d'un identifiant unique pour chaque combinaison de
+-- dimensions
+select
+    {% for dim in dims -%} {{ dim }}_bis, {% endfor -%}
+    {{ dbt_utils.generate_surrogate_key(["année"] + dims) }} as id_filtre,
+    freq,
+    prenom_nom,
+    code_perm,
+    fiche,
+    population,
+    année,
+    annee_scolaire,
+    eco_cen,
+    bat,
+    ind_transm,
+    ville,
+    interv_age,
+    interv_age_fp,
+    etat_formation,
+    langue_maternelle,
+    type_diplome,
+    descr_raison_grat_scol,
+    descr_motif_dep
 from all_combinations
