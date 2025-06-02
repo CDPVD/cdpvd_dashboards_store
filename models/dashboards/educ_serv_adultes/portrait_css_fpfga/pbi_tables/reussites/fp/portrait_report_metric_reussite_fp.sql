@@ -34,7 +34,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
    "desc_raison_depart"
 ] %}
 
--- Récupération des critères de réussite depuis les variables dbt_project (ou valeur par défaut)
+-- Récupération des critères de réussite depuis les variables dbt_project (ou valeur
+-- par défaut)
 {% if execute %}
     {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("criteres_reussites", "(22, 12, 4, 2)") %}
 {% endif %}
@@ -55,7 +56,8 @@ with
         from {{ ref("portrait_report_effectif_fp_fga") }} as fac
         where etat_formation = 'Terminé' and population = 'Formation professionnelle'
     ),
-    -- Agrégation avec CUBE pour obtenir toutes les combinaisons possibles des dimensions
+    -- Agrégation avec CUBE pour obtenir toutes les combinaisons possibles des
+    -- dimensions
     agg_with_taux as (
         select
             année,
@@ -77,7 +79,8 @@ with
                 {% endfor -%}
             )
     )
--- Sélection finale avec génération d'un identifiant unique pour chaque combinaison de dimensions
+-- Sélection finale avec génération d'un identifiant unique pour chaque combinaison de
+-- dimensions
 select *,{{ dbt_utils.generate_surrogate_key(["année"] + dims) }} as id_filtre
 from agg_with_taux
 where nombre_total_by_reussite > 0

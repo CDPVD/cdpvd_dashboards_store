@@ -22,7 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         ]
     )
 }}
--- Récupère la variable criteres_reussites depuis les variables dbt_project, avec une valeur par défaut si non définie
+-- Récupère la variable criteres_reussites depuis les variables dbt_project, avec une
+-- valeur par défaut si non définie
 {% if execute %}
     {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("criteres_reussites", "(22, 12, 4, 2)") %}
     {#
