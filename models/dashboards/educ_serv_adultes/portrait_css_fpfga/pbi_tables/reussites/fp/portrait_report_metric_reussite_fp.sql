@@ -26,9 +26,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- Définition de la liste des dimensions utilisées pour les agrégations et combinaisons
 {% set dims = [
    "programme",
-   "organisation_horaire",
+   "groupe_horaire",
    "desc_type_parcours",
-   "service_enseignement",
+   "condition_admission",
    "nom_centre",
    "genre",
    "desc_raison_depart"
@@ -52,9 +52,8 @@ with
                 end as {{ dim }}
                 {% if not loop.last %},{% endif %}
             {%- endfor -%}
-        from {{ ref("eff_report_portrait_css_fpfga") }} as fac
-        where
-            etat_formation = 'Terminé' and population = 'Formation générale des adultes'
+        from {{ ref("portrait_report_effectif_fp_fga") }} as fac
+        where etat_formation = 'Terminé' and population = 'Formation professionnelle'
     ),
     -- Agrégation avec CUBE pour obtenir toutes les combinaisons possibles des dimensions
     agg_with_taux as (

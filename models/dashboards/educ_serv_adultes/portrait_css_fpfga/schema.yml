@@ -1,9 +1,9 @@
 version: 2
 
 models:
-  - name: eff_report_portrait_css_fpfga
+  - name: portrait_report_effectif_fp_fga
     config:
-      alias: report_portrait_css_fpfga
+      alias: report_effectif_fp_fga
       tags:
         - educ_serv_adultes
         - populations_adultes
@@ -19,9 +19,9 @@ models:
             - année
             - freq
             - fiche
-  - name: eff_report_reussis_css_adultes_fp
+  - name: portrait_report_liste_eleves_reussite_fp
     config:
-      alias: report_reussis_css_adultes_fp
+      alias: report_liste_eleves_reussite_fp
       tags:
         - educ_serv_adultes
         - portrait_css_fpfga
@@ -36,9 +36,9 @@ models:
             - fiche
             - freq
             - id_filtre
-  - name: eff_report_reussis_css_adultes_fga
+  - name: portrait_report_liste_eleves_reussite_fga
     config:
-      alias: report_reussis_css_adultes_fga
+      alias: report_liste_eleves_reussite_fga
       tags:
         - educ_serv_adultes
         - portrait_css_fpfga
@@ -53,9 +53,9 @@ models:
             - fiche
             - freq
             - id_filtre
-  - name: metric_report_reussis_css_fp
+  - name: portrait_report_metric_reussite_fp
     config:
-      alias: report_metric_reussis_css_fp
+      alias: report_metric_reussite_fp
       tags:
         - educ_serv_adultes
         - portrait_css_fpfga
@@ -67,9 +67,9 @@ models:
       - core_dashboards_store.resolution:
           combination_of_columns:
             - id_filtre
-  - name: metric_report_reussis_css_fga
+  - name: portrait_report_metric_reussite_fga
     config:
-      alias: report_metric_reussis_css_fga
+      alias: report_metric_reussite_fga
       tags:
         - educ_serv_adultes
         - portrait_css_fpfga

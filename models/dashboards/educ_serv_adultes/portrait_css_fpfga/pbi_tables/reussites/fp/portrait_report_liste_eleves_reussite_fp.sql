@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         ]
     )
 }}
+
 -- Récupère la variable criteres_reussites depuis les variables dbt_project, avec une
 -- valeur par défaut si non définie
 {% if execute %}
@@ -29,15 +30,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     {#
     Appelle la macro affich_description_code pour afficher les descriptions des raisons de réussite sélectionnées
     #}
-    {{ affich_description_code("eff_report_portrait_css_fpfga","desc_raison_depart","raison_depart",criteres_reussites,"formation des adultes ") }}
+    {{ affich_description_code("portrait_report_effectif_fp_fga","desc_raison_depart","raison_depart",criteres_reussites,"formation des adultes ") }}
 {% endif %}
 
 -- Définition de la liste des dimensions utilisées pour les combinaisons et l'agrégation
 {% set dims = [
    "programme",
-   "organisation_horaire",
+   "groupe_horaire",
    "desc_type_parcours",
-   "service_enseignement",
+   "condition_admission",
    "nom_centre",
    "genre",
    "desc_raison_depart"
@@ -73,10 +74,10 @@ with
             type_diplome,
             descr_raison_grat_scol,
             descr_motif_dep
-        from {{ ref("eff_report_portrait_css_fpfga") }}
+        from {{ ref("portrait_report_effectif_fp_fga") }}
         where
             raison_depart in {{ criteres_reussites }}
-            and population = 'Formation générale des adultes'
+            and population = 'Formation professionnelle'
     ),
     all_combinations as (
         -- Génère toutes les combinaisons possibles des dimensions en remplaçant
