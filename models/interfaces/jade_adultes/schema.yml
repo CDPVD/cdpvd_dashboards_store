@@ -50,4 +50,3 @@ models:
       - populations_adultes
     description: >
       Table d'interface. Utilisée uniquement pour pallier la table 'o_orghor' de la base de données source.
-      

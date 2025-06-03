@@ -82,6 +82,9 @@ models:
                 features:
                 staging:
                     +schema: educ_serv_staging
+            educ_serv_adultes:
+                features:
+                dimensions:
 
         dashboards:
             #+enabled: true
@@ -109,6 +112,8 @@ models:
                         +post-hook:
                             - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
           
+            educ_serv_adultes:
+                portrait_css_fpfga:
 
         interfaces:
             +enabled: true
