@@ -82,6 +82,9 @@ models:
                 features:
                 staging:
                     +schema: educ_serv_staging
+            educ_serv_adultes:
+                features:
+                dimensions:
 
         dashboards:
             #+enabled: true
@@ -109,10 +112,7 @@ models:
                     pbi_tables:
                         +post-hook:
                             - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
-                endb:
-                    +tags: ["endb"]
-                    +schema: "dashboard_endb"
-                                             
+          
 
         interfaces:
             +enabled: true

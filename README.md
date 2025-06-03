@@ -100,9 +100,14 @@ models:
                 +enabled: false/true
             educ_serv_adultes:
                 +enabled: false/true
+            educ_serv_adultes:
+                +enabled: false/true
         dashboards:
             educ_serv_adultes:
-                effectif_css_adultes
+                portrait_css_fpfga
+                    +enabled: false/true
+            educ_serv_adultes:
+                portrait_css_fpfga
                     +enabled: false/true
             other:
                 pevr:
@@ -134,6 +139,7 @@ vars:
     database_paie: "[SERVEUR_IP].[PAIE]"
     database_gpi: "[SERVEUR_IP].[GPIP]"
     database_jade: "[SERVEUR_IP].[JADE]"
+    database_jade_adultes: "[SERVEUR_IP].[JADE_ADULTES]"
     database_jade_adultes: "[SERVEUR_IP].[JADE_ADULTES]"
     database_prodrome: "[SERVEUR_IP]"
 
@@ -447,11 +453,12 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 | [effectif_css](#effectif_css) | Track the population count in each school in the CSS | (CSSVT) Frédéryk Busque , Mohamed Sadqi (CSSVDC)
 | [retirement](#retirement) | Tracks the number of retired employees by job categories and workplace. Forecast, for up to five years, the number of retiring employees | (Sciance) Hugo Juhel
 | [absenteeism](#absenteeism) | Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | (Sciance) Hugo Juhel, Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
+| [portrait_css_fpfga](#portrait_css_fpfga) | Une vue d'ensemble en fonction des objectifs et des types de formation suivis par les élèves inscrits à notre centre de service scolaire. | Martin Legault (CSSMV), Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
 
 
 > The following section describe the specific for each dashboard. Bear with me, we are gonna drill down into the specifics of each dashboard ! Stay focused ! In each of the following section, you will learn how to tame a specific dashboard.
 
-### Effectif_css_adultes
+### portrait_css_fpfga
 > Suivi des population définie au sein d'un centre de services scolaires. Le tableau de bord affiche le nombre total d'élèves dans chaque école, ainsi que les taux de réussite et les sanctions disciplinaires.
 
 | Interfaces  | Marts         	| Marts seeds     | Dashboard seeds | Additional config |
@@ -513,6 +520,10 @@ models:
 
 Afin de construire votre population, vous devez définir pour chaque population les règles d'affaire pour les années précedente y compris l'année en cours. 
 
+#### Module réussites 
+
+Dans ce module, l'intégrateur ou l'analyste du CSS a la possibilité de choisir les critères de réussite. Sinon, les critères de réussite par défaut seront activés.
+
 #### Spécification du Dbt project
 > Mettez à jour votre fichier `cssxx_store/dbt_project.yml` avec l'extrait suivant
 
@@ -525,11 +536,17 @@ models:
         +enabled: True 
     dashboards:
       educ_serv_adultes:
-        effectif_css_adultes:
+        portrait_css_fpfga:
           +enabled: true
     interfaces:
       jade_adultes:
         +enabled: true
+
+vars:
+  dashboards:
+    educ_serv_adultes:
+      portrait_css_fpfga:
+        criteres_reussites: (22, 12, 04, 02)
 ```
 
 ### Transport
@@ -1133,7 +1150,22 @@ __Developers : when creating a new dashboard using the population mechanism, you
 > Ce comptoir de données (mart) regroupe toutes les données liées à la formation des adultes.
 
 ##### Populations
-Les `Populations` sont des ensembles d'élèves utilisées comme filtre par les tableaux de bord. __Vous pouvez vous reférer à section [### Guide effectif_css_adultes](#effectif_css_adultes).__
+Les `Populations` sont des ensembles d'élèves utilisées comme filtre par les tableaux de bord. __Vous pouvez vous reférer à section [### Guide portrait_css_fpfga](#portrait_css_fpfga).__
+
+Les populations suivantes sont obligatoires et doivent être définies : 
+* `stg_ele_fp`
+* `stg_ele_fga`
+* `stg_populations_adultes` __Vous devez créer ce fichier sql pour unioniser tes populations.__
+
+__Développeurs : lors de la création d'un nouveau tableau de bord utilisant les populations, vous devez enregistrer son tag `populations_adultes` dans les fichiers `*/schema.yml` , afin de déclencher la calcul de la population.__
+  
+
+
+#### `educ_serv_adultes`
+> Ce comptoir de données (mart) regroupe toutes les données liées à la formation des adultes.
+
+##### Populations
+Les `Populations` sont des ensembles d'élèves utilisées comme filtre par les tableaux de bord. __Vous pouvez vous reférer à section [### Guide portrait_css_fpfga](#portrait_css_fpfga).__
 
 Les populations suivantes sont obligatoires et doivent être définies : 
 * `stg_ele_fp`
