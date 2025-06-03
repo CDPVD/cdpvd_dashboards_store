@@ -228,7 +228,7 @@ select
 
 from perim
 inner join {{ ref("i_gpm_e_ele") }} ele on ele.fiche = perim.fiche
-inner join actifs a on a.fiche = perim.fiche and a.eco = perim.eco
+left join actifs a on a.fiche = perim.fiche and a.eco = perim.eco
 left join car_gpi on car_gpi.code_perm = perim.code_perm and car_gpi.annee = perim.annee and car_gpi.eco = perim.eco
 left join trp_gpi on trp_gpi.code_perm = perim.code_perm and trp_gpi.annee = perim.annee and trp_gpi.eco = perim.eco
 left join car_ag on car_ag.code_perm = perim.code_perm and car_ag.annee = perim.annee and car_ag.eco = perim.eco
