@@ -29,8 +29,9 @@ select
     el.timedataretrieval + el.timeprocessing + el.timerendering as duree_total,
     el.timeprocessing as temps_traitement,
     el.timerendering as temps_rendu,
-    el.timedataretrieval as dataretrievalms,
+    el.timedataretrieval as temps_recuperation_donnees,
     el.source as executionsource,
+    el.status as status,
     el.format as outputformat
 from {{ ref("i_executionlogstorage") }} el
 join {{ ref("i_catalog") }} c on c.itemid = el.reportid
