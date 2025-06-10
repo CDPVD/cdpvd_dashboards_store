@@ -50,7 +50,7 @@ with
             perimetre.cohorte,
             perimetre.freq,
             case
-                when perimetre.freq = 3 and perimetre.ind_obtention = 1.0 then 1.0 -- L'élève doit posseder la certification ET faire son 3 ans
+                when perimetre.ind_obtention = 1.0 then 1.0 -- L'élève doit posseder la certification
                 else 0.0
             end as is_qualified,
             case
@@ -111,6 +111,7 @@ with
             distribution,
             cible,
             count(fiche) nb_resultat,
+            CAST(SUM(is_qualified) as integer) nb_qualified,
             CAST(ROUND(AVG(is_qualified), 3) AS FLOAT) AS taux_qualification_fpt,
             CAST(ROUND(AVG(is_qualified) - cible, 3) AS FLOAT) AS ecart_cible
         from _filtre
@@ -141,6 +142,7 @@ with
             coalesce(classification, 'Tout') as classification,
             coalesce(distribution, 'Tout') as distribution,
             nb_resultat,
+            nb_qualified,
             taux_qualification_fpt,
             ecart_cible,
             cible,
@@ -153,6 +155,8 @@ select
     description_indicateur,
     cohorte,
     nb_resultat,
+    nb_qualified,
+    CONCAT(nb_qualified,'/', nb_resultat) as f_nb_qualified,
     taux_qualification_fpt,
     CONCAT(taux_qualification_fpt * 100, '%', CHAR(10), '(', nb_resultat, ' él.) ') AS taux_nbEleve,
     ecart_cible,

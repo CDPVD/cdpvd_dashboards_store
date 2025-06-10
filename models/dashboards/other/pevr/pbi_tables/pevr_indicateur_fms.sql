@@ -101,6 +101,7 @@ with
             id_indicateur,
             description_indicateur,
             count(fiche) nb_resultat,
+            CAST(SUM(ind_obtention) as integer) as nb_ind_obtention,
             CAST(ROUND(AVG(ind_obtention), 3) AS FLOAT) AS taux_qualification_fms,
             CAST(ROUND(AVG(ind_obtention) - cible, 3) AS FLOAT) AS ecart_cible,
             cible
@@ -132,6 +133,7 @@ with
             coalesce(classification, 'Tout') as classification,
             coalesce(distribution, 'Tout') as distribution,
             nb_resultat,
+            nb_ind_obtention,
             taux_qualification_fms,
             ecart_cible,
             cible,
@@ -145,6 +147,7 @@ select
     annee_scolaire,
     nb_resultat,
     taux_qualification_fms,
+    CONCAT(nb_ind_obtention,'/', nb_resultat) as f_nb_obtention,
     CONCAT(taux_qualification_fms * 100, '%', CHAR(10), '(', nb_resultat, 'él.) ') AS taux_nbEleve,
     ecart_cible,
     cible,
