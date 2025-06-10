@@ -22,32 +22,37 @@ with
     perimetre as (
         select
             '1.3' as id_indicateur,
-            sch.annee,
-            sch.annee_scolaire,
-            src.fiche,
-            sch.school_friendly_name,
-            mentions.ind_obtention,
-            row_number() over (
-                partition by src.fiche, sch.annee order by mentions.date_exec_sanct desc
-            ) as seqid
-        from {{ ref("stg_perimetre_eleve_frequentation_fpt") }} as src
-        inner join {{ ref("dim_mapper_schools") }} as sch on src.id_eco = sch.id_eco
+            fpt.code_perm,
+            fpt.fiche,
+            fpt.school_friendly_name,
+            fpt.Annee_Fpt_1,
+            fpt.cohorte,
+            fpt.freq,
+            mentions.ind_obtention
+        from {{ ref("stg_perimetre_eleve_frequentation_fpt") }} as fpt
         left join
             {{ ref("fact_ri_mentions") }} as mentions
-            on src.fiche = mentions.fiche
-            and sch.annee = mentions.annee
-        where
-            sch.annee
-            between {{ core_dashboards_store.get_current_year() }}
-            - 3 and {{ core_dashboards_store.get_current_year() }}
-            and mentions.indice_cfpt = 1.0  -- Qualification fpt
+            on fpt.fiche = mentions.fiche
+            and mentions.indice_cfpt = 1.0
     ),
+
     -- Ajout des filtres utilisés dans le tableau de bord.
     _filtre as (
         select
-            perim.annee,
-            perim.annee_scolaire,
-            perim.fiche,
+            perimetre.code_perm,
+            perimetre.fiche,
+            case
+                when perimetre.school_friendly_name is null
+                then '-'
+                else perimetre.school_friendly_name
+            end as school_friendly_name,
+            perimetre.Annee_Fpt_1,
+            perimetre.cohorte,
+            perimetre.freq,
+            case
+                when perimetre.freq = 3 and perimetre.ind_obtention = 1.0 then 1.0 -- L'élève doit posseder la certification ET faire son 3 ans
+                else 0.0
+            end as is_qualified,
             case
                 when ind.id_indicateur_css is null
                 then ind.id_indicateur_cdpvd  -- Permet d'utiliser l'indicateur défaut de la CDPVD
@@ -55,56 +60,62 @@ with
             end as id_indicateur,
             ind.description_indicateur,
             ind.cible,
-            case
-                when perim.school_friendly_name is null
-                then '-'
-                else perim.school_friendly_name
-            end as school_friendly_name,
-            perim.ind_obtention,
-            case when ele.genre is null then '-' else ele.genre end as genre,
+            case 
+                when ele.genre is null 
+                then '-' 
+                else ele.genre 
+            end as genre,
             case
                 when y_stud.plan_interv_ehdaa is null
                 then '-'
                 else y_stud.plan_interv_ehdaa
             end as plan_interv_ehdaa,
             case
-                when y_stud.population is null then '-' else y_stud.population
+                when y_stud.population is null 
+                then '-' 
+                else y_stud.population
             end as population,
             case
-                when y_stud.class is null then '-' else y_stud.class
+                when y_stud.class is null 
+                then '-' 
+                else y_stud.class
             end as classification,
-            case when y_stud.dist is null then '-' else y_stud.dist end as distribution
-        from perimetre as perim
+            case 
+                when y_stud.dist is null 
+                then '-' 
+                else y_stud.dist
+            end as distribution
+        from perimetre
         inner join
             {{ ref("fact_yearly_student") }} as y_stud
-            on perim.fiche = y_stud.fiche
-            and perim.annee = y_stud.annee
+            on perimetre.fiche = y_stud.fiche
+            and perimetre.Annee_Fpt_1 = y_stud.annee
         inner join
-            {{ ref("dim_eleve") }} as ele on perim.fiche = ele.fiche
+            {{ ref("dim_eleve") }} as ele on perimetre.fiche = ele.fiche
         inner join
             {{ ref("pevr_dim_indicateurs") }} as ind
-            on perim.id_indicateur = ind.id_indicateur_cdpvd
-        where seqid = 1
+            on perimetre.id_indicateur = ind.id_indicateur_cdpvd
     ),
+
     -- Début de l'aggrégration
     agg_dip as (
         select
-            annee_scolaire,
             school_friendly_name,
+            cohorte,
+            id_indicateur,
+            description_indicateur,
             genre,
             plan_interv_ehdaa,
             population,
             classification,
             distribution,
-            id_indicateur,
-            description_indicateur,
+            cible,
             count(fiche) nb_resultat,
-            CAST(ROUND(AVG(ind_obtention), 3) AS FLOAT) AS taux_qualification_fpt,
-            CAST(ROUND(AVG(ind_obtention) - cible, 3) AS FLOAT) AS ecart_cible,
-            cible
+            CAST(ROUND(AVG(is_qualified), 3) AS FLOAT) AS taux_qualification_fpt,
+            CAST(ROUND(AVG(is_qualified) - cible, 3) AS FLOAT) AS ecart_cible
         from _filtre
         group by
-            annee_scolaire,
+            cohorte,
             id_indicateur,
             description_indicateur,
             cible, cube (
@@ -116,12 +127,13 @@ with
                 distribution
             )
     ),
+
     -- Coalesce pour crée le choix 'Tout' dans les filtres.
     _coalesce as (
         select
             id_indicateur,
             description_indicateur,
-            annee_scolaire,
+            cohorte,
             coalesce(school_friendly_name, 'CSS') as ecole,
             coalesce(genre, 'Tout') as genre,
             coalesce(plan_interv_ehdaa, 'Tout') as plan_interv_ehdaa,
@@ -132,20 +144,20 @@ with
             taux_qualification_fpt,
             ecart_cible,
             cible,
-            LAG(taux_qualification_fpt) OVER (PARTITION BY id_indicateur ORDER BY cast(left(annee_scolaire, 4) as int)) as taux_previous_year
+            LAG(taux_qualification_fpt) OVER (PARTITION BY id_indicateur ORDER BY cast(left(cohorte, 4) as int)) as taux_previous_year
         from agg_dip
     )
 
 select
     id_indicateur,
     description_indicateur,
-    annee_scolaire,
+    cohorte,
     nb_resultat,
     taux_qualification_fpt,
     CONCAT(taux_qualification_fpt * 100, '%', CHAR(10), '(', nb_resultat, ' él.) ') AS taux_nbEleve,
     ecart_cible,
     cible,
-    cast(left(annee_scolaire, 4) as int) as annee,
+    cast(left(cohorte, 4) as int) as annee,
     CASE 
         WHEN (taux_qualification_fpt >= cible ) THEN 2 -- Vert
         WHEN ( (taux_qualification_fpt < taux_previous_year) AND (taux_qualification_fpt > cible) ) THEN 2 -- Vert
