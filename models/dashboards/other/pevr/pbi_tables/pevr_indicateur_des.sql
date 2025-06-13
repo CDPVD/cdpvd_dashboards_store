@@ -146,8 +146,11 @@ select
     annee_scolaire,
     nb_resultat,
     taux_diplomation,
-    CONCAT(nb_ind_obtention,'/', nb_resultat) as f_nb_obtention,
-    CONCAT(taux_diplomation * 100, '%', CHAR(10), '(', nb_resultat, ' él.) ') AS taux_nbEleve,
+    CONCAT(
+        taux_diplomation * 100, '%',
+        CHAR(10),
+        '(', nb_ind_obtention, '/', nb_resultat, ' él.) '
+    ) AS taux_nbEleve,
     ecart_cible,
     cible,
     CASE 

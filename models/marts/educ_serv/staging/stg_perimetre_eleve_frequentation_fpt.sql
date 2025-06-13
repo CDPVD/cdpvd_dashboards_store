@@ -25,7 +25,7 @@ with perimetre as (
     from {{ ref("fact_yearly_student") }} as perimetre
     inner join {{ ref("i_e_freq") }} as freq
         on perimetre.fiche = freq.fiche and perimetre.annee = freq.annee
-    where freq.type_freq = 'FIN' -- On veut la fréquentation avant le 30 septembre.
+    where freq.type_freq = 'FIN' -- On veut la fréquentation au 30 septembre.
     and perimetre.type_parcours = '07' -- FPT
     and perimetre.is_doubleur = 0 -- On veut l'année la moins récente de l'élève
 	and perimetre.Annee between {{ core_dashboards_store.get_current_year() }} - 5 and {{ core_dashboards_store.get_current_year() }} 

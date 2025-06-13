@@ -146,7 +146,17 @@ with
             taux_qualification_fpt,
             ecart_cible,
             cible,
-            LAG(taux_qualification_fpt) OVER (PARTITION BY id_indicateur ORDER BY cast(left(cohorte, 4) as int)) as taux_previous_year
+            LAG(taux_qualification_fpt) OVER (
+            PARTITION BY 
+                id_indicateur,
+                coalesce(school_friendly_name, 'CSS'),
+                coalesce(genre, 'Tout'),
+                coalesce(plan_interv_ehdaa, 'Tout'),
+                coalesce(population, 'Tout'),
+                coalesce(classification, 'Tout'),
+                coalesce(distribution, 'Tout')
+            ORDER BY cast(left(cohorte, 4) as int)
+            ) as taux_previous_year
         from agg_dip
     )
 
@@ -156,9 +166,12 @@ select
     cohorte,
     nb_resultat,
     nb_qualified,
-    CONCAT(nb_qualified,'/', nb_resultat) as f_nb_qualified,
     taux_qualification_fpt,
-    CONCAT(taux_qualification_fpt * 100, '%', CHAR(10), '(', nb_resultat, ' él.) ') AS taux_nbEleve,
+    CONCAT(
+        taux_qualification_fpt * 100, '%',
+        CHAR(10),
+        '(', nb_qualified, '/', nb_resultat, ' él.) '
+    ) AS taux_nbEleve,
     ecart_cible,
     cible,
     cast(left(cohorte, 4) as int) as annee,

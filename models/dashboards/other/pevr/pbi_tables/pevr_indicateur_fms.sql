@@ -146,9 +146,13 @@ select
     description_indicateur,
     annee_scolaire,
     nb_resultat,
+    nb_ind_obtention,
     taux_qualification_fms,
-    CONCAT(nb_ind_obtention,'/', nb_resultat) as f_nb_obtention,
-    CONCAT(taux_qualification_fms * 100, '%', CHAR(10), '(', nb_resultat, 'él.) ') AS taux_nbEleve,
+    CONCAT(
+        taux_qualification_fms * 100, '%',
+        CHAR(10),
+        '(', nb_ind_obtention, '/', nb_resultat, ' él.) '
+    ) as taux_nbEleve,
     ecart_cible,
     cible,
     cast(left(annee_scolaire, 4) as int) as annee,

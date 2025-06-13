@@ -106,7 +106,7 @@ models:
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:
-            - annee_scolaire
+            - cohorte
             - id_indicateur
             - id_filtre
 

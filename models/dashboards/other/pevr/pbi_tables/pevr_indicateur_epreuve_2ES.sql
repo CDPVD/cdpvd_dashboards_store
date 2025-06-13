@@ -84,7 +84,8 @@ with
             classification,
             distribution,
             code_matiere,
-            count(fiche) nb_resultat,
+            cast(sum(is_maitrise) as integer) as nb_resultat,
+            count(is_maitrise) as nb_eleve,
             CAST(ROUND(AVG(is_maitrise), 3) AS FLOAT) AS taux_maitrise,
             CAST(ROUND(AVG(is_maitrise) - cible, 3) AS FLOAT) AS ecart_cible
         from src
@@ -115,6 +116,7 @@ with
             coalesce(classification, 'Tout') as classification,
             coalesce(distribution, 'Tout') as distribution,
             nb_resultat,
+            nb_eleve,
             taux_maitrise,
             ecart_cible,
             cible,
@@ -128,7 +130,7 @@ select
     annee_scolaire,
     nb_resultat,
     taux_maitrise,  -- Possibilité d'avoir un null à cause du res_etape_num peut être nulle. A voir.
-    CONCAT(taux_maitrise * 100, '%', CHAR(10), '(', nb_resultat, ' él.) ') AS taux_nbEleve,
+    CONCAT(taux_maitrise * 100, '%', CHAR(10), '(', CONCAT(nb_resultat,'/', nb_eleve), ' él.) ') AS taux_nbEleve,
     ecart_cible,  -- Même affaire.
     cible,
     cast(left(annee_scolaire, 4) as int) as annee,

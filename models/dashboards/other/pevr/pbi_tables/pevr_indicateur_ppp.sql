@@ -86,8 +86,9 @@ with
             distribution,
             id_indicateur,
             description_indicateur,
-            sum(is_ppp) as nb_ppp,
-            avg(is_ppp) as taux_ppp,
+            count(is_ppp) as nb_eleve,
+            cast(sum(is_ppp) as integer) as nb_ppp,
+            CAST(ROUND(AVG(is_ppp), 3) AS FLOAT) AS taux_ppp,
             CAST(ROUND(AVG(is_ppp) - cible, 3) AS FLOAT) AS ecart_cible,
             cible
         from ind_pevr
@@ -117,6 +118,7 @@ with
             coalesce(classification, 'Tout') as classification,
             coalesce(distribution, 'Tout') as distribution,
             nb_ppp,
+            nb_eleve,
             taux_ppp,
             ecart_cible,
             cible,
@@ -129,8 +131,13 @@ select
     description_indicateur,
     annee_scolaire,
     nb_ppp,
+    nb_eleve,
     taux_ppp,
-    CONCAT(taux_ppp * 100, '%', CHAR(10), '(', nb_ppp, ' él.) ') AS taux_nbEleve,
+    CONCAT(
+        taux_ppp * 100, '%',
+        CHAR(10),
+        '(', nb_ppp, '/', nb_eleve, ' él.) '
+    ) AS taux_nbEleve,
     ecart_cible,
     cible,
     cast(left(annee_scolaire, 4) as int) as annee,
