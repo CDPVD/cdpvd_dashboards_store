@@ -22,12 +22,6 @@ seeds:
     core_dashboards_store:
         +enabled: true
     ### <<< END
-    cdpvd_dashboards_store:
-        dashboards:
-            other:
-                pevr:
-                    +tags: ["pevr"]
-                    +schema: "dashboard_pevr"
 models:
     ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
     # >>> BEGIN
@@ -50,7 +44,7 @@ models:
                 i_gpm_e_dan:
                     +enabled: false
                 i_gpm_e_abs:
-                    +enabled: false                    
+                    +enabled: false
             jade:
                 i_e_ri_mentions:
                     +enabled: false
@@ -97,14 +91,7 @@ models:
                             [
                                 "{{ core_dashboards_store.stamp_model('dashboard_absenteeism') }}",
                             ]        
-                other:
-                    pevr:
-                        +tags: ["pevr"]
-                        +schema: "dashboard_pevr"
-                        pbi_tables:
-                            +post-hook:
-                                - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
-            human_resources:                        
+            human_resources:
                 retirement:
                     +tags: ["retirement"]
                     +schema: "dashboard_retirement"
