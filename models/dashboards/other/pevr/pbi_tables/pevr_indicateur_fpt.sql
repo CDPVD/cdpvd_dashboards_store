@@ -164,6 +164,10 @@ select
     id_indicateur,
     description_indicateur,
     cohorte,
+    Concat(
+        'Cohorte', ' ', cohorte,
+        CHAR(10), 'Suivie sur 3 ans'
+    ) as concat_cohorte,
     nb_resultat,
     nb_qualified,
     taux_qualification_fpt,
