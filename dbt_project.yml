@@ -22,12 +22,6 @@ seeds:
     core_dashboards_store:
         +enabled: true
     ### <<< END
-    cdpvd_dashboards_store:
-        dashboards:
-            other:
-                pevr:
-                    +tags: ["pevr"]
-                    +schema: "dashboard_pevr"
 models:
     ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
     # >>> BEGIN
@@ -50,7 +44,7 @@ models:
                 i_gpm_e_dan:
                     +enabled: false
                 i_gpm_e_abs:
-                    +enabled: false                    
+                    +enabled: false
             jade:
                 i_e_ri_mentions:
                     +enabled: false
