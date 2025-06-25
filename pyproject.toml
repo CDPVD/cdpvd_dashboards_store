@@ -3,13 +3,18 @@ name = "cdpvd_dashboards_store"
 version = "0.1.0"
 description = ""
 authors = ["Mohamed Sadqi <sadqim@cssvdc.gouv.qc.ca>"]
+package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.8"
-dbt-core = "~1.6"
+python = ">=3.9,<3.13"
+dbt-core = "^1.6"
 dbt-fabric = {git = "https://github.com/Sciance-Inc/dbt-fabric.git", rev = "v0.16.0"}
 pyodbc = "~4.0"
 python-semantic-release = "^7.33.4"
+dagster = "1.4.9"
+dagster-dbt = "0.20.9"
+dagster-webserver = "1.4.9"
+pendulum = "2.1.2"
 
 
 [tool.poetry.dev-dependencies]
@@ -44,3 +49,29 @@ exclude=[
     "dbt_packages/**/*",
     "tooling/templates/**/*"
 ]
+
+[tool.dagster]
+module_name = "projet_cssst.projet_cssst.definitions"
+code_location_name = "projet_cssst"
+
+[project]
+name = "projet_cssst"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9,<3.13"
+dependencies = [
+    "dagster",
+    "dagster-cloud",
+    "dagster-dbt",
+]
+
+[project.optional-dependencies]
+dev = [
+    "dagster-webserver", 
+    "pytest",
+]
+
+
+[tool.setuptools.packages.find]
+exclude=["projet_cssst.projet_cssst_tests"]
