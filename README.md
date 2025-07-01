@@ -468,10 +468,10 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 ##### Populer les comptoirs de données (marts)
 > Ce tableau de bord requiert la définition des populations spécifiques dans le comptoir de données `educ_serv_adultes`.
 
-Les comptoirs de données(marts) doivent être populés dans `cssXX.data.store/models/marts/educ_serv_adultes/populations/staging/` conformement à la définition du fichier  `cssXX.data.store/models/marts/educ_serv_adultes/populations/staging/schema.yml`.
+Les comptoirs de données(marts) doivent être populés dans `cssXX.data.store/models/marts/educ_serv_adultes/staging/populations/` conformement à la définition du fichier  `cssXX.data.store/models/marts/educ_serv_adultes/staging/schema.yml`.
 
 ```yaml
-# cssXX.data.store/models/marts/educ_serv_adultes/populations/staging/schema.yml
+# cssXX.data.store/models/marts/educ_serv_adultes/staging/schema.yml
 version: 2
 
 models:
@@ -482,7 +482,7 @@ models:
         - educ_serv_adultes
     description: table de fait qui identifie les fréquentations FP-FGA
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - code_perm
             - fiche
@@ -496,7 +496,7 @@ models:
     description: >
           Identifier les inscriptions en FGA
     tests: 
-      - resolution: 
+      - core_dashboards_store.resolution: 
           combination_of_columns: 
             - code_perm
             - fiche
@@ -510,7 +510,7 @@ models:
     description: >
           Identifier les inscriptions en FP
     tests: 
-      - resolution: 
+      - core_dashboards_store.resolution: 
           combination_of_columns: 
             - code_perm
             - fiche

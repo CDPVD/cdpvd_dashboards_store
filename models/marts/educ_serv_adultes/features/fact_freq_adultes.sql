@@ -89,7 +89,7 @@ with
             and freq.annee = pop.annee
             and freq.freq = pop.freq
         left join {{ ref("i_t_prog_adultes") }} prog on prog.prog = freq.prog  -- récupère la description des programmes
-        left join  -- récupère la description du service d'enseignement                                                              
+        left join  -- récupère la description du service d'enseignement
             {{ ref("i_t_wl_descr_adultes") }} wld
             on wld.code = freq.service_enseign
             and wld.nom_table = 'X_ServiceEnseign'
@@ -174,7 +174,9 @@ select
     activ_form,
     cond_admiss,
     descr_condadmiss,
-    etat_formation,
+    case
+        when motif_depart = 'I' then 'En cours' else etat_formation
+    end as etat_formation,
     prog,
     descr_prog,
     type_diplome,
