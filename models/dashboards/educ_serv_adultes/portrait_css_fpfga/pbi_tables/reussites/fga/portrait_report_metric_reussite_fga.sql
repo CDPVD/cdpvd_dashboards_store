@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
+-- depends_on: {{ ref('portrait_report_effectif_fp_fga') }}
 {{
     config(
         post_hook=[
@@ -38,6 +39,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- par défaut)
 {% if execute %}
     {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("criteres_reussites", "(22, 12, 4, 2)") %}
+    {% set serv_ens = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("serv_ens_exclut", "") %}
+    {% if serv_ens != '' %}
+        {% set serv_ens_exclut = 'and service_enseign not in ' ~ serv_ens %}
+        {# Appelle la macro affich_description_code pour afficher les descriptions des codes sélectionnées #}
+        {{ affich_description_code("portrait_report_effectif_fp_fga","service_enseignement","service_enseign",serv_ens,"formation des adultes", "Les codes service d'enseignement exlus en réussite pour le tableau de bord ") }}
+    {% else %} {% set serv_ens_exclut = '' %}
+    {% endif %}
+
 {% endif %}
 
 with
@@ -55,7 +64,8 @@ with
             {%- endfor -%}
         from {{ ref("portrait_report_effectif_fp_fga") }} as fac
         where
-            etat_formation = 'Terminé' and population = 'Formation générale des adultes'
+            etat_formation = 'Terminé'
+            and population = 'Formation générale des adultes' {{ serv_ens_exclut }}
     ),
     -- Agrégation avec CUBE pour obtenir toutes les combinaisons possibles des
     -- dimensions

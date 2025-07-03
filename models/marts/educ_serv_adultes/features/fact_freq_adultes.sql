@@ -24,6 +24,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         ]
     )
 }}
+-- Récupération des critères de réussite depuis les variables dbt_project (ou valeur
+-- par défaut)
+{% if execute %}
+    {% set motif_reussite_exclut = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("motif_reussite_exclut", "10") %}
+{% endif %}
 with
     facsources as (
         select
@@ -175,7 +180,9 @@ select
     cond_admiss,
     descr_condadmiss,
     case
-        when motif_depart = 'I' then 'En cours' else etat_formation
+        when motif_depart = '{{ motif_reussite_exclut }}'
+        then 'En cours'
+        else etat_formation
     end as etat_formation,
     prog,
     descr_prog,

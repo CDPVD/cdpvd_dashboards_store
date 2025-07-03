@@ -104,6 +104,7 @@ select
         then descr_service_enseign
         else concat(service_enseign, ' - ', descr_service_enseign)
     end as service_enseignement,
+    service_enseign,
     motif_depart,
     descr_motif_dep,
     raison_depart,
