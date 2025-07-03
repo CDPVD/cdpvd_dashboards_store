@@ -82,9 +82,10 @@ with
             event_end_date,
             events_sequence_length,
             event_kind,
+            school_year,
             coalesce(etape_description, 'inconnue') as etape_description
         from {{ ref("cdpvd_fact_absences_sequence") }}
-        where school_year = {{ core_dashboards_store.get_current_year() }}  -- Only consider the current school year
+        where school_year >= {{ core_dashboards_store.get_current_year() - 1}}  -- Only consider the current school year
 
     -- Add some metadata to better identify the sutdent
     ),
@@ -105,6 +106,7 @@ with
             event_end_date,
             events_sequence_length,
             event_kind,
+            school_year,
             last_event_description,
             last_remarque
         from src
@@ -118,6 +120,7 @@ with
 
 select
     school_friendly_name,
+    school_year,
     fiche,
     full_name,
     coalesce(groupe, '-') as groupe,
