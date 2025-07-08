@@ -43,7 +43,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     {% if serv_ens != '' %}
         {% set serv_ens_exclut = 'and service_enseign not in ' ~ serv_ens %}
         {# Appelle la macro affich_description_code pour afficher les descriptions des codes sélectionnées #}
-        {{ affich_description_code("portrait_report_effectif_fp_fga","service_enseignement","service_enseign",serv_ens,"formation des adultes", "Les codes service d'enseignement exlus en réussite pour le tableau de bord ") }}
+        {{ affich_description_code("portrait_report_effectif_fp_fga","service_enseignement","service_enseign",serv_ens,"portrait_css_fpfga", "Les codes service d'enseignement exlus en réussite pour le tableau de bord ") }}
     {% else %} {% set serv_ens_exclut = '' %}
     {% endif %}
 

@@ -31,7 +31,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     {#
     Appelle la macro affich_description_code pour afficher les descriptions des raisons de réussite sélectionnées
     #}
-    {{ affich_description_code("portrait_report_effectif_fp_fga","desc_raison_depart","raison_depart",criteres_reussites,"formation des adultes") }}
+    {{ affich_description_code("portrait_report_effectif_fp_fga","desc_raison_depart","raison_depart",criteres_reussites,"portrait_css_fpfga") }}
 {% endif %}
 
 -- Définition de la liste des dimensions utilisées pour les combinaisons et l'agrégation
