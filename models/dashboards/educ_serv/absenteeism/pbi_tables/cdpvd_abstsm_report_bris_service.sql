@@ -84,7 +84,10 @@ with
             event_kind,
             coalesce(etape_description, 'inconnue') as etape_description
         from {{ ref("cdpvd_fact_absences_sequence") }}
-        where school_year = {{ core_dashboards_store.get_current_year() }}  -- Only consider the current school year
+        where
+            school_year
+            between {{ core_dashboards_store.get_current_year() }}
+            - 1 and {{ core_dashboards_store.get_current_year() }}  -- Only consider the current school year
 
     -- Add some metadata to better identify the sutdent
     ),
@@ -93,6 +96,7 @@ with
             eco.school_friendly_name,
             eco.id_eco,
             eco.eco,
+            eco.annee_scolaire,
             ele.fiche,
             concat(ele.nom, ' ', ele.pnom) as full_name,
             case
@@ -118,6 +122,7 @@ with
 
 select
     school_friendly_name,
+    annee_scolaire,
     fiche,
     full_name,
     coalesce(groupe, '-') as groupe,
