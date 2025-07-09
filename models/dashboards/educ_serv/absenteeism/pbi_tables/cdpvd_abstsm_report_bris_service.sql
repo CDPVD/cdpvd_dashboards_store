@@ -87,7 +87,7 @@ with
         where
             school_year
             between {{ core_dashboards_store.get_current_year() }}
-            - 1 and {{ core_dashboards_store.get_current_year() }}  -- Only consider the current school year
+            - 1 and {{ core_dashboards_store.get_current_year() }}  
 
     -- Add some metadata to better identify the sutdent
     ),
