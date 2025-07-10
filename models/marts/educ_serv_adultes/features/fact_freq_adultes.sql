@@ -24,6 +24,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         ]
     )
 }}
+-- Récupération des critères de réussite depuis les variables dbt_project (ou valeur
+-- par défaut)
+{% if execute %}
+    {% set motif_reussite_exclut = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("motif_reussite_exclut", "10") %}
+{% endif %}
 with
     facsources as (
         select
@@ -89,7 +94,7 @@ with
             and freq.annee = pop.annee
             and freq.freq = pop.freq
         left join {{ ref("i_t_prog_adultes") }} prog on prog.prog = freq.prog  -- récupère la description des programmes
-        left join  -- récupère la description du service d'enseignement                                                              
+        left join  -- récupère la description du service d'enseignement
             {{ ref("i_t_wl_descr_adultes") }} wld
             on wld.code = freq.service_enseign
             and wld.nom_table = 'X_ServiceEnseign'
@@ -174,7 +179,11 @@ select
     activ_form,
     cond_admiss,
     descr_condadmiss,
-    etat_formation,
+    case
+        when motif_depart = '{{ motif_reussite_exclut }}'
+        then 'En cours'
+        else etat_formation
+    end as etat_formation,
     prog,
     descr_prog,
     type_diplome,
