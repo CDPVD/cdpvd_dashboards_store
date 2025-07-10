@@ -468,10 +468,10 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 ##### Populer les comptoirs de données (marts)
 > Ce tableau de bord requiert la définition des populations spécifiques dans le comptoir de données `educ_serv_adultes`.
 
-Les comptoirs de données(marts) doivent être populés dans `cssXX.data.store/models/marts/educ_serv_adultes/populations/staging/` conformement à la définition du fichier  `cssXX.data.store/models/marts/educ_serv_adultes/populations/staging/schema.yml`.
+Les comptoirs de données(marts) doivent être populés dans `cssXX.data.store/models/marts/educ_serv_adultes/staging/populations/` conformement à la définition du fichier  `cssXX.data.store/models/marts/educ_serv_adultes/staging/schema.yml`.
 
 ```yaml
-# cssXX.data.store/models/marts/educ_serv_adultes/populations/staging/schema.yml
+# cssXX.data.store/models/marts/educ_serv_adultes/staging/schema.yml
 version: 2
 
 models:
@@ -482,7 +482,7 @@ models:
         - educ_serv_adultes
     description: table de fait qui identifie les fréquentations FP-FGA
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - code_perm
             - fiche
@@ -496,7 +496,7 @@ models:
     description: >
           Identifier les inscriptions en FGA
     tests: 
-      - resolution: 
+      - core_dashboards_store.resolution: 
           combination_of_columns: 
             - code_perm
             - fiche
@@ -510,7 +510,7 @@ models:
     description: >
           Identifier les inscriptions en FP
     tests: 
-      - resolution: 
+      - core_dashboards_store.resolution: 
           combination_of_columns: 
             - code_perm
             - fiche
@@ -523,6 +523,7 @@ Afin de construire votre population, vous devez définir pour chaque population 
 #### Module réussites 
 
 Dans ce module, l'intégrateur ou l'analyste du CSS a la possibilité de choisir les critères de réussite. Sinon, les critères de réussite par défaut seront activés.
+On a aussi la possibilité d'exclure certains services d'enseignement via la variable `serv_ens_exclut`. De plus, il est possible d'exclure ou de spécifier le motif de départ de la formation en cours à l'aide de la variable `motif_reussite_exclut`. Ces paramètres sont à configurer dans la section `vars` de votre fichier `dbt_project.yml` :
 
 #### Spécification du Dbt project
 > Mettez à jour votre fichier `cssxx_store/dbt_project.yml` avec l'extrait suivant
@@ -546,8 +547,11 @@ vars:
   dashboards:
     educ_serv_adultes:
       portrait_css_fpfga:
-        criteres_reussites: (22, 12, 04, 02)
+        criteres_reussites: replaceme #(22, 12, 04, 02)
+        serv_ens_exclut: replaceme #(06, 01, 08, 03) # Exclure certains services d'enseignement
+        motif_reussite_exclut: replaceme #10         # Exclure ou préciser le motif de départ
 ```
+Adaptez ces valeurs selon les besoins spécifiques de votre CSS.
 
 ### Transport
 > Get operational data about the Transport system of the school board. KPI include the number of circuits per parcours, etc..

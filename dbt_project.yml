@@ -139,6 +139,11 @@ vars:
             groupe_primaire: replaceme 
             groupe_secondaire: replaceme
             nbre_annee_a_extraire: replaceme
+        educ_serv_adultes:
+            portrait_css_fpfga:
+                criteres_reussites: replaceme #(22, 12, 04, 02)
+                serv_ens_exclut: replaceme #(06, 01, 08, 03)
+                motif_reussite_exclut: replaceme #10
 
     # Le mois de référence pour le début de l'année -- Indiquez en 2 caractères comme, 01, 02, 03, ..., 10, 11, 12
     mois_reference: 07

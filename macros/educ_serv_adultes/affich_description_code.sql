@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-{% macro affich_description_code(nom_table,desc_colonne,code_colonne,val_condition,nom_tableau=null) %}
+{% macro affich_description_code(nom_table, desc_colonne, code_colonne, val_condition, nom_tableau=null, txt= "Les codes sélectionnés pour le tableau de bord ") %}
     {% if not nom_table or not desc_colonne or not code_colonne or not val_condition %}
         {{ exceptions.raise_compiler_error("Tous les arguments de la macro affich_description_code sont obligatoires sauf le nom du tableau de bord.") }}
     {% endif %}
@@ -26,7 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         column=desc_colonne
 ) %}
     {% if data %}
-        {{ log("Les codes sélectionnés pour le tableau de bord " ~ nom_tableau ~ "sont les suivants "~ val_condition ~ ":",info=True,) }}
+        {{ log(txt ~ nom_tableau ~ " sont les suivants "~ val_condition ~ ":",info=True,) }}
         {% for row in data %} {{ log("Code " ~ row, info=True) }} {% endfor %}
     {% else %} {{ log("Aucune donnée trouvée", info=True) }}
     {% endif %}
