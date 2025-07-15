@@ -4,7 +4,7 @@ models:
   - name: eff_etablissements_prim
     description: List of all css registrations
     tests:
-      - resolution:
+      - core_dashboards_store.resolution:
           combination_of_columns:
             - annee
             - eco
