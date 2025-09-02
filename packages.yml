@@ -1,3 +1,4 @@
 packages:
   - git: git@github.com:Sciance-Inc/core.dashboards_store.git
-    revision: support/cdpvd-v0.1.7
+    revision: v0.18.0+20250611
+  #- local: ../core.dashboards_store
