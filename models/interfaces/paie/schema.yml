@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: i_pai_hchq_pmnt
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'pai_hchq_pmnt' de la base de données source.
+       Historique de paiement pour chaque matricule.
+       
+  - name: i_pai_hchq
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'pai_hchq' de la base de données source.
+       Detail des cheques recus par chaque matricule.
+
+  - name: i_pai_tab_cal_per
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'pai_tab_cal_per' de la base de données source.
+
+  - name: i_pai_tab_corp_empl_date
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'pai_tab_corp_empl_date' de la base de données source.
+
+  - name: i_pai_tab_corp_empl
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'pai_tab_corp_empl' de la base de données source.
+
+  - name: i_pai_tab_etat_empl
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'pai_tab_etat_empl' de la base de données source.
+
+  - name: i_pai_tab_mot_abs
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'pai_tab_mot_abs' de la base de données source.
+
+  - name: i_pai_tab_pmnt
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'pai_tab_pmnt' de la base de données source.
+       Detail des différents type de paiements.

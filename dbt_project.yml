@@ -50,6 +50,13 @@ models:
                     +enabled: false
                 i_t_prog:
                     +enabled: false
+            paie:
+                i_pai_tab_corp_empl:
+                    +enabled: false
+                i_pai_hemp:
+                    +enabled: false
+                i_pai_tab_etat_empl:
+                    +enabled: false
     ### <<< END
 
     # This code block can be safely overriden in the cssXX_dashboards_store.
@@ -59,15 +66,13 @@ models:
         +materialized: table
         marts:
             #+enabled: true
-            human_resources:
+            direction_generale:
                 +tags:
-                    - "human_resources"
-                    - "mart_human_resources"
-                +schema: human_resources
+                    - "direction_generale"
+                    - "mart_direction_generale"
+                +schema: direction_generale
                 features:
-                    +schema: human_resources_features                
-                staging:
-                    +schema: human_resources_staging
+                    +schema: direction_generale_features                
             educ_serv:
                 +tags:
                     - "educ_serv"
@@ -79,7 +84,15 @@ models:
             educ_serv_adultes:
                 features:
                 dimensions:
-
+            human_resources:
+                +tags:
+                    - "human_resources"
+                    - "mart_human_resources"
+                +schema: human_resources
+                features:
+                    +schema: human_resources_features                
+                staging:
+                    +schema: human_resources_staging           
         dashboards:
             #+enabled: true
             educ_serv:
