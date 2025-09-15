@@ -39,18 +39,35 @@ with reel as (
     join {{ ref('i_pai_tab_stat_eng') }} as eng
         on eng.stat_eng = hrs.stat_eng
     join {{ ref('i_pai_tab_lieu_trav') }} as lieu
-        on lieu.lieu_trav = hrs.lieu_trav
+        on lieu.lieu_trav = hrs.lieu_trav    
+
+-- sommer le tout    
+), tot as (
+    select
+        an_budg
+        , no_per
+        , date_cheq
+        , cat_emploi
+        , corp_emploi
+        , lieu_trav
+        , stat_eng
+        , typeremun_descr
+        , sum(nb_hre_remun_fin) as nombre_heures_remun
+    from reel
+    group by an_budg, no_per, date_cheq, cat_emploi, corp_emploi, lieu_trav, stat_eng, typeremun_descr
 )
 
 select
     an_budg
     , no_per
-    , date_cheq
+    , min(date_cheq) as date_cheq
     , cat_emploi
     , corp_emploi
     , lieu_trav
     , stat_eng
     , typeremun_descr
-    , sum(nb_hre_remun_fin) as nombre_heures_remun
-from reel
-group by an_budg, no_per, date_cheq, cat_emploi, corp_emploi, lieu_trav, stat_eng, typeremun_descr
+    , sum(nombre_heures_remun) as nombre_heures_remun
+from tot
+group by
+    an_budg
+    , cube (no_per, cat_emploi, corp_emploi, lieu_trav, stat_eng, typeremun_descr)
