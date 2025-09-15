@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: suivi_effectif
+    config:
+      alias: suivi_effectif
+      tags:
+        - direction_generale
+      schema: dashboard_direction_generale
+    description: >
+        Table de rapports qui presente les cibles annuelles ainsi que le nombre réel d'heures / etc payées.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - an_budg
