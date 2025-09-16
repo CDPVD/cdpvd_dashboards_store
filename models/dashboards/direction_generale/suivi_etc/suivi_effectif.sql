@@ -95,12 +95,22 @@ with reel as (
 -- rajout des colonnes date_cheque, cat_emploi
 ), map as (
     select distinct
-    an_budg
-    , no_per
-    , date_cheq
-    , corp_emploi
-    , cat_emploi
-from reel
+        an_budg
+        , no_per
+        , date_cheq
+        , corp_emploi
+        , cat_emploi
+    from tot
+    union all
+    -- ligne "Totale" pour chaque période / année
+    select 
+        an_budg,
+        no_per,
+        max(date_cheq) as date_cheq, 
+        'Tout' as corp_emploi,
+        'Tout' as cat_emploi
+    from tot
+    group by an_budg, no_per
 )
 
 select 
