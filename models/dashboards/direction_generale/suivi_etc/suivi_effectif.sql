@@ -19,17 +19,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 with reel as (
     select
         hrs.an_budg
-        , hrs.no_per
-        , hrs.date_cheq
-        , job.job_group_category as cat_emploi
-        , concat(hrs.corp_emploi, ' - ', ptce.descr) as corp_emploi
-        , concat(hrs.lieu_trav, ' - ', lieu.descr) as lieu_trav
-        , concat(hrs.stat_eng, ' - ', eng.descr_stat_eng) as stat_eng
+        , coalesce(cast(hrs.no_per as varchar), '-') as no_per
+        , coalesce(hrs.date_cheq, '-') as date_cheq
+        , coalesce(job.job_group_category, '-') as cat_emploi
+        , coalesce(concat(hrs.corp_emploi, ' - ', ptce.descr), '-') as corp_emploi
+        , coalesce(concat(hrs.lieu_trav, ' - ', lieu.descr), '-') as lieu_trav
+        , coalesce(concat(hrs.stat_eng, ' - ', eng.descr_stat_eng), '-') as stat_eng
         , case 
             when hrs.typeremun = '1' then 'Traitement régulier'
             when hrs.typeremun = '2' then 'Absences'	 
             when hrs.typeremun = '3' then 'Temps supplémentaire'
-        end as typeremun_descr
+            else '-'
+        end as type_remun
         , hrs.nb_hre_remun_fin
     from  {{ ref('fact_h_remun') }} as hrs
     join {{ ref('dim_mapper_job_group') }} as job
@@ -51,23 +52,68 @@ with reel as (
         , corp_emploi
         , lieu_trav
         , stat_eng
-        , typeremun_descr
+        , type_remun
         , sum(nb_hre_remun_fin) as nombre_heures_remun
     from reel
-    group by an_budg, no_per, date_cheq, cat_emploi, corp_emploi, lieu_trav, stat_eng, typeremun_descr
-)
+    group by an_budg, no_per, date_cheq, cat_emploi, corp_emploi, lieu_trav, stat_eng, type_remun
 
-select
+-- agreger selon les differentes combinaisons
+), cube_agg as (
+    select
+        an_budg
+        , coalesce(no_per, 'Tout') as no_per
+        , coalesce(corp_emploi, 'Tout') as corp_emploi
+        , coalesce(lieu_trav, 'Tout') as lieu_trav
+        , coalesce(stat_eng, 'Tout') as stat_eng
+        , coalesce(type_remun, 'Tout') as type_remun
+        , sum(nombre_heures_remun) as nombre_heures_remun
+    from tot
+    group by
+        an_budg     
+        , cube (no_per, corp_emploi, lieu_trav, stat_eng, type_remun)
+
+-- ajout d'un cumul progressif
+), cum as (
+    select
+        an_budg
+        , no_per
+        , corp_emploi
+        , lieu_trav
+        , stat_eng
+        , type_remun
+        , nombre_heures_remun
+        , case 
+            when no_per <> 'Tout' then
+                sum(nombre_heures_remun) over (
+                    partition by an_budg, corp_emploi, lieu_trav, stat_eng, type_remun
+                    order by case when no_per in ('Tout','-') then 9999 else cast(no_per as int) end
+                    rows between unbounded preceding and current row
+                )
+        end as cumul_progressif
+    from cube_agg
+
+-- rajout des colonnes date_cheque, cat_emploi
+), map as (
+    select distinct
     an_budg
     , no_per
-    , min(date_cheq) as date_cheq
-    , cat_emploi
+    , date_cheq
     , corp_emploi
-    , lieu_trav
-    , stat_eng
-    , typeremun_descr
-    , sum(nombre_heures_remun) as nombre_heures_remun
-from tot
-group by
-    an_budg
-    , cube (no_per, cat_emploi, corp_emploi, lieu_trav, stat_eng, typeremun_descr)
+    , cat_emploi
+from reel
+)
+
+select 
+    cum.an_budg
+    , cum.no_per
+    , map.date_cheq
+    , map.cat_emploi
+    , cum.corp_emploi
+    , cum.lieu_trav
+    , cum.stat_eng
+    , cum.type_remun
+    , cum.nombre_heures_remun
+    , cum.cumul_progressif
+from cum
+join map on map.an_budg=cum.an_budg and map.no_per=cum.no_per and map.corp_emploi=cum.corp_emploi
+
