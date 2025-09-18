@@ -50,18 +50,19 @@ with prd as (
             else ptce.nb_hres_an / 260.0
         end as hntj,
         -- Corps d'emploi
-        case when len(ptce.corp_empl_percos) = 4 
-             then ptce.corp_empl_percos 
-             else ptce.corp_empl 
+        case 
+            when len(ptce.corp_empl_percos) = 4 then ptce.corp_empl_percos 
+            else ptce.corp_empl 
         end as corp_emploi,
         ptce.descr as corp_emploi_descr,
         -- Nombre d’heures annuelles
-        case when left(phe.corp_empl, 2) = '35' 
-             then 800.0 
-             else 1080.0 
+        case 
+            when left(phe.corp_empl, 2) = '35' then 800.0 
+            else 1080.0 
         end as nb_hres_an,
         phe.pourc_post,
         phe.pourc_temp,
+        -- A DOCUMENTER
         case 
             when ptee.trait_spec = '1' and phe.pourc_sal >= 2.0 
                  then round(((phe.pourc_post * phe.pourc_temp / 100.0) - phe.pourc_sal), 4)
@@ -139,7 +140,9 @@ with prd as (
 			select 1 
 			from {{ ref('i_pai_tab_mot_abs') }} as ptma 
 			where ptma.code_pmnt_a_exonerer = pmnt.code_pmnt and pmnt.code_pmnt like '103%'
-		) 
+		)
+		-- Exclusion des paiements precisés dans la seed pmnt_exclude_etc
+		and pmnt.code_pmnt not in (select distinct code_pmnt from {{ ref('pmnt_exclude_etc') }})
         and pmnt.mnt <> 0.0 
         and ( 
                 ( 
@@ -155,7 +158,7 @@ with prd as (
     select 
         *
         , case 
-            when pourc_sabbatique_manquant <> 0.0 and pourc_sabbatique_manquant <> 100.0 and date_deb_pmnt <> date_fin_pmnt then ( ( ( pourc_post * pourc_temp / 100.0 ) * nombre_heures_remun ) / ( ( pourc_post * pourc_temp / 100.0 ) - pourc_sabbatique_manquant ) ) - nombre_heures_remun 
+            when pourc_sabbatique_manquant <> 0.0 and pourc_sabbatique_manquant <> 100.0 and date_deb_pmnt <> date_fin_pmnt then (((pourc_post * pourc_temp / 100.0) * nombre_heures_remun) / ((pourc_post * pourc_temp / 100.0) - pourc_sabbatique_manquant)) - nombre_heures_remun 
             else 0.0 
         end as heures_manquantes_sab
     from hres_remun
