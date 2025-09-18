@@ -13,3 +13,8 @@ models:
       - core_dashboards_store.resolution:
           combination_of_columns:
             - an_budg
+            - no_per
+            - corp_emploi
+            - lieu_trav
+            - stat_eng
+            - type_remun

@@ -8,11 +8,18 @@ models:
         - mart_direction_generale
     description: >
       Cumulatif des heures travaillées, des heures supplémentaires et des heures d'absences par date de chèque, matricule, code de paiement (avec le profiler).
-    # tests:
-    #   - core_dashboards_store.resolution:
-    #       combination_of_columns:
-    #         - matr
-    #         - no_seq
-    #         - corp_empl
-    #         - date_cheq
-    #         - code_pmnt
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - an_budg
+            - no_per
+            - matr
+            - corp_emploi
+            - stat_eng
+            - sect
+            - aff
+            - typeremun
+            - mode
+            - lieu_trav
+            - no_seq
+            - code_pmnt
