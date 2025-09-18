@@ -115,10 +115,10 @@ models:
                 portrait_css_fpfga:
             direction_generale:
                 suivi_etc:
-                    +tags: ["direction_generale"]
-                    +schema: "dashboard_direction_generale"
+                    +tags: ["suivi_etc"]
+                    +schema: "dashboard_suivi_etc"
                     +post-hook:
-                            - "{{ core_dashboards_store.stamp_model('dashboard_direction_generale') }}"
+                            - "{{ core_dashboards_store.stamp_model('dashboard_suivi_etc') }}"
 
         interfaces:
             +enabled: true

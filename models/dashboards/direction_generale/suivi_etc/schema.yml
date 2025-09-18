@@ -5,8 +5,8 @@ models:
     config:
       alias: suivi_effectif
       tags:
-        - direction_generale
-      schema: dashboard_direction_generale
+        - suivi_etc
+      schema: dashboard_suivi_etc
     description: >
         Table de rapports qui presente les cibles annuelles ainsi que le nombre réel d'heures / etc payées.
     tests:
