@@ -454,9 +454,94 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 | [retirement](#retirement) | Tracks the number of retired employees by job categories and workplace. Forecast, for up to five years, the number of retiring employees | (Sciance) Hugo Juhel
 | [absenteeism](#absenteeism) | Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | (Sciance) Hugo Juhel, Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
 | [portrait_css_fpfga](#portrait_css_fpfga) | Une vue d'ensemble en fonction des objectifs et des types de formation suivis par les élèves inscrits à notre centre de service scolaire. | Martin Legault (CSSMV), Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
+| [suivi_etc](#suivi_etc) | Vue permettant d’analyser les heures rémunérées et les ETC selon divers axes (catégorie d’emploi, type de rémunération, etc.). | Mohamed Sadqi (CSSVDC), Alluard Jérémie (CSSVDC)
 
 
 > The following section describe the specific for each dashboard. Bear with me, we are gonna drill down into the specifics of each dashboard ! Stay focused ! In each of the following section, you will learn how to tame a specific dashboard.
+
+### suivi_etc
+
+> Suivi des heures rémunérées / ETC selon différents axes
+
+| Interfaces  | Marts         	  | Marts seeds     | Dashboard seeds | Additional config |
+|-------------|-------------------|-----------------|-----------------| ------------------|
+| paie        |direction_generale | Yes            	| Yes             | Yes 	            |
+
+#### Configurations 
+
+#### Exclure certains codes de paiement
+
+* Pour exclure des codes de paiement de la table de fait `fact_h_remun` :
+  1. Ajoutez un fichier nommé `pmnt_exclude_etc.csv` dans le dossier `cssXX.dashboards_store/seeds/marts/direction_generale`. Ce fichier doit contenir les colonnes décrites dans `core.dashboards_store/seeds/marts/direction_generale/schema.yml` (référez-vous à la définition de la seed `pmnt_exclude_etc`). 
+
+  2. Déclenchez un rafraîchissement de vos seeds 
+
+```bash
+dbt seed --full-refresh
+```
+
+::alert{type=info}
+Veuillez consulter la section [seeds](/using/marts/seeds) pour plus d’informations sur la manière d’utiliser et de peupler les graines
+::
+
+#### Ajout des cibles ETC de votre CSS
+
+Cette seed est utilisée pour comparer les cibles ETC de votre CSS avec les heures et ETC réels.
+
+  1. Ajoutez un fichier nommé `cibles_etc.csv` dans le dossier `cssXX.dashboards_store/seeds/dashboards/direction_generale`. Ce fichier doit contenir les colonnes décrites dans `core.dashboards_store/seeds/dashboards/direction_generale/schema.yml` (référez-vous à la définition de la seed `cibles_etc`). 
+
+  2. Déclenchez un rafraîchissement de vos seeds 
+
+```bash
+dbt seed --full-refresh
+```
+
+::alert{type=info}
+Veuillez consulter la section [seeds](/using/marts/seeds) pour plus d’informations sur la manière d’utiliser et de peupler les graines
+::
+
+#### Paramétrage de la date pivot
+
+Dans ce module, l’intégrateur ou l’analyste de votre CSS peut définir la date à partir de laquelle les heures rémunérées doivent être récupérées. Pour cela, configurez la variable `date_pivot` dans la section `vars` de votre fichier `dbt_project.yml` :
+
+#### Spécification du `dbt_project`
+
+> Mettez à jour votre fichier `cssxx_store/dbt_project.yml` avec l'extrait suivant
+
+```yaml
+# cssXX.data.store/dbt_project.yml
+models:
+  core_dashboards_store:          
+    interfaces:
+      +enabled: True
+      +materialized: ephemeral        
+      paie:
+        i_pai_tab_corp_empl:
+          +enabled: false
+        i_pai_hemp:
+          +enabled: false
+        i_pai_tab_etat_empl:
+          +enabled: false
+
+cdpvd_dashboards_store:
+  marts:        
+    direction_generale:
+      +schema: direction_generale
+      +enabled: true 
+    dashboards: 
+      direction_generale:
+        suivi_etc:
+          +enabled: true                       
+      interfaces:
+        paie:
+          +enabled: true
+
+vars:
+  marts:
+    direction_generale:
+      date_pivot: 2024-07-01
+```
+Adaptez ces valeurs selon les besoins spécifiques de votre CSS.
 
 ### portrait_css_fpfga
 > Suivi des population définie au sein d'un centre de services scolaires. Le tableau de bord affiche le nombre total d'élèves dans chaque école, ainsi que les taux de réussite et les sanctions disciplinaires.
@@ -710,7 +795,7 @@ vars:
         cod_css: ###% --Les trois premiers chiffres de votre code d’organisation 
 ```
 
-# configuration 
+# Configuration 
 
 ## Personnalisation des épreuves locales
 ::alert{type=warning}
