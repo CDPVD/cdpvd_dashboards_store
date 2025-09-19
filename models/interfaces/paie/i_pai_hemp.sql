@@ -15,21 +15,21 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select 
-    matr
-    , date_eff
-    , sect
-    , aff
-    , lieu_trav
-    , corp_empl
-    , etat
-    , mode
-    , stat_eng
-    , type
-    , ref_empl
-    , date_fin
-    , pourc_post
-    , pourc_sal
-    , pourc_temp
-    , nb_hre_sem
+select
+    matr,
+    date_eff,
+    sect,
+    aff,
+    lieu_trav,
+    corp_empl,
+    etat,
+    mode,
+    stat_eng,
+    type,
+    ref_empl,
+    date_fin,
+    pourc_post,
+    pourc_sal,
+    pourc_temp,
+    nb_hre_sem
 from {{ var("database_paie") }}.dbo.pai_hemp

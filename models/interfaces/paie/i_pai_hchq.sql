@@ -15,12 +15,5 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select 
-    matr
-    , gr_paie
-    , no_cheq
-    , date_cheq
-    , etat_cheq
-    , an_budg
-    , no_per
+select matr, gr_paie, no_cheq, date_cheq, etat_cheq, an_budg, no_per
 from {{ var("database_paie") }}.dbo.pai_hchq

@@ -15,11 +15,5 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select 
-    corp_empl
-    , descr
-    , date_deb
-    , date_fin
-    , nb_hres_an
-    , corp_empl_percos
+select corp_empl, descr, date_deb, date_fin, nb_hres_an, corp_empl_percos
 from {{ var("database_paie") }}.dbo.pai_tab_corp_empl_date
