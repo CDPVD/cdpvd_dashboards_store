@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 with
     reel as (
         select
-            hrs.an_budg,
+            concat(left(hrs.an_budg, 4), '-', right(hrs.an_budg, 4)) an_budg,
             coalesce(cast(hrs.no_per as varchar), '-') as no_per,
             coalesce(hrs.date_cheq, '-') as date_cheq,
             coalesce(job.job_group_category, '-') as cat_emploi,
