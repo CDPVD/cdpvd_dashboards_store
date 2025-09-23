@@ -39,12 +39,73 @@ with
 			coalesce(fgj.code_perm, fp.code_perm) as code_perm,
 			coalesce(fgj.fiche, left(fp.fiche, ISNULL(NULLIF(charindex('_', fp.fiche)-1, -1), LEN(fp.fiche)))) as fiche,
             coalesce(fgj.annee, fp.annee) as annee,
-            coalesce(fgj.eco, fp.eco) as eco
+            coalesce(fgj.eco, fp.eco) as eco,
+			iif(fgj.code_perm is not null, 'J', iif(fp.code_perm is not null, 'A', NULL)) as type_perim -- J - Jeunes, A - Adultes
     from fgj
     full join fp on fgj.code_perm = fp.code_perm and fgj.annee = fp.annee
 	),
+
+	contacts_fgj as (
+		select 
+			code_perm, 
+			cast(fiche as nvarchar) as fiche,
+			nom_pere, 
+			pnom_pere,
+			adr_electr_pere, 
+			nom_mere, 
+			pnom_mere,
+			adr_electr_mere,
+			nom_tuteur, 
+			pnom_tuteur,
+			adr_electr_tuteur,
+			adr_pere,
+			adr_mere,
+			adr_tuteur
+		from {{ ref("i_fgj_contacts_adresses") }}
+	), 
+
+	contacts_fgafp as (
+		select 
+			codePerm, 
+			cast(fiche as nvarchar) as fiche,
+			nomPere, 
+			pnomPere,
+			ADR_ELECTR_PERE, 
+			NomMere, 
+			PnomMere,
+			ADR_ELECTR_MERE,
+			NomTuteur, 
+			PnomTuteur,
+			ADR_ELECTR_TUTEUR,
+			ADR_ELECTR_ELE,
+			adr_pere,
+			adr_mere,
+			adr_tuteur,
+			adr_eleve
+		from {{ ref("i_fgafp_contacts_adresses") }}
+	), 
 	
-	
+	perim_contacts as (
+		select p.*,
+		coalesce(cj.nom_pere, ca.nomPere) as nom_pere, 
+		coalesce(cj.pnom_pere, ca.pnomPere) as pnom_pere, 
+		coalesce(cj.adr_electr_pere, ca.adr_electr_pere) as adr_electr_pere, 
+		coalesce(cj.nom_mere, ca.NomMere) as nom_mere, 
+		coalesce(cj.pnom_mere, ca.PnomMere) as pnom_mere, 
+		coalesce(cj.adr_electr_mere, ca.adr_electr_mere) as adr_electr_mere, 
+		coalesce(cj.nom_tuteur, ca.NomTuteur) as nom_tuteur, 
+		coalesce(cj.pnom_tuteur, ca.PnomTuteur) as pnom_tuteur, 
+		coalesce(cj.adr_electr_tuteur, ca.adr_electr_tuteur) as adr_electr_tuteur, 
+		coalesce(cj.adr_pere, ca.adr_pere) as adr_pere, 
+		coalesce(cj.adr_mere, ca.adr_mere) as adr_mere, 
+		coalesce(cj.adr_tuteur, ca.adr_tuteur) as adr_tuteur, 
+		iif(p.type_perim = 'A', ca.ADR_ELECTR_ELE, '') as adr_electr_eleve,
+		iif(p.type_perim = 'A', ca.adr_eleve, '') as adr_eleve
+		from perim p
+		left join contacts_fgj cj on p.fiche = cj.fiche AND p.type_perim = 'J'
+		left join contacts_fgafp ca on p.fiche = ca.fiche AND p.type_perim = 'A'
+	),
+
 	-- GPI - Comptes à recevoir
 	car_gpi as (
 		select 
@@ -158,26 +219,6 @@ with
 		group by fp.code_perm, fp.fiche, fp.annee, fp.eco
 	), 
 	
-	-- Contacts Père, mère, tuteur
-	contacts as (
-		select 
-			code_perm, 
-			cast(fiche as nvarchar) as fiche,
-			nom_pere, 
-			pnom_pere,
-			adr_electr_pere, 
-			nom_mere, 
-			pnom_mere,
-			adr_electr_mere,
-			nom_tuteur, 
-			pnom_tuteur,
-			adr_electr_tuteur,
-			adr_pere,
-			adr_mere,
-			adr_tuteur
-		from {{ ref("eleves_contacts_adresses") }}
-	), 
-
 	actifs as (
 		select 		cast(dan.fiche as nvarchar) as fiche, eco.eco, concat('(', eco.eco, ') - ', eco.nom_eco) as nom_ecole
 		from 		{{ ref("i_gpm_e_dan") }} dan
@@ -195,27 +236,30 @@ with
 
 -- REQUETE FINALE
 select 
-    perim.code_perm,
+    p.code_perm,
+	p.type_perim,
 	IIF(cast(a.fiche as nvarchar) IS NOT NULL, 'A', 'I') as statut,
 	ele.nom,
 	ele.pnom,
-	string_agg(perim.fiche, ', ') AS fiche, -- pour considerer les eleves avec 1 CP, 2 fiches la meme annee
-    perim.annee,
-    perim.eco,
-    a.nom_ecole, 
-	-- Contacts
-	c.nom_pere, 
-	c.pnom_pere,
-	c.adr_electr_pere, 
-	c.nom_mere, 
-	c.pnom_mere,
-	c.adr_electr_mere,
-	c.nom_tuteur, 
-	c.pnom_tuteur,
-	c.adr_electr_tuteur,
-	c.adr_pere,
-	c.adr_mere,
-	c.adr_tuteur,
+	string_agg(p.fiche, ', ') AS fiche, -- pour considerer les eleves avec 1 CP, 2 fiches la meme annee
+	p.annee,
+	p.eco,
+	a.nom_ecole, 
+	p.nom_pere, 
+	p.pnom_pere,
+	p.adr_electr_pere, 
+	p.nom_mere, 
+	p.pnom_mere,
+	p.adr_electr_mere,
+	p.nom_tuteur, 
+	p.pnom_tuteur,
+	p.adr_electr_tuteur,
+	p.adr_pere,
+	p.adr_mere,
+	p.adr_tuteur,
+	p.adr_electr_eleve, 
+	p.adr_eleve,
+ 
 	-- GPI
 	 sum(isnull(car_gpi.car_gpi, 0.0)) as car_gpi
 	, sum(isnull(trp_gpi.trp_gpi, 0.0)) as trp_gpi
@@ -226,26 +270,27 @@ select
 	, sum(isnull(car_proc.car_proc, 0.0)) as car_proc
 	, sum(isnull(trp_proc.trp_proc, 0.0)) as trp_proc
 
-from perim
-inner join {{ ref("i_gpm_e_ele") }} ele on ele.fiche = perim.fiche
-left join actifs a on a.fiche = perim.fiche and a.eco = perim.eco
-left join car_gpi on car_gpi.code_perm = perim.code_perm and car_gpi.annee = perim.annee and car_gpi.eco = perim.eco
-left join trp_gpi on trp_gpi.code_perm = perim.code_perm and trp_gpi.annee = perim.annee and trp_gpi.eco = perim.eco
-left join car_ag on car_ag.code_perm = perim.code_perm and car_ag.annee = perim.annee and car_ag.eco = perim.eco
-left join trp_ag on trp_ag.code_perm = perim.code_perm and trp_ag.annee = perim.annee and trp_ag.eco = perim.eco
-left join car_proc on car_proc.code_perm = perim.code_perm and car_proc.annee = perim.annee and car_proc.eco = perim.eco
-left join trp_proc on trp_proc.code_perm = perim.code_perm and trp_proc.annee = perim.annee and trp_proc.eco = perim.eco
-left join contacts c on perim.fiche = c.fiche
-group by perim.code_perm, a.fiche, ele.nom, ele.pnom, perim.annee, perim.eco, a.nom_ecole,
-c.nom_pere,
-c.pnom_pere,
-c.adr_electr_pere,
-c.adr_pere,
-c.nom_mere,
-c.pnom_mere,
-c.adr_electr_mere,
-c.adr_mere,
-c.nom_tuteur,
-c.pnom_tuteur,
-c.adr_electr_tuteur,
-c.adr_tuteur
+from perim_contacts p
+inner join {{ ref("i_gpm_e_ele") }} ele on ele.fiche = p.fiche
+left join actifs a on a.fiche = p.fiche and a.eco = p.eco
+left join car_gpi on car_gpi.code_perm = p.code_perm and car_gpi.annee = p.annee and car_gpi.eco = p.eco
+left join trp_gpi on trp_gpi.code_perm = p.code_perm and trp_gpi.annee = p.annee and trp_gpi.eco = p.eco
+left join car_ag on car_ag.code_perm = p.code_perm and car_ag.annee = p.annee and car_ag.eco = p.eco
+left join trp_ag on trp_ag.code_perm = p.code_perm and trp_ag.annee = p.annee and trp_ag.eco = p.eco
+left join car_proc on car_proc.code_perm = p.code_perm and car_proc.annee = p.annee and car_proc.eco = p.eco
+left join trp_proc on trp_proc.code_perm = p.code_perm and trp_proc.annee = p.annee and trp_proc.eco = p.eco
+group by p.code_perm, p.type_perim, a.fiche, ele.nom, ele.pnom, p.annee, p.eco, a.nom_ecole,
+p.nom_pere, 
+p.pnom_pere,
+p.adr_electr_pere, 
+p.nom_mere, 
+p.pnom_mere,
+p.adr_electr_mere,
+p.nom_tuteur, 
+p.pnom_tuteur,
+p.adr_electr_tuteur,
+p.adr_pere,
+p.adr_mere,
+p.adr_tuteur,
+p.adr_electr_eleve, 
+p.adr_eleve
