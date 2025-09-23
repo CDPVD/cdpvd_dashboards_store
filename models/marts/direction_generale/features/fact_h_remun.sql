@@ -66,7 +66,7 @@ with
             end as nb_hres_an,
             phe.pourc_post,
             phe.pourc_temp,
-            -- A DOCUMENTER
+            -- Traitement des emplois sur un plan sabbatique à traitement différé
             case
                 when ptee.trait_spec = '1' and phe.pourc_sal >= 2.0
                 then
@@ -203,9 +203,9 @@ with
                 )
             )
 
-    -- Recuperer les hres sabbatique manquantes
+    -- Traitement des emplois sur un plan sabbatique à traitement différé
     ),
-    calculer_les_heures_sabbatiques_manquantes as (
+    calc_sab as (
         select
             *,
             case
@@ -259,4 +259,4 @@ select
             else nombre_heures_remun
         end
     ) as nb_hre_remun_fin
-from calculer_les_heures_sabbatiques_manquantes
+from calc_sab
