@@ -8,7 +8,7 @@ seeds:
         - suivi_etc
       schema: suivi_etc_seeds
       column_types:
-        an_budg: nvarchar(8)
+        an_budg: nvarchar(9)
         nb_hres_an: float
         nb_etc: float
     columns:
