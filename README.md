@@ -472,7 +472,7 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 #### Exclure certains codes de paiement
 
 * Pour exclure des codes de paiement de la table de fait `fact_h_remun` :
-  1. Ajoutez un fichier nommé `pmnt_exclude_etc.csv` dans le dossier `cssXX.dashboards_store/seeds/marts/direction_generale`. Ce fichier doit contenir les colonnes décrites dans `core.dashboards_store/seeds/marts/direction_generale/schema.yml` (référez-vous à la définition de la seed `pmnt_exclude_etc`). 
+  1. Ajoutez un fichier nommé `pmnt_exclude_etc.csv` dans le dossier `cssXX.dashboards_store/seeds/marts/direction_generale`. Ce fichier doit contenir les colonnes décrites dans `cdpvd_dashboards_store/seeds/marts/direction_generale/schema.yml` (référez-vous à la définition de la seed `pmnt_exclude_etc`). 
 
   2. Déclenchez un rafraîchissement de vos seeds 
 
@@ -488,7 +488,7 @@ Veuillez consulter la section [seeds](/using/marts/seeds) pour plus d’informat
 
 Cette seed est utilisée pour comparer les cibles ETC de votre CSS avec les heures et ETC réels.
 
-  1. Ajoutez un fichier nommé `cibles_etc.csv` dans le dossier `cssXX.dashboards_store/seeds/dashboards/direction_generale`. Ce fichier doit contenir les colonnes décrites dans `core.dashboards_store/seeds/dashboards/direction_generale/schema.yml` (référez-vous à la définition de la seed `cibles_etc`). 
+  1. Ajoutez un fichier nommé `cibles_etc.csv` dans le dossier `cssXX.dashboards_store/seeds/dashboards/direction_generale/suivi_etc`. Ce fichier doit contenir les colonnes décrites dans `cdpvd_dashboards_store/seeds/dashboards/direction_generale/suivi_etc/schema.yml` (référez-vous à la définition de la seed `cibles_etc`). 
 
   2. Déclenchez un rafraîchissement de vos seeds 
 
