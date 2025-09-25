@@ -66,7 +66,7 @@ with
             end as nb_hres_an,
             phe.pourc_post,
             phe.pourc_temp,
-            -- A DOCUMENTER
+            -- Traitement des emplois sur un plan sabbatique à traitement différé
             case
                 when ptee.trait_spec = '1' and phe.pourc_sal >= 2.0
                 then
@@ -177,9 +177,18 @@ with
                     ptma.code_pmnt_a_exonerer = pmnt.code_pmnt
                     and pmnt.code_pmnt like '103%'
             )
-            -- Exclusion des paiements precisés dans la seed pmnt_exclude_etc
-            and pmnt.code_pmnt
-            not in (select distinct code_pmnt from {{ ref("pmnt_exclude_etc") }})
+            -- Exclusion des paiements precisés dans la seed pmnt_exclude_etc (si elle existe)
+            {%- set exclude_relation = adapter.get_relation(
+                database=target.database,
+                schema=target.schema ~ "_direction_generale_seeds",
+                identifier="pmnt_exclude_etc"
+            ) -%}
+            {% if exclude_relation %}
+                and pmnt.code_pmnt not in (
+                    select distinct code_pmnt
+                    from {{ exclude_relation }}
+                )
+            {% endif %}
             and pmnt.mnt <> 0.0
             and (
                 (
@@ -203,9 +212,9 @@ with
                 )
             )
 
-    -- Recuperer les hres sabbatique manquantes
+    -- Traitement des emplois sur un plan sabbatique à traitement différé
     ),
-    calculer_les_heures_sabbatiques_manquantes as (
+    calc_sab as (
         select
             *,
             case
@@ -259,4 +268,4 @@ select
             else nombre_heures_remun
         end
     ) as nb_hre_remun_fin
-from calculer_les_heures_sabbatiques_manquantes
+from calc_sab

@@ -1,0 +1,27 @@
+version: 2
+
+seeds:
+  - name: cibles_etc
+    description: cibles ETC du CSS
+    config:
+      tags: 
+        - suivi_etc
+      schema: suivi_etc_seeds
+      column_types:
+        an_budg: nvarchar(20)
+        nb_hres_an: float
+        nb_etc: float
+    columns:
+      - name: an_budg
+        description: annee budgétaire
+        tests:
+          - not_null
+          - unique    
+      - name: nb_hres_an
+        description: Nombre d'heures
+        tests:
+          - not_null
+      - name: nb_etc
+        description: Nombre d'ETC
+        tests:
+          - not_null

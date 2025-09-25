@@ -18,12 +18,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 with
     reel as (
         select
-            hrs.an_budg,
+            concat(left(hrs.an_budg, 4), '-', right(hrs.an_budg, 4)) an_budg,
             coalesce(cast(hrs.no_per as varchar), '-') as no_per,
             coalesce(hrs.date_cheq, '-') as date_cheq,
             coalesce(job.job_group_category, '-') as cat_emploi,
             coalesce(concat(hrs.corp_emploi, ' - ', ptce.descr), '-') as corp_emploi,
-            coalesce(concat(hrs.lieu_trav, ' - ', lieu.descr), '-') as lieu_trav,
+            coalesce(hrs.lieu_trav, '-') as lieu_trav,
             coalesce(concat(hrs.stat_eng, ' - ', eng.descr_stat_eng), '-') as stat_eng,
             case
                 when hrs.typeremun = '1'
@@ -40,7 +40,6 @@ with
         join
             {{ ref("i_pai_tab_corp_empl") }} as ptce on ptce.corp_empl = hrs.corp_emploi
         join {{ ref("i_pai_tab_stat_eng") }} as eng on eng.stat_eng = hrs.stat_eng
-        join {{ ref("i_pai_tab_lieu_trav") }} as lieu on lieu.lieu_trav = hrs.lieu_trav
 
     -- sommer le tout    
     ),
@@ -131,7 +130,8 @@ select
     map.date_cheq,
     map.cat_emploi,
     cum.corp_emploi,
-    cum.lieu_trav,
+    cum.lieu_trav as cod_lieu_trav,
+    case when lieu.descr is not null then concat(cum.lieu_trav, ' - ', lieu.descr) else cum.lieu_trav end as lieu_trav,
     cum.stat_eng,
     cum.type_remun,
     cum.nombre_heures_remun,
@@ -142,3 +142,4 @@ join
     on map.an_budg = cum.an_budg
     and map.no_per = cum.no_per
     and map.corp_emploi = cum.corp_emploi
+left join {{ ref("i_pai_tab_lieu_trav") }} as lieu on lieu.lieu_trav = cum.lieu_trav

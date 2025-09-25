@@ -1,0 +1,27 @@
+version: 2
+
+seeds:
+  - name: pmnt_exclude_etc
+    description: codes de paiement propres au CSS à exclure lors du calcul des ETC
+    config:
+      tags: 
+        - direction_generale
+        - suivi_etc
+      schema: direction_generale_seeds
+      column_types:
+        code_pmnt: nvarchar(6)
+        descr: nvarchar(50)
+    columns:
+      - name: code_pmnt
+        description: code de paiement
+        tests:
+          - not_null
+          - unique    
+      - name: descr
+        description: descriptif
+        tests:
+          - not_null
+
+
+
+
