@@ -6,6 +6,7 @@ seeds:
     config:
       tags: 
         - direction_generale
+        - suivi_etc
       schema: direction_generale_seeds
       column_types:
         code_pmnt: nvarchar(6)
