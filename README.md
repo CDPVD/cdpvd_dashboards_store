@@ -466,6 +466,7 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 | Interfaces  | Marts         	  | Marts seeds     | Dashboard seeds | Additional config |
 |-------------|-------------------|-----------------|-----------------| ------------------|
 | paie        |direction_generale | Yes            	| Yes             | Yes 	            |
+|             |human_ressources   |               	|                 |     	            |
 
 #### Configurations 
 
@@ -511,7 +512,13 @@ Dans ce module, l’intégrateur ou l’analyste de votre CSS peut définir la d
 ```yaml
 # cssXX.data.store/dbt_project.yml
 models:
-  core_dashboards_store:          
+  core_dashboards_store:
+    marts:
+      human_resources:
+        dimensions:
+          mappers:
+            dim_mapper_job_group:
+              +enabled: true          
     interfaces:
       +enabled: True
       +materialized: ephemeral        
