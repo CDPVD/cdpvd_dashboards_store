@@ -6,6 +6,7 @@ models:
       tags:
         - direction_generale
         - mart_direction_generale
+        - suivi_etc
     description: >
       Cumulatif des heures travaillées, des heures supplémentaires et des heures d'absences par date de chèque, matricule, code de paiement (avec le profiler).
     tests:
