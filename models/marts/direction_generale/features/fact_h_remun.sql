@@ -187,7 +187,7 @@ with
             {% if exclude_relation %}
                 and pmnt.code_pmnt
                 not in (select distinct code_pmnt from {{ exclude_relation }})
-                {% do log(
+                {% log(
                     "la seed 'pmnt_exclude_etc' EXISTE et est prise en compte dans le calcul des heures rémunérées",
                     info=true,
                 ) %}
