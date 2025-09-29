@@ -131,7 +131,11 @@ select
     map.cat_emploi,
     cum.corp_emploi,
     cum.lieu_trav as cod_lieu_trav,
-    case when lieu.descr is not null then concat(cum.lieu_trav, ' - ', lieu.descr) else cum.lieu_trav end as lieu_trav,
+    case
+        when lieu.descr is not null
+        then concat(cum.lieu_trav, ' - ', lieu.descr)
+        else cum.lieu_trav
+    end as lieu_trav,
     cum.stat_eng,
     cum.type_remun,
     cum.nombre_heures_remun,
