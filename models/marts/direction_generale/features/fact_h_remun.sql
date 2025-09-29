@@ -177,21 +177,20 @@ with
                     ptma.code_pmnt_a_exonerer = pmnt.code_pmnt
                     and pmnt.code_pmnt like '103%'
             )
-            -- Exclusion des paiements precisés dans la seed pmnt_exclude_etc (si elle existe)
+            -- Exclusion des paiements precisés dans la seed pmnt_exclude_etc (si elle
+            -- existe)
             {%- set exclude_relation = adapter.get_relation(
                 database=target.database,
                 schema=target.schema ~ "_direction_generale_seeds",
-                identifier="pmnt_exclude_etc"
+                identifier="pmnt_exclude_etc",
             ) -%}
             {% if exclude_relation %}
-                and pmnt.code_pmnt not in (
-                    select distinct code_pmnt
-                    from {{ exclude_relation }}
+                and pmnt.code_pmnt
+                not in (select distinct code_pmnt from {{ exclude_relation }})
+                log(
+                    "la seed 'pmnt_exclude_etc' EXISTE et est prise en compte dans le calcul des heures rémunérées",
+                    true,
                 )
-                log(  
-                "la seed 'pmnt_exclude_etc' EXISTE et est prise en compte dans le calcul des heures rémunérées",  
-                true,  
-                ) 
             {% endif %}
             and pmnt.mnt <> 0.0
             and (
