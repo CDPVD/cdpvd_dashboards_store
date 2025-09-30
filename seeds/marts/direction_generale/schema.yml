@@ -1,8 +1,8 @@
 version: 2
 
 seeds:
-  - name: pmnt_exclude_etc
-    description: codes de paiement propres au CSS à exclure lors du calcul des ETC
+  - name: pmnt_zero_keep
+    description: contient les codes de paiement que le CSS souhaite considérer malgré un montant nul lors du calcul des ETC
     config:
       tags: 
         - direction_generale
