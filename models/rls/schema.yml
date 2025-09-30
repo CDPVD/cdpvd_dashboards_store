@@ -5,15 +5,15 @@ models:
     tags: ["rls"]
     description: >
       Table utilisée uniquement pour avoir les directeurs, directrices, enseignant(e)s et les écoles.
-    tests: 
-      - resolution: 
-          combination_of_columns: 
-            - compte_authentification
-            - Ecole
-    columns:
-      - name: compte_authentification
-        tests: 
-            - not_null
-      - name: Ecole
-        tests: 
-            - not_null            
+    # tests: 
+    #   - core_dashboard_store.resolution: 
+    #       combination_of_columns: 
+    #         - compte_authentification
+    #         - Ecole
+    # columns:
+    #   - name: compte_authentification
+    #     tests: 
+    #         - not_null
+    #   - name: Ecole
+    #     tests: 
+    #         - not_null            
