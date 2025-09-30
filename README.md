@@ -470,10 +470,10 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 
 #### Configurations 
 
-#### Exclure certains codes de paiement
+#### Inclusion de certains codes de paiement avec des montants nuls
 
-* Pour exclure des codes de paiement de la table de fait `fact_h_remun` :
-  1. Ajoutez un fichier nommé `pmnt_exclude_etc.csv` dans le dossier `cssXX.dashboards_store/seeds/marts/direction_generale`. Ce fichier doit contenir les colonnes décrites dans `cdpvd_dashboards_store/seeds/marts/direction_generale/schema.yml` (référez-vous à la définition de la seed `pmnt_exclude_etc`). 
+* Pour inclure des codes de paiement à montant nuls dans la table de fait `fact_h_remun` :
+  1. Ajoutez un fichier nommé `pmnt_zero_keep.csv` dans le dossier `cssXX.dashboards_store/seeds/marts/direction_generale`. Ce fichier doit contenir les colonnes décrites dans `cdpvd_dashboards_store/seeds/marts/direction_generale/schema.yml` (référez-vous à la définition de la seed `pmnt_zero_keep`). 
 
   2. Déclenchez un rafraîchissement de vos seeds 
 
