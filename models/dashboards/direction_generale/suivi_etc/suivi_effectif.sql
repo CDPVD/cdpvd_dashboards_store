@@ -20,7 +20,6 @@ with
         select
             concat(left(hrs.an_budg, 4), '-', right(hrs.an_budg, 4)) an_budg,
             coalesce(cast(hrs.no_per as varchar), '-') as no_per,
-            coalesce(hrs.date_cheq, '-') as date_cheq,
             coalesce(job.job_group_category, '-') as cat_emploi,
             coalesce(concat(hrs.corp_emploi, ' - ', ptce.descr), '-') as corp_emploi,
             coalesce(hrs.lieu_trav, '-') as lieu_trav,
@@ -47,7 +46,6 @@ with
         select
             an_budg,
             no_per,
-            date_cheq,
             cat_emploi,
             corp_emploi,
             lieu_trav,
@@ -58,7 +56,6 @@ with
         group by
             an_budg,
             no_per,
-            date_cheq,
             cat_emploi,
             corp_emploi,
             lieu_trav,
@@ -107,17 +104,16 @@ with
             end as cumul_progressif
         from cube_agg
 
-    -- rajout des colonnes date_cheque, cat_emploi
+    -- rajout de la colonne cat_emploi
     ),
     map as (
-        select distinct an_budg, no_per, date_cheq, corp_emploi, cat_emploi
+        select distinct an_budg, no_per, corp_emploi, cat_emploi
         from tot
         union all
         -- ligne "Totale" pour chaque période / année
         select
             an_budg,
             no_per,
-            max(date_cheq) as date_cheq,
             'Tout' as corp_emploi,
             'Tout' as cat_emploi
         from tot
@@ -127,7 +123,6 @@ with
 select
     cum.an_budg,
     cum.no_per,
-    map.date_cheq,
     map.cat_emploi,
     cum.corp_emploi,
     cum.lieu_trav as cod_lieu_trav,
