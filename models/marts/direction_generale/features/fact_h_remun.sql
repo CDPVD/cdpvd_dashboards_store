@@ -114,6 +114,7 @@ with
             left(chq.an_budg, 4) as annee,
             chq.an_budg,
             chq.no_per,
+            chq.gr_paie,
             case
                 when pmnt.mode in ('1', '5', 'J')
                 then perim.hntj * pmnt.nb_unit
@@ -177,23 +178,39 @@ with
                     ptma.code_pmnt_a_exonerer = pmnt.code_pmnt
                     and pmnt.code_pmnt like '103%'
             )
-            -- Exclusion des paiements avec un montant nuls exceptés ceux precisés dans la seed pmnt_zero_keep (si elle existe)
-            {%- set exclude_relation = adapter.get_relation(database=target.database,schema=target.schema ~ "_direction_generale_seeds",identifier="pmnt_zero_keep") -%}
+            -- Exclusion des paiements avec un montant nuls exceptés ceux precisés
+            -- dans la seed pmnt_zero_keep (si elle existe)
+            {%- set exclude_relation = adapter.get_relation(
+                database=target.database,
+                schema=target.schema ~ "_direction_generale_seeds",
+                identifier="pmnt_zero_keep",
+            ) -%}
             {% if exclude_relation %}
                 and (
                     pmnt.mnt <> 0.0
                     or (
                         pmnt.mnt = 0
-                        and pmnt.code_pmnt in (select distinct code_pmnt from {{ exclude_relation }})
+                        and pmnt.code_pmnt
+                        in (select distinct code_pmnt from {{ exclude_relation }})
                     )
                 )
                 {% if execute %}
-                    {{ log("✅ La seed 'pmnt_zero_keep' existe et est prise en compte dans le calcul des heures rémunérées", true) }}
+                    {{
+                        log(
+                            "✅ La seed 'pmnt_zero_keep' existe et est prise en compte dans le calcul des heures rémunérées",
+                            true,
+                        )
+                    }}
                 {% endif %}
             {% else %}
                 and pmnt.mnt <> 0.0
                 {% if execute %}
-                    {{ log("ℹ️ La seed 'pmnt_zero_keep' n'existe pas → tous les paiements à 0 sont exclus", true) }}
+                    {{
+                        log(
+                            "🔴 La seed 'pmnt_zero_keep' n'existe pas → tous les paiements à 0 sont exclus",
+                            true,
+                        )
+                    }}
                 {% endif %}
             {% endif %}
             and (
@@ -245,6 +262,7 @@ select
     annee,
     an_budg,
     no_per,
+    gr_paie,
     date_cheq,
     date_deb,
     date_fin,
