@@ -22,6 +22,22 @@ seeds:
     core_dashboards_store:
         +enabled: true
     ### <<< END
+    cdpvd_dashboards_store:
+        mart:
+            direction_generale:
+                +tags:
+                    - "direction_generale"
+                    - "mart_direction_generale"
+                +schema: direction_generale_seeds
+        dashboard:
+            direction_generale:
+                +tags:
+                    - "direction_generale"
+                suivi_etc:
+                    +tags:
+                        - "suivi_etc"
+                    +schema: suivi_etc_seeds
+
 models:
     ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
     # >>> BEGIN
@@ -114,6 +130,8 @@ models:
             educ_serv_adultes:
                 portrait_css_fpfga:
             direction_generale:
+                +tags:
+                    - "direction_generale"
                 suivi_etc:
                     +tags: ["suivi_etc"]
                     +schema: "dashboard_suivi_etc"
