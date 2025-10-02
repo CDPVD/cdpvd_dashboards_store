@@ -5,6 +5,7 @@ seeds:
     description: cibles ETC du CSS
     config:
       tags: 
+        - human_resources
         - suivi_etc
       schema: suivi_etc_seeds
       column_types:

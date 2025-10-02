@@ -5,9 +5,9 @@ seeds:
     description: contient les codes de paiement que le CSS souhaite considérer malgré un montant nul lors du calcul des ETC
     config:
       tags: 
-        - direction_generale
+        - human_resources
         - suivi_etc
-      schema: direction_generale_seeds
+      schema: human_resources_seeds
       column_types:
         code_pmnt: nvarchar(6)
         descr: nvarchar(50)
