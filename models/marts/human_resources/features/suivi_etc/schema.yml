@@ -4,8 +4,8 @@ models:
   - name: fact_h_remun
     config:
       tags:
-        - direction_generale
-        - mart_direction_generale
+        - human_resources
+        - mart_human_resources
         - suivi_etc
     description: >
       Cumulatif des heures travaillées, des heures supplémentaires et des heures d'absences par date de chèque, matricule, code de paiement (avec le profiler).

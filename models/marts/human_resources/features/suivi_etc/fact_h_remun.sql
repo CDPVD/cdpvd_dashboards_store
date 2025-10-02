@@ -16,11 +16,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 -- Récupérer la date de debut d'extraction
-{% set date_pivot = var("marts")["direction_generale"]["date_pivot"] %}
+{% set date_pivot = var("marts")["human_resources"]["date_pivot"] %}
 
 -- Récupérer les code de paiments avec des montants nuls que l'on souhaite considerer
 {% set codes = get_seed_values(
-    "pmnt_zero_keep", "code_pmnt", "_direction_generale_seeds"
+    "pmnt_zero_keep", "code_pmnt", "_human_resources_seeds"
 ) %}
 -- Transforme la liste Python en string SQL friendly
 {% if codes | length > 0 %}
