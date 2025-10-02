@@ -15,7 +15,19 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
+
+-- Récupérer la date de debut d'extraction
 {% set date_pivot = var("marts")["direction_generale"]["date_pivot"] %}
+
+-- Récupérer les code de paiments avec des montants nuls que l'on souhaite considerer
+{% set codes = get_seed_values("pmnt_zero_keep", "code_pmnt", "_direction_generale_seeds") %}
+-- Transforme la liste Python en string SQL friendly
+{% if codes | length > 0 %}
+    {% set codes_sql = "'" ~ codes | join("','") ~ "'" %}
+{% else %}
+-- fallback pour éviter erreur SQL quand la seed est vide #}
+    {% set codes_sql = "''" %}
+{% endif %}
 
 -- periode de paie à considerer
 with
@@ -180,39 +192,14 @@ with
             )
             -- Exclusion des paiements avec un montant nuls exceptés ceux precisés
             -- dans la seed pmnt_zero_keep (si elle existe)
-            {%- set exclude_relation = adapter.get_relation(
-                database=target.database,
-                schema=target.schema ~ "_direction_generale_seeds",
-                identifier="pmnt_zero_keep",
-            ) -%}
-            {% if exclude_relation %}
-                and (
-                    pmnt.mnt <> 0.0
-                    or (
-                        pmnt.mnt = 0
-                        and pmnt.code_pmnt
-                        in (select distinct code_pmnt from {{ exclude_relation }})
+            and (
+                pmnt.mnt <> 0.0
+                or (
+                    pmnt.mnt = 0
+                    and pmnt.code_pmnt
+                    in ({{ codes_sql }})
                     )
                 )
-                {% if execute %}
-                    {{
-                        log(
-                            "✅ La seed 'pmnt_zero_keep' existe et est prise en compte dans le calcul des heures rémunérées",
-                            true,
-                        )
-                    }}
-                {% endif %}
-            {% else %}
-                and pmnt.mnt <> 0.0
-                {% if execute %}
-                    {{
-                        log(
-                            "🔴 La seed 'pmnt_zero_keep' n'existe pas → tous les paiements à 0 sont exclus",
-                            true,
-                        )
-                    }}
-                {% endif %}
-            {% endif %}
             and (
                 (
                     (
