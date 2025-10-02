@@ -465,15 +465,14 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 
 | Interfaces  | Marts         	  | Marts seeds     | Dashboard seeds | Additional config |
 |-------------|-------------------|-----------------|-----------------| ------------------|
-| paie        |direction_generale | Yes            	| Yes             | Yes 	            |
-|             |human_ressources   |               	|                 |     	            |
+| paie        |human_ressources   | Yes            	| Yes             | Yes 	            |
 
 #### Configurations 
 
 #### Inclusion de certains codes de paiement avec des montants nuls
 
 * Pour inclure des codes de paiement à montant nuls dans la table de fait `fact_h_remun` :
-  1. Ajoutez un fichier nommé `pmnt_zero_keep.csv` dans le dossier `cssXX.dashboards_store/seeds/marts/direction_generale`. Ce fichier doit contenir les colonnes décrites dans `cdpvd_dashboards_store/seeds/marts/direction_generale/schema.yml` (référez-vous à la définition de la seed `pmnt_zero_keep`). 
+  1. Ajoutez un fichier nommé `pmnt_zero_keep.csv` dans le dossier `cssXX.dashboards_store/seeds/marts/human_ressources`. Ce fichier doit contenir les colonnes décrites dans `cdpvd_dashboards_store/seeds/marts/human_ressources/schema.yml` (référez-vous à la définition de la seed `pmnt_zero_keep`). 
 
   2. Déclenchez un rafraîchissement de vos seeds 
 
@@ -532,9 +531,11 @@ models:
 
 cdpvd_dashboards_store:
   marts:        
-    direction_generale:
-      +schema: direction_generale
-      +enabled: true 
+    human_resources:
+      features:
+        suivi_etc:
+          +schema: suivi_etc
+          +enabled: true 
     dashboards: 
       direction_generale:
         suivi_etc:
@@ -545,7 +546,7 @@ cdpvd_dashboards_store:
 
 vars:
   marts:
-    direction_generale:
+    human_resources:
       date_pivot: 2024-07-01
 ```
 Adaptez ces valeurs selon les besoins spécifiques de votre CSS.
