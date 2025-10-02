@@ -15,17 +15,17 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-
 -- Récupérer la date de debut d'extraction
 {% set date_pivot = var("marts")["direction_generale"]["date_pivot"] %}
 
 -- Récupérer les code de paiments avec des montants nuls que l'on souhaite considerer
-{% set codes = get_seed_values("pmnt_zero_keep", "code_pmnt", "_direction_generale_seeds") %}
+{% set codes = get_seed_values(
+    "pmnt_zero_keep", "code_pmnt", "_direction_generale_seeds"
+) %}
 -- Transforme la liste Python en string SQL friendly
-{% if codes | length > 0 %}
-    {% set codes_sql = "'" ~ codes | join("','") ~ "'" %}
+{% if codes | length > 0 %} {% set codes_sql = "'" ~ codes | join("','") ~ "'" %}
 {% else %}
--- fallback pour éviter erreur SQL quand la seed est vide #}
+    -- fallback pour éviter erreur SQL quand la seed est vide #}
     {% set codes_sql = "''" %}
 {% endif %}
 
@@ -194,12 +194,8 @@ with
             -- dans la seed pmnt_zero_keep (si elle existe)
             and (
                 pmnt.mnt <> 0.0
-                or (
-                    pmnt.mnt = 0
-                    and pmnt.code_pmnt
-                    in ({{ codes_sql }})
-                    )
-                )
+                or (pmnt.mnt = 0 and pmnt.code_pmnt in ({{ codes_sql }}))
+            )
             and (
                 (
                     (

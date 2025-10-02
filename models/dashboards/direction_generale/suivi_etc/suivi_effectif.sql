@@ -54,13 +54,7 @@ with
             sum(nb_hre_remun_fin) as nombre_heures_remun
         from reel
         group by
-            an_budg,
-            no_per,
-            cat_emploi,
-            corp_emploi,
-            lieu_trav,
-            stat_eng,
-            type_remun
+            an_budg, no_per, cat_emploi, corp_emploi, lieu_trav, stat_eng, type_remun
 
     -- agreger selon les differentes combinaisons
     ),
@@ -111,11 +105,7 @@ with
         from tot
         union all
         -- ligne "Totale" pour chaque période / année
-        select
-            an_budg,
-            no_per,
-            'Tout' as corp_emploi,
-            'Tout' as cat_emploi
+        select an_budg, no_per, 'Tout' as corp_emploi, 'Tout' as cat_emploi
         from tot
         group by an_budg, no_per
     )
