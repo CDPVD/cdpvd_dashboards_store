@@ -1,17 +1,17 @@
 {#
 CDPVD Dashboards store
 Copyright (C) 2024 CDPVD.
-
+ 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or any later version.
-
+ 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
-
+ 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
@@ -23,10 +23,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     "pmnt_zero_keep", "code_pmnt", "_direction_generale_seeds"
 ) %}
 -- Transforme la liste Python en string SQL friendly
-{% if codes | length > 0 %} {% set codes_sql = "'" ~ codes | join("','") ~ "'" %}
+{% if codes | length > 0 %}
+    {% set codes_sql = "'" ~ codes | join("','") ~ "'" %}
+    {% set sqlc = (
+        "or (         pmnt.mnt = 0         and pmnt.code_pmnt in ("
+        ~ codes_sql
+        ~ ")     )"
+    ) %}
+
 {% else %}
     -- fallback pour éviter erreur SQL quand la seed est vide #}
-    {% set codes_sql = "''" %}
+    {% set sqlc = "" %}
 {% endif %}
 
 -- periode de paie à considerer
@@ -192,10 +199,7 @@ with
             )
             -- Exclusion des paiements avec un montant nuls exceptés ceux precisés
             -- dans la seed pmnt_zero_keep (si elle existe)
-            and (
-                pmnt.mnt <> 0.0
-                or (pmnt.mnt = 0 and pmnt.code_pmnt in ({{ codes_sql }}))
-            )
+            and (pmnt.mnt <> 0.0 {{ sqlc }})
             and (
                 (
                     (
