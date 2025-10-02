@@ -1,0 +1,14 @@
+version: 2
+macros:
+  - name: get_seed_values
+    description: Stocker les valeurs de la colonne column_name dans une variable si la seed seed_name est présente
+    arguments:
+      - name: seed_name
+        type: string
+        description: Nom de la seed
+      - name: column_name
+        type: string
+        description: Nom de la colonne
+      - name: schema_suffix
+        type: string
+        description: Schema de la table
