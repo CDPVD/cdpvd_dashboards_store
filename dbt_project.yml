@@ -24,11 +24,10 @@ seeds:
     ### <<< END
     cdpvd_dashboards_store:
         mart:
-            direction_generale:
+            human_resources:
                 +tags:
-                    - "direction_generale"
-                    - "mart_direction_generale"
-                +schema: direction_generale_seeds
+                    - "human_resources"
+                    - "mart_human_resources"
         dashboard:
             direction_generale:
                 +tags:
@@ -36,7 +35,6 @@ seeds:
                 suivi_etc:
                     +tags:
                         - "suivi_etc"
-                    +schema: suivi_etc_seeds
 
 models:
     ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
@@ -81,14 +79,7 @@ models:
         +enabled: false
         +materialized: table
         marts:
-            #+enabled: true
-            direction_generale:
-                +tags:
-                    - "direction_generale"
-                    - "mart_direction_generale"
-                +schema: direction_generale
-                features:
-                    +schema: direction_generale_features                
+            #+enabled: true               
             educ_serv:
                 +tags:
                     - "educ_serv"
