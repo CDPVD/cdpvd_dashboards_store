@@ -27,3 +27,16 @@ models:
       - core_dashboards_store.resolution:
           combination_of_columns:
             - id_post
+
+  - name: fact_poste_affect 
+    config:
+      tags:
+        - human_resources
+        - mart_human_resources
+        - poste
+    description: >
+      Table de fait qui lie les postes au matricule et lieux de travail
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - id_affect
