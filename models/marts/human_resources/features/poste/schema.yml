@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: fact_plan_effectif_lieu_travail
+    config:
+      tags:
+        - human_resources
+        - mart_human_resources
+        - poste
+    description: >
+      Table de fait qui lie les postes au lieux de travail
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - id_post
+            - lieu_trav

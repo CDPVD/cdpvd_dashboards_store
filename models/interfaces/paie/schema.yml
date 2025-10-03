@@ -1,6 +1,12 @@
 version: 2
 
 models:
+  - name: i_grh_poste_lieu_trav
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'grh_poste_lieu_trav' de la base de données source.
+       Historique des lieux de travail associés à chaque poste.
+
   - name: i_pai_hchq_pmnt
     tags: ["interface"]
     description: >
