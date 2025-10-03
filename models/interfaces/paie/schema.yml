@@ -1,6 +1,12 @@
 version: 2
 
 models:
+  - name: i_grh_poste_affect
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'grh_poste_affect' de la base de données source.
+       Historique des affectations de poste.
+
   - name: i_grh_poste_lieu_trav
     tags: ["interface"]
     description: >
@@ -12,6 +18,11 @@ models:
     description: >
       Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'grh_poste' de la base de données source.
        Historique des postes.
+
+  - name: i_grh_tab_motif_aff
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'grh_tab_motif_aff' de la base de données source.
 
   - name: i_grh_tab_param_caract_post
     tags: ["interface"]
