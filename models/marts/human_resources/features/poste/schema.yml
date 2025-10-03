@@ -14,3 +14,16 @@ models:
           combination_of_columns:
             - id_post
             - lieu_trav
+
+  - name: fact_plan_effectif
+    config:
+      tags:
+        - human_resources
+        - mart_human_resources
+        - poste
+    description: >
+      Historique des postes
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - id_post

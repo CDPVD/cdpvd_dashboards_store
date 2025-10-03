@@ -7,6 +7,17 @@ models:
       Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'grh_poste_lieu_trav' de la base de données source.
        Historique des lieux de travail associés à chaque poste.
 
+  - name: i_grh_poste
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'grh_poste' de la base de données source.
+       Historique des postes.
+
+  - name: i_grh_tab_param_caract_post
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'grh_tab_param_caract_post' de la base de données source.
+
   - name: i_pai_hchq_pmnt
     tags: ["interface"]
     description: >
@@ -39,3 +50,8 @@ models:
     description: >
       Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'pai_tab_pmnt' de la base de données source.
        Detail des différents type de paiements.
+
+  - name: i_wl_descr_paie
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'wl_descr_paie' de la base de données source.
