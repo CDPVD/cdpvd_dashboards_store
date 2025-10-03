@@ -22,6 +22,20 @@ seeds:
     core_dashboards_store:
         +enabled: true
     ### <<< END
+    cdpvd_dashboards_store:
+        mart:
+            human_resources:
+                +tags:
+                    - "human_resources"
+                    - "mart_human_resources"
+        dashboard:
+            direction_generale:
+                +tags:
+                    - "direction_generale"
+                suivi_etc:
+                    +tags:
+                        - "suivi_etc"
+
 models:
     ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
     # >>> BEGIN
@@ -50,6 +64,13 @@ models:
                     +enabled: false
                 i_t_prog:
                     +enabled: false
+            paie:
+                i_pai_tab_corp_empl:
+                    +enabled: false
+                i_pai_hemp:
+                    +enabled: false
+                i_pai_tab_etat_empl:
+                    +enabled: false
     ### <<< END
 
     # This code block can be safely overriden in the cssXX_dashboards_store.
@@ -58,16 +79,7 @@ models:
         +enabled: false
         +materialized: table
         marts:
-            #+enabled: true
-            human_resources:
-                +tags:
-                    - "human_resources"
-                    - "mart_human_resources"
-                +schema: human_resources
-                features:
-                    +schema: human_resources_features                
-                staging:
-                    +schema: human_resources_staging
+            #+enabled: true               
             educ_serv:
                 +tags:
                     - "educ_serv"
@@ -79,7 +91,15 @@ models:
             educ_serv_adultes:
                 features:
                 dimensions:
-
+            human_resources:
+                +tags:
+                    - "human_resources"
+                    - "mart_human_resources"
+                +schema: human_resources
+                features:
+                    +schema: human_resources_features                
+                staging:
+                    +schema: human_resources_staging           
         dashboards:
             #+enabled: true
             educ_serv:
@@ -98,9 +118,16 @@ models:
                     pbi_tables:
                         +post-hook:
                             - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
-          
             educ_serv_adultes:
                 portrait_css_fpfga:
+            direction_generale:
+                +tags:
+                    - "direction_generale"
+                suivi_etc:
+                    +tags: ["suivi_etc"]
+                    +schema: "dashboard_suivi_etc"
+                    +post-hook:
+                            - "{{ core_dashboards_store.stamp_model('dashboard_suivi_etc') }}"
 
         interfaces:
             +enabled: true
