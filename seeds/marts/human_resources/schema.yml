@@ -1,4 +1,4 @@
-﻿version: 2
+version: 2
 
 seeds:
   - name: ens_qualification
@@ -79,3 +79,30 @@ seeds:
         secteur_Id: int
         secteur_Descr: nvarchar(32) 
         ordre_Ens: nvarchar(3)
+version: 2
+
+seeds:
+  - name: pmnt_zero_keep
+    description: contient les codes de paiement que le CSS souhaite considérer malgré un montant nul lors du calcul des ETC
+    config:
+      tags: 
+        - human_resources
+        - suivi_etc
+      schema: human_resources_seeds
+      column_types:
+        code_pmnt: nvarchar(6)
+        descr: nvarchar(50)
+    columns:
+      - name: code_pmnt
+        description: code de paiement
+        tests:
+          - not_null
+          - unique    
+      - name: descr
+        description: descriptif
+        tests:
+          - not_null
+
+
+
+

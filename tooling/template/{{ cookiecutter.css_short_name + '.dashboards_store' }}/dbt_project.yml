@@ -75,7 +75,12 @@ models:
         prodrome:
             +enabled: False
         paie:
-            +enabled: False
+            i_pai_tab_corp_empl:
+                +enabled: false
+            i_pai_hemp:
+                +enabled: false
+            i_pai_tab_etat_empl:
+                +enabled: false
         gpi:
             +enabled: false
             # >>> Overridden by cdpvd_dashboards_store
@@ -107,6 +112,9 @@ vars:
             recency:
                 years_of_data_absences: 10 # How many years of data to keep for the 'absences' centric dashboards.
                 years_of_data_grades: 10 # How many years of data to keep for the 'grades' centric dashboards.
+        direction_generale:
+            date_pivot: 2024-07-01
+            
     interfaces:
         gpi:
             max_etapes: 30 # Must be set to the number of etapes, as found in gpm_t_obj_mat_grp

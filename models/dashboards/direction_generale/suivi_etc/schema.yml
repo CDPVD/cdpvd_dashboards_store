@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: suivi_effectif
+    config:
+      alias: suivi_effectif
+      tags:
+        - suivi_etc
+      schema: dashboard_suivi_etc
+    description: >
+        Table de rapports qui presente les cibles annuelles ainsi que le nombre réel d'heures / etc payées.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - an_budg
+            - no_per
+            - corp_emploi
+            - lieu_trav
+            - stat_eng
+            - type_remun
