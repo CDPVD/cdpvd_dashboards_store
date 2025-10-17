@@ -15,11 +15,31 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select
+
+-- Récupérer la date de debut d'extraction
+{% set date_pivot = var("marts")["human_resources"]["date_pivot"] %}
+
+with src as (
+    select
+        matr
+        , date_cheq
+        , no_cheq
+        , no_seq
+        , no_cmpt
+        , left(no_cmpt, 3) as lieu_trav_cpt_budg
+        , mnt_dist
+    from {{ ref("i_pai_hchq_pmnt_dist_cmpt") }}
+    where date_cheq >= {d '{{ date_pivot }}'}
+)
+
+select 
     matr
     , date_cheq
     , no_cheq
     , no_seq
     , no_cmpt
-    , mnt_dist
-from {{ var("database_paie") }}.dbo.pai_hchq_pmnt_dist_cmpt
+    , lieu_trav_cpt_budg
+    , sum(mnt_dist) as mnt_dist
+from src
+group by matr, date_cheq, no_cheq, no_seq, no_cmpt, lieu_trav_cpt_budg
+
