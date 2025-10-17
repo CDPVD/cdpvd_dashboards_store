@@ -27,9 +27,12 @@ with src as (
         , no_seq
         , no_cmpt
         , left(no_cmpt, 3) as lieu_trav_cpt_budg
-        , mnt_dist
+        , sum(mnt_dist) as mnt_dist
     from {{ ref("i_pai_hchq_pmnt_dist_cmpt") }}
     where date_cheq >= {d '{{ date_pivot }}'}
+    group by matr, date_cheq, no_cheq, no_seq, no_cmpt, left(no_cmpt, 3)
+
+-- calcul du pourcentage du mnt_dist par rapport au total de ce groupe matr, no_cheq, no_seq
 )
 
 select 
@@ -39,7 +42,11 @@ select
     , no_seq
     , no_cmpt
     , lieu_trav_cpt_budg
-    , sum(mnt_dist) as mnt_dist
+    , mnt_dist
+    , round(
+        case 
+            when sum(mnt_dist) over (partition by matr, no_cheq, no_seq) = 0 then 0
+            else mnt_dist / sum(mnt_dist) over (partition by matr, no_cheq, no_seq)
+        end
+    , 3) as pct_mnt_dist
 from src
-group by matr, date_cheq, no_cheq, no_seq, no_cmpt, lieu_trav_cpt_budg
-
