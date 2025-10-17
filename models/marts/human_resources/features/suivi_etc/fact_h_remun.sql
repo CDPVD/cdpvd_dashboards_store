@@ -109,6 +109,7 @@ with
     hres_remun as (
         select
             prd.date_cheq,
+            pmnt.no_cheq,
             prd.date_deb,
             prd.date_fin,
             pmnt.matr,
@@ -151,7 +152,9 @@ with
                 then pmnt.nb_unit * (perim.hntj / 2.0)
                 when pmnt.mode = '4'
                 then pmnt.nb_unit * (perim.hntj * 3.0 / 4.0)
-            end as nombre_heures_remun
+            end as nombre_heures_remun,
+            pmnt.mnt,
+            pmnt.mnt_cour_trait_diff
         from prd
         left join
             {{ ref("i_pai_hchq") }} as chq
@@ -250,6 +253,7 @@ select
     an_budg,
     no_per,
     gr_paie,
+    no_cheq,
     date_cheq,
     date_deb,
     date_fin,
@@ -278,5 +282,8 @@ select
             then 0.0
             else nombre_heures_remun
         end
-    ) as nb_hre_remun_fin
+    ) as nb_hre_remun_fin,
+    mnt,
+    mnt_cour_trait_diff,
+    mnt + mnt_cour_trait_diff as mnt_tot
 from calc_sab

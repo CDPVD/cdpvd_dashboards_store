@@ -30,5 +30,6 @@ select
     date_fin,
     code_prov,
     mnt,
+    mnt_cour_trait_diff,
     no_cmpt_cour_trait_diff
 from {{ var("database_paie") }}.dbo.pai_hchq_pmnt
