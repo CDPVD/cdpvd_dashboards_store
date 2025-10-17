@@ -43,10 +43,4 @@ select
     , no_cmpt
     , lieu_trav_cpt_budg
     , mnt_dist
-    , round(
-        case 
-            when sum(mnt_dist) over (partition by matr, no_cheq, no_seq) = 0 then 0
-            else mnt_dist / sum(mnt_dist) over (partition by matr, no_cheq, no_seq)
-        end
-    , 3) as pct_mnt_dist
 from src
