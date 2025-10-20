@@ -22,7 +22,7 @@ with
             coalesce(cast(hrs.no_per as varchar), '-') as no_per,
             coalesce(job.job_group_category, '-') as cat_emploi,
             coalesce(concat(hrs.corp_emploi, ' - ', ptce.descr), '-') as corp_emploi,
-            coalesce(hrs.lieu_trav, '-') as lieu_trav,
+            coalesce(coalesce(hrs.lieu_trav_cpt_budg, hrs.lieu_trav), '-') as lieu_trav,
             coalesce(concat(hrs.stat_eng, ' - ', eng.descr_stat_eng), '-') as stat_eng,
             case
                 when hrs.typeremun = '1'
@@ -33,7 +33,7 @@ with
                 then 'Temps supplémentaire'
                 else '-'
             end as type_remun,
-            hrs.nb_hre_remun_fin
+            hrs.nb_hre_remun_dist
         from {{ ref("fact_h_remun") }} as hrs
         join {{ ref("dim_mapper_job_group") }} as job on job.job_group = hrs.corp_emploi
         join
@@ -51,7 +51,7 @@ with
             lieu_trav,
             stat_eng,
             type_remun,
-            sum(nb_hre_remun_fin) as nombre_heures_remun
+            sum(nb_hre_remun_dist) as nombre_heures_remun
         from reel
         group by
             an_budg, no_per, cat_emploi, corp_emploi, lieu_trav, stat_eng, type_remun

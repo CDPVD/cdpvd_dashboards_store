@@ -247,7 +247,7 @@ with
             end as heures_manquantes_sab
         from hres_remun
     
-    -- Ajout des pourcentages / lieu de travail du cpt budgetaire
+    -- Jointure avec la table de staging stg_dist_cmpt
     ),
     perc as (
         select
@@ -298,6 +298,7 @@ with
         left join {{ ref("stg_dist_cmpt") }} as t2
             on t2.matr = t1.matr and t2.no_cheq = t1.no_cheq and t2.no_seq = t1.no_seq
 
+    -- Repartir les heures remunerees
     )
 
 select
