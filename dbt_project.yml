@@ -112,12 +112,7 @@ models:
                 endb:
                     +tags: ["endb"]
                     +schema: "dashboard_endb"
-                    pbi_tables:
-                        +post-hook:
-                            [
-                                "{{ core_dashboards_store.stamp_model('endb') }}",
-                            ]                                     
-          
+                                             
 
         interfaces:
             +enabled: true
