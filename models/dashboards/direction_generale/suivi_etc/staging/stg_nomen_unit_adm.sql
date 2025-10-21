@@ -15,9 +15,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-
-{% if var('use_adjust_nomen_unit_adm', true) %}
-    {% set join_table = ref('adjust_nomen_unit_adm') %}
+{% if var("use_adjust_nomen_unit_adm", true) %}
+    {% set join_table = ref("adjust_nomen_unit_adm") %}
 {% else %}
     {% set join_table = "(select null as current_lieu_trav, null as new_lieu_trav, null as new_descr)" %}
 {% endif %}
@@ -28,5 +27,4 @@ select distinct
     coalesce(t2.new_lieu_trav, t1.code) as new_lieu_trav,
     lower(coalesce(t2.new_descr, t1.descr)) as descr
 from {{ ref("i_fin_nomen_unit_adm") }} as t1
-left join {{ join_table }} as t2 
-    on t2.current_lieu_trav = t1.code
+left join {{ join_table }} as t2 on t2.current_lieu_trav = t1.code

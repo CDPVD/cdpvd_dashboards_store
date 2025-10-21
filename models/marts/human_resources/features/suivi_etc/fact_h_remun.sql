@@ -246,7 +246,7 @@ with
                 else 0.0
             end as heures_manquantes_sab
         from hres_remun
-    
+
     -- Jointure avec la table de staging stg_dist_cmpt
     ),
     perc as (
@@ -278,7 +278,9 @@ with
             convert(
                 numeric(7, 2),
                 case
-                    when t1.pourc_sabbatique_manquant <> 0.0 and t1.pourc_sabbatique_manquant <> 100.0
+                    when
+                        t1.pourc_sabbatique_manquant <> 0.0
+                        and t1.pourc_sabbatique_manquant <> 100.0
                     then t1.nombre_heures_remun + t1.heures_manquantes_sab
                     when t1.pourc_sabbatique_manquant = 0.0
                     then 0.0
@@ -288,15 +290,19 @@ with
             {# t1.mnt,
             t1.mnt_cour_trait_diff, #}
             t1.mnt + t1.mnt_cour_trait_diff as mnt_tot,
-            t2.no_cmpt,                   
+            t2.no_cmpt,
             t2.lieu_trav_cpt_budg,
             case
-                when t2.no_cmpt is null then t1.mnt + t1.mnt_cour_trait_diff
+                when t2.no_cmpt is null
+                then t1.mnt + t1.mnt_cour_trait_diff
                 else t2.mnt_dist
             end as mnt_dist
         from calc_sab as t1
-        left join {{ ref("stg_dist_cmpt") }} as t2
-            on t2.matr = t1.matr and t2.no_cheq = t1.no_cheq and t2.no_seq = t1.no_seq
+        left join
+            {{ ref("stg_dist_cmpt") }} as t2
+            on t2.matr = t1.matr
+            and t2.no_cheq = t1.no_cheq
+            and t2.no_seq = t1.no_seq
 
     -- Repartir les heures remunerees
     )
@@ -324,14 +330,37 @@ select
     no_cmpt,
     lieu_trav,
     lieu_trav_cpt_budg,
-    --sum(nb_hre_remun) as nb_hre_remun,
+    -- sum(nb_hre_remun) as nb_hre_remun,
     sum(
         case
-            when mnt_dist = 0 then 0
-            when mnt_tot = mnt_dist or mnt_tot = 0 then nb_hre_remun
+            when mnt_dist = 0
+            then 0
+            when mnt_tot = mnt_dist or mnt_tot = 0
+            then nb_hre_remun
             else nb_hre_remun * (mnt_dist / mnt_tot)
         end
     ) as nb_hre_remun_dist
 from perc
-group by annee, an_budg, no_per, gr_paie, no_cheq, date_cheq, date_deb, date_fin, date_deb_pmnt, date_fin_pmnt, matr, corp_emploi, stat_eng, sect, aff, typeremun,
-    mode, no_seq, code_pmnt, no_cmpt, lieu_trav, lieu_trav_cpt_budg
+group by
+    annee,
+    an_budg,
+    no_per,
+    gr_paie,
+    no_cheq,
+    date_cheq,
+    date_deb,
+    date_fin,
+    date_deb_pmnt,
+    date_fin_pmnt,
+    matr,
+    corp_emploi,
+    stat_eng,
+    sect,
+    aff,
+    typeremun,
+    mode,
+    no_seq,
+    code_pmnt,
+    no_cmpt,
+    lieu_trav,
+    lieu_trav_cpt_budg
