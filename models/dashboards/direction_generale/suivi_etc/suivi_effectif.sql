@@ -22,7 +22,7 @@ with
             coalesce(cast(hrs.no_per as varchar), '-') as no_per,
             coalesce(job.job_group_category, '-') as cat_emploi,
             coalesce(concat(hrs.corp_emploi, ' - ', ptce.descr), '-') as corp_emploi,
-            coalesce(coalesce(hrs.lieu_trav_cpt_budg, hrs.lieu_trav), '-') as lieu_trav,
+            coalesce(concat(ua.new_lieu_trav, ' - ', ua.descr), '-') as lieu_trav,
             coalesce(concat(hrs.stat_eng, ' - ', eng.descr_stat_eng), '-') as stat_eng,
             case
                 when hrs.typeremun = '1'
@@ -35,6 +35,8 @@ with
             end as type_remun,
             hrs.nb_hre_remun_dist
         from {{ ref("fact_h_remun") }} as hrs
+        left join {{ ref("stg_nomen_unit_adm") }} as ua
+            on ua.exer_fin = hrs.an_budg and ua.current_lieu_trav = hrs.lieu_trav_cpt_budg
         join {{ ref("dim_mapper_job_group") }} as job on job.job_group = hrs.corp_emploi
         join
             {{ ref("i_pai_tab_corp_empl") }} as ptce on ptce.corp_empl = hrs.corp_emploi
@@ -131,4 +133,3 @@ join
     on map.an_budg = cum.an_budg
     and map.no_per = cum.no_per
     and map.corp_emploi = cum.corp_emploi
-left join {{ ref("i_fin_nomen_unit_adm") }} as lieu on concat(left(lieu.exer_fin, 4), '-', right(lieu.exer_fin, 4)) = cum.an_budg and lieu.code = cum.lieu_trav
