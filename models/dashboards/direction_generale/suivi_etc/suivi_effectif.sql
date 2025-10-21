@@ -131,4 +131,4 @@ join
     on map.an_budg = cum.an_budg
     and map.no_per = cum.no_per
     and map.corp_emploi = cum.corp_emploi
-left join {{ ref("i_pai_tab_lieu_trav") }} as lieu on lieu.lieu_trav = cum.lieu_trav
+left join {{ ref("i_fin_nomen_unit_adm") }} as lieu on concat(left(lieu.exer_fin, 4), '-', right(lieu.exer_fin, 4)) = cum.an_budg and lieu.code = cum.lieu_trav
