@@ -16,3 +16,4 @@ models:
             - no_cheq
             - matr
             - no_seq
+            - no_cmpt
