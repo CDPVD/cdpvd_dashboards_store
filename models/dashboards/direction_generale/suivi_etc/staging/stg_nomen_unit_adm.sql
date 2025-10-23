@@ -15,7 +15,17 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-{% if var("use_adjust_nomen_unit_adm", true) %}
+
+{% set use_adjust = var("dashboards")["direction_generale"]["suivi_etc"]["staging"]["use_adjust_nomen_unit_adm"] %}
+
+{% if use_adjust | as_bool %}
+    {% set join_table = ref("adjust_nomen_unit_adm") %}
+{% else %}
+    {% set join_table = "(select null as current_lieu_trav, null as new_lieu_trav, null as new_descr)" %}
+{% endif %}
+
+
+{% if use_adjust | as_bool %}
     {% set join_table = ref("adjust_nomen_unit_adm") %}
 {% else %}
     {% set join_table = "(select null as current_lieu_trav, null as new_lieu_trav, null as new_descr)" %}
