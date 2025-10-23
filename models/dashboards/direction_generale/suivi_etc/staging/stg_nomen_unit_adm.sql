@@ -24,13 +24,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     {% set join_table = "(select null as current_lieu_trav, null as new_lieu_trav, null as new_descr)" %}
 {% endif %}
 
-
-{% if use_adjust | as_bool %}
-    {% set join_table = ref("adjust_nomen_unit_adm") %}
-{% else %}
-    {% set join_table = "(select null as current_lieu_trav, null as new_lieu_trav, null as new_descr)" %}
-{% endif %}
-
 select distinct
     t1.exer_fin,
     t1.code as current_lieu_trav,
