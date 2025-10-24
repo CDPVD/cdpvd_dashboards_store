@@ -564,10 +564,9 @@ vars:
       date_pivot: 2024-07-01
   
   dashboards:
-      direction_generale:
-          suivi_etc:
-              staging:
-                  use_adjust_nomen_unit_adm: true
+    direction_generale:
+      suivi_etc:
+        use_adjust_nomen_unit_adm: true # à ajouter si l'on souhaite ajuster / regrouper des unités administratives
 ```
 Adaptez ces valeurs selon les besoins spécifiques de votre CSS.
 

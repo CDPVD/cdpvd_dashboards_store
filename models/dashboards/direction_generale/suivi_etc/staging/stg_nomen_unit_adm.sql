@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
-{% set use_adjust = var("dashboards")["direction_generale"]["suivi_etc"]["staging"]["use_adjust_nomen_unit_adm"] %}
+{% set use_adjust = var("dashboards", {}).get("direction_generale", {}).get("suivi_etc", {}).get("use_adjust_nomen_unit_adm", False) %}
 
 {% if use_adjust | as_bool %}
     {% set join_table = ref("adjust_nomen_unit_adm") %}
