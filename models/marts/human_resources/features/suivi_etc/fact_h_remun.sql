@@ -337,7 +337,7 @@ select
             then 0
             when mnt_tot = mnt_dist or mnt_tot = 0
             then nb_hre_remun
-            else nb_hre_remun * (mnt_dist / mnt_tot)
+            else round(nb_hre_remun * (mnt_dist / mnt_tot), 2)
         end
     ) as nb_hre_remun_dist
 from perc
