@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 {% set use_adjust = var("dashboards", {}).get("direction_generale", {}).get("suivi_etc", {}).get("use_adjust_nomen_unit_adm", False) %}
 
-{% if use_adjust | as_bool %}
+{% if use_adjust | as_bool and use_adjust != 'replaceme' %}
     {% set join_table = ref("adjust_nomen_unit_adm") %}
 {% else %}
     {% set join_table = "(select null as current_lieu_trav, null as new_lieu_trav, null as new_descr)" %}
