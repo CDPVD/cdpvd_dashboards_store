@@ -14,3 +14,11 @@ models:
             - code_perm
             - fiche
             - annee
+
+  - name: fact_contact
+    config:
+      tags:
+        - rf
+      schema: "rf"
+    description: >
+      Table de fait qui fournit l'ensemble des adresses des fiches
