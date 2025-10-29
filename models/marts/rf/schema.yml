@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: fact_solde_el
+    config:
+      tags:
+        - rf
+      schema: "rf"
+    description: >
+      Table de fait qui fournit l'historique du solde 
+    tests:
+      - resolution:
+          combination_of_columns:
+            - code_perm
+            - fiche
+            - annee
