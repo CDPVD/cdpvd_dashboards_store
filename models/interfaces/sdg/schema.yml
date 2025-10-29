@@ -1,16 +1,23 @@
 version: 2
 
 models:
-  - name: i_sdg_e_dan
+  - name: i_sdg_e_fact
     tags: 
       - interface
       - rf
     description: >
-      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'sdg_e_dan' de la base de données source.
-      
-  - name: i_sdg_e_cumul_dan
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'sdg_e_fact' de la base de données source.
+
+  - name: i_sdg_e_trop_percus
     tags: 
       - interface
       - rf
     description: >
-      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'sdg_e_dan' de la base de données source.
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'sdg_e_trop_percus' de la base de données source.
+
+  - name: i_sdg_t_service
+    tags: 
+      - interface
+      - rf
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'sdg_t_service' de la base de données source.
