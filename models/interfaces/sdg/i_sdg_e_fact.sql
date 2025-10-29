@@ -19,6 +19,5 @@ select
     fiche,
     id_sdg,
     annee,
-    sum_solde_fac_cour,
-    trop_percu_an_cour
-from {{ var("database_sdg") }}.dbo.sdg_e_cumul_dan
+    solde
+from {{ var("database_sdg") }}.dbo.sdg_e_fact

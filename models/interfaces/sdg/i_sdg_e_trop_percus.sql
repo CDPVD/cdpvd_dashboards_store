@@ -18,5 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 select
     fiche,
     id_sdg,
-    annee
-from {{ var("database_sdg") }}.dbo.sdg_e_dan
+    annee,
+    mnt
+from {{ var("database_sdg") }}.dbo.sdg_e_trop_percus
