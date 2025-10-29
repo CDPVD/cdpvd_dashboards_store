@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 select
-    concat(code_emprunt, '_CRIF') as code_emprunt,
+    code_emprunt,
     ecocen as eco_cen,
     annee,
     cout_ttc,
