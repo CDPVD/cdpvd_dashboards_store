@@ -33,7 +33,7 @@ with
     ), perim as (
         select distinct 
 			coalesce(fgj.code_perm, fp.code_perm) as code_perm,
-			coalesce(fgj.fiche, left(fp.fiche, charindex('_', fp.fiche)-1)) as fiche,
+			coalesce(fgj.fiche, left(fp.fiche, isnull(nullif(charindex('_', fp.fiche)-1, -1), len(fp.fiche)))) as fiche -- gestion des fiche avec / sans _
             coalesce(fgj.annee, fp.annee) as annee,
             coalesce(fgj.eco, fp.eco) as eco
     from fgj
