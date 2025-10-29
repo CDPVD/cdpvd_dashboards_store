@@ -33,7 +33,7 @@ with
     ), perim as (
         select distinct 
 			coalesce(fgj.code_perm, fp.code_perm) as code_perm,
-			coalesce(fgj.fiche, left(fp.fiche, isnull(nullif(charindex('_', fp.fiche)-1, -1), len(fp.fiche)))) as fiche -- gestion des fiche avec / sans _
+			coalesce(fgj.fiche, left(fp.fiche, isnull(nullif(charindex('_', fp.fiche)-1, -1), len(fp.fiche)))) as fiche, -- gestion fiche avec / sans '_'
             coalesce(fgj.annee, fp.annee) as annee,
             coalesce(fgj.eco, fp.eco) as eco
     from fgj
@@ -45,14 +45,12 @@ with
 			, fgj.fiche
 			, fgj.annee
 			, fgj.eco
-			, isnull(sum(f.solde), 0.0) as solde_gpi
+			, sum(case when f.motif_fact = 'F' then f.solde else 0 end) as car_gpi
+			, sum(case when f.motif_fact = 'A' then f.solde else 0 end) as trp_gpi
         from fgj
 		left join {{ ref("i_gpm_n_fact") }} f on f.empr = fgj.fiche and f.id_eco = fgj.id_eco
-        -- BESOIN????
-		--left join [192.168.207.153].[GPIPRIM].dbo.gpm_t_projet p on f.projet = p.projet and f.id_eco = p.id_eco
 		where 
 			f.type_empr = 'E'
-			-- valider les descr et org (l. 91 à 93)
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 	
 	-- soldes AG
@@ -62,13 +60,12 @@ with
 			, fgj.fiche
 			, fgj.annee
 			, fgj.eco
-			, isnull(sum(cdan.sum_solde_fac_cour), 0.0) as car_ag
-			, isnull(sum(cdan.trop_percu_an_cour), 0.0) as tp_ag
-			, isnull(sum(cdan.sum_solde_fac_cour-cdan.trop_percu_an_cour), 0.0) as solde_ag
+			, isnull(sum(el.solde), 0.0) as car_ag
+			, isnull(sum(tp.mnt), 0.0) as tp_ag
         from fgj
-		left join {{ ref("i_sdg_e_dan") }} as dan on dan.fiche = fgj.fiche and dan.id_sdg = fgj.eco AND dan.annee = fgj.annee
-		left join {{ ref("i_sdg_e_cumul_dan") }} as cdan on cdan.fiche = dan.fiche and cdan.id_sdg = dan.id_sdg and cdan.annee = dan.annee
-		-- valider les ecos (l. 112)
+		left join {{ ref("i_sdg_t_service") }} serv on fgj.eco = serv.eco
+		left join {{ ref("i_sdg_e_fact") }} el on el.fiche = fgj.fiche and el.id_sdg = serv.id_sdg AND el.annee = fgj.annee
+		left join {{ ref("i_sdg_e_trop_percus") }} tp on tp.fiche = fgj.fiche and tp.id_sdg = serv.id_sdg AND tp.annee = fgj.annee
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 
 	-- soldes PROCURE
