@@ -73,20 +73,15 @@ with
 	), soldes_proc as (
 		select 
 			fp.code_perm 
-			, left(fp.fiche, charindex('_', fp.fiche)-1) as fiche
+			, left(fp.fiche, isnull(nullif(charindex('_', fp.fiche)-1, -1), len(fp.fiche)) ) as fiche
 			, fp.annee
 			, fp.eco
 			, isnull(sum(f.cout_ttc), 0.0) as car_fpfga
 			, isnull(sum(f.mont_paye), 0.0) as tp_fpfga
-			, isnull(sum(f.depot_paye), 0.0) as depot_paye_fpfga
-			, isnull(sum(f.solde), 0.0) as solde_fpfga
         from fp
 		left join {{ ref("i_pro_art_emprunt") }} as f on f.code_emprunt = fp.fiche and f.eco_cen = fp.eco and f.annee = fp.annee
-		--BESOIN????
-        --left join [192.168.207.153].[PROCCRIF].dbo.PRO_PAIEMNT as c on c.code_emprunt = cast(fp.fiche as nvarchar(7)) and c.ecocen = fp.eco
 		where 
 			f.statut != 15
-			-- valider les descr et org (l. 131)
 		group by fp.code_perm, fp.fiche, fp.annee, fp.eco
 	)
 
@@ -97,15 +92,14 @@ select
     perim.annee,
     perim.eco
 	-- GPI
-	, sum(isnull(gpi.solde_gpi, 0.0)) as solde_gpi
+	, sum(isnull(gpi.car_gpi, 0.0)) as car_gpi
+	, sum(isnull(gpi.trp_gpi, 0.0)) as trp_gpi
 	-- AG
 	, sum(isnull(ag.car_ag, 0.0)) as car_ag
 	, sum(isnull(ag.tp_ag, 0.0)) as tp_ag
-	, sum(isnull(ag.solde_ag, 0.0)) as solde_ag
 	-- PROCURE
 	, sum(isnull(prc.car_fpfga, 0.0)) as car_fpfga
 	, sum(isnull(prc.tp_fpfga, 0.0)) as tp_fpfga
-	, sum(isnull(prc.solde_fpfga, 0.0)) as solde_fpfga
 from perim
 left join soldes_gpi as gpi on gpi.code_perm = perim.code_perm and gpi.annee = perim.annee and gpi.eco = perim.eco
 left join soldes_ag as ag on ag.code_perm = perim.code_perm and ag.annee = perim.annee and ag.eco = perim.eco
