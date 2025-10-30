@@ -76,12 +76,16 @@ with
 			, left(fp.fiche, isnull(nullif(charindex('_', fp.fiche)-1, -1), len(fp.fiche)) ) as fiche
 			, fp.annee
 			, fp.eco
-			, isnull(sum(f.cout_ttc), 0.0) as car_fpfga
-			, isnull(sum(f.mont_paye), 0.0) as tp_fpfga
+			, isnull(sum(car.solde), 0.0) as car_proc
+			, isnull(sum(tp.mont_non_repart), 0.0) as trp_proc
         from fp
-		left join {{ ref("i_pro_art_emprunt") }} as f on f.code_emprunt = fp.fiche and f.eco_cen = fp.eco and f.annee = fp.annee
+		left join {{ ref("i_pro_art_emprunt") }} as car on car.code_emprunt = fp.fiche and car.eco_cen = fp.eco and car.annee = fp.annee
+		left join {{ ref("i_pro_paiemnt") }} as tp on tp.code_emprunt = fp.fiche and tp.eco_cen = fp.eco and year(tp.date_paiemnt) = fp.annee
 		where 
-			f.statut != 15
+			car.statut != 15
+			and tp.type_emprunt = '1' 
+			and	tp.date_annul is null 
+			and	tp.type_paiemnt = '4'
 		group by fp.code_perm, fp.fiche, fp.annee, fp.eco
 	)
 
@@ -98,8 +102,8 @@ select
 	, sum(isnull(ag.car_ag, 0.0)) as car_ag
 	, sum(isnull(ag.tp_ag, 0.0)) as tp_ag
 	-- PROCURE
-	, sum(isnull(prc.car_fpfga, 0.0)) as car_fpfga
-	, sum(isnull(prc.tp_fpfga, 0.0)) as tp_fpfga
+	, sum(isnull(prc.car_proc, 0.0)) as car_proc
+	, sum(isnull(prc.trp_proc, 0.0)) as trp_proc
 from perim
 left join soldes_gpi as gpi on gpi.code_perm = perim.code_perm and gpi.annee = perim.annee and gpi.eco = perim.eco
 left join soldes_ag as ag on ag.code_perm = perim.code_perm and ag.annee = perim.annee and ag.eco = perim.eco
