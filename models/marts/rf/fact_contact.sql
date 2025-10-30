@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
 with
-    -- construit le champs adresse et un seq_id pour conserver les dernieres lignes par type d'adresse
+    -- Ajout du champs adresse et un seq_id pour conserver les dernieres lignes par type d'adresse
     seq as (
         select 
 			fiche,
@@ -31,7 +31,7 @@ with
 			iif(ville is not null, ville + ', ', ' ') +
 			iif(code_post is not null, code_post, ' ') as adresse,
 			row_number() over (partition by fiche, type_adr order by date_effect desc) as seq_id
-        from {{ ref("i_gpm_e_adr") }} as adr
+        from {{ ref("i_gpm_e_adr") }}
 
 	-- Conserver les dernieres adresses par type
 	), latest as (
@@ -66,9 +66,19 @@ with
 )
 
 select
-    fiche,
-    max(case when role = 'mere' and seq_id = 1 then adresse end) as adresse_maman,
-    max(case when role = 'pere' and seq_id = 1 then adresse end) as adresse_papa,
-    max(case when role = 'tuteur' and seq_id = 1 then adresse end) as adresse_tuteur
+    seq2.fiche,
+    el.nom_mere, 
+	el.pnom_mere,
+	el.adr_electr_mere,
+    max(case when seq2.role = 'mere' and seq2.seq_id = 1 then seq2.adresse end) as adresse_mere,
+	el.nom_pere, 
+	el.pnom_pere,
+	el.adr_electr_pere, 
+    max(case when seq2.role = 'pere' and seq2.seq_id = 1 then seq2.adresse end) as adresse_pere,
+	el.nom_tuteur, 
+	el.pnom_tuteur,
+	el.adr_electr_tuteur,
+    max(case when seq2.role = 'tuteur' and seq2.seq_id = 1 then seq2.adresse end) as adresse_tuteur
 from seq2
-group by fiche;
+left join {{ ref("i_gpm_e_ele") }} as el on el.fiche = seq2.fiche
+group by seq2.fiche, el.nom_mere, el.pnom_mere, el.adr_electr_mere, el.nom_pere, el.pnom_pere, el.adr_electr_pere, el.nom_tuteur, el.pnom_tuteur, el.adr_electr_tuteur
