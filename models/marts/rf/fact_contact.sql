@@ -15,9 +15,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
+
 with
-    -- construit l'adresse
-    adr as (
+    -- construit le champs adresse et un seq_id pour conserver les dernieres lignes par type d'adresse
+    seq as (
         select 
 			fiche,
 			type_adr,
@@ -28,11 +29,46 @@ with
 			iif(genre_rue is not null, genre_rue + ' ', ' ') +
 			iif(rue is not null, rue + ', ', ' ') +
 			iif(ville is not null, ville + ', ', ' ') +
-			iif(code_post is not null, code_post, ' ') as adresse
-        from {{ ref("i_gpm_e_adr") }}
+			iif(code_post is not null, code_post, ' ') as adresse,
+			row_number() over (partition by fiche, type_adr order by date_effect desc) as seq_id
+        from {{ ref("i_gpm_e_adr") }} as adr
 
-	-- table avec les différentes adresses
-	)
+	-- Conserver les dernieres adresses par type
+	), latest as (
+		select *
+		from seq
+		where seq_id = 1
 
-	select * 
-	from adr
+	-- redefinir les types d'adresses en role
+	), roles as (
+		select fiche, 'mere' as role, date_effect, adresse
+		from latest
+		where type_adr in (1,3)
+
+		union all
+
+		select fiche, 'pere' as role, date_effect, adresse
+		from latest
+		where type_adr in (1,2)
+
+		union all
+
+		select fiche, 'tuteur' as role, date_effect, adresse
+		from latest
+		where type_adr = 4
+	
+	-- ajout d'un nouveau seq_id par role
+	), seq2 as (
+    select 
+		*,
+        row_number() over (partition by fiche, role order by date_effect desc) as seq_id
+    from roles
+)
+
+select
+    fiche,
+    max(case when role = 'mere' and seq_id = 1 then adresse end) as adresse_maman,
+    max(case when role = 'pere' and seq_id = 1 then adresse end) as adresse_papa,
+    max(case when role = 'tuteur' and seq_id = 1 then adresse end) as adresse_tuteur
+from seq2
+group by fiche;
