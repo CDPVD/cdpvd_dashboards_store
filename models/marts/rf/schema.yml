@@ -21,4 +21,8 @@ models:
         - rf
       schema: "rf"
     description: >
-      Table de fait qui fournit l'ensemble des adresses des fiches
+      Table de fait contenant les contacts des parents et tuteurs des élèves.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - fiche
