@@ -202,7 +202,7 @@ with
             )
             -- Exclusion des paiements avec un montant nuls exceptés ceux precisés
             -- dans la seed pmnt_zero_keep (si elle existe)
-            and (pmnt.mnt <> 0.0 {{ sqlc }})
+            --and (pmnt.mnt <> 0.0 {{ sqlc }})
             and (
                 (
                     (
@@ -235,6 +235,7 @@ with
                     pourc_sabbatique_manquant <> 0.0
                     and pourc_sabbatique_manquant <> 100.0
                     and date_deb_pmnt <> date_fin_pmnt
+                    and mnt_cour_trait_diff <> 0.0
                 then
                     (
                         ((pourc_post * pourc_temp / 100.0) * nombre_heures_remun) / (
@@ -271,10 +272,6 @@ with
             t1.lieu_trav,
             t1.no_seq,
             t1.code_pmnt,
-            {# t1.hntj,
-            t1.nb_unit, #}
-            {# t1.nombre_heures_remun,
-            t1.heures_manquantes_sab, #}
             convert(
                 numeric(7, 2),
                 case
@@ -287,8 +284,6 @@ with
                     else t1.nombre_heures_remun
                 end
             ) as nb_hre_remun,
-            {# t1.mnt,
-            t1.mnt_cour_trait_diff, #}
             t1.mnt + t1.mnt_cour_trait_diff as mnt_tot,
             t2.no_cmpt,
             t2.lieu_trav_cpt_budg,
@@ -304,8 +299,25 @@ with
             and t2.no_cheq = t1.no_cheq
             and t2.no_seq = t1.no_seq
 
-    -- Repartir les heures remunerees
+
+
+    -- Identifier les sequences de paiements CNESST 0% (103547) avec plusieurs comptes budgetaires
     )
+    , cnts_cnesst as (
+        select
+            *,
+            sum(
+                case 
+                    when code_pmnt = '103547' and mnt_dist = 0 and mnt_tot = 0 then 1
+                    else 0
+                end
+            ) over (
+                partition by an_budg, no_cheq, matr, no_seq
+            ) as nbr_no_cmpt
+        from perc
+
+    -- Repartir les heures remunerees en tenant compte du cas particulier : CNESST à 0%
+)
 
 select
     annee,
@@ -330,17 +342,19 @@ select
     no_cmpt,
     lieu_trav,
     lieu_trav_cpt_budg,
-    -- sum(nb_hre_remun) as nb_hre_remun,
     sum(
         case
-            when mnt_dist = 0
+            -- Répartir les heures CNESST malgré des mnt nuls
+            when mnt_dist = 0 and code_pmnt = '103547'
+            then nb_hre_remun / nbr_no_cmpt
+            when mnt_dist = 0 and code_pmnt != '103547'
             then 0
             when mnt_tot = mnt_dist or mnt_tot = 0
             then nb_hre_remun
-            else round(nb_hre_remun * (mnt_dist / mnt_tot), 2)
+            else nb_hre_remun * (mnt_dist / mnt_tot)
         end
     ) as nb_hre_remun_dist
-from perc
+from cnts_cnesst
 group by
     annee,
     an_budg,

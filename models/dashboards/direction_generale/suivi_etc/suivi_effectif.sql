@@ -55,7 +55,7 @@ with
             lieu_trav,
             stat_eng,
             type_remun,
-            sum(nb_hre_remun_dist) as nombre_heures_remun
+            round(sum(nb_hre_remun_dist), 2) as nombre_heures_remun
         from reel
         group by
             an_budg, no_per, cat_emploi, corp_emploi, lieu_trav, stat_eng, type_remun
