@@ -25,9 +25,11 @@ with
 	-- Recuperer l'ensemble des eleves qui ont des inscriptions ces 10 dernieres annees en FP/FGA
     -- Possible qu'il y ai le cas 1 code_perm -> 2 fiches la meme annee (si 2 centres dans un meme CSS / 2 BD adultes...)
     ), fp as (
-        select code_perm, fiche, annee, eco_cen as eco
-        from {{ ref("fact_freq_adultes") }}
-		where annee BETWEEN {{ core_dashboards_store.get_current_year() }}-10 AND {{ core_dashboards_store.get_current_year() }}
+        select pop.code_perm, pop.fiche, pop.annee, freq.eco_cen as eco
+        from {{ ref("stg_populations_adultes") }} as pop
+		join {{ ref("i_e_freq_adultes") }} as freq
+			on freq.fiche = pop.fiche and freq.annee = pop.annee and freq.freq = pop.freq
+		where pop.annee BETWEEN {{ core_dashboards_store.get_current_year() }}-10 AND {{ core_dashboards_store.get_current_year() }}
 
 	-- perimetre
     ), perim as (
