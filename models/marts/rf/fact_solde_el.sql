@@ -79,22 +79,32 @@ with
 		left join {{ ref("i_sdg_e_trop_percus") }} tp on tp.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and tp.id_sdg = serv.id_sdg
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 
-	-- soldes PROCURE
-    -- le cast force les fiches a etre des varchar car mes fiche FP/FGA le sont et sinon ca pete (cas specifique vdc)
-	), soldes_proc as (
+	-- car PROCURE
+	), car_proc as (
 		select 
 			fp.code_perm 
-			, left(fp.fiche, isnull(nullif(charindex('_', fp.fiche)-1, -1), len(fp.fiche)) ) as fiche
+			, fp.fiche
 			, fp.annee
 			, fp.eco
 			, isnull(sum(car.solde), 0.0) as car_proc
-			, isnull(sum(tp.mont_non_repart), 0.0) as trp_proc
         from fp
-		left join {{ ref("i_pro_art_emprunt") }} as car on car.code_emprunt = fp.fiche and car.eco_cen = fp.eco and car.annee = fp.annee
-		left join {{ ref("i_pro_paiemnt") }} as tp on tp.code_emprunt = fp.fiche and tp.eco_cen = fp.eco and year(tp.date_paiemnt) = fp.annee
+		left join {{ ref("i_pro_art_emprunt") }} as car on right('0000000' + cast(car.code_emprunt as varchar(7)), 7) = left(fp.fiche, isnull(nullif(charindex('_', fp.fiche)-1, -1), len(fp.fiche))) and car.eco_cen = fp.eco
 		where 
 			car.statut != 15
-			and tp.type_emprunt = '1' 
+		group by fp.code_perm, fp.fiche, fp.annee, fp.eco
+
+	-- tp PROCURE
+	), tp_proc as (
+		select 
+			fp.code_perm 
+			, fp.fiche
+			, fp.annee
+			, fp.eco
+			, isnull(sum(tp.mont_non_repart), 0.0) as trp_proc
+        from fp
+		left join {{ ref("i_pro_paiemnt") }} as tp on right('0000000' + cast(tp.code_emprunt as varchar(7)), 7) = left(fp.fiche, isnull(nullif(charindex('_', fp.fiche)-1, -1), len(fp.fiche))) and tp.eco_cen = fp.eco
+		where 
+			tp.type_emprunt = '1' 
 			and	tp.date_annul is null 
 			and	tp.type_paiemnt = '4'
 		group by fp.code_perm, fp.fiche, fp.annee, fp.eco
@@ -113,11 +123,12 @@ select
 	, sum(isnull(car_ag.car_ag, 0.0)) as car_ag
 	, sum(isnull(tp_ag.tp_ag, 0.0)) as tp_ag
 	-- PROCURE
-	, sum(isnull(prc.car_proc, 0.0)) as car_proc
-	, sum(isnull(prc.trp_proc, 0.0)) as trp_proc
+	, sum(isnull(car_proc.car_proc, 0.0)) as car_proc
+	, sum(isnull(tp_proc.trp_proc, 0.0)) as trp_proc
 from perim
 left join soldes_gpi as gpi on gpi.code_perm = perim.code_perm and gpi.annee = perim.annee and gpi.eco = perim.eco
 left join car_ag on car_ag.code_perm = perim.code_perm and car_ag.annee = perim.annee and car_ag.eco = perim.eco
 left join tp_ag on tp_ag.code_perm = perim.code_perm and tp_ag.annee = perim.annee and tp_ag.eco = perim.eco
-left join soldes_proc as prc on prc.code_perm = perim.code_perm and prc.annee = perim.annee and prc.eco = perim.eco
+left join car_proc on car_proc.code_perm = perim.code_perm and car_proc.annee = perim.annee and car_proc.eco = perim.eco
+left join tp_proc on tp_proc.code_perm = perim.code_perm and tp_proc.annee = perim.annee and tp_proc.eco = perim.eco
 group by perim.code_perm, perim.annee, perim.eco
