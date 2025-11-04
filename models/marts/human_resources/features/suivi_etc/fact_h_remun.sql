@@ -25,15 +25,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- Transforme la liste Python en string SQL friendly
 {% if codes | length > 0 %}
     {% set codes_sql = "'" ~ codes | join("','") ~ "'" %}
-    {% set sqlc = (
-        "or (         pmnt.mnt = 0         and pmnt.code_pmnt in ("
+    {% set list_cod_pmnt = (
+        "("
         ~ codes_sql
-        ~ ")     )"
+        ~ ")"
     ) %}
 
 {% else %}
     -- fallback pour éviter erreur SQL quand la seed est vide #}
-    {% set sqlc = "" %}
+    {% set list_cod_pmnt = "(NULL)" %}
 {% endif %}
 
 -- periode de paie à considerer
@@ -200,9 +200,6 @@ with
                     ptma.code_pmnt_a_exonerer = pmnt.code_pmnt
                     and pmnt.code_pmnt like '103%'
             )
-            -- Exclusion des paiements avec un montant nuls exceptés ceux precisés
-            -- dans la seed pmnt_zero_keep (si elle existe)
-            --and (pmnt.mnt <> 0.0 {{ sqlc }})
             and (
                 (
                     (
@@ -250,7 +247,7 @@ with
 
     -- Jointure avec la table de staging stg_dist_cmpt
     ),
-    perc as (
+    tot as (
         select
             t1.annee,
             t1.an_budg,
@@ -301,24 +298,23 @@ with
 
 
 
-    -- Identifier les sequences de paiements CNESST 0% (103547) avec plusieurs comptes budgetaires
+    -- Gestion des paiements avec un montant nul mais des hres remunerees que l'on souhaite compter (ex: CNESST)
     )
-    , cnts_cnesst as (
+    , mnt_zeros as (
         select
             *,
             sum(
                 case 
-                    when code_pmnt = '103547' and mnt_dist = 0 and mnt_tot = 0 then 1
+                    when code_pmnt in {{ list_cod_pmnt }} and mnt_dist = 0 and mnt_tot = 0 then 1
                     else 0
                 end
             ) over (
                 partition by an_budg, no_cheq, matr, no_seq
             ) as nbr_no_cmpt
-        from perc
-
-    -- Repartir les heures remunerees en tenant compte du cas particulier : CNESST à 0%
+        from tot
 )
 
+-- Repartition des heures remunerees
 select
     annee,
     an_budg,
@@ -345,16 +341,16 @@ select
     sum(
         case
             -- Répartir les heures CNESST malgré des mnt nuls
-            when mnt_dist = 0 and code_pmnt = '103547'
+            when mnt_dist = 0 and code_pmnt in {{ list_cod_pmnt }}
             then nb_hre_remun / nbr_no_cmpt
-            when mnt_dist = 0 and code_pmnt != '103547'
+            when mnt_dist = 0 and code_pmnt not in {{ list_cod_pmnt }}
             then 0
             when mnt_tot = mnt_dist or mnt_tot = 0
             then nb_hre_remun
             else nb_hre_remun * (mnt_dist / mnt_tot)
         end
     ) as nb_hre_remun_dist
-from cnts_cnesst
+from mnt_zeros
 group by
     annee,
     an_budg,
