@@ -53,19 +53,30 @@ with
 			f.type_empr = 'E'
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 	
-	-- soldes AG
-	), soldes_ag as (
+	-- car AG
+	), car_ag as (
 		select 
 			fgj.code_perm 
 			, fgj.fiche
 			, fgj.annee
 			, fgj.eco
 			, isnull(sum(el.solde), 0.0) as car_ag
+        from fgj
+		left join {{ ref("i_sdg_t_service") }} serv on fgj.eco = serv.eco
+		left join {{ ref("i_sdg_e_fact") }} el on el.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and el.id_sdg = serv.id_sdg
+		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
+	
+	-- tp AG
+	), tp_ag as (
+		select 
+			fgj.code_perm 
+			, fgj.fiche
+			, fgj.annee
+			, fgj.eco
 			, isnull(sum(tp.mnt), 0.0) as tp_ag
         from fgj
 		left join {{ ref("i_sdg_t_service") }} serv on fgj.eco = serv.eco
-		left join {{ ref("i_sdg_e_fact") }} el on el.fiche = fgj.fiche and el.id_sdg = serv.id_sdg AND el.annee = fgj.annee
-		left join {{ ref("i_sdg_e_trop_percus") }} tp on tp.fiche = fgj.fiche and tp.id_sdg = serv.id_sdg AND tp.annee = fgj.annee
+		left join {{ ref("i_sdg_e_trop_percus") }} tp on tp.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and tp.id_sdg = serv.id_sdg
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 
 	-- soldes PROCURE
@@ -99,13 +110,14 @@ select
 	, sum(isnull(gpi.car_gpi, 0.0)) as car_gpi
 	, sum(isnull(gpi.trp_gpi, 0.0)) as trp_gpi
 	-- AG
-	, sum(isnull(ag.car_ag, 0.0)) as car_ag
-	, sum(isnull(ag.tp_ag, 0.0)) as tp_ag
+	, sum(isnull(car_ag.car_ag, 0.0)) as car_ag
+	, sum(isnull(tp_ag.tp_ag, 0.0)) as tp_ag
 	-- PROCURE
 	, sum(isnull(prc.car_proc, 0.0)) as car_proc
 	, sum(isnull(prc.trp_proc, 0.0)) as trp_proc
 from perim
 left join soldes_gpi as gpi on gpi.code_perm = perim.code_perm and gpi.annee = perim.annee and gpi.eco = perim.eco
-left join soldes_ag as ag on ag.code_perm = perim.code_perm and ag.annee = perim.annee and ag.eco = perim.eco
+left join car_ag on car_ag.code_perm = perim.code_perm and car_ag.annee = perim.annee and car_ag.eco = perim.eco
+left join tp_ag on tp_ag.code_perm = perim.code_perm and tp_ag.annee = perim.annee and tp_ag.eco = perim.eco
 left join soldes_proc as prc on prc.code_perm = perim.code_perm and prc.annee = perim.annee and prc.eco = perim.eco
 group by perim.code_perm, perim.annee, perim.eco
