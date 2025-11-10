@@ -16,16 +16,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
-{{
-    config(
-        post_hook=[
-            core_dashboards_store.stamp_model("dashboard_endb")
-        ]
-    )
-}}
+
 
 {{ config
-    (alias="pbi_endb_rapport",
+    (
         post_hook=[
             core_dashboards_store.create_nonclustered_index(
                 "{{ this }}", 
@@ -34,9 +28,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             core_dashboards_store.create_clustered_index(
                 "{{ this }}", 
                 ["matricule", "lieu_principal","ordre_Ens", "statut_enseignant", "qualification"]
-            )            
+            ),
+            core_dashboards_store.stamp_model("dashboard_endb")           
         ]
-    ) 
+    )
 }}
 
 select

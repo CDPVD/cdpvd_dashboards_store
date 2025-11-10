@@ -2,6 +2,12 @@
 
 models:
   - name: pbi_endb_rapport
+    config:
+      alias: pbi_endb_rapport
+      tags:
+        - endb
+        - human_resources
+      schema: dashboard_endb
     description: >
       Table qui permet d'afficher les données des enseignant(e)s actifs.
     columns:
