@@ -33,7 +33,7 @@ with
         select 
 			pop.code_perm
 			, pop.fiche
-			, left(pop.fiche, isnull(nullif(charindex('_', pop.fiche)-1, -1), len(pop.fiche))) as fiche_key
+			, right('0000000' + left(pop.fiche, isnull(nullif(charindex('_', pop.fiche) - 1, -1), len(pop.fiche))), 7) as fiche_key
 			, pop.annee
 			, freq.eco_cen as eco
         from {{ ref("stg_populations_adultes") }} as pop
@@ -94,7 +94,10 @@ with
 	-- car PROCURE (la ss requete car_clean permet d'optimiser la ss requete car_proc)
 	), car_clean as (
 		select
-			right('0000000' + cast(code_emprunt as varchar(7)), 7) as fiche_key,
+			case
+				when charindex('_', code_emprunt) > 0 then right('0000000' + left(code_emprunt, charindex('_', code_emprunt) - 1), 7)
+				else right('0000000' + cast(code_emprunt as varchar(7)), 7)
+			end as fiche_key,
 			eco_cen,
 			solde
 		from {{ ref("i_pro_art_emprunt") }}
@@ -115,7 +118,10 @@ with
 	-- tp PROCURE (la ss requete tp_clean permet d'optimiser la ss requete tp_proc)
 	), tp_clean as (
 		select
-			right('0000000' + cast(code_emprunt as varchar(7)), 7) as fiche_key,
+			case
+				when charindex('_', code_emprunt) > 0 then right('0000000' + left(code_emprunt, charindex('_', code_emprunt) - 1), 7)
+				else right('0000000' + cast(code_emprunt as varchar(7)), 7)
+			end as fiche_key,
 			eco_cen,
 			mont_non_repart
 		from {{ ref("i_pro_paiemnt") }}
