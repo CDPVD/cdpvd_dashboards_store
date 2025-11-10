@@ -1092,6 +1092,38 @@ vars:
                 years_of_data_absences: votre_nombre_annee # Combien d'années de données conserver pour les tableaux de bord centrés sur les absences.
                 years_of_data_student: votre_nombre_annee # Combien d'années de données conserver pour les données des élèves.
 ```
+### Endb 
+> Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | Gabriel Thiffault (CSSVT)
+
+| Interfaces  | Marts 	| Marts seeds     | Dashboard seeds | Additional config |
+|-------------|---------|-----------------|-----------------| ------------------|
+| paie         |human_resources |human_resources             	| Non              | Oui 	              |
+
+## Déploiement
+
+![Success](https://img.shields.io/badge/endb-success-brightgreen)  
+![New in v0.11.0](https://img.shields.io/badge/new%20in-v0.11.0-blue)
+
+
+## Bases de données
+
+La base de données `paie` doit être liée au projet. Veuillez vous référer à la section [Lier une base de données](/using/configuration/databases) pour plus d'informations sur la façon de lier une base de données.
+
+## Seed
+
+> ⚠️ **Attention**  
+> 3 seeds sont requises pour le fonctionnement du tableau de bord.
+
+Le tableau de bord nécessite les 3 seeds suivantes :  ens_qualification, statut_enseignant et secteur. Veuillez consulter la section sur l'amorçage [seeding](/using/configuration/adapts-seeds) pour plus d'informations sur l'amorçage d'un mart. Ces seeds sont nécessaires pour peupler les sujets sanctionnées. Comme vous n'aurez pas besoin de la remplacer, vous pouvez simplement exécuter la commande suivante pour créer la seeds : dbt seed --select +tag:endb. Les seeds sont décrites à cet endroit : seeds/marts/human_resources/schema.yml
+
+
+## Marts
+
+Les marts suivants doivent être activés pour que le tableau de bord fonctionne. Veuillez vous référer à la section [Activer un mart](/using/configuration/enabling) pour plus d'informations sur la façon d'activer un mart.
+
+- `human_resources`
+
+
 
 # Developer guidelines
 
