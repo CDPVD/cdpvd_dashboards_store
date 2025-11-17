@@ -65,14 +65,15 @@ with
     cube_agg as (
         select
             an_budg,
-            coalesce(no_per, 'Tout') as no_per,
+            no_per,
+            coalesce(cat_emploi, 'Tout') as cat_emploi,
             coalesce(corp_emploi, 'Tout') as corp_emploi,
             coalesce(lieu_trav, 'Tout') as lieu_trav,
             coalesce(stat_eng, 'Tout') as stat_eng,
             coalesce(type_remun, 'Tout') as type_remun,
             sum(nombre_heures_remun) as nombre_heures_remun
         from tot
-        group by an_budg, cube (no_per, corp_emploi, lieu_trav, stat_eng, type_remun)
+        group by an_budg, no_per, cube (cat_emploi, corp_emploi, lieu_trav, stat_eng, type_remun)
 
     -- ajout d'un cumul progressif
     ),
@@ -80,53 +81,30 @@ with
         select
             an_budg,
             no_per,
+            cat_emploi,
             corp_emploi,
             lieu_trav,
             stat_eng,
             type_remun,
             nombre_heures_remun,
-            case
-                when no_per <> 'Tout'
-                then
-                    sum(nombre_heures_remun) over (
-                        partition by
-                            an_budg, corp_emploi, lieu_trav, stat_eng, type_remun
-                        order by
-                            case
-                                when no_per in ('Tout', '-')
-                                then 9999
-                                else cast(no_per as int)
-                            end
-                        rows between unbounded preceding and current row
-                    )
-            end as cumul_progressif
+            sum(nombre_heures_remun) over (
+                partition by
+                    an_budg, cat_emploi, corp_emploi, lieu_trav, stat_eng, type_remun
+                order by cast(no_per as int)
+                rows between unbounded preceding and current row
+            ) as cumul_progressif
         from cube_agg
 
-    -- rajout de la colonne cat_emploi
-    ),
-    map as (
-        select distinct an_budg, no_per, corp_emploi, cat_emploi
-        from tot
-        union all
-        -- ligne "Totale" pour chaque période / année
-        select an_budg, no_per, 'Tout' as corp_emploi, 'Tout' as cat_emploi
-        from tot
-        group by an_budg, no_per
     )
 
 select
-    cum.an_budg,
-    cum.no_per,
-    map.cat_emploi,
-    cum.corp_emploi,
-    cum.lieu_trav,
-    cum.stat_eng,
-    cum.type_remun,
-    cum.nombre_heures_remun,
-    cum.cumul_progressif
+    an_budg,
+    no_per,
+    cat_emploi,
+    corp_emploi,
+    lieu_trav,
+    stat_eng,
+    type_remun,
+    nombre_heures_remun,
+    cumul_progressif
 from cum
-join
-    map
-    on map.an_budg = cum.an_budg
-    and map.no_per = cum.no_per
-    and map.corp_emploi = cum.corp_emploi
