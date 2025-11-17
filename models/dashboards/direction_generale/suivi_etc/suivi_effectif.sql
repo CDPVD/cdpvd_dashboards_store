@@ -73,7 +73,9 @@ with
             coalesce(type_remun, 'Tout') as type_remun,
             sum(nombre_heures_remun) as nombre_heures_remun
         from tot
-        group by an_budg, no_per, cube (cat_emploi, corp_emploi, lieu_trav, stat_eng, type_remun)
+        group by
+            an_budg,
+            no_per, cube (cat_emploi, corp_emploi, lieu_trav, stat_eng, type_remun)
 
     -- ajout d'un cumul progressif
     ),

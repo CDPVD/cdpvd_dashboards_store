@@ -25,11 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- Transforme la liste Python en string SQL friendly
 {% if codes | length > 0 %}
     {% set codes_sql = "'" ~ codes | join("','") ~ "'" %}
-    {% set list_cod_pmnt = (
-        "("
-        ~ codes_sql
-        ~ ")"
-    ) %}
+    {% set list_cod_pmnt = "(" ~ codes_sql ~ ")" %}
 
 {% else %}
     -- fallback pour éviter erreur SQL quand la seed est vide #}
@@ -296,23 +292,24 @@ with
             and t2.no_cheq = t1.no_cheq
             and t2.no_seq = t1.no_seq
 
-
-
-    -- Gestion des paiements avec un montant nul mais des hres remunerees que l'on souhaite compter (ex: CNESST)
-    )
-    , mnt_zeros as (
+    -- Gestion des paiements avec un montant nul mais des hres remunerees que l'on
+    -- souhaite compter (ex: CNESST)
+    ),
+    mnt_zeros as (
         select
             *,
             sum(
-                case 
-                    when code_pmnt in {{ list_cod_pmnt }} and mnt_dist = 0 and mnt_tot = 0 then 1
+                case
+                    when
+                        code_pmnt in {{ list_cod_pmnt }}
+                        and mnt_dist = 0
+                        and mnt_tot = 0
+                    then 1
                     else 0
                 end
-            ) over (
-                partition by an_budg, no_cheq, matr, no_seq
-            ) as nbr_no_cmpt
+            ) over (partition by an_budg, no_cheq, matr, no_seq) as nbr_no_cmpt
         from tot
-)
+    )
 
 -- Repartition des heures remunerees
 select
