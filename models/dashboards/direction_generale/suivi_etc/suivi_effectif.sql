@@ -19,10 +19,12 @@ with
     reel as (
         select
             concat(left(hrs.an_budg, 4), '-', right(hrs.an_budg, 4)) an_budg,
-            coalesce(cast(hrs.no_per as varchar), '-') as no_per,
+            no_cmpt,
+            cast(hrs.no_per as int) as no_per,
             coalesce(job.job_group_category, '-') as cat_emploi,
             coalesce(concat(hrs.corp_emploi, ' - ', ptce.descr), '-') as corp_emploi,
             coalesce(concat(ua.new_lieu_trav, ' - ', ua.descr), '-') as lieu_trav,
+            code_lieu_trav,
             coalesce(concat(hrs.stat_eng, ' - ', eng.descr_stat_eng), '-') as stat_eng,
             case
                 when hrs.typeremun = '1'
@@ -38,7 +40,7 @@ with
         left join
             {{ ref("stg_nomen_unit_adm") }} as ua
             on ua.exer_fin = hrs.an_budg
-            and ua.current_lieu_trav = hrs.lieu_trav_cpt_budg
+            and ua.current_lieu_trav = hrs.code_lieu_trav
         join {{ ref("dim_mapper_job_group") }} as job on job.job_group = hrs.corp_emploi
         join
             {{ ref("i_pai_tab_corp_empl") }} as ptce on ptce.corp_empl = hrs.corp_emploi
@@ -50,63 +52,37 @@ with
         select
             an_budg,
             no_per,
+            no_cmpt,
             cat_emploi,
             corp_emploi,
+            code_lieu_trav,
             lieu_trav,
             stat_eng,
             type_remun,
-            round(sum(nb_hre_remun_dist), 2) as nombre_heures_remun
+            sum(nb_hre_remun_dist) as nombre_heures_remun,
+            sum((nb_hre_remun_dist / 1826.3)) as equivalent_temps_plein
         from reel
         group by
-            an_budg, no_per, cat_emploi, corp_emploi, lieu_trav, stat_eng, type_remun
-
-    -- agreger selon les differentes combinaisons
-    ),
-    cube_agg as (
-        select
             an_budg,
             no_per,
-            coalesce(cat_emploi, 'Tout') as cat_emploi,
-            coalesce(corp_emploi, 'Tout') as corp_emploi,
-            coalesce(lieu_trav, 'Tout') as lieu_trav,
-            coalesce(stat_eng, 'Tout') as stat_eng,
-            coalesce(type_remun, 'Tout') as type_remun,
-            sum(nombre_heures_remun) as nombre_heures_remun
-        from tot
-        group by
-            an_budg,
-            no_per, cube (cat_emploi, corp_emploi, lieu_trav, stat_eng, type_remun)
-
-    -- ajout d'un cumul progressif
-    ),
-    cum as (
-        select
-            an_budg,
-            no_per,
+            no_cmpt,
             cat_emploi,
             corp_emploi,
+            code_lieu_trav,
             lieu_trav,
             stat_eng,
-            type_remun,
-            nombre_heures_remun,
-            sum(nombre_heures_remun) over (
-                partition by
-                    an_budg, cat_emploi, corp_emploi, lieu_trav, stat_eng, type_remun
-                order by cast(no_per as int)
-                rows between unbounded preceding and current row
-            ) as cumul_progressif
-        from cube_agg
-
+            type_remun
     )
-
 select
     an_budg,
     no_per,
+    no_cmpt,
     cat_emploi,
     corp_emploi,
+    code_lieu_trav,
     lieu_trav,
     stat_eng,
     type_remun,
     nombre_heures_remun,
-    cumul_progressif
-from cum
+    equivalent_temps_plein
+from tot

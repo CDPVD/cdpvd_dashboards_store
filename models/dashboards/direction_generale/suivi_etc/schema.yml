@@ -14,7 +14,10 @@ models:
           combination_of_columns:
             - an_budg
             - no_per
+            - no_cmpt
+            - cat_emploi
             - corp_emploi
+            - code_lieu_trav
             - lieu_trav
             - stat_eng
             - type_remun

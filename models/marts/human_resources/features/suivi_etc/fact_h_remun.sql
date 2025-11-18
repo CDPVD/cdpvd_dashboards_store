@@ -309,9 +309,69 @@ with
                 end
             ) over (partition by an_budg, no_cheq, matr, no_seq) as nbr_no_cmpt
         from tot
+    ),
+    cal_renum as (
+        -- Repartition des heures remunerees
+        select
+            annee,
+            an_budg,
+            no_per,
+            gr_paie,
+            no_cheq,
+            date_cheq,
+            date_deb,
+            date_fin,
+            date_deb_pmnt,
+            date_fin_pmnt,
+            matr,
+            corp_emploi,
+            stat_eng,
+            sect,
+            aff,
+            typeremun,
+            mode,
+            no_seq,
+            code_pmnt,
+            no_cmpt,
+            lieu_trav,
+            lieu_trav_cpt_budg,
+            sum(
+                case
+                    -- Répartir les heures CNESST malgré des mnt nuls
+                    when mnt_dist = 0 and code_pmnt in {{ list_cod_pmnt }}
+                    then nb_hre_remun / nbr_no_cmpt
+                    when mnt_dist = 0 and code_pmnt not in {{ list_cod_pmnt }}
+                    then 0
+                    when mnt_tot = mnt_dist or mnt_tot = 0
+                    then nb_hre_remun
+                    else nb_hre_remun * (mnt_dist / mnt_tot)
+                end
+            ) as nb_hre_remun_dist
+        from mnt_zeros
+        group by
+            annee,
+            an_budg,
+            no_per,
+            gr_paie,
+            no_cheq,
+            date_cheq,
+            date_deb,
+            date_fin,
+            date_deb_pmnt,
+            date_fin_pmnt,
+            matr,
+            corp_emploi,
+            stat_eng,
+            sect,
+            aff,
+            typeremun,
+            mode,
+            no_seq,
+            code_pmnt,
+            no_cmpt,
+            lieu_trav,
+            lieu_trav_cpt_budg
     )
-
--- Repartition des heures remunerees
 select
     annee,
     an_budg,
@@ -332,42 +392,9 @@ select
     mode,
     no_seq,
     code_pmnt,
-    no_cmpt,
+    stuff(stuff(stuff(no_cmpt, 4, 0, '-'), 6, 0, '-'), 12, 0, '-') as no_cmpt,
     lieu_trav,
-    lieu_trav_cpt_budg,
-    sum(
-        case
-            -- Répartir les heures CNESST malgré des mnt nuls
-            when mnt_dist = 0 and code_pmnt in {{ list_cod_pmnt }}
-            then nb_hre_remun / nbr_no_cmpt
-            when mnt_dist = 0 and code_pmnt not in {{ list_cod_pmnt }}
-            then 0
-            when mnt_tot = mnt_dist or mnt_tot = 0
-            then nb_hre_remun
-            else nb_hre_remun * (mnt_dist / mnt_tot)
-        end
-    ) as nb_hre_remun_dist
-from mnt_zeros
-group by
-    annee,
-    an_budg,
-    no_per,
-    gr_paie,
-    no_cheq,
-    date_cheq,
-    date_deb,
-    date_fin,
-    date_deb_pmnt,
-    date_fin_pmnt,
-    matr,
-    corp_emploi,
-    stat_eng,
-    sect,
-    aff,
-    typeremun,
-    mode,
-    no_seq,
-    code_pmnt,
-    no_cmpt,
-    lieu_trav,
-    lieu_trav_cpt_budg
+    lieu_trav_cpt_budg as code_lieu_trav,
+    nb_hre_remun_dist
+from cal_renum
+where lieu_trav_cpt_budg is not null and nb_hre_remun_dist != 0
