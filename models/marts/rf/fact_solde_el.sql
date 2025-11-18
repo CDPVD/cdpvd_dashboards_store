@@ -25,7 +25,7 @@ with
 			, eco
 			, id_eco
         from {{ ref("spine") }}
-		where annee between {{ core_dashboards_store.get_current_year() }}-10 and {{ core_dashboards_store.get_current_year() }}
+		where annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
 
 	-- Recuperer l'ensemble des eleves qui ont des inscriptions ces 10 dernieres annees en FP/FGA
     -- Possible qu'il y ai le cas 1 code_perm -> 2 fiches la meme annee (si 2 centres dans un meme CSS / 2 BD adultes...)
@@ -39,7 +39,7 @@ with
         from {{ ref("stg_populations_adultes") }} as pop
 		join {{ ref("i_e_freq_adultes") }} as freq
 			on freq.fiche = pop.fiche and freq.annee = pop.annee and freq.freq = pop.freq
-		where pop.annee BETWEEN {{ core_dashboards_store.get_current_year() }}-10 AND {{ core_dashboards_store.get_current_year() }}
+		where pop.annee BETWEEN {{ core_dashboards_store.get_current_year() }}-15 AND {{ core_dashboards_store.get_current_year() }}
 
 	-- perimetre
     ), perim as (
@@ -74,8 +74,7 @@ with
 			, fgj.eco
 			, isnull(sum(el.solde), 0.0) as car_ag
         from fgj
-		left join {{ ref("i_sdg_t_service") }} serv on fgj.eco = serv.eco
-		left join {{ ref("i_sdg_e_fact") }} el on el.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and el.id_sdg = serv.id_sdg
+		left join {{ ref("i_sdg_e_fact") }} el on el.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and el.annee = fgj.annee
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 	
 	-- tp AG
@@ -87,8 +86,7 @@ with
 			, fgj.eco
 			, isnull(sum(tp.mnt), 0.0) as tp_ag
         from fgj
-		left join {{ ref("i_sdg_t_service") }} serv on fgj.eco = serv.eco
-		left join {{ ref("i_sdg_e_trop_percus") }} tp on tp.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and tp.id_sdg = serv.id_sdg
+		left join {{ ref("i_sdg_e_trop_percus") }} tp on tp.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and tp.annee = fgj.annee
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 
 	-- car PROCURE (la ss requete car_clean permet d'optimiser la ss requete car_proc)
@@ -111,8 +109,8 @@ with
 			, fp.eco
 			, isnull(sum(car.solde), 0.0) as car_proc
         from fp
-		left join car_clean car
-        	on car.fiche_key = fp.fiche_key and car.eco_cen = fp.eco
+		left join car_clean as car
+        	on car.fiche_key = fp.fiche_key and car.eco_cen = fp.eco --and car.annee = fp.annee
 		group by fp.code_perm, fp.fiche, fp.annee, fp.eco
 
 	-- tp PROCURE (la ss requete tp_clean permet d'optimiser la ss requete tp_proc)
@@ -138,8 +136,8 @@ with
 			, fp.eco
 			, isnull(sum(tp.mont_non_repart), 0.0) as trp_proc
         from fp
-		left join tp_clean tp 
-        	on tp.fiche_key = fp.fiche_key and tp.eco_cen = fp.eco
+		left join tp_clean as tp 
+        	on tp.fiche_key = fp.fiche_key and tp.eco_cen = fp.eco --and tp.annee = fp.annee
 		group by fp.code_perm, fp.fiche, fp.annee, fp.eco
 	)
 
