@@ -97,6 +97,7 @@ with
 				else right('0000000' + cast(code_emprunt as varchar(7)), 7)
 			end as fiche_key,
 			eco_cen,
+			annee,
 			solde
 		from {{ ref("i_pro_art_emprunt") }}
 		where statut != 15
@@ -110,7 +111,7 @@ with
 			, isnull(sum(car.solde), 0.0) as car_proc
         from fp
 		left join car_clean as car
-        	on car.fiche_key = fp.fiche_key and car.eco_cen = fp.eco --and car.annee = fp.annee
+        	on car.fiche_key = fp.fiche_key and car.eco_cen = fp.eco and car.annee = fp.annee
 		group by fp.code_perm, fp.fiche, fp.annee, fp.eco
 
 	-- tp PROCURE (la ss requete tp_clean permet d'optimiser la ss requete tp_proc)
@@ -121,6 +122,9 @@ with
 				else right('0000000' + cast(code_emprunt as varchar(7)), 7)
 			end as fiche_key,
 			eco_cen,
+			case
+                when month(date_paiemnt) < 7 then year(date_paiemnt) - 1 else year(date_paiemnt)
+            end as annee,
 			mont_non_repart
 		from {{ ref("i_pro_paiemnt") }}
 		where 
@@ -137,7 +141,7 @@ with
 			, isnull(sum(tp.mont_non_repart), 0.0) as trp_proc
         from fp
 		left join tp_clean as tp 
-        	on tp.fiche_key = fp.fiche_key and tp.eco_cen = fp.eco --and tp.annee = fp.annee
+        	on tp.fiche_key = fp.fiche_key and tp.eco_cen = fp.eco and tp.annee = fp.annee
 		group by fp.code_perm, fp.fiche, fp.annee, fp.eco
 	)
 
