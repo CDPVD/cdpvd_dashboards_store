@@ -25,15 +25,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- Transforme la liste Python en string SQL friendly
 {% if codes | length > 0 %}
     {% set codes_sql = "'" ~ codes | join("','") ~ "'" %}
-    {% set sqlc = (
-        "or (         pmnt.mnt = 0         and pmnt.code_pmnt in ("
-        ~ codes_sql
-        ~ ")     )"
-    ) %}
+    {% set list_cod_pmnt = "(" ~ codes_sql ~ ")" %}
 
 {% else %}
     -- fallback pour éviter erreur SQL quand la seed est vide #}
-    {% set sqlc = "" %}
+    {% set list_cod_pmnt = "(NULL)" %}
 {% endif %}
 
 -- periode de paie à considerer
@@ -109,6 +105,7 @@ with
     hres_remun as (
         select
             prd.date_cheq,
+            pmnt.no_cheq,
             prd.date_deb,
             prd.date_fin,
             pmnt.matr,
@@ -151,7 +148,9 @@ with
                 then pmnt.nb_unit * (perim.hntj / 2.0)
                 when pmnt.mode = '4'
                 then pmnt.nb_unit * (perim.hntj * 3.0 / 4.0)
-            end as nombre_heures_remun
+            end as nombre_heures_remun,
+            pmnt.mnt,
+            pmnt.mnt_cour_trait_diff
         from prd
         left join
             {{ ref("i_pai_hchq") }} as chq
@@ -197,9 +196,6 @@ with
                     ptma.code_pmnt_a_exonerer = pmnt.code_pmnt
                     and pmnt.code_pmnt like '103%'
             )
-            -- Exclusion des paiements avec un montant nuls exceptés ceux precisés
-            -- dans la seed pmnt_zero_keep (si elle existe)
-            and (pmnt.mnt <> 0.0 {{ sqlc }})
             and (
                 (
                     (
@@ -232,6 +228,7 @@ with
                     pourc_sabbatique_manquant <> 0.0
                     and pourc_sabbatique_manquant <> 100.0
                     and date_deb_pmnt <> date_fin_pmnt
+                    and mnt_cour_trait_diff <> 0.0
                 then
                     (
                         ((pourc_post * pourc_temp / 100.0) * nombre_heures_remun) / (
@@ -243,13 +240,144 @@ with
                 else 0.0
             end as heures_manquantes_sab
         from hres_remun
-    )
 
+    -- Jointure avec la table de staging stg_dist_cmpt
+    ),
+    tot as (
+        select
+            t1.annee,
+            t1.an_budg,
+            t1.no_per,
+            t1.gr_paie,
+            t1.no_cheq,
+            t1.date_cheq,
+            t1.date_deb,
+            t1.date_fin,
+            t1.date_deb_pmnt,
+            t1.date_fin_pmnt,
+            t1.matr,
+            t1.corp_emploi,
+            t1.stat_eng,
+            t1.sect,
+            t1.aff,
+            t1.typeremun,
+            t1.mode,
+            t1.lieu_trav,
+            t1.no_seq,
+            t1.code_pmnt,
+            convert(
+                numeric(7, 2),
+                case
+                    when
+                        t1.pourc_sabbatique_manquant <> 0.0
+                        and t1.pourc_sabbatique_manquant <> 100.0
+                    then t1.nombre_heures_remun + t1.heures_manquantes_sab
+                    when t1.pourc_sabbatique_manquant = 0.0
+                    then 0.0
+                    else t1.nombre_heures_remun
+                end
+            ) as nb_hre_remun,
+            t1.mnt + t1.mnt_cour_trait_diff as mnt_tot,
+            t2.no_cmpt,
+            t2.lieu_trav_cpt_budg,
+            case
+                when t2.no_cmpt is null
+                then t1.mnt + t1.mnt_cour_trait_diff
+                else t2.mnt_dist
+            end as mnt_dist
+        from calc_sab as t1
+        left join
+            {{ ref("stg_dist_cmpt") }} as t2
+            on t2.matr = t1.matr
+            and t2.no_cheq = t1.no_cheq
+            and t2.no_seq = t1.no_seq
+
+    -- Gestion des paiements avec un montant nul mais des hres remunerees que l'on
+    -- souhaite compter (ex: CNESST)
+    ),
+    mnt_zeros as (
+        select
+            *,
+            sum(
+                case
+                    when
+                        code_pmnt in {{ list_cod_pmnt }}
+                        and mnt_dist = 0
+                        and mnt_tot = 0
+                    then 1
+                    else 0
+                end
+            ) over (partition by an_budg, no_cheq, matr, no_seq) as nbr_no_cmpt
+        from tot
+    ),
+    cal_renum as (
+        -- Repartition des heures remunerees
+        select
+            annee,
+            an_budg,
+            no_per,
+            gr_paie,
+            no_cheq,
+            date_cheq,
+            date_deb,
+            date_fin,
+            date_deb_pmnt,
+            date_fin_pmnt,
+            matr,
+            corp_emploi,
+            stat_eng,
+            sect,
+            aff,
+            typeremun,
+            mode,
+            no_seq,
+            code_pmnt,
+            no_cmpt,
+            lieu_trav,
+            lieu_trav_cpt_budg,
+            sum(
+                case
+                    -- Répartir les heures CNESST malgré des mnt nuls
+                    when mnt_dist = 0 and code_pmnt in {{ list_cod_pmnt }}
+                    then nb_hre_remun / nbr_no_cmpt
+                    when mnt_dist = 0 and code_pmnt not in {{ list_cod_pmnt }}
+                    then 0
+                    when mnt_tot = mnt_dist or mnt_tot = 0
+                    then nb_hre_remun
+                    else nb_hre_remun * (mnt_dist / mnt_tot)
+                end
+            ) as nb_hre_remun_dist
+        from mnt_zeros
+        group by
+            annee,
+            an_budg,
+            no_per,
+            gr_paie,
+            no_cheq,
+            date_cheq,
+            date_deb,
+            date_fin,
+            date_deb_pmnt,
+            date_fin_pmnt,
+            matr,
+            corp_emploi,
+            stat_eng,
+            sect,
+            aff,
+            typeremun,
+            mode,
+            no_seq,
+            code_pmnt,
+            no_cmpt,
+            lieu_trav,
+            lieu_trav_cpt_budg
+    )
 select
     annee,
     an_budg,
     no_per,
     gr_paie,
+    no_cheq,
     date_cheq,
     date_deb,
     date_fin,
@@ -262,21 +390,11 @@ select
     aff,
     typeremun,
     mode,
-    lieu_trav,
     no_seq,
     code_pmnt,
-    hntj,
-    nb_unit,
-    nombre_heures_remun,
-    heures_manquantes_sab,
-    convert(
-        numeric(7, 2),
-        case
-            when pourc_sabbatique_manquant <> 0.0 and pourc_sabbatique_manquant <> 100.0
-            then nombre_heures_remun + heures_manquantes_sab
-            when pourc_sabbatique_manquant = 0.0
-            then 0.0
-            else nombre_heures_remun
-        end
-    ) as nb_hre_remun_fin
-from calc_sab
+    stuff(stuff(stuff(no_cmpt, 4, 0, '-'), 6, 0, '-'), 12, 0, '-') as no_cmpt,
+    lieu_trav,
+    lieu_trav_cpt_budg as code_lieu_trav,
+    nb_hre_remun_dist
+from cal_renum
+where lieu_trav_cpt_budg is not null and nb_hre_remun_dist != 0

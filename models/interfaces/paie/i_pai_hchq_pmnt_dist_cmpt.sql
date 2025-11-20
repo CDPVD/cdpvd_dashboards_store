@@ -15,21 +15,5 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select
-    matr,
-    no_seq,
-    code_pmnt,
-    corp_empl,
-    lieu_trav,
-    mode,
-    nb_unit,
-    ref_empl,
-    no_cheq,
-    date_cheq,
-    date_deb,
-    date_fin,
-    code_prov,
-    mnt,
-    mnt_cour_trait_diff,
-    no_cmpt_cour_trait_diff
-from {{ var("database_paie") }}.dbo.pai_hchq_pmnt
+select matr, date_cheq, no_cheq, no_seq, no_cmpt, mnt_dist
+from {{ var("database_paie") }}.dbo.pai_hchq_pmnt_dist_cmpt

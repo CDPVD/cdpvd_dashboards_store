@@ -13,15 +13,7 @@ models:
       - core_dashboards_store.resolution:
           combination_of_columns:
             - an_budg
-            - no_per
-            - gr_paie
+            - no_cheq
             - matr
-            - corp_emploi
-            - stat_eng
-            - sect
-            - aff
-            - typeremun
-            - mode
-            - lieu_trav
             - no_seq
-            - code_pmnt
+            - no_cmpt

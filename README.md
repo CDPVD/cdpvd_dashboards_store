@@ -465,7 +465,8 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 
 | Interfaces  | Marts         	  | Marts seeds     | Dashboard seeds | Additional config |
 |-------------|-------------------|-----------------|-----------------| ------------------|
-| paie        |human_ressources   | Yes            	| Yes             | Yes 	            |
+| paie, dofin |human_ressources   | Yes            	| Yes             | Yes 	            |
+
 
 #### Configurations 
 
@@ -484,6 +485,14 @@ dbt seed --full-refresh
 Veuillez consulter la section [seeds](/using/marts/seeds) pour plus d’informations sur la manière d’utiliser et de peupler les graines
 ::
 
+#### Actualiser les descriptifs des unités administratives, procéder à des regroupements
+
+* Pour fournir des descriptifs plus explicites à certaines unités administratives, regrouper certaines sous une même étiquette :
+  1. Ajoutez un fichier nommé `adjust_nomen_unit_adm.csv` dans le dossier `cssXX.dashboards_store/seeds/marts/human_ressources`. Ce fichier doit contenir les colonnes décrites dans `cdpvd_dashboards_store/seeds/marts/human_ressources/schema.yml` (référez-vous à la définition de la seed `adjust_nomen_unit_adm`). 
+
+  2. Déclenchez un rafraîchissement de vos seeds 
+  3. Configurez la variable `use_adjust_nomen_unit_adm` dans la section `vars` de votre fichier `dbt_project.yml`
+    
 #### Ajout des cibles ETC de votre CSS
 
 Cette seed est utilisée pour comparer les cibles ETC de votre CSS avec les heures et ETC réels.
@@ -532,6 +541,9 @@ models:
 cdpvd_dashboards_store:
   marts:        
     human_resources:
+      staging:
+        suivi_etc:
+          +enabled: true
       features:
         suivi_etc:
           +schema: suivi_etc
@@ -545,9 +557,16 @@ cdpvd_dashboards_store:
           +enabled: true
 
 vars:
+  database_dofin: "[Replace Me].[DOFIN]"
+
   marts:
     human_resources:
       date_pivot: 2024-07-01
+  
+  dashboards:
+    direction_generale:
+      suivi_etc:
+        use_adjust_nomen_unit_adm: true # à ajouter si l'on souhaite ajuster / regrouper des unités administratives
 ```
 Adaptez ces valeurs selon les besoins spécifiques de votre CSS.
 
