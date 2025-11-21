@@ -1,4 +1,4 @@
 packages:
-  - git: git@github.com:CDPVD/fork_core.git #git@github.com:Sciance-Inc/core.dashboards_store.git
-    revision: bugfix/rls_ecoles #develop
+  - git: git@github.com:Sciance-Inc/core.dashboards_store.git
+    revision: develop
   
