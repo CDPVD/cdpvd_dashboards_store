@@ -17,7 +17,7 @@ models:
       - name: Ecole
         tests: 
             - not_null            
-  - name: unites_services
+  - name: lieux_travail
     tags: ["rls"]
     description: >
       Table utilisée uniquement pour avoir la liste des codes d'écoles et leur nom.

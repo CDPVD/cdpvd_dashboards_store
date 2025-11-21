@@ -15,7 +15,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-
 with
     users as (
         select
@@ -28,25 +27,28 @@ with
             ecole_principale,
             description_corps_emploi_principal
         from {{ ref("i_identite") }}
-        where
-            corps_emploi  like '1%'
-    ), eco_princ as (
+        where corps_emploi like '1%'
+    ),
+    eco_princ as (
         select
             cle_organisationnelle,
             compte_authentification,
             nom,
             prenom,
-            CASE
-                WHEN ecole_principale IS NULL THEN ecoles
-                WHEN ecoles IS NULL OR LTRIM(RTRIM(ecoles)) = '' THEN ecole_principale
-                WHEN NOT EXISTS (
-                    SELECT 1
-                    FROM STRING_SPLIT(ecoles, ',') AS s
-                    WHERE LTRIM(RTRIM(s.value)) = LTRIM(RTRIM(ecole_principale))
-                )
-                THEN CONCAT(ecoles, ',', ecole_principale)
-                ELSE ecoles
-            END AS ecoles,
+            case
+                when ecole_principale is null
+                then ecoles
+                when ecoles is null or ltrim(rtrim(ecoles)) = ''
+                then ecole_principale
+                when
+                    not exists (
+                        select 1
+                        from string_split(ecoles, ',') as s
+                        where ltrim(rtrim(s.value)) = ltrim(rtrim(ecole_principale))
+                    )
+                then concat(ecoles, ',', ecole_principale)
+                else ecoles
+            end as ecoles,
             corps_emploi,
             ecole_principale,
             description_corps_emploi_principal

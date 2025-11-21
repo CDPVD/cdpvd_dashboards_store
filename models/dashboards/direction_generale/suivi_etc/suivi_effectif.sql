@@ -23,8 +23,11 @@ with
             cast(hrs.no_per as int) as no_per,
             coalesce(job.job_group_category, '-') as cat_emploi,
             coalesce(concat(hrs.corp_emploi, ' - ', ptce.descr), '-') as corp_emploi,
-            coalesce(concat(ua.new_lieu_trav, ' - ', ua.descr), '-') as lieu_trav,
-            code_lieu_trav,
+            coalesce(
+                concat(ua.new_lieu_trav, ' - ', ua.descr), '-'
+            ) as descr_unite_admin,
+            hrs.unite_admin,
+            hrs.lieu_trav as code_lieu_trav,
             coalesce(concat(hrs.stat_eng, ' - ', eng.descr_stat_eng), '-') as stat_eng,
             case
                 when hrs.typeremun = '1'
@@ -40,7 +43,7 @@ with
         left join
             {{ ref("stg_nomen_unit_adm") }} as ua
             on ua.exer_fin = hrs.an_budg
-            and ua.current_lieu_trav = hrs.code_lieu_trav
+            and ua.current_lieu_trav = hrs.unite_admin
         join {{ ref("dim_mapper_job_group") }} as job on job.job_group = hrs.corp_emploi
         join
             {{ ref("i_pai_tab_corp_empl") }} as ptce on ptce.corp_empl = hrs.corp_emploi
@@ -55,8 +58,9 @@ with
             no_cmpt,
             cat_emploi,
             corp_emploi,
+            unite_admin,
             code_lieu_trav,
-            lieu_trav,
+            descr_unite_admin,
             stat_eng,
             type_remun,
             sum(nb_hre_remun_dist) as nombre_heures_remun,
@@ -68,8 +72,9 @@ with
             no_cmpt,
             cat_emploi,
             corp_emploi,
+            unite_admin,
             code_lieu_trav,
-            lieu_trav,
+            descr_unite_admin,
             stat_eng,
             type_remun
     )
@@ -80,7 +85,8 @@ select
     cat_emploi,
     corp_emploi,
     code_lieu_trav,
-    lieu_trav,
+    unite_admin,
+    descr_unite_admin,
     stat_eng,
     type_remun,
     nombre_heures_remun,
