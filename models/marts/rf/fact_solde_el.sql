@@ -19,13 +19,15 @@ with
     -- Recuperer l'ensemble des eleves qui ont des inscriptions ces 10 dernieres annees en FGJ
     fgj as (
         select distinct 
-			code_perm
-			, fiche
-			, annee
-			, eco
-			, id_eco
-        from {{ ref("spine") }}
-		where annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
+			el.code_perm
+			, dan.fiche
+			, eco.annee
+			, eco.eco
+			, dan.id_eco
+        from {{ ref("i_gpm_e_dan") }} as dan
+		left join {{ ref("i_gpm_t_eco") }} as eco on eco.id_eco = dan.id_eco
+		left join {{ ref("i_gpm_e_ele") }} as el on el.fiche = dan.fiche
+		where eco.annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
 
 	-- Recuperer l'ensemble des eleves qui ont des inscriptions ces 10 dernieres annees en FP/FGA
     -- Possible qu'il y ai le cas 1 code_perm -> 2 fiches la meme annee (si 2 centres dans un meme CSS / 2 BD adultes...)
@@ -57,7 +59,7 @@ with
 			, fgj.fiche
 			, fgj.annee
 			, fgj.eco
-			, sum(case when f.motif_fact = 'F' then f.solde else 0 end) as car_gpi
+			, sum(case when f.motif_fact in ('F','V') then f.solde else 0 end) as car_gpi
 			, sum(case when f.motif_fact = 'A' then f.solde else 0 end) as trp_gpi
         from fgj
 		left join {{ ref("i_gpm_n_fact") }} f on f.empr = fgj.fiche and f.id_eco = fgj.id_eco
