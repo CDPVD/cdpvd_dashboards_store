@@ -26,7 +26,7 @@ with
             coalesce(
                 concat(ua.new_lieu_trav, ' - ', ua.descr), '-'
             ) as descr_unite_admin,
-            hrs.unite_admin,
+            ua.new_lieu_trav as unite_admin,
             hrs.lieu_trav as code_lieu_trav,
             coalesce(concat(hrs.stat_eng, ' - ', eng.descr_stat_eng), '-') as stat_eng,
             case
