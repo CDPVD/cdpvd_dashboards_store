@@ -10,15 +10,15 @@ models:
     description: >
       Table utilisée uniquement pour avoir les gestionnaire des unités de service.
     tests: 
-      - core_dashboard_store.resolution: 
+      - core_dashboards_store.resolution: 
           combination_of_columns: 
             - compte_authentification
-            - Ecole
+            - ecole
     columns:
       - name: compte_authentification
         tests: 
             - not_null
-      - name: Ecole
+      - name: ecole
         tests: 
             - not_null            
   - name: lieux_travail
@@ -30,7 +30,7 @@ models:
     description: >
       Table utilisée uniquement pour avoir la liste des codes d'écoles et leur nom.
     tests: 
-      - core_dashboard_store.resolution: 
+      - core_dashboards_store.resolution: 
           combination_of_columns: 
             - lieu_trav
     columns:
