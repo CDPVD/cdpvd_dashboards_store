@@ -17,7 +17,8 @@ models:
             - no_cmpt
             - cat_emploi
             - corp_emploi
+            - unite_admin
             - code_lieu_trav
-            - lieu_trav
+            - descr_unite_admin
             - stat_eng
             - type_remun

@@ -394,7 +394,7 @@ select
     code_pmnt,
     stuff(stuff(stuff(no_cmpt, 4, 0, '-'), 6, 0, '-'), 12, 0, '-') as no_cmpt,
     lieu_trav,
-    lieu_trav_cpt_budg as code_lieu_trav,
+    lieu_trav_cpt_budg as unite_admin,
     nb_hre_remun_dist
 from cal_renum
 where lieu_trav_cpt_budg is not null and nb_hre_remun_dist != 0
