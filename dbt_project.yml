@@ -34,9 +34,13 @@ seeds:
             direction_generale:
                 +tags:
                     - "direction_generale"
+                pevr:
+                    +tags:
+                        - "pevr"
                 suivi_etc:
                     +tags:
                         - "suivi_etc"
+                
 
 models:
     ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
@@ -130,6 +134,12 @@ models:
                     +schema: "dashboard_suivi_etc"
                     +post-hook:
                             - "{{ core_dashboards_store.stamp_model('dashboard_suivi_etc') }}"
+                pevr:
+                    +tags: ["pevr"]
+                    +schema: "dashboard_pevr"
+                    pbi_tables:
+                        +post-hook:
+                            - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
 
         interfaces:
             +enabled: true
