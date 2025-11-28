@@ -43,8 +43,8 @@ inner join {{ ref("i_pai_dos_empl") }} as emp on util.matr = emp.matr
 inner join {{ ref("etat_empl") }}  as etat on emp.etat = etat.etat_empl
 inner join {{ ref("fact_activity_current") }} as ca on util.matr = ca.matr -- Employé actif ds paie
 
--- LEFT JOIN requis pour assurer une bonne représentation de la population
-left join {{ ref("i_pai_qualif") }} as qa on util.matr = qa.matr
+-- LEFT JOIN Aller chercher les qualifications valides (date_expir NULL ou future)
+left join {{ ref("i_pai_qualif") }} as qa on util.matr = qa.matr and (qa.date_expir is NULL or qa.date_Expir >= GetDate())
 
 where
     etat.etat_actif = 1                 -- Si l'employé est actif

@@ -2,6 +2,11 @@ version: 2
 
 models:
   - name: fact_endb_liste
+    config:
+      tags:
+        - endb
+        - human_resources
+      schema: dashboard_endb
     description: >
       Table permettant de comptabiliser le nombre d'enseignant(e)s qui sont qualifiés pour enseigner.
     columns:
