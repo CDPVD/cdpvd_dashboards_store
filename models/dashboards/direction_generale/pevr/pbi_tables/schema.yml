@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: pevr_indicateur_des
+    description: >
+        Taux de diplomation annuel secondaire 5.
+        Donnée provenant des BD locaux.
+        Indicateur '1.1' de la cdpvd.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - annee_scolaire
+            - id_indicateur
+            - id_filtre
+
+  - name: pevr_indicateur_fms
+    description: >
+        Taux de qualification annuel FMS.
+        Donnée provenant des BD locaux.
+        Indicateur '1.2' de la cpdvd.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - annee_scolaire
+            - id_indicateur
+            - id_filtre
+
+  - name: pevr_indicateur_fpt
+    description: >
+        Taux de qualification annuel FPT.
+        Donnée provenant des BD locaux.
+        Indicateur '1.3' de la cpdvd.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - cohorte
+            - id_indicateur
+            - id_filtre
+
+  - name: pevr_dim_indicateurs_cdpvd
+    description: >
+      Table de dimension qui mappe les indicateurs communs avec les indicateurs personalisés.
+      La table est constuite en unionant la dimension commune (core/seeds/pevr/indicateurs_pevr_cdpvd.csv) et la dimension personalisée (cssss/seeds/pevr/custom_indicateurs_pevr_cdpvd.csv).
+      La table `custom` peut-etre adaptée pour chaque CSS pour rajouter des indicateurs.
+    columns:
+      - name: id_indicateur_cdpvd
+        description: Identifiant unique crée par la cdpvd.
+      - name: id_indicateur_css
+        description: Identifiant unique optionel crée par la CSS.
+      - name: description_indicateur
+        description: Description de l'indicateur, soit crée par la cdpvd ou par la CSS.
+      - name: code_matiere
+        description: Code la matière. Ex -> 132508 (Français secondaire 5)
+      - name: no_competence
+        description: Numéro de la compétence.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - id_indicateur_cdpvd
+            - id_indicateur_css
