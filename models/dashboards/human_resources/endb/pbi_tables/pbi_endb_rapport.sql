@@ -59,15 +59,19 @@ select
     case when qualif.is_qualified = 1 then 1 ELSE 0 end as edb,
     CASE WHEN qualif.is_qualified IS NULL OR qualif.is_qualified != 1 THEN 1 ELSE 0 END AS endb,
     statut_ens.statut as statut_enseignant,
-    sect.ordre_Ens
+    sect.ordre_Ens,
+    sect.secteur_Descr as secteur
 from {{ ref("fact_endb_liste") }} as ens
 
 inner join {{ ref("dim_employees") }} as emp on ens.matr = emp.matr
 inner join {{ ref("dim_mapper_workplace") }} lieu on ens.workplace = lieu.workplace
 inner join {{ ref("etat_empl") }} state on ens.etat_empl = state.etat_empl
-inner join {{ ref("secteur") }} AS sect on ens.workplace = sect.ua_id
+
 inner join {{ ref("dim_mapper_job_class") }} as job_class on job_class.code_job = ens.corp_empl
 inner join {{ ref("statut_enseignant") }} as statut_ens on ens.stat_eng = statut_ens.code
+
+-- Left join pour aller chercher le secteur et l'ordre d'enseignement left au cas ou l'UA ne se troueve pas dans la table secteur
+left join {{ ref("secteur") }} AS sect on ens.workplace = sect.lieu_trav
 
 -- LEFT JOIN requis pour assurer une bonne représentation de la population
 left join {{ ref("ens_qualification") }} qualif on ens.type_qualif = qualif.code    
