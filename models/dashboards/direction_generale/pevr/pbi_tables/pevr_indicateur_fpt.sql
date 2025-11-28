@@ -22,7 +22,6 @@ with
     perimetre as (
         select
             '1.3' as id_indicateur,
-            fpt.code_perm,
             fpt.fiche,
             fpt.school_friendly_name,
             fpt.Annee_Fpt_1,
@@ -39,7 +38,6 @@ with
     -- Ajout des filtres utilisés dans le tableau de bord.
     _filtre as (
         select
-            perimetre.code_perm,
             perimetre.fiche,
             case
                 when perimetre.school_friendly_name is null
@@ -93,7 +91,7 @@ with
         inner join
             {{ ref("dim_eleve") }} as ele on perimetre.fiche = ele.fiche
         inner join
-            {{ ref("pevr_dim_indicateurs") }} as ind
+            {{ ref("pevr_dim_indicateurs_cdpvd") }} as ind
             on perimetre.id_indicateur = ind.id_indicateur_cdpvd
     ),
 
