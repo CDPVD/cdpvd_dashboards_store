@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         * named 'custom_indicateurs_pevr_cdpvd'
         * located in the schema 'dashboard_pevr_seeds'
 #}
-{{ config(alias="dim_indicateurs_pevr") }}
+{{ config(alias="dim_indicateurs_pevr_cdpvd") }}
 
 {%- set source_relation = adapter.get_relation(
     database=target.database,

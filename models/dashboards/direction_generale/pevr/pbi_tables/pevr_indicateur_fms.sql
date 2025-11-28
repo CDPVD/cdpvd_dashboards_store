@@ -83,7 +83,7 @@ with
         inner join
             {{ ref("dim_eleve") }} as ele on perim.fiche = ele.fiche
         inner join
-            {{ ref("pevr_dim_indicateurs") }} as ind
+            {{ ref("pevr_dim_indicateurs_cdpvd") }} as ind
             on perim.id_indicateur = ind.id_indicateur_cdpvd
         where seqid = 1
     ),
