@@ -81,6 +81,7 @@ with
             end as nb_hres_an,
             phe.pourc_post,
             phe.pourc_temp,
+            phe.pourc_sal,
             -- Traitement des emplois sur un plan sabbatique à traitement différé
             case
                 when ptee.trait_spec = '1' and phe.pourc_sal >= 2.0
@@ -148,7 +149,13 @@ with
                 then pmnt.nb_unit * (perim.hntj / 2.0)
                 when pmnt.mode = '4'
                 then pmnt.nb_unit * (perim.hntj * 3.0 / 4.0)
-            end as nombre_heures_remun,
+            end
+            * case	
+                when pmnt.code_prov in ('AX', 'AY', 'AZ', 'A0') 
+                then  (perim.pourc_sal  / 100.0) 
+				else 1.0 
+			end 
+            as nombre_heures_remun,
             pmnt.mnt,
             pmnt.mnt_cour_trait_diff
         from prd
@@ -214,7 +221,7 @@ with
                 )
                 or (
                     pmnt.code_pmnt = '105001'
-                    and (pmnt.code_prov = 'AY' or pmnt.code_prov = 'A0')
+                    and pmnt.code_prov in ('AY', 'A0', 'AZ')
                 )
             )
 
