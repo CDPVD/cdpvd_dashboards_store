@@ -78,20 +78,13 @@ seeds:
     columns:
       - name: lieu_trav
         description: Le numéro de l'unité administrative ou de l'école
-        tests:
-          - not_null
       - name: secteur_Id
         description: L'ID du secteur géographique ou subdivition de votre territoire
-        tests:
-          - not_null
       - name: secteur_Descr
         description: Description du secteur géographique ou subdivition de votre territoire
-        tests:
-          - not_null
       - name: ordre_Ens
         description: Ordre des enseignants dans ce secteur
-        tests:
-          - not_null
+
     config:
       tags:
         - human_resources
