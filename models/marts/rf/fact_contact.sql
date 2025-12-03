@@ -66,7 +66,8 @@ with
 )
 
 select
-    seq2.fiche,
+    el.code_perm,
+	seq2.fiche,
     el.nom_mere, 
 	el.pnom_mere,
 	el.adr_electr_mere,
