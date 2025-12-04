@@ -67,6 +67,8 @@ with
 
 select
     el.code_perm,
+	el.nom, 
+    el.pnom, 
 	seq2.fiche,
     el.nom_mere, 
 	el.pnom_mere,
@@ -82,4 +84,4 @@ select
     max(case when seq2.role = 'tuteur' and seq2.seq_id = 1 then seq2.adresse end) as adresse_tuteur
 from seq2
 left join {{ ref("i_gpm_e_ele") }} as el on el.fiche = seq2.fiche
-group by seq2.fiche, el.nom_mere, el.pnom_mere, el.adr_electr_mere, el.nom_pere, el.pnom_pere, el.adr_electr_pere, el.nom_tuteur, el.pnom_tuteur, el.adr_electr_tuteur
+group by el.code_perm, 	el.nom, el.pnom, seq2.fiche, el.nom_mere, el.pnom_mere, el.adr_electr_mere, el.nom_pere, el.pnom_pere, el.adr_electr_pere, el.nom_tuteur, el.pnom_tuteur, el.adr_electr_tuteur
