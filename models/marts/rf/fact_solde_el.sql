@@ -86,11 +86,13 @@ with
 			, fgj.fiche
 			, fgj.annee
 			, fgj.eco
-			, isnull(sum(tp.mnt), 0.0) as tp_ag
+			, isnull(sum(tp.mnt), 0.0) + isnull(sum(rfnd.mnt), 0.0) as tp_ag
         from fgj
-		left join {{ ref("i_sdg_e_trop_percus") }} tp on tp.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and tp.annee = fgj.annee
+		left join {{ ref("i_sdg_e_trop_percus") }} tp on tp.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and tp.annee = fgj.annee and tp.mnt > 0
+		-- tp remboursés
+		left join (select distinct fiche, id_sdg, mnt from {{ ref("i_sdg_e_trop_percus") }} where mnt < 0) as rfnd on rfnd.fiche = tp.fiche and rfnd.id_sdg = tp.id_sdg
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
-
+	
 	-- car PROCURE (la ss requete car_clean permet d'optimiser la ss requete car_proc)
 	), car_clean as (
 		select
