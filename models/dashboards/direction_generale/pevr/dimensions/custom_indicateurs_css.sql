@@ -1,6 +1,6 @@
 {#
-CDPVD Dashboards store
-Copyright (C) 2024 CDPVD.
+Dashboards Store - Helping students, one dashboard at a time.
+Copyright (C) 2023  Sciance Inc.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         * named 'custom_indicateurs_pevr_cdpvd'
         * located in the schema 'dashboard_pevr_seeds'
 #}
-{{ config(alias="dim_indicateurs_pevr_cdpvd") }}
+{{ config(alias="dim_indicateurs_pevr") }}
 
 {%- set source_relation = adapter.get_relation(
     database=target.database,
@@ -46,45 +46,45 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     with
         cte as (
             select
-                id_indicateur_cdpvd,
+                objectif,
+                id_indicateur_meq,
                 id_indicateur_css,
                 description_indicateur,
-                cible,
                 code_matiere,
                 no_competence,
-                count(case when id_indicateur_css is not null then 1 end) over (
-                    partition by id_indicateur_cdpvd
-                ) as ind_indicateur_custom  -- Si = 1, alors il a un indicateur custom.
+                row_number() over (
+                    partition by id_indicateur_meq order by id_indicateur_css desc
+                ) as ind_indicateur_custom  -- choisir id_indicateur_css s'il existe.
             from
                 (
                     select
-                        id_indicateur_cdpvd,
+                        objectif,
+                        id_indicateur_meq,
                         id_indicateur_css,
                         description_indicateur,
-                        cible,
                         code_matiere,
                         no_competence
                     from {{ source_relation }}
                     union
                     select
-                        id_indicateur_cdpvd,
+                        objectif,
+                        id_indicateur_meq,
                         null as id_indicateur_css,
                         description_indicateur,
-                        cible,
                         code_matiere,
                         no_competence
                     from {{ ref("indicateurs_pevr_cdpvd") }}
                 ) as results
         )
     select
-        id_indicateur_cdpvd,
+        objectif,
+        id_indicateur_meq,
         id_indicateur_css,
         description_indicateur,
-        cible,
         code_matiere,
         no_competence
     from cte
-    where ind_indicateur_custom = 0 or id_indicateur_css is not null  -- Enlève l'indicateur par défaut de la css lorsqu'il a un indicateur custom.
+    where ind_indicateur_custom = 1  -- Enlève l'indicateur par défaut de la css lorsqu'il a un indicateur custom.
 
 {% else %}
     {% if execute %}
@@ -97,10 +97,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     {% endif %}
 
     select
-        id_indicateur_cdpvd,
-        cast(null as nvarchar) as id_indicateur_css,
+        objectif,
+        id_indicateur_meq,
+        id_indicateur_css,
         description_indicateur,
-        cible,
         code_matiere,
         no_competence
     from {{ ref("indicateurs_pevr_cdpvd") }}
