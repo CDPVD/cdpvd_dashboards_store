@@ -72,7 +72,7 @@ with
             freq.raison_depart,
             freq.desc_raison_depart
         from {{ ref("fact_freq_adultes") }} as freq
-        inner join {{ ref("dim_eleve_adultes") }} as el on el.code_perm = fac.code_perm
+        inner join {{ ref("dim_eleve_adultes") }} as el on el.code_perm = freq.code_perm
     )
 select
     nom_centre,
