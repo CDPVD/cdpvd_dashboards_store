@@ -1,3 +1,2 @@
 packages:
-  - git: git@github.com:Sciance-Inc/core.dashboards_store.git
-    revision: develop
+  - local: ../core.dashboards_store

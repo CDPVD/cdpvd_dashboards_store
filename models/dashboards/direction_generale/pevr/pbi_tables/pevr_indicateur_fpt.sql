@@ -91,7 +91,7 @@ with
         inner join
             {{ ref("dim_eleve") }} as ele on perimetre.fiche = ele.fiche
         inner join
-            {{ ref("pevr_dim_indicateurs_cdpvd") }} as ind
+            {{ ref("pevr_dim_objectif_cdpvd") }} as ind
             on perimetre.id_indicateur = ind.id_indicateur_cdpvd
     ),
 
