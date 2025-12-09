@@ -53,9 +53,7 @@ with
             activ_form,
             donpers,
             case
-                when activ_form is not null or activ_form != ''
-                then activ_form
-                else donpers
+                when activ_form is null or activ_form = '' then donpers else activ_form
             end as groupe_horaire,
             cond_admiss,
             descr_condadmiss,
