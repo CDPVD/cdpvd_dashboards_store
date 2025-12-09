@@ -91,9 +91,7 @@ select
     interv_age,
     interv_age_fp,
     case
-        when groupe_horaire = '' or groupe_horaire is null
-        then '-'
-        else groupe_horaire
+        when groupe_horaire = '' or groupe_horaire is null then '-' else groupe_horaire
     end as groupe_horaire,
     concat(cond_admiss, ' - ', descr_condadmiss) as condition_admission,
     descr_org_hor as organisation_horaire,
