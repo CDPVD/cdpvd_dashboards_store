@@ -32,7 +32,7 @@ with
 	-- Recuperer l'ensemble des eleves qui ont des inscriptions ces 10 dernieres annees en FP/FGA
     -- Possible qu'il y ai le cas 1 code_perm -> 2 fiches la meme annee (si 2 centres dans un meme CSS / 2 BD adultes...)
     ), fp as (
-        select 
+        select distinct
 			pop.code_perm
 			, pop.fiche
 			, right('0000000' + left(pop.fiche, isnull(nullif(charindex('_', pop.fiche) - 1, -1), len(pop.fiche))), 7) as fiche_key
