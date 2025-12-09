@@ -28,6 +28,7 @@ select
     freq,
     prog,
     activform as activ_form,
+    donpers,
     condadmiss as cond_admiss,
     serviceenseign as service_enseign,
     orghor as org_hor,

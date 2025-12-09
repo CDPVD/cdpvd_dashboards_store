@@ -51,6 +51,12 @@ with
             el.code_post,
             fac.ind_transm,
             activ_form,
+            donpers,
+            case
+                when activ_form is not null or activ_form != ''
+                then activ_form
+                else donpers
+            end as groupe_horaire,
             cond_admiss,
             descr_condadmiss,
             prog,
@@ -84,7 +90,11 @@ select
     ville,
     interv_age,
     interv_age_fp,
-    activ_form as groupe_horaire,
+    case
+        when groupe_horaire = '' or groupe_horaire is null
+        then '-'
+        else groupe_horaire
+    end as groupe_horaire,
     concat(cond_admiss, ' - ', descr_condadmiss) as condition_admission,
     descr_org_hor as organisation_horaire,
     etat_formation as etat_formation,
@@ -92,7 +102,7 @@ select
     desc_lang_matern as langue_maternelle,
     prog,
     case
-        when descr_prog is null then descr_prog else concat(prog, ' - ', descr_prog)
+        when descr_prog is null then '-' else concat(prog, ' - ', descr_prog)
     end as programme,
     type_diplome,
     raison_grat_scol,
