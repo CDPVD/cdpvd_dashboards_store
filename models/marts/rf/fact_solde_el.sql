@@ -70,27 +70,38 @@ with
 		left join (select distinct fiche, id_sdg, sum(mnt) as mnt from {{ ref("i_sdg_e_trop_percus") }} where mnt < 0 group by fiche, id_sdg) as rfnd on rfnd.fiche = tp.fiche and rfnd.id_sdg = tp.id_sdg
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 	
-	-- car tp PROCURE
+	-- car tp PROCURE + recuperer les ecoles associées aux eleves inscrits en FP/FGA
 	), car_tp_proc as (
 		select
-			code_perm,
-			fiche, 
-			annee,
-			eco,
-			car_proc,
-			trp_proc
-		from {{ ref("car_tp_procure") }}
+			car_tp_proc.code_perm,
+			car_tp_proc.fiche, 
+			car_tp_proc.annee,
+			coalesce(freq.eco_cen , car_tp_proc.eco) as eco, -- privilégier l'eco de la freq si dispo
+			car_tp_proc.car_proc,
+			car_tp_proc.trp_proc
+		from {{ ref("car_tp_procure") }} as car_tp_proc
+		left join {{ ref("stg_populations_adultes") }} as pop
+			on pop.code_perm = car_tp_proc.code_perm and pop.fiche = car_tp_proc.fiche and pop.annee = car_tp_proc.annee 
+		left join {{ ref("i_e_freq_adultes") }} as freq
+			on freq.fiche = pop.fiche and freq.annee = pop.annee and freq.freq = pop.freq
+		where car_tp_proc.annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
 	
 	-- perimetre
     ), perim as (
-        select distinct 
-			coalesce(fgj.code_perm, car_tp_proc.code_perm) as code_perm,
-			coalesce(cast(fgj.fiche as varchar(7)), cast(car_tp_proc.fiche as varchar(7))) as fiche,
-            coalesce(fgj.annee, car_tp_proc.annee) as annee,
-            coalesce(fgj.eco, car_tp_proc.eco) as eco
-    from fgj
-    full join car_tp_proc on fgj.code_perm = car_tp_proc.code_perm and fgj.annee = car_tp_proc.annee
-	)
+        select 
+            code_perm,
+            right('0000000' + cast(fiche as varchar(7)), 7) fiche,
+            annee,
+            eco
+        from fgj
+        union
+        select 
+            code_perm,
+            cast(fiche as varchar(7)) as fiche,
+            annee,
+            eco
+		from car_tp_proc
+	)     
 
 -- REQUETE FINALE
 select 
