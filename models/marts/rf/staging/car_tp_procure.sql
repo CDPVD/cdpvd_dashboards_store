@@ -32,7 +32,9 @@ car_agg as (
     from {{ ref("i_pro_art_emprunt") }} as car
     left join {{ ref("i_e_ele_adultes") }} as el 
 			on el.fiche = car.code_emprunt
-    where car.statut != 15
+    where 
+        car.statut != 15
+        and el.code_perm is not null
     group by 
         el.code_perm,
         case
@@ -65,6 +67,7 @@ tp_agg as (
         tp.type_emprunt = '1'
         and tp.date_annul is null
         and tp.type_paiemnt = '4'
+        and el.code_perm is not null
     group by 
         el.code_perm,
         case
