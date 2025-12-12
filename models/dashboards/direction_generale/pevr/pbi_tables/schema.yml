@@ -1,42 +1,6 @@
 version: 2
 
 models:
-  - name: pevr_indicateur_des
-    description: >
-        Taux de diplomation annuel secondaire 5.
-        Donnée provenant des BD locaux.
-        Indicateur '1.1' de la cdpvd.
-    tests:
-      - core_dashboards_store.resolution:
-          combination_of_columns:
-            - annee_scolaire
-            - id_indicateur
-            - id_filtre
-
-  - name: pevr_indicateur_fms
-    description: >
-        Taux de qualification annuel FMS.
-        Donnée provenant des BD locaux.
-        Indicateur '1.2' de la cpdvd.
-    tests:
-      - core_dashboards_store.resolution:
-          combination_of_columns:
-            - annee_scolaire
-            - id_indicateur
-            - id_filtre
-
-  - name: pevr_indicateur_fpt
-    description: >
-        Taux de qualification annuel FPT.
-        Donnée provenant des BD locaux.
-        Indicateur '1.3' de la cpdvd.
-    tests:
-      - core_dashboards_store.resolution:
-          combination_of_columns:
-            - cohorte
-            - id_indicateur
-            - id_filtre
-
   - name: pevr_dim_objectif_cdpvd
     description: >
       Table de dimension qui mappe les indicateurs communs avec les indicateurs personalisés.
@@ -78,3 +42,43 @@ models:
             - id_indicateur_meq
             - id_indicateur_cdpvd
             - annee_scolaire
+
+  - name: pevr_filtres_cdpvd
+    description: >
+        Table qui contient les combinaisons possibles des filtres pour la liaison des tables de données par rapport à la table de filtre.
+
+  - name: pevr_indicateur_des
+    description: >
+        Taux de diplomation annuel secondaire 5.
+        Donnée provenant des BD locaux.
+        Indicateur '1.1' de la cdpvd.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - annee_scolaire
+            - id_indicateur
+            - id_filtre
+
+  - name: pevr_indicateur_fms
+    description: >
+        Taux de qualification annuel FMS.
+        Donnée provenant des BD locaux.
+        Indicateur '1.2' de la cpdvd.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - annee_scolaire
+            - id_indicateur
+            - id_filtre
+
+  - name: pevr_indicateur_fpt
+    description: >
+        Taux de qualification annuel FPT.
+        Donnée provenant des BD locaux.
+        Indicateur '1.3' de la cpdvd.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - cohorte
+            - id_indicateur
+            - id_filtre
