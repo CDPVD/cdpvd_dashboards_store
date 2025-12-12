@@ -21,17 +21,20 @@ with
     -- Jumelage du perimetre élèves avec la table mentions
     perimetre as (
         select
-            '1.3' as id_indicateur,
+            '3' as id_indicateur_cdpvd, -- Indicateur cdpvd
             fpt.fiche,
             fpt.school_friendly_name,
             fpt.Annee_Fpt_1,
+            fpt.cohorte as annee_scolaire,
             fpt.cohorte,
             fpt.freq,
+            mentions.mois_sanction,
             mentions.ind_obtention
         from {{ ref("stg_perimetre_eleve_frequentation_fpt") }} as fpt
         left join
             {{ ref("fact_ri_mentions") }} as mentions
             on fpt.fiche = mentions.fiche
+            and fpt.Annee_Fpt_1 = mentions.annee_sanction
             and mentions.indice_cfpt = 1.0
     ),
 
@@ -39,50 +42,48 @@ with
     _filtre as (
         select
             perimetre.fiche,
-            case
-                when perimetre.school_friendly_name is null
-                then '-'
-                else perimetre.school_friendly_name
-            end as school_friendly_name,
-            perimetre.Annee_Fpt_1,
+            y_stud.annee,
             perimetre.cohorte,
+            perimetre.annee_scolaire,
             perimetre.freq,
+            perimetre.mois_sanction,
+            ind_cdpvd.objectif,
+            ind_cdpvd.id_indicateur_cdpvd,
+            ind_cdpvd.id_indicateur_css,
+            ind_cdpvd.description_indicateur,
+            cible_annuelle.cible,
             case
                 when perimetre.ind_obtention = 1.0 then 1.0 -- L'élève doit posseder la certification
                 else 0.0
             end as is_qualified,
             case
-                when ind.id_indicateur_css is null
-                then ind.id_indicateur_cdpvd  -- Permet d'utiliser l'indicateur défaut de la CDPVD
-                else ind.id_indicateur_css
-            end as id_indicateur,
-            ind.description_indicateur,
-            ind.cible,
+                when perim.school_friendly_name is null then '-'
+                else perim.school_friendly_name
+            end as school_friendly_name,
             case 
-                when ele.genre is null 
-                then '-' 
+                when ele.genre is null then '-' 
                 else ele.genre 
             end as genre,
             case
-                when y_stud.plan_interv_ehdaa is null
-                then '-'
+                when y_stud.plan_interv_ehdaa is null then '-'
                 else y_stud.plan_interv_ehdaa
             end as plan_interv_ehdaa,
             case
-                when y_stud.population is null 
-                then '-' 
+                when y_stud.population is null then '-' 
                 else y_stud.population
             end as population,
             case
-                when y_stud.class is null 
-                then '-' 
+                when y_stud.class is null then '-' 
                 else y_stud.class
             end as classification,
             case 
-                when y_stud.dist is null 
-                then '-' 
-                else y_stud.dist
-            end as distribution
+                when y_stud.dist is null then '-' 
+                else y_stud.dist 
+            end as distribution,
+            case
+                when y_stud.grp_rep is null then '-' 
+                else y_stud.grp_rep
+            end as groupe_repere
         from perimetre
         inner join
             {{ ref("fact_yearly_student") }} as y_stud
@@ -91,59 +92,79 @@ with
         inner join
             {{ ref("dim_eleve") }} as ele on perimetre.fiche = ele.fiche
         inner join
-            {{ ref("pevr_dim_objectif_cdpvd") }} as ind
-            on perimetre.id_indicateur = ind.id_indicateur_cdpvd
+            {{ ref("pevr_dim_objectif_cdpvd") }} as ind_cdpvd
+            on perimetre.id_indicateur_cdpvd = ind_cdpvd.id_indicateur_cdpvd
+        inner join
+            {{ ref("pevr_dim_cible_annuelle_cdpvd") }} as cible_annuelle
+            on ind_cdpvd.id_indicateur_cdpvd = cible_annuelle.id_indicateur_cdpvd
+            and perimetre.annee_scolaire = cible_annuelle.annee_scolaire
     ),
 
     -- Début de l'aggrégration
     agg_dip as (
         select
+        -- Filtre
+            annee_scolaire,
+            mois_sanction,
             school_friendly_name,
-            cohorte,
-            id_indicateur,
-            description_indicateur,
             genre,
             plan_interv_ehdaa,
             population,
             classification,
             distribution,
+            groupe_repere,
+        -- Indicateurs
+            id_indicateur_cdpvd,
+            id_indicateur_css,
+            description_indicateur,
             cible,
+        -- Agg
             count(fiche) nb_resultat,
             CAST(SUM(is_qualified) as integer) nb_qualified,
             CAST(ROUND(AVG(is_qualified), 3) AS FLOAT) AS taux_qualification_fpt,
             CAST(ROUND(AVG(is_qualified) - cible, 3) AS FLOAT) AS ecart_cible
         from _filtre
         group by
-            cohorte,
-            id_indicateur,
+            annee_scolaire,
+            id_indicateur_cdpvd,
+            id_indicateur_css,
             description_indicateur,
             cible, cube (
+                mois_sanction,
                 school_friendly_name,
                 genre,
                 plan_interv_ehdaa,
                 population,
                 classification,
-                distribution
+                distribution,
+                groupe_repere
             )
     ),
 
     -- Coalesce pour crée le choix 'Tout' dans les filtres.
     _coalesce as (
         select
-            id_indicateur,
-            description_indicateur,
-            cohorte,
+        -- Filtre
+            annee_scolaire,
             coalesce(school_friendly_name, 'CSS') as ecole,
+            coalesce(mois_sanction, 'Tout') as mois_sanction,
             coalesce(genre, 'Tout') as genre,
             coalesce(plan_interv_ehdaa, 'Tout') as plan_interv_ehdaa,
             coalesce(population, 'Tout') as population,
             coalesce(classification, 'Tout') as classification,
             coalesce(distribution, 'Tout') as distribution,
+            coalesce(groupe_repere, 'Tout') as groupe_repere,
+        -- Indicateurs
+            id_indicateur_cdpvd,
+            id_indicateur_css,
+            description_indicateur,
+            cible,
+        -- Agg
+            cohorte,
             nb_resultat,
             nb_qualified,
             taux_qualification_fpt,
             ecart_cible,
-            cible,
             LAG(taux_qualification_fpt) OVER (
             PARTITION BY 
                 id_indicateur,
@@ -159,8 +180,12 @@ with
     )
 
 select
-    id_indicateur,
+-- Indicateurs
+    id_indicateur_cdpvd,
+    id_indicateur_css,
     description_indicateur,
+    cible,
+-- Agg
     cohorte,
     Concat(
         'Cohorte', ' ', cohorte,
@@ -175,7 +200,6 @@ select
         '(', nb_qualified, '/', nb_resultat, ' él.) '
     ) AS taux_nbEleve,
     ecart_cible,
-    cible,
     cast(left(cohorte, 4) as int) as annee,
     CASE 
         WHEN (taux_qualification_fpt >= cible ) THEN 2 -- Vert
@@ -187,11 +211,14 @@ select
         dbt_utils.generate_surrogate_key(
             [
                 "ecole",
+                "annee_scolaire",
+                "mois_sanction",
                 "plan_interv_ehdaa",
                 "genre",
                 "population",
                 "classification",
                 "distribution",
+                "groupe_repere",
             ]
         )
     }} as id_filtre

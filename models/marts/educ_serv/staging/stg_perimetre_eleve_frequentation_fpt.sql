@@ -70,7 +70,7 @@ _cohorte as (
 		Annee_Fpt_1,
 		Annee_Fin_Parcours,
 		CASE
-			WHEN Annee_Fpt_1 = Annee_Fpt_1 THEN CONCAT(Annee_Fpt_1, '-' ,Annee_Fpt_1 + 1)
+			WHEN Annee_Fpt_1 = Annee_Fpt_1 THEN CONCAT(Annee_Fpt_1, ' - ' ,Annee_Fpt_1 + 1)
 			ELSE Convert(varchar, Annee_Fpt_1)
 		END AS Cohorte
 	from _parcours
