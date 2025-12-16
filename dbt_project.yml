@@ -1,5 +1,7 @@
 name: "cdpvd_dashboards_store"
 version: "0.0.0"
+name: "cdpvd_dashboards_store"
+version: "0.0.0"
 config-version: 2
 
 profile: "replaceMeInLocals"
@@ -37,6 +39,10 @@ seeds:
                         - "suivi_etc"
 
 models:
+    ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
+    # >>> BEGIN
+    core_dashboards_store:
+        +enabled: true # By default, all models in the core schould be enabled
     ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
     # >>> BEGIN
     core_dashboards_store:
@@ -137,6 +143,7 @@ models:
             +schema: rls            
 
 vars:
+    is_context_core: false
     is_context_core: false
     # The source database to pull the data for a css.
     database_bi: "Replace me in the CSS repositery"
