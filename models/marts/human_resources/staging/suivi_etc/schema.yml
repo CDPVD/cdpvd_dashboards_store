@@ -14,3 +14,15 @@ models:
             - no_cheq
             - no_seq
             - no_cmpt
+  - name: stg_perim_hitorique_emplois
+    config:
+      tags:
+        - human_resources
+    description: >
+      Table de staging pour identifier le perimètre utiliser dans la fact_h_remun
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - matr
+            - ref_empl
+            - date_eff
