@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: stg_dist_cmpt
+    config:
+      tags:
+        - human_resources
+    description: >
+      Table auxiliaire qui limite la table aux distributions de comptes budgétaires sur une période donnée.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - matr
+            - no_cheq
+            - no_seq
+            - no_cmpt

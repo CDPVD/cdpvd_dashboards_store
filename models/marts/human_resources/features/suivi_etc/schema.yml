@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: fact_h_remun
+    config:
+      tags:
+        - human_resources
+        - mart_human_resources
+        - suivi_etc
+    description: >
+      Cumulatif des heures travaillées, des heures supplémentaires et des heures d'absences par date de chèque, matricule, code de paiement (avec le profiler).
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - an_budg
+            - no_cheq
+            - matr
+            - no_seq
+            - no_cmpt

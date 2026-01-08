@@ -1,5 +1,7 @@
 name: "cdpvd_dashboards_store"
 version: "0.0.0"
+name: "cdpvd_dashboards_store"
+version: "0.0.0"
 config-version: 2
 
 profile: "replaceMeInLocals"
@@ -23,11 +25,19 @@ seeds:
         +enabled: true
     ### <<< END
     cdpvd_dashboards_store:
-        dashboards:
-            other:
-                pevr:
-                    +tags: ["pevr"]
-                    +schema: "dashboard_pevr"
+        mart:
+            human_resources:
+                +tags:
+                    - "human_resources"
+                    - "mart_human_resources"
+        dashboard:
+            direction_generale:
+                +tags:
+                    - "direction_generale"
+                suivi_etc:
+                    +tags:
+                        - "suivi_etc"
+
 models:
     ### WARN : !IMPORTANT : overriding must be redefined in the cssXX project, as dbt does not support config inheritance.
     # >>> BEGIN
@@ -37,35 +47,96 @@ models:
             human_resources:
                 features:
                 staging:
+
             educ_serv:
                 features:
                 staging:
-
+        dashboards:
+            educ_serv:
+                absenteeism:
+                    +enabled: false
         interfaces:
             gpi:
                 i_gpm_e_dan:
+                    +enabled: false
+                i_gpm_e_abs:
                     +enabled: false
             jade:
                 i_e_ri_mentions:
                     +enabled: false
                 i_t_prog:
                     +enabled: false
+            paie:
+                i_pai_tab_corp_empl:
+                    +enabled: false
+                i_pai_hemp:
+                    +enabled: false
+                i_pai_tab_etat_empl:
+                    +enabled: false
     ### <<< END
 
     # This code block can be safely overriden in the cssXX_dashboards_store.
     # There is no need for code duplication here
     cdpvd_dashboards_store:
+        +enabled: false
         +materialized: table
+        marts:
+            #+enabled: true               
+            educ_serv:
+                +tags:
+                    - "educ_serv"
+                    - "mart_educ_serv"
+                +schema: educ_serv
+                features:
+                staging:
+                    +schema: educ_serv_staging
+            educ_serv_adultes:
+                features:
+                dimensions:
+            human_resources:
+                +tags:
+                    - "human_resources"
+                    - "mart_human_resources"
+                +schema: human_resources
+                features:
+                    +schema: human_resources_features                
+                staging:
+                    +schema: human_resources_staging           
         dashboards:
-            other:
-                pevr:
-                    +tags: ["pevr"]
-                    +schema: "dashboard_pevr"
+            #+enabled: true
+            educ_serv:
+                absenteeism:
+                    +tags: ["absenteeism"]
+                    +schema: "dashboard_absenteeism"
                     pbi_tables:
                         +post-hook:
-                            - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
+                            [
+                                "{{ core_dashboards_store.stamp_model('dashboard_absenteeism') }}",
+                            ]        
+            human_resources:
+                retirement:
+                    +tags: ["retirement"]
+                    +schema: "dashboard_retirement"
+                    pbi_tables:
+                        +post-hook:
+                            - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
+            educ_serv_adultes:
+                portrait_css_fpfga:
+            direction_generale:
+                +tags:
+                    - "direction_generale"
+                suivi_etc:
+                    +tags: ["suivi_etc"]
+                    +schema: "dashboard_suivi_etc"
+                    +post-hook:
+                            - "{{ core_dashboards_store.stamp_model('dashboard_suivi_etc') }}"
+
         interfaces:
+            +enabled: true
             +materialized: ephemeral
+        rls:
+            +tags: ["rls"]    
+            +schema: rls            
 
 vars:
     is_context_core: false
@@ -74,6 +145,7 @@ vars:
     database_paie: "Replace me in the CSS repositery"
     database_gpi: "Replace me in the CSS repositery"
     database_jade: "Replace me in the CSS repositery"
+    database_jade_adultes: "Replace me in the CSS repositery"
     database_prodrome: "Replace me in the CSS repositery" # Modelling output from the Sciance's models.
 
     interfaces:
@@ -85,6 +157,24 @@ vars:
             recency:
                 years_of_data_absences: 10 # How many years of data to keep for the 'absences' centric dashboards.
                 years_of_data_grades: 10 # How many years of data to keep for the 'grades' centric dashboards.
+                years_of_data_student: 10 # How many years of data to keep for the students data.
+        human_resources:
+            date_pivot: replaceme
     dashboards:
         res_epreuves:
             cod_css: replaceme # The code of the CSS to use for the res_epreuves dashboard. A regex like placeholder. Something like '866%'
+        absenteeism:
+            groupe_primaire: replaceme 
+            groupe_secondaire: replaceme
+            nbre_annee_a_extraire: replaceme
+        educ_serv_adultes:
+            portrait_css_fpfga:
+                criteres_reussites: replaceme #(22, 12, 04, 02)
+                serv_ens_exclut: replaceme #(06, 01, 08, 03)
+                motif_reussite_exclut: replaceme #10
+        direction_generale:
+            suivi_etc:
+                use_adjust_nomen_unit_adm: replaceme
+
+    # Le mois de référence pour le début de l'année -- Indiquez en 2 caractères comme, 01, 02, 03, ..., 10, 11, 12
+    mois_reference: 07
