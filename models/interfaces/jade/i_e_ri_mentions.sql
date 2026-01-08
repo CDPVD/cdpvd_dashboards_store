@@ -23,5 +23,6 @@ select
     typediplomecharl as type_diplome_charl,
     regimesanctcharl as regime_sanct_charl,
     indreussanctcharl as ind_reus_sanct_charl,
+    dateobtmention as date_obt_mention,
     dateexecsanct as date_exec_sanct
 from {{ var("database_jade") }}.dbo.e_ri_mentions

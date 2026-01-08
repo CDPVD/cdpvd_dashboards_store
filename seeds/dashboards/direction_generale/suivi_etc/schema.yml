@@ -1,0 +1,54 @@
+version: 2
+
+seeds:
+  - name: cibles_etc
+    description: cibles ETC du CSS
+    config:
+      tags: 
+        - human_resources
+        - suivi_etc
+      schema: suivi_etc_seeds
+      column_types:
+        an_budg: nvarchar(20)
+        nb_hres_an: float
+        nb_etc: float
+    columns:
+      - name: an_budg
+        description: annee budgétaire (format = YYYY-YYYY)
+        tests:
+          - not_null
+          - unique    
+      - name: nb_hres_an
+        description: Nombre d'heures
+        tests:
+          - not_null
+      - name: nb_etc
+        description: Nombre d'ETC
+        tests:
+          - not_null
+
+  - name: adjust_nomen_unit_adm
+    description: Ajustement d'unites administratives descriptivess peu explicites ou que l'on souhaite regrouper sous une meme etiquette. 
+    config:
+      tags: 
+        - human_resources
+        - suivi_etc
+      schema: suivi_etc_seeds
+      column_types:
+        current_lieu_trav: nvarchar(3)
+        new_lieu_trav: nvarchar(3)
+        new_descr: nvarchar(50)
+    columns:
+      - name: current_lieu_trav
+        description: Code unique d'origine représentant le lieu de travail
+        tests:
+          - not_null
+          - unique    
+      - name: new_lieu_trav
+        description: Code du lieu de travail à remplacer ou regrouper
+        tests:
+          - not_null
+      - name: new_descr
+        description: Descriptif du lieu de travail ou de l’unité administrative
+        tests:
+          - not_null

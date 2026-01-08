@@ -20,11 +20,14 @@ with
     _mentions as (
         select
             mentions.fiche,
+            mentions.code_perm,
+            mentions.eco_cen_off,
             mentions.prog_charl,
             cast(left(mentions.date_exec_sanct, 4) as int) as annee_brute,
             cast(right(left(mentions.date_exec_sanct, 6), 2) as int) as mois_brut,
             mentions.ind_reus_sanct_charl,
             mentions.regime_sanct_charl,
+            mentions.date_obt_mention,
             mentions.date_exec_sanct
         from {{ ref("i_e_ri_mentions") }} as mentions
     ),
@@ -33,9 +36,12 @@ with
     mentions_annee as (
         select
             mentions.fiche,
+            mentions.code_perm,
+            mentions.eco_cen_off,
             mentions.prog_charl,
             mentions.regime_sanct_charl,
             mentions.date_exec_sanct,
+            mentions.date_obt_mention,
             case
                 when mentions.mois_brut between 9 and 12  -- Entre septembre et Décembre
                 then mentions.annee_brute
@@ -54,11 +60,14 @@ with
 
 select
     fiche,
+    code_perm,
+    eco_cen_off,
     prog_charl,
     annee,
     ind_obtention,
     regime_sanct_charl,
     date_exec_sanct,
+    date_obt_mention,
     indice_des,
     indice_cfpt,
     indice_cfms

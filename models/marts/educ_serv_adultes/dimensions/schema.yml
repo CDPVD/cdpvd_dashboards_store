@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: dim_eleve_adultes
+    config:
+      tags:
+        - educ_serv_adultes
+        - populations_adultes
+      schema: "educ_serv_adultes"
+    description: >
+      Table de dimension répertoriant les informations statiques pour chaque élève dans les centres.
+    columns:
+      - name: code_perm
+        description: code permanent de l'élève
+        tests:
+          - not_null
+          - unique
