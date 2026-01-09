@@ -55,10 +55,12 @@ models:
         description: Statut de l'enseignant (Titulaire, Suppléant, Remplaçant).
         tests:
           - not_null
-      - name: ordre_Ens
+      - name: ordre_ens
         description: Secteur d'enseignement (FGA, FP, FGJ).
       - name: secteur
         description: Secteur géographique ou subdivition de votre territoire.
+      - name: date_expir
+        description: la date d'expiration de la qualification.
     tests: 
       - core_dashboards_store.resolution: 
           combination_of_columns: 

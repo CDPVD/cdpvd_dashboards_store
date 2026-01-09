@@ -54,13 +54,14 @@ select
     job_class.code_job_name as corp_empl,
     case when qualif.code is null then 'Aucune' else qualif.descr end as qualification,
     state.descr as etat_empl,
-    case when emp.sex_friendly_name = 'femme' then 1 end as Femme,
-    case when emp.sex_friendly_name = 'homme' then 1 end as Homme,
+    case when emp.sex_friendly_name = 'femme' then 1 end as femme,
+    case when emp.sex_friendly_name = 'homme' then 1 end as homme,
     case when qualif.is_qualified = 1 then 1 ELSE 0 end as edb,
     CASE WHEN qualif.is_qualified IS NULL OR qualif.is_qualified != 1 THEN 1 ELSE 0 END AS endb,
     statut_ens.statut as statut_enseignant,
-    sect.ordre_Ens,
-    sect.secteur_Descr as secteur
+    sect.ordre_ens,
+    sect.secteur_Descr as secteur,
+    ens.date_expir
 from {{ ref("fact_endb_liste") }} as ens
 
 inner join {{ ref("dim_employees") }} as emp on ens.matr = emp.matr
