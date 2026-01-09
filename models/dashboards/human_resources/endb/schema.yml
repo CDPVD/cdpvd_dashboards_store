@@ -72,4 +72,4 @@ models:
             - qualification
             - etat_empl
             - statut_enseignant
-            - ordre_Ens
+            - ordre_ens
