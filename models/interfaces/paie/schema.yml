@@ -38,3 +38,8 @@ models:
     description: >
       Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'pai_tab_pmnt' de la base de données source.
        Detail des différents type de paiements.
+
+  - name: i_pai_qualif
+    tags: ["interface"]
+    description: >
+      Table d'interface. Utilisée pour aller chercher les descriptions des qualifications des employé(e)s.
