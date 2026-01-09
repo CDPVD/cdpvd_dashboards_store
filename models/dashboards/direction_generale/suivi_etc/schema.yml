@@ -14,7 +14,11 @@ models:
           combination_of_columns:
             - an_budg
             - no_per
+            - no_cmpt
+            - cat_emploi
             - corp_emploi
-            - lieu_trav
+            - unite_admin
+            - code_lieu_trav
+            - descr_unite_admin
             - stat_eng
             - type_remun

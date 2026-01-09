@@ -2,207 +2,945 @@
 
 
 
-## v0.11.0+20241002 (2024-10-02)
+## v1.0.0+20260109 (2026-01-09)
 
-### Feature
+### Bug fixes
 
-* feat: Ajout d&#39;un nouveau tableau de bord PEVR (#18)
+* fix(pevr): increasing seed field char limit ([`f3580f9`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f3580f9c56252aeef2a5565878d0be928ff68407))
 
-* feat: ajout de l&#39;indicateur 1.1.1.1.1 -&gt;taux de qualification FMS
+* fix(educ_serv): adding scope to test resolution ([`c3f46aa`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c3f46aafb6652d249940b7664938ca68bbcfc60f))
 
-* feat: ajout de l&#39;indicateur 1.1.1.1.2 -&gt; FPT
+* fix(interfaces): adding missing interfaces ([`88811dc`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/88811dc6af4af55389c7955172a4fff041a2c589))
 
-* chore: modifier le perimetre fpt.
+* fix(packages): updating the template s dependencies to depend from cdpvd_dashboards_store ([`46900f8`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/46900f8cfa53810bb940dd25858f301ea3f4789a))
 
-* chore: correction erreur de syntaxe
+* fix(template): updating the human resources seed ([`42724f7`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/42724f730c0e6b31896c9fcb8ad3c5729c944ba5))
 
-* feat: ajout du schema
+* fix(stg_perimetre_eleve_frequentation_*): call to macros are now properly qualified ([`75bca69`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/75bca69c65db252cc1bb77b70c7768180829324d))
 
-* chore: maj du tdb
+* fix: naming incorrect dans la table suivi_diplomation (#20) ([`f2ffb98`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f2ffb98f2357529bcedd55038a723de5b674d6dc))
 
-* chore: fix missing licence
+* fix: erreur de duplicat dans pevr_indicateur_des ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
 
-* chore: exclusion de l&#39;année prévisionnelle
-
-* fix: erreur de duplicat dans pevr_indicateur_des
-
-* feat: ajout de commentaire et separation de ri_mentions
-
-* fix: correction d&#39;un bug avec la date
-
-* feat: ajout du schema pour stg_ri_mentions
-
-* chore: correction des duplicats et ajout de filtre.
-
-* chore: modification de stg_ri_mentions à fact.
-
-* feat : add alias
+* fix: correction d'un bug avec la date ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
 
 * fix: régler le licence_checker
 
-* chore : changed some filter + sqlfmt
-
-* chore: ajout de date_exec_sanct pour utilisation future
-
-* Chore: ajout de case pour eviter d&#39;avoir des resultats null
-
-* feat: ajout de distribution
-
-* feat: ajout de distribution au filtre
-
-* chore: maj des noms et pbix
+chore : changed some filter + sqlfmt ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
 
 * fix: incohérence entre ri_mentions et t_prog
 
-* chore: sqlfmt
+chore: sqlfmt ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
 
-* chore: modification d&#39;un problème du run de sqlfmt
+* fix: delete_vdc_specific_table (#1)
 
-* chore: ajout de row_number dans les indicateurs
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
 
-* chore: modification du row_number pour prendre l&#39;année la plus récente.
+* hotfix: fixe sur les warning par rapport au schema.yml de plusieurs tableau ([`d40781e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d40781e4eb2f102178862836bb8e174c65302b3a))
 
-* chore: suppression de code inutile.
+* fix: corriger_nom_colonne_moderatin_regional_provincial (#17)
 
-* chore: maj du schema et modification des noms.
-
----------
-
-Co-authored-by: sadqim &lt;sadqim@csvdc.qc.ca&gt; ([`94a220d`](https://github.com/CDPVD/core.dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
-
-* feat: nouvelle version du tableau de bord des épreuves uniques, obligatoires et locales (#15)
-
-* feat : mise à jour du model res_epreuves
-
-* feat: add_column_to_interface
-
-* feat : cration des nouvelles tables du nouveau tbd des épreuves
-
-* feat : ajout pbit
-
-* feat : ajout pbit
-
-* feat: mise à jour de la doc
-
-* feat: modifier le schema, doc and script
-
-* feat: ajouter la seed au nightly
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`b2dd6d3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/b2dd6d324a75f30f10aad34b15f80b358c21b7b5))
 
 * fix: gerer les resultats non numerique
 
-* fix : modification suite au commentaire de la PR
+fix : modification suite au commentaire de la PR
 
-* fix : suite des modifications suite au commentaire de la PR
+fix : suite des modifications suite au commentaire de la PR
 
-* fix :ajout de parametre dans le pbit
+fix :ajout de parametre dans le pbit
 
 * mend
 
 ---------
 
-Co-authored-by: sadqim &lt;sadqim@csvdc.qc.ca&gt;
-Co-authored-by: Gabriel Girouard &lt;gabriel.girouard@csssh.gouv.qc.ca&gt; ([`cf03674`](https://github.com/CDPVD/core.dashboards_store/commit/cf0367471a78fa851da80a6fb6e183bf5bed2fb2))
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+Co-authored-by: Gabriel Girouard <gabriel.girouard@csssh.gouv.qc.ca> ([`cf03674`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cf0367471a78fa851da80a6fb6e183bf5bed2fb2))
 
-* feat: ajout d&#39;une table de staging pour le mapping des adresses au 30/09 et la plus récente pour chaque année (#13)
-
-* chore(suivi_effectif): adding geospatial skeleton
-
-* jade interface added to get student address history
-
-* feat: staging table storing students address history
-
-* feat: get additional fields in the e_adr interface
-
-* feat: staging table to identify student addresses
-
-* fix: adjust rule to identify home address
-
-* feat: code adjustment to generate a postal code per fiche/year
-
-* chore: update yaml schema to test uniqueness of my staging table
-
-* feat: consider all addresses when there is only one type of address on the student&#39;s plan
-
-* feat: field added to staging_adresses table to correct inconsistencies
-
-* feat: distinguish between the latest addresses and those at september 30
-
-* chore: modifiy licence
-
-* chore: modify the schema describing the stg_adresses_eleves table
-
----------
-Co-authored-by: alluardj &lt;alluardj@csvdc.qc.ca&gt; ([`3de681e`](https://github.com/CDPVD/core.dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
-
-* feat: Add new dashboard &#34;Employees active&#34; (#6)
-
-* chore: Query and dashboard updated | Employes active
-
-* refactor: uniformize code
-
-* doc: readme updated | Employes active
-
-* feat: correction apportés
-
-* fix: licence missed
-
-* fix: remove duplicates and add missed variable
-
-* feat: tdb Report builder
-
-* fix: corrections PR v0
-
-* fix: pr version 3
-
-* fix: report builder | En-tête et format d&#39;impression
-
-* fix: request edited for getting current employees and adding searchbar for  report builder
-
-* Fix: schema corrected ([`1fc6650`](https://github.com/CDPVD/core.dashboards_store/commit/1fc6650791eef7743adf909a1cfd7e44311d09de))
-
-### Fix
-
-* fix: naming incorrect dans la table suivi_diplomation (#20) ([`f2ffb98`](https://github.com/CDPVD/core.dashboards_store/commit/f2ffb98f2357529bcedd55038a723de5b674d6dc))
-
-* fix: corriger_nom_colonne_moderatin_regional_provincial (#17)
-
-Co-authored-by: sadqim &lt;sadqim@csvdc.qc.ca&gt; ([`b2dd6d3`](https://github.com/CDPVD/core.dashboards_store/commit/b2dd6d324a75f30f10aad34b15f80b358c21b7b5))
-
-* fix: error in table dip_report_suivi_diplomation (#14)
+* fix: error in table dip_report_suivi_diplomation (#14) ([`593d91f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/593d91f2e87e171f612c0d9a8a1393283c09c183))
 
 * fix: error in table dip_report_suivi_diplomation
 
 * Correction des unités acquises en secondaire 4 et 5
 
-* sqlfmt pour le fichier dip_report_suivi_diplomation.sql
+* sqlfmt pour le fichier dip_report_suivi_diplomation.sql ([`593d91f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/593d91f2e87e171f612c0d9a8a1393283c09c183))
 
 * fix: Correction des unités prévisionnel
 
 ---------
 
-Co-authored-by: sadqim &lt;146247957+sadqim@users.noreply.github.com&gt; ([`593d91f`](https://github.com/CDPVD/core.dashboards_store/commit/593d91f2e87e171f612c0d9a8a1393283c09c183))
+Co-authored-by: sadqim <146247957+sadqim@users.noreply.github.com> ([`593d91f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/593d91f2e87e171f612c0d9a8a1393283c09c183))
 
-* fix: improved is_doubleur SQL query (#12)
+* fix: adjust rule to identify home address ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
 
-* fix: improved is_doubleur SQL query
+* fix: improved is_doubleur SQL query (#12) ([`a832659`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a83265948731407a2eedd50da8ba15682c6341b8))
 
-* fix: Application de sqlfmt ([`a832659`](https://github.com/CDPVD/core.dashboards_store/commit/a83265948731407a2eedd50da8ba15682c6341b8))
+* fix: improved is_doubleur SQL query ([`a832659`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a83265948731407a2eedd50da8ba15682c6341b8))
+
+* fix: Application de sqlfmt ([`a832659`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a83265948731407a2eedd50da8ba15682c6341b8))
 
 * fix: correct column en cours (#11)
 
-Co-authored-by: sadqim &lt;sadqim@csvdc.qc.ca&gt; ([`5773e82`](https://github.com/CDPVD/core.dashboards_store/commit/5773e8254e7bec7e4969862460a14ebcda0e73c2))
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`5773e82`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/5773e8254e7bec7e4969862460a14ebcda0e73c2))
 
-### Refactor
+* fix: licence missed ([`1fc6650`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1fc6650791eef7743adf909a1cfd7e44311d09de))
 
-* refactor: renaming and add columns to interface  (#8)
+* fix: remove duplicates and add missed variable ([`1fc6650`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1fc6650791eef7743adf909a1cfd7e44311d09de))
 
-* feat: added regrp_ehdaa in i_gpm_e_dan for pops
+* fix: corrections PR v0 ([`1fc6650`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1fc6650791eef7743adf909a1cfd7e44311d09de))
+
+* fix: pr version 3 ([`1fc6650`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1fc6650791eef7743adf909a1cfd7e44311d09de))
+
+* fix: report builder | En-tête et format d'impression ([`1fc6650`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1fc6650791eef7743adf909a1cfd7e44311d09de))
+
+* fix: request edited for getting current employees and adding searchbar for report builder
+
+* Fix: schema corrected ([`1fc6650`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1fc6650791eef7743adf909a1cfd7e44311d09de))
 
 * fix: delete_vdc_specific_table (#1)
 
-Co-authored-by: sadqim &lt;sadqim@csvdc.qc.ca&gt;
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
 
-* hotfix: fixe sur les warning par rapport au schema.yml de plusieurs tableau
+* hotfix: fixe sur les warning par rapport au schema.yml de plusieurs tableau ([`0e7f487`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0e7f4879c139f465a58e30d40879aeec9460ec92))
+
+* fix: delete_vdc_specific_table (#1)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+
+* hotfix: fixe sur les warning par rapport au schema.yml de plusieurs tableau ([`fd0d2af`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/fd0d2af3f6c9bacd71e97b519b12614eaca008ce))
+
+* fix(template): removing a useless s in the profile ([`7caf858`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7caf8582daa12abefacba174917235208e646ae7))
+
+* fix(cookiecutter): stg_sectors does not cause a rendering error anymore ([`69534b5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/69534b5099c662e480b015e5a33634ecf1323409))
+
+* fix: swtich back compentency ID (#29)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`2131f6e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/2131f6ea1ba355029bdcfd811225e4181a7cb577))
+
+* fix: corrections d'orthographe (#28) ([`c5fe336`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c5fe336f59fd40ea16dd22ac3ba3a6c600a821f3))
+
+* fix(suivi_resultats): remove css specific table (#39) ([`a6b4506`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a6b450675768d70ef8811d0fdedc9ffba95fb76c))
+
+* fix(res_scolaire): fixed error on legend and fixed missing title (#34) ([`db69a96`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/db69a963341f1907f8c5bfa40ea9eaa720a10c5f))
+
+* fix(tracking): the requests json attribute has been replaced with a data attributes ([`1e1cc84`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1e1cc84427f2188ea6d27cb8716265647bdb5ff8))
+
+* fix(cookiecutter): stg_sectors does not cause a rendering error anymore ([`d381d53`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d381d530c016f9e0c64b7d515318732ea06783c0))
+
+* fix: swtich back compentency ID (#29)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`6d20da7`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6d20da7e4adad682a0f5e05b1ae1a952ba0a878c))
+
+* fix: corrections d'orthographe (#28) ([`9a3ed3e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/9a3ed3ed4b6fbac8e8ad282524abc9cbbc2ac20b))
+
+* fix(tests): propagating columns renaming in the tests ([`59cfc94`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/59cfc948b55656240dff3fd63f483a3b6fdd3a0b))
+
+* fix(emp_conge): the table now uses the yearly dim_employment mapper, thus avoiding duplicates. ([`6c40936`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6c409366003e5fc0feaec61febdb1ae4e4c6cda7))
+
+* fix(emp_actif): the table now use the yearly dim_employment mapper, thus avoiding duplicates. ([`77da183`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/77da183c4c548d7614dbae67b7ef6e020714f360))
+
+* fix(template): the template is now using the Fabric adapter ([`c8a0a61`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c8a0a61d4a0795f62deb1e9d6329c5c78de3975e))
+
+* fix(adapter): swtich the adapter from dbt-sqlserver to fabric (#26)
+
+Co-authored-by: hugo juhel <juhel.hugo@stratemia.com> ([`9b507f5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/9b507f5a367ac7600f2027c656435982dc9c3399))
+
+* fix(predictive_view_aggregated): typo in variable selection ([`519ad45`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/519ad452cf24767ed2f27eabb869752514b9b611))
+
+* fix(typo): various dashboards typo adjustements (#23)
+
+Co-authored-by: hugo juhel <juhel.hugo@stratemia.com>
+Co-authored-by: Gabriel Thiffault <147753578+gabrielThiffault@users.noreply.github.com> ([`48ee40c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/48ee40cf32ebdd4ebd1b3cb6189e7e00a52d6492))
+
+* fix: removing duplicates from the transport details (#15)
+
+Co-authored-by: hugo juhel <juhel.hugo@stratemia.com> ([`105eeba`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/105eeba21eac22f8a6e3528f00adc76502608ab0))
+
+* fix: minor maintenance on the cicd pipeline o prepare for code freeze (#14)
+
+Co-authored-by: hugo juhel <juhel.hugo@stratemia.com> ([`aabb1a4`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/aabb1a43be918ad7d00f59de5b37dec4dc5af617))
+
+* fix: renaming transport staging adapter table to match it's alias (#13)
+
+Co-authored-by: hugo juhel <juhel.hugo@stratemia.com> ([`3bc7a78`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3bc7a78e54c89f5cfbdaf858664c71db69c7cb13))
+
+* fix: filter_non_null_obj_number (#9)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+Co-authored-by: Hugo Juhel <22279443+hugoJuhel@users.noreply.github.com>
+Co-authored-by: hugo juhel <juhel.hugo@stratemia.com> ([`3c120b2`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3c120b2c73b75329906ed3225eaa3aa657614927))
+
+* fix(spine): removing students with duplicated code perm ([`b0464e1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/b0464e1595b41efd3ae2ff5a06cf727f9067fe51))
+
+* fix: properly injecting the name of the db when not using a linked server ([`ff6fbf5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ff6fbf5b98ecfb8ec0aad69c679ec8b3624869c3))
+
+* fix: disembiguate duplicates resulting from multiple fetchs from the Jade database
+
+Done with Fred and Mohamed :
+
+* Remove duplicates introduced by fetching the Jade database multples times.
+* Only the most recent upserted grade is now used., Previous results are removed. ([`b66b53e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/b66b53ec6f377ee072240be60bc1dd46f4f6a098))
+
+* fix: removing dead code ([`1f64fe2`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1f64fe242dccb0152887c66a3da87710c4fddb12))
+
+* fix(cicd): adding job scope to group name ([`508f8de`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/508f8de800f145202bf23de0419053f61e1baa3c))
+
+* fix(cicd): fixing the stable pattern ([`f00b560`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f00b560efb13bac0264b3fd48868cc43901ec25c))
+
+* fix(cicd): fixing the stable pattern ([`9a2959c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/9a2959cd8d4e1a8d553db2310b788855207b5cdb))
+
+* fix: the default empty custom population now properly support the id_eco ([`17e25e9`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/17e25e9a0f4336fb868272ecd52f08f472998604))
+
+* fix: adding the missing is_context_core variable to the cookiecutter ([`3e57cf2`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3e57cf26677ca94b5a52a4594049efbf7401975b))
+
+* fix: adding the missing is_context_core variable to the cookiecutter ([`3e57cf2`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3e57cf26677ca94b5a52a4594049efbf7401975b))
+
+* fix: dependencies will now be parsed as ref when source are used and is_context_core is set to false ([`8a97d08`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/8a97d08db0615440925c82a7f236f6d412cc2a31))
+
+* fix: dependencies will now be parsed as ref when source are used and is_context_core is set to false ([`a8316f7`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a8316f7346e4c62725eeea6f76eff77468cc2e6a))
+
+* fix: the purge_metadata_macro will no be triggered in compile only mode ([`d038274`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d0382743b8cdd3984dd1ae7584fb929f9866c48d))
+
+* fix: the drop_schema macro won<t try to remove the public schema dbo anymore ([`88e0414`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/88e04149036bed97a4aa6aea27e6c3c8c473360f))
+
+* fix: uniformizing the base version of dbt-sqlserver and dbt-core so raised errors are now hidden behin RuntimeExeception anymore ([`e9deef0`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e9deef0f0a56475f3c5f76c493186af60828d799))
+
+* fix(build): fixing the azure target ([`ce6bad3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ce6bad3304167af68e94141296b691fb8d5e34f2))
+
+* fix: change_dbt_project_name_to_store
+
+> Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
+- le seul but de cette PR est de corriger le nom du dbt_project du core de "TBE" à "STORE"
+
+> Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
+
+> Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+
+```bash
+cd core.data.store
+git checkout bugfix/rename_dbt_project
+git pull
+cd ../cssvdc.data.store
+git checkout develop
+git pull
+dbt build compile
+```
+
+> Please, read carefully each item before checking it. Your PR's review might be delayed otherwise.
+
+* **Code** :
+  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [ ] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [ ] I have added DBT tests to my models (at least a `non null` / `unique` per models).
+* **Template** :
+  * [ ] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
+* **Documentation** :
+  * [ ] I have updated the documentation (README) accordingly to my changes.
+  * [ ] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [x] I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`**
+  * [x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [ ] I have added my CSS lead as a reviewer.
+  * [ ] My pull request is documented. I have explained the needs for the PR and what was left out of the it.
+  * [ ] I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
+* **Tasksboard** :
+  * [ ] My work item is linked to the pull request.
+  * [ ] My work item has been moved to `review` in the taskboard.
+
+fix :change_dbt_project_name_to_store ([`30a4bdb`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/30a4bdb81169e0edff0de351c88bc5abcc894502))
+
+* fix: casting the timeout as integer to allow for string like definition in the inherited dags ([`987b90a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/987b90afa242e9a3d346edfd848b385ad635596a))
+
+* fix: typo in doc ([`512903f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/512903f1d4b24b8771e26f051cf88efd6c885dbb))
+
+* fix: the macro no properly delete the schema and the views ([`71ec6a1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/71ec6a187a03e374c2e31d4a3bdc9d8b8b67f9b8))
+
+* fix(suivi_resultat): correcting seeds' friendly name and mandatory courses
+
+> describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
+cette PR a pour but de corriger le nom des épreuves et de les rendre compréhensibles
+
+> Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+
+```bash
+cd core.data.tbe
+git checkout feature/subj_name
+git pull
+cd ../cssvdc.data.tbe
+git checkout develop
+git pull
+dbt build --select tag:res_epreuves
+```
+
+> Please, read carefully each item before checking it. You PR's review might be delayed otherwise.
+
+* **Code** :
+  * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [ ] I have added DBT tests to my models (at least a `non null` / `unique` per model).
+* **Documentation** :
+  * [ ] I have updated the documentation (README) accordingly to my changes.
+  * [ ] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [ ] I have edited the merge commit message to remove the `Merged PR XXX :` so that my message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`
+  * [x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x] I have added my CSS lead as a reviewer.
+  * [x] My pull request is documented.
+  * [x] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+* **Tasksboard** :
+  * [x] My work item is linked to the pull request.
+  * [x] My workw item has been moved to `review` in the taskboard.
+
+Related work items: #2219 ([`aa80750`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/aa807507cdbf878b5bc16fb51a7e0107c2b2701d))
+
+* fix: remove blank results and correct subject evaluation code
+
+> describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
+Cette PR a pour objectif de régler le problème des doublons qui proviennent de la table des résultats ministérielles de Jade. elle corrige aussi des typos dans les codes des matières des épreuves
+
+> Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+
+```bash
+cd core.data.tbe
+git checkout bugfix/doublons_res_epr
+git pull
+cd ../cssvdc.data.tbe
+git checkout develop
+git pull
+dbt build --select tag:res_epreuves
+```
+
+> Please, read carefully each item before checking it. You PR's review might be delayed otherwise.
+
+* **Code** :
+  * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [x] I have added DBT tests to my models (at least a `non null` / `unique` per model).
+* **Documentation** :
+  * [ ] I have updated the documentation (README) accordingly to my changes.
+  * [ ] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x] I have added my CSS lead as a reviewer.
+  * [x] My pull request is documented.
+  * [x] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+* **Tasksboard** :
+  * [x] My work item is linked to the pull request.
+  * [x] My workw item has been moved to `review` in the taskboard.
+
+Related work items: #2014 ([`de87bc1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/de87bc13bb3b79917d77760f0249b9362358b24d))
+
+* fix: transports tests are now only executed if the transport is available ([`8231318`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/8231318591708316e3df2d175ea9b6919a54820a))
+
+* fix: transports tests are now only executed if the transport is available ([`e7c2157`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e7c21572225a214fe6702a7cf14217a15769d412))
+
+* fix: propagating renaming ([`cc9de86`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cc9de86bdb61b77d02c955108f15b472da510a00))
+
+* fix: updating the code-placeholder since the commands in the placeholders were out of order ([`659a75b`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/659a75b37419e2ad6dfaaf2377b35d0e30105601))
+
+* fix: updating the documentation to better reflect the purpose of the table ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* fix: adding missing documentation and renaming exposed fields to increase readibility ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* fix: adding missing codeblock ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* fix: fix errors in columns names ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* fix: sorry:) its suppsd to b in the cadention now ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* fix: fix errors in columns names ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* fix: sorry:) its suppsd to b in the cadention now ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* fix: correct_error_in_schema ([`831ecad`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/831ecad6d37b20098516b9c316afb154b5ad383e))
+
+* fix: adding missing weighting ([`9739c88`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/9739c88884affee5006b9bc293163a6c8de5cdfa))
+
+* fix: modification of the 'transport' dashboard schema ([`6984b85`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6984b857dfe97e4ad119050c9326f5c537ec38a8))
+
+* fix: adding missing weighting ([`11bf79f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/11bf79f3cf625f8a00d28ee988812a33bdf777d7))
+
+* fix: add_model_prefix ([`cdabb33`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cdabb33ff4bd9a95c2ae00a77e900e52e562f3df))
+
+* fix: correcti models_name ([`83ca72b`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/83ca72b3aff7976c3fb44347b9dc9f7c64a455e2))
+
+* fix: modify_var_naming ([`bb2e1e5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/bb2e1e5cc2247b37fec9581b78313165038a2e6c))
+
+* fix: fixing dbt project ([`5a6a4e6`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/5a6a4e63f4bfaa1d9e8f24041dd67bf94f7ed532))
+
+* fix: removing dead code ([`a16cc66`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a16cc660b3750ce603632f01517f1a6968515723))
+
+* fix: add_prefix_to test_name_to_resolve_ambiguity ([`0338c88`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0338c88b01c9eb73cb7007080a469e191e72a75d))
+
+* fix: modify version_from_0_to_2 ([`cc16df3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cc16df3305e3dca0c29e39827e45bb0e21677ff1))
+
+* fix: updated comments ([`178f319`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/178f319bf9b2891e371e6ec9a6cf3485f9c4796e))
+
+* fix: add_prefix_to test_name_to_resolve_ambiguity ([`d8dacaa`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d8dacaa4f4d3d9012ada872f77bcb97d2e9873c4))
+
+* fix: modify version_from_0_to_2 ([`2a99c8e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/2a99c8ed44d896f663a6e56876380f80099cb544))
+
+* fix: delet_conflict_message ([`7c7dc62`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7c7dc62482c64e1ce70ff675b59b9c10f1ad950e))
+
+* fix: updated comments ([`13ce039`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/13ce039e786a12ff6667aa65f5c89416fa8c6ccb))
+
+### Build system
+
+* build(dag): disabling email on failure as I don t have any smtp server ([`e66f488`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e66f488f4e33b6bee7490eccbfeb38110cfebf75))
+
+* build(fix): addinthe token as an header ([`434a6fd`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/434a6fdd2f2cf6f5702886241e5e589525e22888))
+
+* build(fix): addinthe token as an header ([`9b8678d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/9b8678d13641048c88d7f8ef4f5874747238f298))
+
+* build(azure): removing azure build ([`4627ecc`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/4627ecce83461c192b0d24461d55fc98beafee15))
+
+* build(release): updating the release process ([`c323552`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c3235522cbe90b3c7de921ced9f25f41f6502207))
+
+* build(azure): swithcing to deep fetch ([`2646d79`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/2646d79c5cad6f42544aacf53b5aee73218f48a6))
+
+* build: update azure-pipelines.yml for Azure Pipelines ([`c2923c3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c2923c36387deab9d142cf9b549265ee86970139))
+
+* build: committing on VDC will now push to the sciance repo where tagging happens ;) ([`222b64c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/222b64c139540cd3db59aa771cee5ea5c09d0562))
+
+* build(release): updating the release process ([`8f4c64e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/8f4c64ef12e7a38e392f2a713cd2965463e49eee))
+
+* build: pining sr version ([`7f2f78a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7f2f78a55d96de77265b5341cc86357d150b9d55))
+
+* build: casting the timeout as integer to allow for string like definition in the inherited dags ([`2f99f7f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/2f99f7f88374032484b746d86750dcd7fd8b49c7))
+
+* build: updating version REGEX ([`e48cb4a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e48cb4ae32652cf67c03cf82b27e8b17cf95b00d))
+
+* build: dumping json to keep header properly setted ([`bad9a83`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/bad9a83ed2dfc4551e493f2acb27347556cf5bf3))
+
+* build: payalod is now a dictionary to be serialized ([`86806d7`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/86806d7be75d8747a531e9418f4f7c87ab6f664c))
+
+* build: adding etl_profile ([`0318e2f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0318e2f8ddbc63386862631d9c2641ec3af73f75))
+
+* build: forcing the use of the etl_profile to make the etl profile invariant ([`6970c3a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6970c3a3e543386aa866e374275ace350f4471b5))
+
+* build: adding notification to the DBT failure ([`a133b6c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a133b6c4dffa84c3042febc18fd952ac1c5bc7d4))
+
+* build: including the manifest in the dag folder ([`f88ecae`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f88ecaef65b82374959120a557eb15a7cabdce19))
+
+* build: unesting deployment folder ([`5451735`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/5451735fbb196e4b096f7fae2bd58ec55a8b0585))
+
+* build: adding support for variable docker host ([`6ebbaa3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6ebbaa33d3f6e15861d0730192b14daddcc382cd))
+
+* build: reducing the exported files ([`38cf61b`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/38cf61bcdf31d5c35230ac0278f1cf938f3814a7))
+
+* build: add profiles and dag file to the image ([`561ef91`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/561ef91313980b92d2bdcfd150082e0a259b5862))
+
+* build: adding CICD ([`51aa803`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/51aa80389fe86f0f21c5287c8fb52ca5d355c24d))
+
+* build: adding missing workflows folder ([`51aa803`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/51aa80389fe86f0f21c5287c8fb52ca5d355c24d))
+
+* build: adding notifcation of failures ([`51aa803`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/51aa80389fe86f0f21c5287c8fb52ca5d355c24d))
+
+* build: renaming staging database to staging ([`51aa803`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/51aa80389fe86f0f21c5287c8fb52ca5d355c24d))
+
+* build: adding building of master images ([`51aa803`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/51aa80389fe86f0f21c5287c8fb52ca5d355c24d))
+
+* build: adding semantic release ([`5e6c24c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/5e6c24c5bd18f1bd9533db9f81e8963ce36aea59))
+
+* build: adding CICD ([`d689069`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d689069fcb984a2f68551d9f7bd84d7004baa8c5))
+
+* build: adding missing workflows folder ([`d689069`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d689069fcb984a2f68551d9f7bd84d7004baa8c5))
+
+* build: adding notifcation of failures ([`d689069`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d689069fcb984a2f68551d9f7bd84d7004baa8c5))
+
+* build: renaming staging database to staging ([`d689069`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d689069fcb984a2f68551d9f7bd84d7004baa8c5))
+
+* build: adding building of master images ([`d689069`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d689069fcb984a2f68551d9f7bd84d7004baa8c5))
+
+* build: adding semantic release ([`8a80d88`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/8a80d8833cbee0e1306447b51b0c2212d7814608))
+
+### Chores
+
+* chore(deps): align parent to v0.19.3
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+Co-authored-by: hugoJuhel <juhel.hugo@sciance.ca>
+Co-authored-by: Hugo Juhel <22279443+hugoJuhel@users.noreply.github.com>
+Co-authored-by: Frederyk Busque <147734849+busquef@users.noreply.github.com>
+Co-authored-by: jalluard <159054441+jalluard@users.noreply.github.com>
+Co-authored-by: alluardj <alluardj@csvdc.qc.ca>
+Co-authored-by: Adama Fall <fallada@cs-soreltracy.qc.ca>
+Co-authored-by: Sylvain Gelinas <161489091+gelinassCSSRS@users.noreply.github.com>
+Co-authored-by: Gabriel Thiffault <thiffaultg@csvt.qc.ca>
+Co-authored-by: Adama Fall <adama.fall@cssst.gouv.qc.ca>
+Co-authored-by: martin_legault <martin_legault@cssmv.gouv.qc.ca> ([`0230928`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0230928747fec36603e217e12bd3132c80898319))
+
+* chore: adding a git keet commit file to preserve the folder ([`caca770`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/caca77066f07c42a831545cde347a3e2953beea4))
+
+* chore(retirement): disabling retirement dashboard override as the PR has not been accepted yet ([`344f1b1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/344f1b1116ca080714afb8505b5d0c390a6db7bb))
+
+* chore: updating dependency to a branch from sciance/core ([`6e6b52a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6e6b52adf6cae9d3051b124e19fa0e62811ef3d4))
+
+* chore: removing dead code ([`a7f7591`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a7f7591a85a185055a75abd37340ed7e17f5c60f))
+
+* chore(pevr): the pevr now lives in its dedicated subfolder ([`f642278`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f64227854ae89b019bae55b6861ce9ca2975ba4b))
+
+* chore: updating the licence to CDPVD instead of Sciance ([`861b5e0`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/861b5e0d6ac57aad531023d5e6a850c1d973d4c6))
+
+* chore: propagating project renaming from cdpvd_store to cdpvd_dashboards_store ([`ce02229`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ce02229b3c4abb459cb769b3da199a271e30b1af))
+
+* chore: propagating core_dashboards_store renaming from store to core_dashboards_store ([`abd6de0`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/abd6de0b8edec7bbb6e7d7437d2ff44dc43162a2))
+
+* chore: modifier le perimetre fpt. ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: correction erreur de syntaxe ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: maj du tdb ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: fix missing licence ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: exclusion de l'année prévisionnelle ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: correction des duplicats et ajout de filtre. ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: modification de stg_ri_mentions à fact.
+
+feat : add alias ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: ajout de date_exec_sanct pour utilisation future
+
+* Chore: ajout de case pour eviter d'avoir des resultats null ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: maj des noms et pbix ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: modification d'un problème du run de sqlfmt ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: ajout de row_number dans les indicateurs ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: modification du row_number pour prendre l'année la plus récente. ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: suppression de code inutile. ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: maj du schema et modification des noms.
+
+---------
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* chore: actions/checkout vers la version v4 ([`d40781e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d40781e4eb2f102178862836bb8e174c65302b3a))
+
+* chore(suivi_effectif): adding geospatial skeleton
+
+* jade interface added to get student address history ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
+
+* chore: update yaml schema to test uniqueness of my staging table ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
+
+* chore: modifiy licence ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
+
+* chore: modify the schema describing the stg_adresses_eleves table
+
+---------
+Co-authored-by: alluardj <alluardj@csvdc.qc.ca> ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
+
+* chore: modification au dip ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: modification de suivi_diplome et du perimetre ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: suppression du filtre is_francisation de la stg ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: modification de l'affichage de la donnée pour les filtres. ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: updated seed schema ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: ajoût de l'indicateur obtention diplome et ses prerequis ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: modification de la colonne sexe pour genre
+
+Chore: ajoût du schema et correction d'une anomalie ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: suppression du filtre is_francisation de la stg ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: updated seed schema ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: modification de la colonne sexe pour genre ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: changement de la classe pour niveau_scolaire ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: ajout des commentaires ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: deplacement des filtres a la fin de l'aggregration ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: modification du champ annee avec id_eco ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: modification des filtres pour le pevr_des ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: modification des filtres pour le pevr_des
+
+feat : add column to interface table ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: ajout notion année_scolaire et modification de champ ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: Maj du tdb ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: maj de la documentation sur l'overriding ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: mini typo
+
+fix : modifier le script de suivi et supprimer la connexion a la bd du fichier excel
+
+fix : rectification table filtres et modification du fichier excel et tdb
+
+---------
+
+Co-authored-by: Gabriel Girouard <gabriel.girouard@csssh.gouv.qc.ca>
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+Co-authored-by: sadqim <146247957+sadqim@users.noreply.github.com> ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
+
+* chore: Query and dashboard updated | Employes active ([`1fc6650`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1fc6650791eef7743adf909a1cfd7e44311d09de))
+
+* chore: renaming and add columns to interface (#7) ([`fd0d2af`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/fd0d2af3f6c9bacd71e97b519b12614eaca008ce))
+
+* chore: updating default version in template ([`a09ae99`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a09ae9993f199ee97c65ecfaa723f5a1cf83e68a))
+
+* chore: improving landing page ([`970a085`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/970a0859217619a686b78f9eda91cec0905d8073))
+
+* chore: adding a .gitignore ([`22f3111`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/22f311147b6eaf9baea405c5afd2527616841f26))
+
+* chore(nighlty): installing the core through the branch ([`e8fee16`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e8fee165f18fea69b9b6a631d9e0ffb0a78953ba))
+
+* chore: adjusting the number of reviewers ([`c82793a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c82793a803f6bad8d115ffaf97d91fd09cf1fa27))
+
+* chore: disabling cssvdc push ([`24e3f39`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/24e3f39765b110174ff6d7dc15768a287bdc445f))
+
+* chore: removing unused template ([`7e3a1ad`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7e3a1adbf634327eb3570fe7cf0f963e9aa10314))
+
+* chore(depechecode): the dbt profiles-dir is now configured through an environement variable ([`648f56c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/648f56c4f6aa2ee08da17c4caf46bf756c39fb28))
+
+* chore: gitgnoring .python-version for pyenv interopability ([`7f1e7f7`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7f1e7f7f65646f0b31317ae5779f94264418f0bb))
+
+* chore(template): improving the template with better project naming and pre-populated population tables. (#31) ([`ab74c68`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ab74c68f2ed144231ff11dd8bccd50f2df6df404))
+
+* chore: removing chore and style from commit ([`4a8ca7e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/4a8ca7ed2acaee5a689842bcf63345e032233f50))
+
+* chore(nighlty): installing the core through the branch ([`443902d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/443902d70004baa5c96e44bc5af24e80af7d1b2e))
+
+* chore(nightly): the nightly build will now run using the branch instead of the tag ([`9f2db4c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/9f2db4c61a10074c2f4550b09ee3ab1a9004d37e))
+
+* chore: removing unknown commit from changelog ([`dd18341`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/dd1834182ce2f0f49ed28312353a94b1cfe460b6))
+
+* chore: disabling dev-* chagelog rendering ([`3559aa3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3559aa32ba697d9c1b89836ca129f08e57fe60c2))
+
+* chore: adding changelog template ([`b2cb311`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/b2cb311558b36e073c78d9f1037c4607f224aedc))
+
+* chore: disabling tagging of dev version ([`5886bac`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/5886bac9faf0e8f1ba7b9f9958c793c5474dd75f))
+
+* chore(fix): setting profile dir through env_var instead of hardcoding it ([`9c5c2c4`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/9c5c2c42047ecfe623f45cb7a4e93f0deda95305))
+
+* chore(fix): directctly calling poetry to run dbt during the docker build ([`7fbf267`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7fbf267211ba0bdfea34d630f852e62daa3c2c43))
+
+* chore: forcing push to the CSSVDC repo ([`47ae4cc`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/47ae4cc055b1742487c9dc0203d79d1f2f92010e))
+
+* chore: adding the stamper to the gabarit (#12)
+
+Co-authored-by: hugo juhel <juhel.hugo@stratemia.com> ([`92ed003`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/92ed0034bfa9849ad051e1fcad2e8fcd1e335873))
+
+* chore: the nightly build can now be manually triggered ([`5b7f227`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/5b7f2274514e58f91cb62a60b9401abda7929f10))
+
+* chore: increasing verbosity of the release pipeline ([`537283d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/537283d1f0578eb5a4c49f7bba7f742f57fde0a2))
+
+* chore: sqlfmt is now run in check mode and will raise an error if something is left to be formatted ([`8de5860`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/8de5860234cd5eced3d9c5f49ff0840d10cb5865))
+
+* chore(cicd): running the fmt on all files ([`4d20729`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/4d20729a7b899afe98790035c4f911253db8ade1))
+
+* chore(cicd): disabling the sqlfmt checks on template ([`2207449`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/22074499d21a050c8bc49e8e05b0017d0766b9f8))
+
+* chore(licence-check): warning won t be treated as error anymore ([`c161e9e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c161e9e62a791eceae175b60ffa64c34b13f2515))
+
+* chore(fix): fixing badly resolved conflict in the template s dbt_project ([`89dc589`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/89dc58970ed194b3f55b85c6d80ac845dd3067d0))
+
+* chore: excluding template from formatting ([`8cf9428`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/8cf94285fc8304e463cdbd936e5540a8d305fefb))
+
+* chore: mobing the template folder into the tooling folder ([`0a0bd2f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0a0bd2f78defbe96dc7488bdf905a068f446f117))
+
+* chore: adding missing licence ([`fa498a6`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/fa498a60d189c8c369a790cb185a616bd9962346))
+
+* chore: fixing path in licence checker ([`c1f5523`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c1f552383289cf5bd914f253f431ead156f2a653))
+
+* chore: adding assignee item ([`e9d123d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e9d123dbb22d440811e9f6f53e80dcf7496ff4df))
+
+* chore: adding licence checker ([`468e4a0`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/468e4a08ff9672b849217a3c37e035b72054070e))
+
+* chore: updating actions to not triggers on PR if not needed ([`5b68894`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/5b68894fa4a7425dabf85d67b6320b679cc7703e))
+
+* chore: adding sqlfmt guidelines and check ([`9623bae`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/9623baed2cacb68dac60b83cc53232c98e2d5b63))
+
+* chore: adding question template ([`81b9cf7`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/81b9cf72e7517e48d495995de0fde152cd405579))
+
+* chore: updating feature request template ([`6ac3de5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6ac3de52da533f6db26e9f14048958a6213e96fd))
+
+* chore: adding PR, bug, and feature templates ([`a14021f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a14021fdca6d65ec53889f52587b56d9e0de6c50))
+
+* chore: moving the nightly build to the tooling subfolder ([`1d82aec`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1d82aecd7e159e4d2c472a04a67ad16381a68c54))
+
+* chore(fix): setting the build context to the root of the folder as pyproject is required ([`36b7a8f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/36b7a8fdf190188d3ee6818ac9e34ce1accad10a))
+
+* chore: moving depeche code to the tooling folder ([`a928669`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a9286696bbb76b3454f66eaa8de7a8fc3265a8f4))
+
+* chore: disabling fail-fast so all the matrix runs will be tried each day ([`8a00df3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/8a00df3c8a123663674eae98b06a314741a92160))
+
+* chore: renaming gabarait to gabarit ([`34d409c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/34d409c6c608bf1962cf3552f47bca10ef7edcaa))
+
+* chore: gitignoring the pbix ([`cb92a3d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cb92a3d35c6f6417ab7ad36642e23d8bd7ed6d28))
+
+* chore(cicd): adding concurrency piority ([`dbff52c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/dbff52c6c90b055510733b4b00811304c1bcc58f))
+
+* chore(test): adding the stable version to the nightly build ([`ad7fc6c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ad7fc6c7c4e0aef4c338049830a0a19c306ed460))
+
+* chore(cicd): fixing maximal matrix concurrency to 1 to avoid burning the database ([`e22153a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e22153a163345ae009ce9524a3507a8673deab28))
+
+* chore(fix): logging to the github registry before pushing the docker ([`493e726`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/493e726ffd8395aa2ab3f46c6e1e4eff7d470fc2))
+
+* chore(cicd): adding the command to run the integration tests suite ([`da003f3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/da003f39d1925e5c50575d1c438ae98c3df187d2))
+
+* chore: trigger the nightly on master ([`5e34159`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/5e34159c32fcd697667b1abdda44bfcae95134f6))
+
+* chore: adding CICD pipeline for nightly release ([`1fc829f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1fc829ffe2b1e1f82f94fea1790bb8ff5d82492a))
+
+* chore(test): adding the dockerfile and the required files to run the integration tests ([`c99333d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c99333dfbd03f8296d0fe61724fbc7a829884019))
+
+* chore: adding the sqlfmt linter
+
+# Objectives of the Pull Request ?
+> Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
+
+* The PR introduces the `sqlfmt` formatter in the tools chain.
+* `sqlfmt` parses the SQL code and produces a formatted version of it.
+* The formatted version uses standard style guidelines, that are NOT developer-dependant, resulting in a more coherent developing experience.
+* Formatting the SQL code will help developers review other developer's code
+
+* The PR also adds a `git pre-commit-hook` that can be installed to automagically format the code prior to the commit.
+* The pre-commit-hook can be install with the commands documented in the `README.md`
+
+* A new item is added to the `pull-request-template` to remind developers of formatting their code.
+
+# What is left out of the Pull Request ?
+> Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
+
+* The PR does not decide on whether or not, the particular style-guide of `sqlfmt` should be accepted as-is or tuned. For now, everything is set as default
+
+# How to review the PR ?
+* The commit `style: applying fmt` contains ALL newly-styled files.
+* I advise you not to first select this commit, as doing so will impair your ability to review the other files.
+
+# How to run the pull request ?
+> Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+
+```bash
+# Assuming you are in a folder containing both the core.data.store and the cssvdc.data.store folder.
+
+## MIGHT BE core.data.tbe AND cssvdc.data.tbe depending on your setup
+
+# Update the code
+cd core.data.store
+git checkout feature/linter
+git pull
+
+# Install the linter
+poetry shell
+poetry lock
+poetry install
+
+# Might as well install the precommit
+pre-commit install
+
+cd ../cssvdc.data.store
+git checkout feature/develop
+git pull
+
+# Run everything as a sanity check
+dbt build --full-refresh
+```
+
+# Pull request's checklist
+> Please, read carefully each item before checking it. Your PR's review might be delayed otherwise.
+
+* **Code** :
+  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [ ] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [ ] I have added DBT tests to my models (at least a `non null` / `unique` per models).
+* **Template** :
+  * [X] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
+* **Documentation** :
+  * [X] I have updated the documentation (README) accordingly to my changes.
+  * [ ] The models I have added are documented in a `schema.yml` file.
+* **Pull-request... ([`c80072e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c80072e048897680152d38f83b71020afb28153a))
+
+* chore: removing dead code ([`6f4b768`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6f4b76829df260c4a774dc8e235dc782518c5535))
+
+* chore: updating PR template ([`1abf722`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1abf722c9adc2b84a3e1f9f8acb638fd4201c6b8))
+
+* chore: adding item to the pull request template ([`68b6eee`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/68b6eeed603b2b66b0edd10616417d17820d7388))
+
+* chore: template typo correction ([`1466eef`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1466eef469bb630ad9d5a59f5482f297f7de7669))
+
+* chore: template typo correction ([`fbc9541`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/fbc9541f7e77026a69bcd87f8e2d0b4f6df08f0f))
+
+* chore: change the name of the profile and the project
+
+Related work items: #1770 ([`5ef7d3a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/5ef7d3a7f509cfd365d753d645f6a3d97500fe79))
+
+* chore: adding a pull request template to the repo ([`c84fed3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c84fed331269e24307f099babc6ec89892e81067))
+
+* chore: empty commit to trigger a revierw from Julie and Nathalie ([`1d1a660`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1d1a660dd6db4ab95cf8441b7fa3316ce38ba951))
+
+* chore: removing duiplicated code ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* chore: updating dependencies ([`6c1ca12`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6c1ca12227cc817a37455af9fa84251fa47ac23e))
+
+* chore: adjustment of the schema that describes the emp_conge dashboard scripts ([`b8c3981`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/b8c39812bd059d765417f8fa7c41c5482723beb1))
+
+* chore: update README part 2 ([`243bca7`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/243bca72396eb9c6ab4f4e0971b4224d3c6ad27c))
+
+* chore: management of the centralized schema ([`718b7a4`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/718b7a40881700c7144802bb8efd96ad3b813b3e))
+
+* chore: update the README ([`1eb7208`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1eb720861fd881a43f2f5610f3da6d98095d6e8d))
+
+* chore: change the table empcong_fact_emp_conge to fact_emp_conge ([`9952e66`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/9952e66a5ba7047615d34f907972f85be865fc0f))
+
+* chore: adjustment of the schema that describes the dashboard scripts prospective_cdp ([`8a5a316`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/8a5a3162fa15788d788aaeaa0ee3341ada2bad51))
+
+* chore: adjustment of the schema that describes the emp_conge dashboard scripts ([`0aaf111`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0aaf1112f7a29f86b581b024aced1513efe8c459))
+
+* chore: rename the script stg_parc_activ_10y because it is not used to generate a staging table ([`ee0cf3f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ee0cf3fc806313d9f74d80e660e8f62a29692f3c))
+
+* chore: modification of the dbt_project so that it respects the conventions of the tbe project ([`ccc203e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ccc203efb7d8ae6f1e59e759352ce095a0e910b9))
+
+* chore: rename the script stg_parc_activ_10y because it is not used to generate a staging table ([`a7cbebf`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a7cbebfda9c62a02aa865ce8af2e91ec57e79664))
+
+* chore: modif of the stg_parc_activ_10y script so that it respects the conventions of the project ([`97b0fd3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/97b0fd334a3d567a558754952ff1e71e1f7d2ce2))
+
+* chore: adjustment of the schema that describes the interface tables of the geobus database ([`0f17bc9`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0f17bc9f7082b5d2dac4bf5e9570e5f2059ccdc4))
+
+* chore: modification of the i_geobus_parc script so that it respects the conventions of the project (part2). ([`2bfc12d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/2bfc12d644dbdbc94c78a8bbc0ed5a12241e338a))
+
+* chore: adjustment of the schema that describes the interface tables of the piastre database ([`863cccc`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/863cccc3ce258c7bd2dc59e4348a232f7cabf74f))
+
+* chore: modification of the i_geobus_parc script so that it respects the project conventions ([`eb0088c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/eb0088c485cacfa71b5e1789bb805c27334c4e6a))
+
+* chore: move the schema of the 'transport' dashboard. 1 schema that centralizes all the information ([`81123d2`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/81123d22b133b6139890862735f4ec0f85ee5b04))
+
+* chore: change the project structure (store structure) ([`961bf8c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/961bf8c1f2c340f57f4172cb67ce490485a76f6f))
+
+* chore: put the tests in the macro adapt in comments ([`66f790d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/66f790d004f90313daa492e88338a24d4767eafd))
+
+* chore: update the packages ([`f9c77d5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f9c77d5e222896f632406b5e892bae2fd53d2322))
+
+* chore: update the sources file ([`4ba22f8`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/4ba22f8a127c3f2e87ae6f86c3b9d74317deeabf))
+
+* chore: move PBIX files outside the models folder
+chore: modify the sources database in the dbt_project
+chore: update the schema file for the adapters
+chore: add a schema file for the interfaces
+chore: add a schema file for the bridges folder
+chore: add a schema file for the spines folder ([`c6711a1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c6711a103dd90f6edc916781c314ebb3e92c55ec))
+
+* chore: change the project structure (store structure) ([`c1f2d90`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c1f2d9069f3c0a0764516176f8059f69c507639c))
+
+* chore: put the tests in the macro adapt in comments ([`4f576fd`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/4f576fd7767ee6fa7e284bcf744b08b1fc063a46))
+
+* chore: update the packages ([`aa19145`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/aa19145099f5c21ebb98c9608466a2cddfc378ee))
+
+* chore: update the sources file ([`a8e09f9`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a8e09f919e85087d87643861fd41755eda231086))
+
+* chore: move PBIX files outside the models folder
+chore: modify the sources database in the dbt_project
+chore: update the schema file for the adapters
+chore: add a schema file for the interfaces
+chore: add a schema file for the bridges folder
+chore: add a schema file for the spines folder ([`7357543`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/73575437f971ba1518e9b273cce16d63a2a8d670))
+
+* chore: update of the source file which indicates the adapters ([`140c98d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/140c98d1bd1ce282898b3ed2b0af79656f248c73))
+
+* chore: change the name of the source database ([`8ef893a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/8ef893a92ebe9a3411c83d1c5441a30c90c432b9))
+
+* chore: add schema file for bridges folder ([`bf0f765`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/bf0f7659a1eaad9da71d99d12e0ecfca728708ac))
+
+* chore: change keyword pevr by tbe ([`8ba436e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/8ba436e1c2458b46671f39cd24d09a0ebe6c523d))
+
+### Code style
+
+* style(template): applying sqlfmt ([`990cc45`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/990cc451612b230a048df8e07cb584be83ed2e84))
+
+* style: applying sqlfmt ([`a6374f2`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a6374f214e7772325f3a4002aacd8f263232db75))
+
+* style(template): applying sqlfmt ([`eb84d5d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/eb84d5dbd8dab859323db2527939b09baf6249f0))
+
+* style: applying sqlfmt ([`e8ca422`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e8ca4227caa02a57a504d9c60ad65340283fd7fc))
+
+* style: applying sqlfmt ([`a6c4b99`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a6c4b9971d3b2b0764bfc32fb4d4fc484bb8cfd3))
+
+* style: applying sqlfmt ([`b822989`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/b82298934ab59740fe2ece0097eb2f44d63d579b))
+
+### Documentation
+
+* docs: removing CDVDP specific documentation ([`758d1fa`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/758d1fa736cd066dbe962dadf2c166742d75dc86))
+
+* docs: addressing docs issues identified by core.dashboards_store/issues/38 ([`8894275`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/88942751dd8af9c90de595fda249fc893a388e5a))
+
+* docs: fixing a typo in the overriding link ([`dee9b18`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/dee9b187fae0cb91b7895274e680082ae030cc9f))
+
+* docs: fixing various legacy typo in the docs ([`541b85a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/541b85a5a373dc9373c3b35661139d3b375b49a6))
+
+* docs: adding doc website ([`5274842`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/527484220ce31305fab121a9d8155bc05be2d66e))
+
+* docs: adding docs about overriding populations ([`13b1118`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/13b11180491d64036230832bac61f59db1625128))
+
+* docs: fixing a typo in the overriding section ([`95c6bef`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/95c6befa8378838aed9041994555aa0fc04b6b11))
+
+* docs: reflecting changes of template new location ([`0b089f4`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0b089f44b08d3db1c8146cdd3fc5bdff01f55750))
+
+* docs: migrating docs notification ([`f4a2739`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f4a2739176e28dc88e7b8b6d0f2e22b30b7a88d4))
+
+* docs: adding doc website ([`37f63ee`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/37f63eee7bbcc646ccace0bb7c1ef0b4d845d748))
+
+* docs: improving profiles documentation ([`148f0fd`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/148f0fd7bcb57d3089af84de23410a239c395da5))
+
+* docs(fix): updatating the stamp_model's macro name ([`404c505`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/404c50554330cb1b2767230c7c56a6f45fad19b9))
+
+* docs: updating both the readme and the PR template to help developers populating seeds in the nightly project ([`2a1b15f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/2a1b15fff10c8c765eeab5f4676753f83fc4ec5f))
+
+* docs(test): adding an how-to about the way to run the integration test on your local computer ([`dc05178`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/dc05178f21798eeaecbed9ca34b305e401af57a3))
+
+* docs: fixing typo in the gpi's database name ([`02ae6f7`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/02ae6f75b3c1898d316e8745c40012eeb06496dc))
+
+* docs: fixing various typos in the docs and adding a placeholder for populations ([`27e8ee0`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/27e8ee047b5d138343a263f279461b655d46cf0d))
+
+* docs: prospectif_cdep -add seeds employees status ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* docs: prospectif_cdep -add seeds employees status ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* docs: fixing a typo in the prospectif_cdep interfaces ([`982ab5c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/982ab5cbf455fd496a82c23e19f92a2d5408224f))
+
+### Features
+
+* feat: uniformizing the project dbt project and the template one ([`588f4c9`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/588f4c9de24867236d9bfd5a9f4783dcdbe734a0))
+
+* feat(reporting): adding the diplimation and emp_actif alternative dashboards ([`30ec73d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/30ec73d4343be95ed99365f97ae9cc7cfd699525))
+
+* feat: update package.yml ([`573fa50`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/573fa506e4f8772e79acf1f0c08cb5c3ed6cbbca))
+
+* feat: Ajout d'un nouveau tableau de bord PEVR (#18) ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* feat: ajout de l'indicateur 1.1.1.1.1 ->taux de qualification FMS ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* feat: ajout de l'indicateur 1.1.1.1.2 -> FPT ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* feat: ajout du schema ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* feat: ajout de commentaire et separation de ri_mentions ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* feat: ajout du schema pour stg_ri_mentions ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* feat: ajout de distribution ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* feat: ajout de distribution au filtre ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
+
+* feat: added regrp_ehdaa in i_gpm_e_dan for pops ([`d40781e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d40781e4eb2f102178862836bb8e174c65302b3a))
 
 * feat: added regrp_ehdaa in i_gpm_e_dan for pops
 
@@ -210,195 +948,162 @@ Co-authored-by: sadqim &lt;sadqim@csvdc.qc.ca&gt;
 
 ---------
 
-Co-authored-by: busquef &lt;busquef@cssvt.gouv.qc.ca&gt;
-Co-authored-by: sadqim &lt;sadqim@csvdc.qc.ca&gt;
-Co-authored-by: Frederyk Busque &lt;147734849+busquef@users.noreply.github.com&gt; ([`0e7f487`](https://github.com/CDPVD/core.dashboards_store/commit/0e7f4879c139f465a58e30d40879aeec9460ec92))
+Co-authored-by: busquef <busquef@cssvt.gouv.qc.ca>
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+Co-authored-by: Frederyk Busque <147734849+busquef@users.noreply.github.com> ([`d40781e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d40781e4eb2f102178862836bb8e174c65302b3a))
 
+* feat: Ajout de la classification ([`d40781e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d40781e4eb2f102178862836bb8e174c65302b3a))
 
-## v0.10.0+20240320 (2024-03-20)
+* feat: modification tables sources ([`d40781e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d40781e4eb2f102178862836bb8e174c65302b3a))
 
+* feat: add verbose to the sqlfmt action to better understand where the concern lies
 
-## v0.10.0+20240228 (2024-02-28)
+---------
 
-### Feature
+Co-authored-by: github-actions <github-actions@github.com>
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+Co-authored-by: sadqim <146247957+sadqim@users.noreply.github.com>
+Co-authored-by: alluardj <alluardj@csvdc.qc.ca> ([`d40781e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d40781e4eb2f102178862836bb8e174c65302b3a))
 
-* feat: v0.10.0 (#41) ([`cad05b2`](https://github.com/CDPVD/core.dashboards_store/commit/cad05b2e99c108a24ca5dd93afc511c106250082))
+* feat: nouvelle version du tableau de bord des épreuves uniques, obligatoires et locales (#15)
 
-### Fix
+feat : mise à jour du model res_epreuves
 
-* fix(template): removing a useless s in the profile ([`7caf858`](https://github.com/CDPVD/core.dashboards_store/commit/7caf8582daa12abefacba174917235208e646ae7))
+feat: add_column_to_interface
 
+feat : cration des nouvelles tables du nouveau tbd des épreuves
 
-## v0.9.3+20240111 (2024-01-11)
+feat : ajout pbit
 
-### Documentation
+feat : ajout pbit ([`cf03674`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cf0367471a78fa851da80a6fb6e183bf5bed2fb2))
 
-* docs: removing CDVDP specific documentation ([`758d1fa`](https://github.com/CDPVD/core.dashboards_store/commit/758d1fa736cd066dbe962dadf2c166742d75dc86))
+* feat: mise à jour de la doc ([`cf03674`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cf0367471a78fa851da80a6fb6e183bf5bed2fb2))
 
-* docs: addressing docs issues identified by core.dashboards_store/issues/38 ([`8894275`](https://github.com/CDPVD/core.dashboards_store/commit/88942751dd8af9c90de595fda249fc893a388e5a))
+* feat: modifier le schema, doc and script ([`cf03674`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cf0367471a78fa851da80a6fb6e183bf5bed2fb2))
 
-* docs: fixing a typo in the overriding link ([`dee9b18`](https://github.com/CDPVD/core.dashboards_store/commit/dee9b187fae0cb91b7895274e680082ae030cc9f))
+* feat: ajouter la seed au nightly ([`cf03674`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cf0367471a78fa851da80a6fb6e183bf5bed2fb2))
 
-* docs: fixing various legacy typo in the docs ([`541b85a`](https://github.com/CDPVD/core.dashboards_store/commit/541b85a5a373dc9373c3b35661139d3b375b49a6))
+* feat: ajout d'une table de staging pour le mapping des adresses au 30/09 et la plus récente pour chaque année (#13) ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
 
-### Feature
+* feat: staging table storing students address history ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
 
-* feat(pevr): creation d&#39;un mvp pour le tdb pevr (#36)
+* feat: get additional fields in the e_adr interface ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
 
-Co-authored-by: sadqim &lt;sadqim@csvdc.qc.ca&gt; ([`ba62f93`](https://github.com/CDPVD/core.dashboards_store/commit/ba62f9304dbc38dc5d29d384d62b277733b13ae1))
+* feat: staging table to identify student addresses ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
 
-* feat(suivi_resultats): adding a per student portrait (#33) ([`578d1b4`](https://github.com/CDPVD/core.dashboards_store/commit/578d1b493d2770e3090b9493a6123b4ad193faf7))
+* feat: code adjustment to generate a postal code per fiche/year ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
 
-* feat(res_scolaire): adding a visual ranking difference between a school success score, and the schoolboard&#39;s one. (#32) ([`9658074`](https://github.com/CDPVD/core.dashboards_store/commit/96580745a967b8d2e12aacdd5cf90456c5f2e52d))
+* feat: consider all addresses when there is only one type of address on the student's plan ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
 
-### Fix
+* feat: field added to staging_adresses table to correct inconsistencies ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
 
-* fix(cookiecutter): stg_sectors does not cause a rendering error anymore ([`69534b5`](https://github.com/CDPVD/core.dashboards_store/commit/69534b5099c662e480b015e5a33634ecf1323409))
+* feat: distinguish between the latest addresses and those at september 30 ([`3de681e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3de681edddb80ec4e2f1141694764174fef0c755))
 
-* fix: swtich back compentency ID (#29)
+* feat: création de la fact diplome
 
-Co-authored-by: sadqim &lt;sadqim@csvdc.qc.ca&gt; ([`2131f6e`](https://github.com/CDPVD/core.dashboards_store/commit/2131f6ea1ba355029bdcfd811225e4181a7cb577))
+feat:added aggre to diplome ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
 
-* fix: corrections d&#39;orthographe (#28) ([`c5fe336`](https://github.com/CDPVD/core.dashboards_store/commit/c5fe336f59fd40ea16dd22ac3ba3a6c600a821f3))
+* feat: ajoût perimetre diplomable et diplomation ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
 
-* fix(suivi_resultats): remove css specific table (#39) ([`a6b4506`](https://github.com/CDPVD/core.dashboards_store/commit/a6b450675768d70ef8811d0fdedc9ffba95fb76c))
+* feat: tx hist acquisition diplome
 
-* fix(res_scolaire): fixed error on legend and fixed missing title (#34) ([`db69a96`](https://github.com/CDPVD/core.dashboards_store/commit/db69a963341f1907f8c5bfa40ea9eaa720a10c5f))
+Feat: ajoût de la seed matiere_evalue ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
 
-* fix(tracking): the requests json attribute has been replaced with a data attributes ([`1e1cc84`](https://github.com/CDPVD/core.dashboards_store/commit/1e1cc84427f2188ea6d27cb8716265647bdb5ff8))
+* feat: Création du cube et supression de table morte ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
 
-* fix(cookiecutter): stg_sectors does not cause a rendering error anymore ([`d381d53`](https://github.com/CDPVD/core.dashboards_store/commit/d381d530c016f9e0c64b7d515318732ea06783c0))
+* feat: Ajouter le schema du staging
 
-* fix: swtich back compentency ID (#29)
+chore: typo
 
-Co-authored-by: sadqim &lt;sadqim@csvdc.qc.ca&gt; ([`6d20da7`](https://github.com/CDPVD/core.dashboards_store/commit/6d20da7e4adad682a0f5e05b1ae1a952ba0a878c))
+Chore: modification du pevr diplome ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
 
-* fix: corrections d&#39;orthographe (#28) ([`9a3ed3e`](https://github.com/CDPVD/core.dashboards_store/commit/9a3ed3ed4b6fbac8e8ad282524abc9cbbc2ac20b))
+* feat: Ajouter le schema du staging ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
 
+* feat: ajout du cookie cutter ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
 
-## v0.9.2+20231210 (2023-12-10)
+* feat: ajout de la documentation 8.diplome ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
 
-### Fix
+* feat: maj du tdb pevr avec les nv filtres ([`673b34f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/673b34f97e074fda4c28907a92e0ff1d4984b0c5))
 
-* fix(tests): propagating columns renaming in the tests ([`59cfc94`](https://github.com/CDPVD/core.dashboards_store/commit/59cfc948b55656240dff3fd63f483a3b6fdd3a0b))
+* feat: Add new dashboard "Employees active" (#6) ([`1fc6650`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1fc6650791eef7743adf909a1cfd7e44311d09de))
 
+* feat: correction apportés ([`1fc6650`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1fc6650791eef7743adf909a1cfd7e44311d09de))
 
-## v0.9.1+20231208 (2023-12-08)
+* feat: tdb Report builder ([`1fc6650`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1fc6650791eef7743adf909a1cfd7e44311d09de))
 
-### Fix
+* feat: added regrp_ehdaa in i_gpm_e_dan for pops ([`0e7f487`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0e7f4879c139f465a58e30d40879aeec9460ec92))
 
-* fix(emp_conge): the table now uses the yearly dim_employment mapper, thus avoiding duplicates. ([`6c40936`](https://github.com/CDPVD/core.dashboards_store/commit/6c409366003e5fc0feaec61febdb1ae4e4c6cda7))
+* feat: added regrp_ehdaa in i_gpm_e_dan for pops
 
-* fix(emp_actif): the table now use the yearly dim_employment mapper, thus avoiding duplicates. ([`77da183`](https://github.com/CDPVD/core.dashboards_store/commit/77da183c4c548d7614dbae67b7ef6e020714f360))
+* bugfix: Correction des warning des schema + MaJ des champs utilisés
 
+---------
 
-## v0.9.0+20231208 (2023-12-08)
+Co-authored-by: busquef <busquef@cssvt.gouv.qc.ca>
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+Co-authored-by: Frederyk Busque <147734849+busquef@users.noreply.github.com> ([`0e7f487`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0e7f4879c139f465a58e30d40879aeec9460ec92))
 
-### Feature
+* feat: added regrp_ehdaa in i_gpm_e_dan for pops ([`fd0d2af`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/fd0d2af3f6c9bacd71e97b519b12614eaca008ce))
+
+* feat: added regrp_ehdaa in i_gpm_e_dan for pops
+
+* bugfix: Correction des warning des schema + MaJ des champs utilisés
+
+---------
+
+Co-authored-by: busquef <busquef@cssvt.gouv.qc.ca>
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+Co-authored-by: Frederyk Busque <147734849+busquef@users.noreply.github.com> ([`fd0d2af`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/fd0d2af3f6c9bacd71e97b519b12614eaca008ce))
+
+* feat: v0.10.0 (#41) ([`cad05b2`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cad05b2e99c108a24ca5dd93afc511c106250082))
+
+* feat(pevr): creation d'un mvp pour le tdb pevr (#36)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`ba62f93`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ba62f9304dbc38dc5d29d384d62b277733b13ae1))
+
+* feat(suivi_resultats): adding a per student portrait (#33) ([`578d1b4`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/578d1b493d2770e3090b9493a6123b4ad193faf7))
+
+* feat(res_scolaire): adding a visual ranking difference between a school success score, and the schoolboard's one. (#32) ([`9658074`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/96580745a967b8d2e12aacdd5cf90456c5f2e52d))
 
 * feat: Ajout des résultats étapes au tdb Analyse des résultats scolaires (#22)
 
-Co-authored-by: sadqim &lt;sadqim@csvdc.qc.ca&gt;
-Co-authored-by: Hugo Juhel &lt;22279443+hugoJuhel@users.noreply.github.com&gt; ([`8e0ddab`](https://github.com/CDPVD/core.dashboards_store/commit/8e0ddab1c865fb463d1d92a13a7483e393f021c6))
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+Co-authored-by: Hugo Juhel <22279443+hugoJuhel@users.noreply.github.com> ([`8e0ddab`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/8e0ddab1c865fb463d1d92a13a7483e393f021c6))
 
-### Fix
+* feat: adding new feature profiles (#25) ([`56463cb`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/56463cb58f8fccd2a0a26d4f7c9196f9f3dff59e))
 
-* fix(template): the template is now using the Fabric adapter ([`c8a0a61`](https://github.com/CDPVD/core.dashboards_store/commit/c8a0a61d4a0795f62deb1e9d6329c5c78de3975e))
+* feat(predictive_view_aggregated): adding demo mode ([`a68ed57`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a68ed57ca5cabd562c936e6c66de217e2a49da8c))
 
-
-## v0.8.2+20231206 (2023-12-06)
-
-### Feature
-
-* feat: adding new feature profiles (#25) ([`56463cb`](https://github.com/CDPVD/core.dashboards_store/commit/56463cb58f8fccd2a0a26d4f7c9196f9f3dff59e))
-
-* feat(predictive_view_aggregated): adding demo mode ([`a68ed57`](https://github.com/CDPVD/core.dashboards_store/commit/a68ed57ca5cabd562c936e6c66de217e2a49da8c))
-
-* feat: propagating switch to the fabric adapter ([`14bf027`](https://github.com/CDPVD/core.dashboards_store/commit/14bf027861bf6b59af08ae2f282359ef4d53e9db))
-
-### Fix
-
-* fix(adapter): swtich the adapter from dbt-sqlserver to fabric (#26)
-
-Co-authored-by: hugo juhel &lt;juhel.hugo@stratemia.com&gt; ([`9b507f5`](https://github.com/CDPVD/core.dashboards_store/commit/9b507f5a367ac7600f2027c656435982dc9c3399))
-
-* fix(predictive_view_aggregated): typo in variable selection ([`519ad45`](https://github.com/CDPVD/core.dashboards_store/commit/519ad452cf24767ed2f27eabb869752514b9b611))
-
-### Refactor
-
-* refactor: swtich the adapter from dbt-sqlserver to fabric (#24)
-
-Co-authored-by: hugo juhel &lt;juhel.hugo@stratemia.com&gt; ([`e249828`](https://github.com/CDPVD/core.dashboards_store/commit/e24982828a7c275f468100c3ab0ecc561f7ec240))
-
-
-## v0.8.1+20231114 (2023-11-14)
-
-### Fix
-
-* fix(typo): various dashboards typo adjustements (#23)
-
-Co-authored-by: hugo juhel &lt;juhel.hugo@stratemia.com&gt;
-Co-authored-by: Gabriel Thiffault &lt;147753578+gabrielThiffault@users.noreply.github.com&gt; ([`48ee40c`](https://github.com/CDPVD/core.dashboards_store/commit/48ee40cf32ebdd4ebd1b3cb6189e7e00a52d6492))
-
-
-## v0.8.0+20231102 (2023-11-02)
-
-### Feature
+* feat: propagating switch to the fabric adapter ([`14bf027`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/14bf027861bf6b59af08ae2f282359ef4d53e9db))
 
 * feat: releasing news changes of v0.8.0 (#16)
 
-Co-authored-by: juhel hugo &lt;juhel.hugo@stratemia.com&gt;
-Co-authored-by: github-actions &lt;github-actions@github.com&gt;
-Co-authored-by: Mohamed Sadqi &lt;sadqim@csvdc.qc.ca&gt;
-Co-authored-by: sadqim &lt;146247957+sadqim@users.noreply.github.com&gt;
-Co-authored-by: ZhuravlovaMaryna &lt;147752681+ZhuravlovaMaryna@users.noreply.github.com&gt;
-Co-authored-by: semantic-release &lt;semantic-release&gt; ([`ad2b5d3`](https://github.com/CDPVD/core.dashboards_store/commit/ad2b5d3d620b2d274ffbabe7729c0e0a2b22f43d))
-
-
-## v0.7.0+20231020 (2023-10-20)
-
-### Documentation
-
-* docs: adding doc website ([`5274842`](https://github.com/CDPVD/core.dashboards_store/commit/527484220ce31305fab121a9d8155bc05be2d66e))
-
-
-## v0.7.0+20230926 (2023-09-26)
-
-### Documentation
-
-* docs: adding docs about overriding populations ([`13b1118`](https://github.com/CDPVD/core.dashboards_store/commit/13b11180491d64036230832bac61f59db1625128))
-
-* docs: fixing a typo in the overriding section ([`95c6bef`](https://github.com/CDPVD/core.dashboards_store/commit/95c6befa8378838aed9041994555aa0fc04b6b11))
-
-* docs: reflecting changes of template new location ([`0b089f4`](https://github.com/CDPVD/core.dashboards_store/commit/0b089f44b08d3db1c8146cdd3fc5bdff01f55750))
-
-* docs: migrating docs notification ([`f4a2739`](https://github.com/CDPVD/core.dashboards_store/commit/f4a2739176e28dc88e7b8b6d0f2e22b30b7a88d4))
-
-* docs: adding doc website ([`37f63ee`](https://github.com/CDPVD/core.dashboards_store/commit/37f63eee7bbcc646ccace0bb7c1ef0b4d845d748))
-
-* docs: improving profiles documentation ([`148f0fd`](https://github.com/CDPVD/core.dashboards_store/commit/148f0fd7bcb57d3089af84de23410a239c395da5))
-
-### Feature
+Co-authored-by: juhel hugo <juhel.hugo@stratemia.com>
+Co-authored-by: github-actions <github-actions@github.com>
+Co-authored-by: Mohamed Sadqi <sadqim@csvdc.qc.ca>
+Co-authored-by: sadqim <146247957+sadqim@users.noreply.github.com>
+Co-authored-by: ZhuravlovaMaryna <147752681+ZhuravlovaMaryna@users.noreply.github.com>
+Co-authored-by: semantic-release <semantic-release> ([`ad2b5d3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ad2b5d3d620b2d274ffbabe7729c0e0a2b22f43d))
 
 * feat: adding the predictive_view_aggregated dashboard (#11)
 
-Co-authored-by: hugo juhel &lt;juhel.hugo@stratemia.com&gt; ([`d1c252b`](https://github.com/CDPVD/core.dashboards_store/commit/d1c252b071dacae2060c8e2a223e175995879ec4))
+Co-authored-by: hugo juhel <juhel.hugo@stratemia.com> ([`d1c252b`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d1c252b071dacae2060c8e2a223e175995879ec4))
 
 * feat(chronic_absenteeism): splitting between lateness and absences (#10)
 
-Co-authored-by: hugo juhel &lt;juhel.hugo@stratemia.com&gt; ([`eb5ba61`](https://github.com/CDPVD/core.dashboards_store/commit/eb5ba61db01148f5eca7e5b1a3dfdc356d529c6d))
+Co-authored-by: hugo juhel <juhel.hugo@stratemia.com> ([`eb5ba61`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/eb5ba61db01148f5eca7e5b1a3dfdc356d529c6d))
 
 * feat(chronic_absenteeism): adding support for customizable list of absences and lateness (#8)
 
-Co-authored-by: hugo juhel &lt;juhel.hugo@stratemia.com&gt; ([`4d2b29e`](https://github.com/CDPVD/core.dashboards_store/commit/4d2b29eee58242dd62835d91d68b4146ddba38d1))
+Co-authored-by: hugo juhel <juhel.hugo@stratemia.com> ([`4d2b29e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/4d2b29eee58242dd62835d91d68b4146ddba38d1))
 
 * feat: add new res_scolaire dashboard
 
-&gt; Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
+> Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
 cette PR introduit un nouveau TDB qui agrège les résultats au bilan des compétences et matières choisies
-&gt; Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
+> Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
 dans une prochaine PR nous allons ajouter les résultats au Étapes pour les compétence et les matières choisies
-&gt; Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+> Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
 
 ```bash
 cd core.data.store
@@ -410,7 +1115,7 @@ git pull
 dbt build --select +tag:res_scolaires
 ```
 
-&gt; Please, read carefully each item before checking it. Your PR&#39;s review might be delayed otherwise.
+> Please, read carefully each item before checking it. Your PR's review might be delayed otherwise.
 
 * **Code** :
   * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
@@ -419,57 +1124,704 @@ dbt build --select +tag:res_scolaires
   * [X] I have formatted the code with the help of `sqlfmt .`.
   * [X] Did you add a new **mandatory seed** ? If so, have you populated the `nightly` project with your new seed ?
 * **Template** :
-  *  [X] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
+  * [X] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
 * **Documentation** :
-  * [X]  I have updated the documentation (README) accordingly to my changes.
-  * [X]  The models I have added are documented in a `schema.yml` file.
+  * [X] I have updated the documentation (README) accordingly to my changes.
+  * [X] The models I have added are documented in a `schema.yml` file.
 * **Pull-request** :
-  * [X]  I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`**
-  * [X]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [X]  I have added my CSS lead as a reviewer.
-  * [X]  My pull request is documented. I have explained the needs for the PR and what was left out of the it.
-  * [X]  I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added o... ([`e2ea271`](https://github.com/CDPVD/core.dashboards_store/commit/e2ea27179170e04d9cff68fab0a75b6c1914589e))
+  * [X] I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`**
+  * [X] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [X] I have added my CSS lead as a reviewer.
+  * [X] My pull request is documented. I have explained the needs for the PR and what was left out of the it.
+  * [X] I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added o... ([`e2ea271`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e2ea27179170e04d9cff68fab0a75b6c1914589e))
 
-* feat: adding dashboards ([`7ab3ec2`](https://github.com/CDPVD/core.dashboards_store/commit/7ab3ec2bb1249e10fe2aa94943176841cf9b2280))
+* feat: adding dashboards ([`7ab3ec2`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7ab3ec2bb1249e10fe2aa94943176841cf9b2280))
 
-### Fix
+* feat: adding licence ([`25994ad`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/25994ad9cf1c11b9291d5cba5cece37ede4caa1f))
 
-* fix: removing duplicates from the transport details (#15)
+* feat: adding dim_employees ([`99ee1db`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/99ee1dbdd030547a78233cc872e567a32935fc5b))
 
-Co-authored-by: hugo juhel &lt;juhel.hugo@stratemia.com&gt; ([`105eeba`](https://github.com/CDPVD/core.dashboards_store/commit/105eeba21eac22f8a6e3528f00adc76502608ab0))
+* feat: add id_eco to population table and add population template
 
-* fix: minor maintenance on the cicd pipeline o prepare for code freeze (#14)
+> Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
+- ajout du id eco au population et la spine
+- ajout de modèles de population dans le dossier analyse
 
-Co-authored-by: hugo juhel &lt;juhel.hugo@stratemia.com&gt; ([`aabb1a4`](https://github.com/CDPVD/core.dashboards_store/commit/aabb1a43be918ad7d00f59de5b37dec4dc5af617))
+> Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
 
-* fix: renaming transport staging adapter table to match it&#39;s alias (#13)
+> Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
 
-Co-authored-by: hugo juhel &lt;juhel.hugo@stratemia.com&gt; ([`3bc7a78`](https://github.com/CDPVD/core.dashboards_store/commit/3bc7a78e54c89f5cfbdaf858664c71db69c7cb13))
+```bash
+cd core.data.store
+git checkout feature/modif_spine
+git pull
+cd ../cssvdc.data.store
+git checkout feature/modif_spine
+git pull
+dbt build
+```
 
-* fix: filter_non_null_obj_number (#9)
+> Please, read carefully each item before checking it. Your PR's review might be delayed otherwise.
 
-Co-authored-by: sadqim &lt;sadqim@csvdc.qc.ca&gt;
-Co-authored-by: Hugo Juhel &lt;22279443+hugoJuhel@users.noreply.github.com&gt;
-Co-authored-by: hugo juhel &lt;juhel.hugo@stratemia.com&gt; ([`3c120b2`](https://github.com/CDPVD/core.dashboards_store/commit/3c120b2c73b75329906ed3225eaa3aa657614927))
+* **Code** :
+  * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [x] I have added DBT tests to my models (at least a `non null` / `unique` per models).
+* **Template** :
+  * [ ] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
+* **Documentation** :
+  * [x] I have updated the documentation (README) accordingly to my changes.
+  * [x] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [x] I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`**
+  * [x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x] I have added my CSS lead as a reviewer.
+  * [x] My pull request is documented. I have explained the needs for the PR and what was left out of the it.
+  * [x] I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
+* **Tasksboard** :
+  * [x] My work item is linked to the pull request.
+  * [x] My work item has been moved to `review` in the taskboard.
 
-* fix(spine): removing students with duplicated code perm ([`b0464e1`](https://github.com/CDPVD/core.dashboards_store/commit/b0464e1595b41efd3ae2ff5a06cf727f9067fe51))
+Related work items: #2323 ([`665583b`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/665583b7f26b218ff0a4d559b408a2dd21b04635))
 
-* fix: properly injecting the name of the db when not using a linked server ([`ff6fbf5`](https://github.com/CDPVD/core.dashboards_store/commit/ff6fbf5b98ecfb8ec0aad69c679ec8b3624869c3))
+* feat: update effectif_css dashboard
 
-* fix: disembiguate duplicates resulting from multiple fetchs from the Jade database
+# Objectives of the Pull Request ?
+> Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
+cette à pour but de mettre à jou le tdb d'effectif avec les norme du template qui a été adopter.
+# What is left out of the Pull Request ?
+> Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
 
-Done with Fred and Mohamed :
+# How to run the pull request ?
+> Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
 
-* Remove duplicates introduced by fetching the Jade database multples times.
-* Only the most recent upserted grade is now used., Previous results are removed. ([`b66b53e`](https://github.com/CDPVD/core.dashboards_store/commit/b66b53ec6f377ee072240be60bc1dd46f4f6a098))
+```bash
+# Assuming you are in a folder containing both the core.data.store and the <cssXX>.data.store folder.
+# Update the code
+cd core.data.store
+git checkout feature/maj_tplt_effectf
+git pull
+# Might be required if you update either the poetry file or the lock file
+# poetry shell && poetry lock && poetry install
+cd ../cssvdc.data.store
+git checkout develop
+git pull
+# Might be required if you add a new DBT dependency
+#dbt deps
+# Run dbt
+dbt build --select tag:effectif_css
+```
 
-* fix: removing dead code ([`1f64fe2`](https://github.com/CDPVD/core.dashboards_store/commit/1f64fe242dccb0152887c66a3da87710c4fddb12))
+# Pull request's checklist
+> Please, read carefully each item before checking it. Your PR's review might be delayed otherwise.
 
-### Refactor
+* **Code** :
+  * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [ ] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [ ] I have added DBT tests to my models (at least a `non null` / `unique` per models).
+* **Template** :
+  * [ ] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
+* **Documentation** :
+  * [ ] I have updated the documentation (README) accordingly to my changes.
+  * [ ] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [x] I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`**
+  * [x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x] I have added my CSS lead as a reviewer.
+  * [x] My pull request is documented. I have explained the needs for the PR and what was left out of the it.
+  * [x] I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
+* **Tasksboard** :
+  * [x] My work item is linked to the pull request.
+  * [x] My work item has been moved to `review` in the taskboard.
+
+Related work items: #2291 ([`088007f`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/088007fb4dcf1ca2217b5b8ee9aa9f2c37766e65))
+
+* feat: add id_eco to population table and add population template
+
+> Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
+- ajout du id eco au population et la spine
+- ajout de modèles de population dans le dossier analyse
+
+> Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
+
+> Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+
+```bash
+cd core.data.store
+git checkout feature/modif_spine
+git pull
+cd ../cssvdc.data.store
+git checkout feature/modif_spine
+git pull
+dbt build
+```
+
+> Please, read carefully each item before checking it. Your PR's review might be delayed otherwise.
+
+* **Code** :
+  * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [x] I have added DBT tests to my models (at least a `non null` / `unique` per models).
+* **Template** :
+  * [ ] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
+* **Documentation** :
+  * [x] I have updated the documentation (README) accordingly to my changes.
+  * [x] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [x] I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`**
+  * [x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x] I have added my CSS lead as a reviewer.
+  * [x] My pull request is documented. I have explained the needs for the PR and what was left out of the it.
+  * [x] I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
+* **Tasksboard** :
+  * [x] My work item is linked to the pull request.
+  * [x] My work item has been moved to `review` in the taskboard.
+
+Related work items: #2323 ([`1d982da`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1d982dabfa76d990ec33a0d9c905ed347e8f809d))
+
+* feat: adding a cookiecutter template to help greenfield CSS bootstraping the cssXX.data.store
+
+# Objectives of the Pull Request ?
+> Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
+
+* The PR adds a cookie cutter template helping new CSS to scaffold the store.
+* The template basically populate a folder with a pre-filled `dbt_project.yaml`, a `profiles.yml` file and a github pipelines already configured
+
+# How to run the pull request ?
+> Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+
+```bash
+# Assuming you are in a folder containing both the core.data.store.
+# Update the code
+cd core.data.store
+git checkout feature/cookiecutter
+git pull
+
+poetry shell && poetry lock && poetry install
+cd ../
+
+cookiecutter core.data.store/template/
+
+# Enter some dummy vars when prompted for
+
+cd ../
+
+# Check if the you project as been properly scaffolded
+ls -l
+```
+
+# Pull request's checklist
+> Please, read carefully each item before checking it. Your PR's review might be delayed otherwise.
+
+* **Code** :
+  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [ ] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [ ] I have added DBT tests to my models (at least a `non null` / `unique` per models).
+* **Documentation** :
+  * [X] I have updated the documentation (README) accordingly to my changes.
+  * [ ] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [X] I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`**
+  * [X] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [ ] I have added my CSS lead as a reviewer.
+  * [X] My pull request is documented. I have explained the needs for the PR and what was left out of the it.
+  * [X] I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
+* **Tasksboard** :
+  * [ ] My work item is linked to the pull request.
+  * [ ] My work item has been moved to `review` in the taskboard. ([`6d823bd`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6d823bd13476eb46c9bf6874bcce0f09f283d695))
+
+* feat: adding the chronic_absenteeism dashboard
+
+# Objectives of the Pull Request?
+* This PR introduces a new dashboard to monitor the chronic absenteeism among students. Chronic absenteeism is defined as a pattern of absence of some sort. The dashboard helps SÉ department monitoring and assess the situation.
+* The PR create a new table in the `mart` : `fact_absences_sequence` listing all the absences sequences for the students.
+* The dashboard uses the new population mechanism.
+
+# What is left out of the Pull Request ?
+* As there was not prototyping phase for this dashboard, some cosmetic / filtering adjustments will have to be made once this dashboard is presented to the clients.
+
+# How to run the pull request ?
+You will need a repo with the population tables ... populated. A companion branch has been created on the CSSVDC repo to help you review this PR. The companion branch's name is `feature/absenteism`. (yes, with a typo -_-)
+
+```bash
+# Assuming you are in a folder containing both the core.data.tbe and the <cssXX>.data.tbe folder, where <cssXX> being either CSSVDC or your own repo with a `feature/absenteism` population-enabled branch.
+
+cd core.data.tbe
+git checkout feature/absenteeism
+git pull
+cd ../<cssXX>.data.tbe
+git checkout feature/absenteism
+git pull
+dbt run-operation drop_schema
+dbt build --select +tag:chronic_absenteeism
+```
+
+# Pull request's checklist
+> Please, read carefully each item before checking it. Your PR's review might be delayed otherwise.
+
+* **Code** :
+  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [X] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [X] I have added DBT tests to my models (at least a `non null` / `unique` per models).
+* **Documentation** :
+  * [X] I have updated the documentation (README) accordingly to my changes.
+  * [X] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [X] I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`**
+  * [X] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [ ] I have added my CSS lead as a reviewer.
+  * [X] My pull request is documented. I have explained the needs for the PR and what was left out of the it.
+  * [X] I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
+* **Tasksboard** :
+  * [ ] My work item is linked to the pull request.
+  * [ ] My work item has been moved to `review` in the taskboard. ([`cf8c809`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cf8c8092aa97f469dbf629a7d8ce0730a732fe54))
+
+* feat: adding the stamper ([`7b01a24`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7b01a241e9fd15449cc3394b158ec3af913c7055))
+
+* feat: adding the retirement dashboard. This dashboard monitors the number of retired employees in the past 10 years and provides forecasts for up to 5 years.
+
+# Objectives of the pull request
+* This PR adds a new dashboard monitoring the retirement situation.
+* A `fact_retirement` and a `fact_active` tables, used as a backbone for the report are introduced in the `human_resources` mart.
+* A `fact_retirement_forecasts` is added to the mart as it could be reused in a more strategical dashboard.
+* A new seed, `int_sequence_0_to_1000` is introduced. This seed can be cause to generate integer sequences.
+
+# What is left out of the pull request
+* Due to the summer break, the human resources' product owner (@<melanie.ranger> ) hasn't review the dashboard yet. The wording of the dashboard, as well as some cosmetics adjustments following Mélanie's review will be done in an other pull request.
+
+# How to run the pull request ?
+
+You will need a working development branch with the `human resources` mart enabled and seeds populated as per the `core.develop` branch requirements.
+For the **cssvt**, a companion branch (*feature/retirement*) has been created to run and review the pull request.
+
+```bash
+# Assuming you are in a folder containing both the core.data.tbe and the <cssXX>.data.tbe folder.
+# Update the code
+cd core.data.tbe
+git checkout feature/retirement
+git pull
+cd ../cssvt.data.tbe
+git checkout feature/retirement
+git pull
+
+dbt build --select +tag:retirement
+```
+
+# Pull request's checklist
+> Please, read carefully each item before checking it. You PR's review might be delayed otherwise.
+
+* **Code** :
+  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [X] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [X] I have added DBT tests to my models (at least a `non null` / `unique` per model).
+* **Documentation** :
+  * [X] I have updated the documentation (README) accordingly to my changes.
+  * [X] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [X] I have edited the merge commit message to remove the `Merged PR XXX :` so that my message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`
+  * [X] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [ ] I have added my CSS lead as a reviewer.
+  * [X] My pull request is documented.
+  * [X] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+* **Tasksboard** :
+  * [ ] My work item is linked to the pull request.
+  * [ ] My workw item has been moved to `review` in the taskboard. ([`34a32ca`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/34a32ca26c5095f2b383c4fa761d0ff30845023e))
+
+* feat: adding hooks for implementing custom populations
+
+# Objectives of the pull request
+
+This PR adds an overridable placeholder, acting as an entry point to add custom populations. The placeholders is designed to be overrided in the `cssXX.data.tbe`.
+
+# How to run the pull request ?
+> By default the custom populations are empty.
+
+```bash
+# Assuming you are in a folder containing both the core.data.tbe and the <cssXX>.data.tbe folder.
+# Update the code
+cd core.data.tbe
+git checkout feature/customPopulations
+git pull
+cd ../<cssXX>.data.tbe
+dbt build --select +custom_fgj_populations
+```
+
+# Pull request's checklist
+
+* **Code** :
+  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [X} My tables/variables naming follows the conventions described in the `readme.md`.
+  * [X] I have added DBT tests to my models (at least a `non null` / `unique` per model).
+* **Documentation** :
+  * [X] I have updated the documentation (README) accordingly to my changes.
+  * [X] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [X] I have edited the merge commit message to remove the `Merged PR XXX :` so that my message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`
+  * [X] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [ ] I have added my CSS lead as a reviewer.
+  * [X] My pull request is documented.
+  * [X] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+* **Tasksboard** :
+  * [ ] My work item is linked to the pull request.
+  * [ ] My workw item has been moved to `review` in the taskboard. ([`966e55d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/966e55d5c5ab4d08dd199a498c339e67fb8d4a02))
+
+* feat: adding hooks for implementing custom populations ([`966e55d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/966e55d5c5ab4d08dd199a498c339e67fb8d4a02))
+
+* feat: adding fact_permanent_employe
+
+> describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
+
+Le but principal de cette requête est d'aller chercher l'état de permanence.
+
+Dans cet PR nous considérons que pour avoir une permanence, il faut avoir travailler une période de deux ans, soit à partir de la date de début du poste actuel ou d'un poste dans le même groupe demploi et la date courante et ce sans cessation d'emploi.
+
+Nous sommes conscients qu'il y a une pluralité de définitions sur qu'est-ce que la permanence.
+
+Mais il s'agit d'une définition qui s'applique à tous les CSS
+
+> Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+
+```bash
+cd core.data.tbe
+git checkout **feature/rh_permanence**
+git pull
+Add a CSV named rh_etat_empl here : cssXX/seeds/marts/human_resources/rh_etat_empl.csvcsv
+with the content you can find here : https://dev.azure.com/Centre-Expertise-IA/COTRA-CE/_git/core.data.tbe?path=/seeds/marts/human_ressources/schema.yml&version=GBdevelop&_a=contents
+cd ../<cssXX>.data.tbe
+dbt build --select tag:rh_permanence
+```
+
+> Please, read carefully each item before checking it. You PR's review might be delayed otherwise.
+
+* **Code** :
+  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [X] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [X] I have added DBT tests to my models (at least a `non null` / `unique` per model).
+* **Documentation** :
+  * [X] I have updated the documentation (README) accordingly to my changes. **not applicable**
+  * [X] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [ ] I have edited the merge commit message to remove the `Merged PR XXX :` so that my message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`
+  * [X] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+![pr.jpg](https://dev.azure.com/Centre-Expertise-IA/c2f84ed8-4636-4689-a070-433ecb89a643/_apis/git/repositories/c515b32e-0393-45f8-a0f3-3c2ce78033d2/pullRequests/398/attachments/pr.jpg)
+  * [X] I have added my CSS lead as a reviewer.
+  * [X] My pull request is documented.
+  * [X] I have careful... ([`e30fc89`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e30fc89f5e639934eb198c8782fff7fa8f29beea))
+
+* feat: adding semantic release ([`51aa803`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/51aa80389fe86f0f21c5287c8fb52ca5d355c24d))
+
+* feat: disabling all release ([`51aa803`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/51aa80389fe86f0f21c5287c8fb52ca5d355c24d))
+
+* feat: adding the effectif_css dashboard
+
+> describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
+
+Le but de ce tdb est de faire le dénombrement de la population au sein d'un centre de service scolaire. La population étant séparé en 4 : Prescolaire, primaire régulier, primaire adapté, secondaire régulier et secondaire adapté.
+
+Cette population est divisé selon le niveau scolaire de l'élève également. PRES4ANS, PRES5ANS, 1er année à la 6ème année, puis 1er secondaire au 5ème secondaire.
+
+> Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+
+```bash
+cd core.data.tbe
+git checkout feature/effectif_css
+git pull
+cd ../cssvt.data.tbe
+git checkout feature/tdb_effectif
+git pull
+dbt build --select tag:effectif_css
+```
+
+> Please, read carefully each item before checking it. You PR's review might be delayed otherwise.
+
+* **Code** :
+  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [X] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [X] I have added DBT tests to my models (at least a `non null` / `unique` per model).
+* **Documentation** :
+  * [X] I have updated the documentation (README) accordingly to my changes.
+  * [X] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [X] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [X] I have added my CSS lead as a reviewer.
+  * [X] My pull request is documented.
+  * [X] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+* **Tasksboard** :
+  * [X] My work item is linked to the pull request.
+  * [X] My workw item has been moved to `review` in the taskboard. ([`11f44d5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/11f44d5204857f2a4a21e98fe9d4aa25ef61fd73))
+
+* feat: adding sectors and filter-by-sectors to the transport dashboard
+
+make of filtering of circuits by sectors.
+
+The following section describe the specific for transport scolaire dashboard in the READEME.md
+ __236_ to 252_ lines
+
+How to run the pull request ?
+git checkout core.data.tbe/feature/trnsp_secteurs
+git pull
+cd ../csshc.data.tbe
+git checkout transport
+git pull
+dbt build --select tag:transport
+
+* **Code** :
+  * [ x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x ] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [x ] I have added DBT tests to my models (at least a `non null` / `unique` per model).
+* **Documentation** :
+  * [ x] I have updated the documentation (README) accordingly to my changes.
+  * [ x] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [ x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x ] I have added my CSS lead as a reviewer.
+  * [x ] My pull request is documented.
+  * [x ] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+* **Tasksboard** :
+  * [X ] My work item is linked to the pull request.
+  * [X ] My workw item has been moved to `review` in the taskboard.
+
+Related work items: #1935, #1938, #2003 ([`e3f7ff2`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e3f7ff243d83f2fec0366197b7132fb53bb77349))
+
+* feat: adding semantic release ([`d689069`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d689069fcb984a2f68551d9f7bd84d7004baa8c5))
+
+* feat: disabling all release ([`d689069`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d689069fcb984a2f68551d9f7bd84d7004baa8c5))
+
+* feat: adding the effectif_css dashboard
+
+> describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
+
+Le but de ce tdb est de faire le dénombrement de la population au sein d'un centre de service scolaire. La population étant séparé en 4 : Prescolaire, primaire régulier, primaire adapté, secondaire régulier et secondaire adapté.
+
+Cette population est divisé selon le niveau scolaire de l'élève également. PRES4ANS, PRES5ANS, 1er année à la 6ème année, puis 1er secondaire au 5ème secondaire.
+
+> Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+
+```bash
+cd core.data.tbe
+git checkout feature/effectif_css
+git pull
+cd ../cssvt.data.tbe
+git checkout feature/tdb_effectif
+git pull
+dbt build --select tag:effectif_css
+```
+
+> Please, read carefully each item before checking it. You PR's review might be delayed otherwise.
+
+* **Code** :
+  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [X] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [X] I have added DBT tests to my models (at least a `non null` / `unique` per model).
+* **Documentation** :
+  * [X] I have updated the documentation (README) accordingly to my changes.
+  * [X] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [X] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [X] I have added my CSS lead as a reviewer.
+  * [X] My pull request is documented.
+  * [X] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+* **Tasksboard** :
+  * [X] My work item is linked to the pull request.
+  * [X] My workw item has been moved to `review` in the taskboard. ([`0f94a10`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0f94a102f887e50b17395787f0e767845b8d3022))
+
+* feat: adding sectors and filter-by-sectors to the transport dashboard
+
+make of filtering of circuits by sectors.
+
+The following section describe the specific for transport scolaire dashboard in the READEME.md
+ __236_ to 252_ lines
+
+How to run the pull request ?
+git checkout core.data.tbe/feature/trnsp_secteurs
+git pull
+cd ../csshc.data.tbe
+git checkout transport
+git pull
+dbt build --select tag:transport
+
+* **Code** :
+  * [ x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x ] My tables/variables naming follows the conventions described in the `readme.md`.
+  * [x ] I have added DBT tests to my models (at least a `non null` / `unique` per model).
+* **Documentation** :
+  * [ x] I have updated the documentation (README) accordingly to my changes.
+  * [ x] The models I have added are documented in a `schema.yml` file.
+* **Pull-request** :
+  * [ x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x ] I have added my CSS lead as a reviewer.
+  * [x ] My pull request is documented.
+  * [x ] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+* **Tasksboard** :
+  * [X ] My work item is linked to the pull request.
+  * [X ] My workw item has been moved to `review` in the taskboard.
+
+Related work items: #1935, #1938, #2003 ([`b69e865`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/b69e865c2afab0d52ea7ee410f4815e480ca33ea))
+
+* feat: improvind documentation of the PR template ([`c0c0841`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c0c084146462e3e86f2602a360c631aa478fe983))
+
+* feat: created history_post_permanant.sql ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* feat: created history_post_permanant.sql ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* feat: adding drop schema macro ([`e7c30de`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e7c30de1e916150396ccae85554dfce8e9ca47a9))
+
+* feat: adding missing seeds in core_dbt_project ([`3c5ecec`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3c5ecec4b1408884fed580ae6d9e5d2a555d87a2))
+
+* feat: adding MatieresEleve interfaces ([`b627acd`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/b627acd5f881c42ce8d7c98300505c3fb8c17a0a))
+
+* feat: add_masse_sal_to_this_table ([`64649b6`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/64649b61681be40ee14b0b52d843b3c04fd61b8e))
+
+* feat: move_table_to_sub_folder_cout_roulement ([`7856608`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7856608825b45c39c459e14a6f719171e31a6aed))
+
+* feat: move_table_to_sub_folder_cout_roulement_and_modify_filter_and_annee_type ([`a7ffeaa`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a7ffeaa7c806bbe05d302e1a7b48ebbaf6f525a4))
+
+* feat: add taux roulement personnel ([`ca56f85`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ca56f85f400867b71defa3bda7ae1d1e08ad2c10))
+
+* feat: modify_filter ([`e13caf8`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e13caf8d7e08629cec44f63593e90c597380fdc7))
+
+* feat: addtable_empl_quitter ([`d97b1b1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d97b1b1b9df848a9f4483f4ada209dc7d2de1683))
+
+* feat: delet_shema ([`bd9d293`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/bd9d293b3f53fc1e2bb7c0cb152ca8fdf97c7847))
+
+* feat: add_schema_to_staging_res_etapes_table ([`6c9f7c5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6c9f7c5673282817dfa72b78c4e6df392579c9c9))
+
+* feat: detele_non_used_table ([`2911998`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/29119981c5df10a6824d65128fc009703f82c4e2))
+
+* feat: freezing dbt-core and dbt-sql-server to ensure across CSS dependencies consistency ([`dc4e7da`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/dc4e7da0c932f0688fcdfe6e74406c6cb8d04ed2))
+
+* feat: add_new_fields_i_e_ri_resultats ([`c577b84`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c577b84757925330fca70f9176b04b234add7de1))
+
+* feat: add_new_vars_to_dbt_project ([`11bdb39`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/11bdb39fd2c850f9d550685e2d0faea08b7f8980))
+
+* feat: update_README_with_new_info_for_model_res_etapes ([`3cd96d1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3cd96d172a31ef7457e4bcb7fbdd5066536a4916))
+
+* feat: add_diff_to_school_table ([`31f943e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/31f943e0750cd0d4633f5c6b609ed8500645f487))
+
+* feat: add_new_table_to _schema ([`c34fad2`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c34fad28abaa803cdaac3534bc1c3b81723060d3))
+
+* feat: add_gouv_evaluation_name _to_seed_table ([`445813d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/445813d3fee3faa4c6c9c77e7a67cbd632b2e41b))
+
+* feat: add_new_interface_table_to_schema ([`fbf0149`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/fbf01498ac5decd3240f3235d5da0d99764fae12))
+
+* feat: extract_gouv_rslt_from_interface_table ([`89ae487`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/89ae4873d7115429c78bf5909216cd36238e9a32))
+
+* feat: add_dbt_utils_package ([`2338780`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/23387805c5af3ae5cd23994ff82091b55d57fd70))
+
+* feat: add_id_friendly_name ([`a7eea47`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a7eea476ea403228bdb3fba25b9fa884f6c8874f))
+
+* feat: add a 'vars' field for the jade data source
+feat: make the Jade tables e_ele, e_freq, t_prog accessible
+feat: added interface i_t_service_enseign (WL_Descr + filter)
+feat: add fact_freq_fp
+feat: add fact_freq_fga
+chore: update the schema file
+feat: added tables that count the number of fp fga students by year / school
+chore: update the READMME file
+
+Related work items: #1175 ([`53563fc`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/53563fc5155e813f9724fb9ce572f08adee1e99d))
+
+* feat: make tables gpm_e_dan and gpm_t_eco accessible
+feat: update adapt source file
+feat: add a query to group all students registered in FGJ
+feat: add a spine table
+feat: added a query to count the number of students per year, school population
+feat: add a test to make sure that the tables on GPI are resolved by fiche / id_eco
+feat: add tests to ensure the resolution of the population table and base spine table ([`e2ee146`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e2ee146f614c84d0aab454e43b07b1b8d2669cec))
+
+* feat: add_new_model_emp_cong_to_dbtproject ([`ff11e76`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ff11e76db48b1163e6cba67ad8fac474a1b261fc))
+
+* feat: move_interface_table_cssrepo_to_core_modify_schema.yml ([`84bf8c8`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/84bf8c80b822723005b9e5dc59bfa368c796a4f0))
+
+* feat: add adapt macro
+feat: add stg_populations
+feat: add base_spine table
+chore: change keyword pevr by tbe
+- Merged PR 225: Mise à jour du répertoire pour enlever la FP/FGA + répondre au besoin de la User Story 910
+refactor: test if an error message is sent when dbt test fails
+refactor: fix the bug introduced earlier
+chore: add schema file for bridges folder
+chore: change the name of the source database
+chore: update of the source file which indicates the adapters
+chore: update the sources file
+feat: add a fact table that tracks the number of part-time employees in the last 10 years
+- Merged PR 238: Cleanage du repertoire core.data.tbe
+- Merge branch 'develop' into feature/partial_work
+feat: adapt macro test
+chore: update the packages
+chore: put the tests in the macro adapt in comments
+chore: change the project structure (store structure)
+feat: change in the dbt_project to manually activate the dashboards of interest on the css repo (enable option) ([`8b250d6`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/8b250d6550b3b8bd2bb945d67ba2247a3d7cedf7))
+
+* feat: change in the dbt_project to manually activate the dashboards of interest on the css repo (enable option) ([`9ee5048`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/9ee5048b96c2fc0ea17e3e1ac324d2a10396af6a))
+
+* feat: adapt macro test ([`c97cb31`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c97cb31433cd1acd53f8a00224f3eed4019aacd0))
+
+* feat: add a fact table that tracks the number of part-time employees in the last 10 years ([`c0df3ae`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c0df3ae02ec2a266606a789aa68dbaa2ce9c45e7))
+
+* feat: connection of databases: geobus and piastreto obtain data for analyzing school transport efficiency ([`cb197de`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cb197dec0ebf67c67ca7526ea08577c44c2e3daa))
+
+* feat: add_new_model_emp_cong_to_dbtproject ([`baa58eb`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/baa58eb89cc34ca0859480106572050294528944))
+
+* feat: move_interface_table_cssrepo_to_core_modify_schema.yml ([`6edb881`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6edb881d56c8495643e87f2470a1e91953832a08))
+
+* feat: add adapt macro
+feat: add stg_populations
+feat: add base_spine table
+chore: change keyword pevr by tbe
+- Merged PR 225: Mise à jour du répertoire pour enlever la FP/FGA + répondre au besoin de la User Story 910
+refactor: test if an error message is sent when dbt test fails
+refactor: fix the bug introduced earlier
+chore: add schema file for bridges folder
+chore: change the name of the source database
+chore: update of the source file which indicates the adapters
+chore: update the sources file
+feat: add a fact table that tracks the number of part-time employees in the last 10 years
+- Merged PR 238: Cleanage du repertoire core.data.tbe
+- Merge branch 'develop' into feature/partial_work
+feat: adapt macro test
+chore: update the packages
+chore: put the tests in the macro adapt in comments
+chore: change the project structure (store structure)
+feat: change in the dbt_project to manually activate the dashboards of interest on the css repo (enable option) ([`ab5fb58`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ab5fb58f8b216c286e83c86b37dd1e20f7539060))
+
+* feat: change in the dbt_project to manually activate the dashboards of interest on the css repo (enable option) ([`f8dd5ab`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f8dd5abcfef0573f20632d5fbd2c1086c15b4b99))
+
+* feat: adapt macro test ([`c70431b`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c70431bb84fcbbf2b775b63ddc23c1967f0f672b))
+
+* feat: add a fact table that tracks the number of part-time employees in the last 10 years ([`87c16e2`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/87c16e2c05ac4869efc1c08e93925ccf3594d995))
+
+* feat: connection of databases: geobus and piastreto obtain data for analyzing school transport efficiency ([`4c21bd8`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/4c21bd8c6cc509400b1f5ac11eb3b218ac91e218))
+
+* feat: add base_spine table ([`819cf5a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/819cf5ad3ce05b628d5522e363fc874b05a6d608))
+
+* feat: add stg_populations ([`512146d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/512146d40003a8151877c098b9af7ec48097ce05))
+
+* feat: add adapt macro ([`de7b290`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/de7b290b3f442025d2823017a738c87096871e2f))
+
+* feat: adding test in the core repo ([`a4acb2a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a4acb2a9ab9e16155f780c4caf00b1692918495b))
+
+### Refactoring
+
+* refactor: reorganisation de cdpvd_dashboard_store ([`f7ab9a5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f7ab9a5b25058872c2f19af6775a638fe9b860de))
+
+* refactor: restrecturation du dissier dashboard ([`00dbb8b`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/00dbb8bc8375e184f5b8f5e128897774f26cf93f))
+
+* refactor: renaming and add columns to interface (#8) ([`d40781e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d40781e4eb2f102178862836bb8e174c65302b3a))
+
+* refactor: uniformize code
+
+* doc: readme updated | Employes active ([`1fc6650`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1fc6650791eef7743adf909a1cfd7e44311d09de))
+
+* refactor: renaming and add columns to interface (#8) ([`0e7f487`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0e7f4879c139f465a58e30d40879aeec9460ec92))
+
+* refactor: swtich the adapter from dbt-sqlserver to fabric (#24)
+
+Co-authored-by: hugo juhel <juhel.hugo@stratemia.com> ([`e249828`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e24982828a7c275f468100c3ab0ecc561f7ec240))
 
 * refactor: added new version of the rapport/transport (#2)
 
-Co-authored-by: hugo juhel &lt;juhel.hugo@stratemia.com&gt; ([`608d260`](https://github.com/CDPVD/core.dashboards_store/commit/608d2604d34beaade44a54b85542912be2f4327c))
+Co-authored-by: hugo juhel <juhel.hugo@stratemia.com> ([`608d260`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/608d2604d34beaade44a54b85542912be2f4327c))
 
 * refactor(hr mart): switching to historical activity table
 
@@ -503,326 +1855,24 @@ Permanence will be rebuilt upon the new activity table. For now, the table is fl
 ```bash
 cd core.data.store
 git checkout feature/rh_dim_empl
-poetry shell &amp;&amp; poetry install
+poetry shell && poetry install
 git pull
 cd ../cssvt.data.store
 git checkout feature/rh_dim_empl
 git pull
 dbt run-operation drop_schema
 dbt build --select +tag:human_resources --full-refresh
-``` ([`d88a4e5`](https://github.com/CDPVD/core.dashboards_store/commit/d88a4e50d5a7e872ee4a6180efb40c507e3784ae))
+``` ([`d88a4e5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d88a4e50d5a7e872ee4a6180efb40c507e3784ae))
 
-* refactor: renaming profiles with profiles-sample and remove password to avoid giting it by accident ([`017f960`](https://github.com/CDPVD/core.dashboards_store/commit/017f9600bf07bc7797d46960d68ce907d2effb9c))
-
-
-## v0.6.2+20230913 (2023-09-13)
-
-### Documentation
-
-* docs(fix): updatating the stamp_model&#39;s macro name ([`404c505`](https://github.com/CDPVD/core.dashboards_store/commit/404c50554330cb1b2767230c7c56a6f45fad19b9))
-
-### Feature
-
-* feat: adding licence ([`25994ad`](https://github.com/CDPVD/core.dashboards_store/commit/25994ad9cf1c11b9291d5cba5cece37ede4caa1f))
-
-* feat: adding dim_employees ([`99ee1db`](https://github.com/CDPVD/core.dashboards_store/commit/99ee1dbdd030547a78233cc872e567a32935fc5b))
-
-
-## v0.6.2+20230831 (2023-08-31)
-
-### Fix
-
-* fix(cicd): adding job scope to group name ([`508f8de`](https://github.com/CDPVD/core.dashboards_store/commit/508f8de800f145202bf23de0419053f61e1baa3c))
-
-
-## v0.6.1+20230831 (2023-08-31)
-
-### Fix
-
-* fix(cicd): fixing the stable pattern ([`f00b560`](https://github.com/CDPVD/core.dashboards_store/commit/f00b560efb13bac0264b3fd48868cc43901ec25c))
-
-
-## v0.6.0+20230831 (2023-08-31)
-
-### Fix
-
-* fix(cicd): fixing the stable pattern ([`9a2959c`](https://github.com/CDPVD/core.dashboards_store/commit/9a2959cd8d4e1a8d553db2310b788855207b5cdb))
-
-### Test
-
-* test(fix): fixing the test populations ([`6be75a0`](https://github.com/CDPVD/core.dashboards_store/commit/6be75a085ab0d9fd5e5e6065b4f75fd2e9e9bebd))
-
-
-## v0.5.3 (2023-08-31)
-
-### Documentation
-
-* docs: updating both the readme and the PR template to help developers populating seeds in the nightly project ([`2a1b15f`](https://github.com/CDPVD/core.dashboards_store/commit/2a1b15fff10c8c765eeab5f4676753f83fc4ec5f))
-
-* docs(test): adding an how-to about the way to run the integration test on your local computer ([`dc05178`](https://github.com/CDPVD/core.dashboards_store/commit/dc05178f21798eeaecbed9ca34b305e401af57a3))
-
-### Fix
-
-* fix: adding dummy id_eco to custom_fgj_population so the table is now working when not overrided ([`4cb464c`](https://github.com/CDPVD/core.dashboards_store/commit/4cb464c115a88a3ba9bb8c639ddcbac0684eba0c))
-
-* fix: the default empty custom population now properly support the id_eco ([`17e25e9`](https://github.com/CDPVD/core.dashboards_store/commit/17e25e9a0f4336fb868272ecd52f08f472998604))
-
-### Test
-
-* test: adding a simple /default dbt project to be run as an integration test ([`46bc620`](https://github.com/CDPVD/core.dashboards_store/commit/46bc6200e358b343779523da179bdfe4ff856c12))
-
-
-## v0.5.2 (2023-08-30)
-
-### Build
-
-* build(dag): disabling email on failure as I don t have any smtp server ([`e66f488`](https://github.com/CDPVD/core.dashboards_store/commit/e66f488f4e33b6bee7490eccbfeb38110cfebf75))
-
-### Fix
-
-* fix: adding the missing is_context_core variable to the cookiecutter
-
-commit 541e66cd7e66564c2c16c99e27da30538469c3b8
-Author: hugo juhel &lt;juhel.hugo@stratemia.com&gt;
-Date:   Wed Aug 30 12:58:33 2023 -0400
-
-    fix: adding the missing is_context_core variable to the cookiecutter ([`3e57cf2`](https://github.com/CDPVD/core.dashboards_store/commit/3e57cf26677ca94b5a52a4594049efbf7401975b))
-
-
-## v0.5.1 (2023-08-30)
-
-### Build
-
-* build(fix): addinthe token as an header ([`434a6fd`](https://github.com/CDPVD/core.dashboards_store/commit/434a6fdd2f2cf6f5702886241e5e589525e22888))
-
-* build(fix): addinthe token as an header ([`9b8678d`](https://github.com/CDPVD/core.dashboards_store/commit/9b8678d13641048c88d7f8ef4f5874747238f298))
-
-* build(azure): removing azure build ([`4627ecc`](https://github.com/CDPVD/core.dashboards_store/commit/4627ecce83461c192b0d24461d55fc98beafee15))
-
-* build(release): updating the release process ([`c323552`](https://github.com/CDPVD/core.dashboards_store/commit/c3235522cbe90b3c7de921ced9f25f41f6502207))
-
-* build(azure): swithcing to deep fetch ([`2646d79`](https://github.com/CDPVD/core.dashboards_store/commit/2646d79c5cad6f42544aacf53b5aee73218f48a6))
-
-* build: update azure-pipelines.yml for Azure Pipelines ([`c2923c3`](https://github.com/CDPVD/core.dashboards_store/commit/c2923c36387deab9d142cf9b549265ee86970139))
-
-* build: committing on VDC will now push to the sciance repo where tagging happens ;) ([`222b64c`](https://github.com/CDPVD/core.dashboards_store/commit/222b64c139540cd3db59aa771cee5ea5c09d0562))
-
-* build(release): updating the release process ([`8f4c64e`](https://github.com/CDPVD/core.dashboards_store/commit/8f4c64ef12e7a38e392f2a713cd2965463e49eee))
-
-### Fix
-
-* fix: dependencies will now be parsed as ref when source are used and is_context_core is set to false ([`8a97d08`](https://github.com/CDPVD/core.dashboards_store/commit/8a97d08db0615440925c82a7f236f6d412cc2a31))
-
-* fix: dependencies will now be parsed as ref when source are used and is_context_core is set to false ([`a8316f7`](https://github.com/CDPVD/core.dashboards_store/commit/a8316f7346e4c62725eeea6f76eff77468cc2e6a))
-
-* fix: the purge_metadata_macro will no be triggered in compile only mode ([`d038274`](https://github.com/CDPVD/core.dashboards_store/commit/d0382743b8cdd3984dd1ae7584fb929f9866c48d))
-
-* fix: the drop_schema macro won&lt;t try to remove the public schema dbo anymore ([`88e0414`](https://github.com/CDPVD/core.dashboards_store/commit/88e04149036bed97a4aa6aea27e6c3c8c473360f))
-
-* fix: uniformizing the base version of dbt-sqlserver and dbt-core so raised errors are now hidden behin RuntimeExeception anymore ([`e9deef0`](https://github.com/CDPVD/core.dashboards_store/commit/e9deef0f0a56475f3c5f76c493186af60828d799))
-
-* fix(build): fixing the azure target ([`ce6bad3`](https://github.com/CDPVD/core.dashboards_store/commit/ce6bad3304167af68e94141296b691fb8d5e34f2))
-
-
-## v0.5.0 (2023-08-28)
-
-### Build
-
-* build: pining sr version ([`7f2f78a`](https://github.com/CDPVD/core.dashboards_store/commit/7f2f78a55d96de77265b5341cc86357d150b9d55))
-
-### Feature
-
-* feat: add id_eco to population table and add population template
-
-&gt; Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
-- ajout du id eco au population et la spine
-- ajout de modèles de population dans le dossier analyse
-
-&gt; Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
-
-&gt; Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
-
-```bash
-cd core.data.store
-git checkout feature/modif_spine
-git pull
-cd ../cssvdc.data.store
-git checkout feature/modif_spine
-git pull
-dbt build
-```
-
-&gt; Please, read carefully each item before checking it. Your PR&#39;s review might be delayed otherwise.
-
-* **Code** :
-  * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [x] I have added DBT tests to my models (at least a `non null` / `unique` per models).
-* **Template** :
-  *  [ ] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
-* **Documentation** :
-  * [x]  I have updated the documentation (README) accordingly to my changes.
-  * [x]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [x]  I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`**
-  * [x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x]  I have added my CSS lead as a reviewer.
-  * [x]  My pull request is documented. I have explained the needs for the PR and what was left out of the it.
-  * [x]  I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
-* **Tasksboard** :
-  * [x] My work item is linked to the pull request.
-  * [x] My work item has been moved to `review` in the taskboard.
-
-Related work items: #2323 ([`665583b`](https://github.com/CDPVD/core.dashboards_store/commit/665583b7f26b218ff0a4d559b408a2dd21b04635))
-
-* feat: update effectif_css dashboard
-
-# Objectives of the Pull Request ?
-&gt; Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
-cette à pour but de mettre à jou le tdb d&#39;effectif avec les norme du template qui a été adopter.
-# What is left out of the Pull Request ?
-&gt; Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
-
-# How to run the pull request ?
-&gt; Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
-
-```bash
-# Assuming you are in a folder containing both the core.data.store and the &lt;cssXX&gt;.data.store folder.
-# Update the code
-cd core.data.store
-git checkout feature/maj_tplt_effectf
-git pull
-# Might be required if you update either the poetry file or the lock file
-# poetry shell &amp;&amp; poetry lock &amp;&amp; poetry install
-cd ../cssvdc.data.store
-git checkout develop
-git pull
-# Might be required if you add a new DBT dependency
-#dbt deps
-# Run dbt
-dbt build --select tag:effectif_css
-```
-
-# Pull request&#39;s checklist
-&gt; Please, read carefully each item before checking it. Your PR&#39;s review might be delayed otherwise.
-
-* **Code** :
-  * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [ ] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [ ] I have added DBT tests to my models (at least a `non null` / `unique` per models).
-* **Template** :
-  *  [ ] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
-* **Documentation** :
-  * [ ]  I have updated the documentation (README) accordingly to my changes.
-  * [ ]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [x]  I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`**
-  * [x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x]  I have added my CSS lead as a reviewer.
-  * [x]  My pull request is documented. I have explained the needs for the PR and what was left out of the it.
-  * [x]  I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
-* **Tasksboard** :
-  * [x] My work item is linked to the pull request.
-  * [x] My work item has been moved to `review` in the taskboard.
-
-Related work items: #2291 ([`088007f`](https://github.com/CDPVD/core.dashboards_store/commit/088007fb4dcf1ca2217b5b8ee9aa9f2c37766e65))
-
-* feat: add id_eco to population table and add population template
-
-&gt; Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
-- ajout du id eco au population et la spine
-- ajout de modèles de population dans le dossier analyse
-
-&gt; Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
-
-&gt; Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
-
-```bash
-cd core.data.store
-git checkout feature/modif_spine
-git pull
-cd ../cssvdc.data.store
-git checkout feature/modif_spine
-git pull
-dbt build
-```
-
-&gt; Please, read carefully each item before checking it. Your PR&#39;s review might be delayed otherwise.
-
-* **Code** :
-  * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [x] I have added DBT tests to my models (at least a `non null` / `unique` per models).
-* **Template** :
-  *  [ ] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
-* **Documentation** :
-  * [x]  I have updated the documentation (README) accordingly to my changes.
-  * [x]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [x]  I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`**
-  * [x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x]  I have added my CSS lead as a reviewer.
-  * [x]  My pull request is documented. I have explained the needs for the PR and what was left out of the it.
-  * [x]  I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
-* **Tasksboard** :
-  * [x] My work item is linked to the pull request.
-  * [x] My work item has been moved to `review` in the taskboard.
-
-Related work items: #2323 ([`1d982da`](https://github.com/CDPVD/core.dashboards_store/commit/1d982dabfa76d990ec33a0d9c905ed347e8f809d))
-
-### Fix
-
-* fix: change_dbt_project_name_to_store
-
-&gt; Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
-- le seul but de cette PR est de corriger le nom du dbt_project du core de &#34;TBE&#34; à &#34;STORE&#34;
-
-&gt; Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
-
-&gt; Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
-
-```bash
-cd core.data.store
-git checkout bugfix/rename_dbt_project
-git pull
-cd ../cssvdc.data.store
-git checkout develop
-git pull
-dbt build compile
-```
-
-&gt; Please, read carefully each item before checking it. Your PR&#39;s review might be delayed otherwise.
-
-* **Code** :
-  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [ ] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [ ] I have added DBT tests to my models (at least a `non null` / `unique` per models).
-* **Template** :
-  *  [ ] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
-* **Documentation** :
-  * [ ]  I have updated the documentation (README) accordingly to my changes.
-  * [ ]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [x]  I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`**
-  * [x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [ ]  I have added my CSS lead as a reviewer.
-  * [ ]  My pull request is documented. I have explained the needs for the PR and what was left out of the it.
-  * [ ]  I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
-* **Tasksboard** :
-  * [ ] My work item is linked to the pull request.
-  * [ ] My work item has been moved to `review` in the taskboard.
-
-fix :change_dbt_project_name_to_store ([`30a4bdb`](https://github.com/CDPVD/core.dashboards_store/commit/30a4bdb81169e0edff0de351c88bc5abcc894502))
-
-### Refactor
+* refactor: renaming profiles with profiles-sample and remove password to avoid giting it by accident ([`017f960`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/017f9600bf07bc7797d46960d68ce907d2effb9c))
 
 * refactor: update effectif_css dashboard to match the template
 
-&gt; Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
-cette à pour but de mettre à jou le tdb d&#39;effectif avec les norme du template qui a été adopter.
-&gt; Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
+> Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
+cette à pour but de mettre à jou le tdb d'effectif avec les norme du template qui a été adopter.
+> Describe what is not included in the pull request. Why did you not include it in the PR. What are the next steps ?
 
-&gt; Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+> Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
 
 ```bash
 cd core.data.store
@@ -834,389 +1884,33 @@ git pull
 dbt build --select tag:effectif_css
 ```
 
-&gt; Please, read carefully each item before checking it. Your PR&#39;s review might be delayed otherwise.
+> Please, read carefully each item before checking it. Your PR's review might be delayed otherwise.
 
 * **Code** :
   * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
   * [ ] My tables/variables naming follows the conventions described in the `readme.md`.
   * [ ] I have added DBT tests to my models (at least a `non null` / `unique` per models).
 * **Template** :
-  *  [ ] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
+  * [ ] I have updated the `core/template/{{ cookiecutter.project_slug }}/dbt_project.yml` file accordingly to my changes.
 * **Documentation** :
-  * [ ]  I have updated the documentation (README) accordingly to my changes.
-  * [ ]  The models I have added are documented in a `schema.yml` file.
+  * [ ] I have updated the documentation (README) accordingly to my changes.
+  * [ ] The models I have added are documented in a `schema.yml` file.
 * **Pull-request** :
-  * [x]  I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`**
-  * [x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x]  I have added my CSS lead as a reviewer.
-  * [x]  My pull request is documented. I have explained the needs for the PR and what was left out of the it.
-  * [x]  I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
+  * [x] I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`**
+  * [x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x] I have added my CSS lead as a reviewer.
+  * [x] My pull request is documented. I have explained the needs for the PR and what was left out of the it.
+  * [x] I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
 * **Tasksboard** :
   * [x] My work item is linked to the pull request.
   * [x] My work item has been moved to `review` in the taskboard.
 
-Related work items: #2291 ([`91de6a4`](https://github.com/CDPVD/core.dashboards_store/commit/91de6a4fa5131b5aa6dd390d724048a7c6e38cac))
-
-
-## v0.3.2 (2023-06-26)
-
-### Fix
-
-* fix: casting the timeout as integer to allow for string like definition in the inherited dags ([`987b90a`](https://github.com/CDPVD/core.dashboards_store/commit/987b90afa242e9a3d346edfd848b385ad635596a))
-
-
-## v0.3.1 (2023-06-08)
-
-### Build
-
-* build: casting the timeout as integer to allow for string like definition in the inherited dags ([`2f99f7f`](https://github.com/CDPVD/core.dashboards_store/commit/2f99f7f88374032484b746d86750dcd7fd8b49c7))
-
-* build: updating version REGEX ([`e48cb4a`](https://github.com/CDPVD/core.dashboards_store/commit/e48cb4ae32652cf67c03cf82b27e8b17cf95b00d))
-
-* build: dumping json to keep header properly setted ([`bad9a83`](https://github.com/CDPVD/core.dashboards_store/commit/bad9a83ed2dfc4551e493f2acb27347556cf5bf3))
-
-* build: payalod is now a dictionary to be serialized ([`86806d7`](https://github.com/CDPVD/core.dashboards_store/commit/86806d7be75d8747a531e9418f4f7c87ab6f664c))
-
-* build: adding etl_profile ([`0318e2f`](https://github.com/CDPVD/core.dashboards_store/commit/0318e2f8ddbc63386862631d9c2641ec3af73f75))
-
-* build: forcing the use of the etl_profile to make the etl profile invariant ([`6970c3a`](https://github.com/CDPVD/core.dashboards_store/commit/6970c3a3e543386aa866e374275ace350f4471b5))
-
-* build: adding notification to the DBT failure ([`a133b6c`](https://github.com/CDPVD/core.dashboards_store/commit/a133b6c4dffa84c3042febc18fd952ac1c5bc7d4))
-
-* build: including the manifest in the dag folder ([`f88ecae`](https://github.com/CDPVD/core.dashboards_store/commit/f88ecaef65b82374959120a557eb15a7cabdce19))
-
-* build: unesting deployment folder ([`5451735`](https://github.com/CDPVD/core.dashboards_store/commit/5451735fbb196e4b096f7fae2bd58ec55a8b0585))
-
-* build: adding support for variable docker host ([`6ebbaa3`](https://github.com/CDPVD/core.dashboards_store/commit/6ebbaa33d3f6e15861d0730192b14daddcc382cd))
-
-* build: reducing the exported files ([`38cf61b`](https://github.com/CDPVD/core.dashboards_store/commit/38cf61bcdf31d5c35230ac0278f1cf938f3814a7))
-
-* build: add profiles and dag file to the image ([`561ef91`](https://github.com/CDPVD/core.dashboards_store/commit/561ef91313980b92d2bdcfd150082e0a259b5862))
-
-### Documentation
-
-* docs: fixing typo in the gpi&#39;s database name ([`02ae6f7`](https://github.com/CDPVD/core.dashboards_store/commit/02ae6f75b3c1898d316e8745c40012eeb06496dc))
-
-### Feature
-
-* feat: adding a cookiecutter template to help greenfield CSS bootstraping the cssXX.data.store
-
-# Objectives of the Pull Request ?
-&gt; Describe the high level purpose of your pull request. What are you trying to achieve ? How are you doing it ?
-
-* The PR adds a cookie cutter template helping new CSS to scaffold the store.
-* The template basically populate a folder with a pre-filled `dbt_project.yaml`, a `profiles.yml` file and a github pipelines already configured
-
-# How to run the pull request ?
-&gt; Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
-
-```bash
-# Assuming you are in a folder containing both the core.data.store.
-# Update the code
-cd core.data.store
-git checkout feature/cookiecutter
-git pull
-
-poetry shell &amp;&amp; poetry lock &amp;&amp; poetry install
-cd ../
-
-cookiecutter core.data.store/template/
-
-# Enter some dummy vars when prompted for
-
-cd ../
-
-# Check if the you project as been properly scaffolded
-ls -l
-```
-
-# Pull request&#39;s checklist
-&gt; Please, read carefully each item before checking it. Your PR&#39;s review might be delayed otherwise.
-
-* **Code** :
-  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [ ] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [ ] I have added DBT tests to my models (at least a `non null` / `unique` per models).
-* **Documentation** :
-  * [X]  I have updated the documentation (README) accordingly to my changes.
-  * [ ]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [X]  I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`**
-  * [X]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [ ]  I have added my CSS lead as a reviewer.
-  * [X]  My pull request is documented. I have explained the needs for the PR and what was left out of the it.
-  * [X]  I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
-* **Tasksboard** :
-  * [ ] My work item is linked to the pull request.
-  * [ ] My work item has been moved to `review` in the taskboard. ([`6d823bd`](https://github.com/CDPVD/core.dashboards_store/commit/6d823bd13476eb46c9bf6874bcce0f09f283d695))
-
-* feat: adding the chronic_absenteeism dashboard
-
-# Objectives of the Pull Request?
-* This PR introduces a new dashboard to monitor the chronic absenteeism among students. Chronic absenteeism is defined as a pattern of absence of some sort. The dashboard helps SÉ department monitoring and assess the situation.
-* The PR create a new table in the `mart` : `fact_absences_sequence` listing all the absences sequences for the students.
-* The dashboard uses the new population mechanism.
-
-# What is left out of the Pull Request ?
-* As there was not prototyping phase for this dashboard, some cosmetic / filtering adjustments will have to be made once this dashboard is presented to the clients.
-
-# How to run the pull request ?
-You will need a repo with the population tables ... populated. A companion branch has been created on the CSSVDC repo to help you review this PR. The companion branch&#39;s name is `feature/absenteism`. (yes, with  a typo -_-)
-
-```bash
-# Assuming you are in a folder containing both the core.data.tbe and the &lt;cssXX&gt;.data.tbe folder, where &lt;cssXX&gt; being either CSSVDC or your own repo with a `feature/absenteism` population-enabled branch.
-
-cd core.data.tbe
-git checkout feature/absenteeism
-git pull
-cd ../&lt;cssXX&gt;.data.tbe
-git checkout feature/absenteism
-git pull
-dbt run-operation drop_schema
-dbt build --select +tag:chronic_absenteeism
-```
-
-# Pull request&#39;s checklist
-&gt; Please, read carefully each item before checking it. Your PR&#39;s review might be delayed otherwise.
-
-* **Code** :
-  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [X] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [X] I have added DBT tests to my models (at least a `non null` / `unique` per models).
-* **Documentation** :
-  * [X]  I have updated the documentation (README) accordingly to my changes.
-  * [X]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [X]  I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`**
-  * [X]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [ ]  I have added my CSS lead as a reviewer.
-  * [X]  My pull request is documented. I have explained the needs for the PR and what was left out of the it.
-  * [X]  I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
-* **Tasksboard** :
-  * [ ] My work item is linked to the pull request.
-  * [ ] My work item has been moved to `review` in the taskboard. ([`cf8c809`](https://github.com/CDPVD/core.dashboards_store/commit/cf8c8092aa97f469dbf629a7d8ce0730a732fe54))
-
-* feat: adding the stamping mechanism to expose the data freshness in the dashboards ([`27f1cb7`](https://github.com/CDPVD/core.dashboards_store/commit/27f1cb768ee8904cafe4ff56ba48f3b875cc6b80))
-
-* feat: adding the stamper ([`7b01a24`](https://github.com/CDPVD/core.dashboards_store/commit/7b01a241e9fd15449cc3394b158ec3af913c7055))
-
-* feat: adding the retirement dashboard. This dashboard monitors the number of retired employees in the past 10 years and provides forecasts for up to 5 years.
-
-# Objectives of the pull request
-* This PR adds a new dashboard monitoring the retirement situation.
-* A `fact_retirement` and a `fact_active` tables, used as a backbone for the report are introduced in the `human_resources` mart.
-* A `fact_retirement_forecasts` is added to the mart as it could be reused in a more strategical dashboard.
-* A new seed, `int_sequence_0_to_1000` is introduced. This seed can be cause to generate integer sequences.
-
-# What is left out of the pull request
-* Due to the summer break, the human resources&#39; product owner (@&lt;melanie.ranger&gt; ) hasn&#39;t review the dashboard yet. The wording of the dashboard, as well as some cosmetics adjustments following Mélanie&#39;s review will be done in an other pull request.
-
-# How to run the pull request ?
-
-You will need a working development branch with the `human resources` mart enabled and seeds populated as per the `core.develop` branch requirements.
-For the **cssvt**, a companion branch (*feature/retirement*) has been created to run and review the pull request.
-
-```bash
-# Assuming you are in a folder containing both the core.data.tbe and the &lt;cssXX&gt;.data.tbe folder.
-# Update the code
-cd core.data.tbe
-git checkout feature/retirement
-git pull
-cd ../cssvt.data.tbe
-git checkout feature/retirement
-git pull
-
-dbt build --select +tag:retirement
-```
-
-# Pull request&#39;s checklist
-&gt; Please, read carefully each item before checking it. You PR&#39;s review might be delayed otherwise.
-
-* **Code** :
-  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [X] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [X] I have added DBT tests to my models (at least a `non null` / `unique` per model).
-* **Documentation** :
-  * [X]  I have updated the documentation (README) accordingly to my changes.
-  * [X]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [X]  I have edited the merge commit message to remove the `Merged PR XXX :` so that my message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`
-  * [X]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [ ]  I have added my CSS lead as a reviewer.
-  * [X]  My pull request is documented.
-  * [X]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
-* **Tasksboard** :
-  * [ ] My work item is linked to the pull request.
-  * [ ] My workw item has been moved to `review` in the taskboard. ([`34a32ca`](https://github.com/CDPVD/core.dashboards_store/commit/34a32ca26c5095f2b383c4fa761d0ff30845023e))
-
-* feat: adding hooks for implementing custom populations
-
-# Objectives of the pull request
-
-This PR adds an overridable placeholder, acting as an entry point to add custom populations. The placeholders is designed to be overrided in the `cssXX.data.tbe`.
-
-# How to run the pull request ?
-&gt; By default the custom populations are empty.
-
-```bash
-# Assuming you are in a folder containing both the core.data.tbe and the &lt;cssXX&gt;.data.tbe folder.
-# Update the code
-cd core.data.tbe
-git checkout feature/customPopulations
-git pull
-cd ../&lt;cssXX&gt;.data.tbe
-dbt build --select +custom_fgj_populations
-```
-
-# Pull request&#39;s checklist
-
-* **Code** :
-  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [X} My tables/variables naming follows the conventions described in the `readme.md`.
-  * [X] I have added DBT tests to my models (at least a `non null` / `unique` per model).
-* **Documentation** :
-  * [X]  I have updated the documentation (README) accordingly to my changes.
-  * [X]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [X]  I have edited the merge commit message to remove the `Merged PR XXX :` so that my message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`
-  * [X]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [ ]  I have added my CSS lead as a reviewer.
-  * [X]  My pull request is documented.
-  * [X]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
-* **Tasksboard** :
-  * [ ] My work item is linked to the pull request.
-  * [ ] My workw item has been moved to `review` in the taskboard.
-
-feat: adding hooks for implementing custom populations ([`966e55d`](https://github.com/CDPVD/core.dashboards_store/commit/966e55d5c5ab4d08dd199a498c339e67fb8d4a02))
-
-* feat: adding fact_permanent_employe
-
-&gt; describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
-
-Le but principal de cette requête est d&#39;aller chercher l&#39;état de permanence.
-
-Dans cet PR nous considérons que pour avoir une permanence, il faut avoir travailler une période de deux ans, soit à partir de la date de début du poste actuel ou d&#39;un poste dans le même groupe demploi et la date courante et ce sans cessation d&#39;emploi.
-
-Nous sommes conscients qu&#39;il y a une pluralité de définitions sur qu&#39;est-ce que la permanence.
-
-Mais il s&#39;agit d&#39;une définition qui s&#39;applique à tous les CSS
-
-&gt; Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
-
-```bash
-cd core.data.tbe
-git checkout **feature/rh_permanence**
-git pull
-Add a CSV named rh_etat_empl here : cssXX/seeds/marts/human_resources/rh_etat_empl.csvcsv
-with the content you can find here : https://dev.azure.com/Centre-Expertise-IA/COTRA-CE/_git/core.data.tbe?path=/seeds/marts/human_ressources/schema.yml&amp;version=GBdevelop&amp;_a=contents
-cd ../&lt;cssXX&gt;.data.tbe
-dbt build --select tag:rh_permanence
-```
-
-&gt; Please, read carefully each item before checking it. You PR&#39;s review might be delayed otherwise.
-
-* **Code** :
-  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [X] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [X] I have added DBT tests to my models (at least a `non null` / `unique` per model).
-* **Documentation** :
-  * [X]  I have updated the documentation (README) accordingly to my changes. **not applicable**
-  * [X]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [ ]  I have edited the merge commit message to remove the `Merged PR XXX :` so that my message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`
-  * [X]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-![pr.jpg](https://dev.azure.com/Centre-Expertise-IA/c2f84ed8-4636-4689-a070-433ecb89a643/_apis/git/repositories/c515b32e-0393-45f8-a0f3-3c2ce78033d2/pullRequests/398/attachments/pr.jpg)
-  * [X]  I have added my CSS lead as a reviewer.
-  * [X]  My pull request is documented.
-  * [X]  I have careful... ([`e30fc89`](https://github.com/CDPVD/core.dashboards_store/commit/e30fc89f5e639934eb198c8782fff7fa8f29beea))
-
-### Fix
-
-* fix: typo in doc ([`512903f`](https://github.com/CDPVD/core.dashboards_store/commit/512903f1d4b24b8771e26f051cf88efd6c885dbb))
-
-* fix: the macro no properly delete the schema and the views ([`71ec6a1`](https://github.com/CDPVD/core.dashboards_store/commit/71ec6a187a03e374c2e31d4a3bdc9d8b8b67f9b8))
-
-* fix(suivi_resultat): correcting seeds&#39; friendly name and mandatory courses
-
-&gt; describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
-cette PR a pour but de corriger le nom des épreuves et de les rendre compréhensibles
-
-&gt; Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
-
-```bash
-cd core.data.tbe
-git checkout feature/subj_name
-git pull
-cd ../cssvdc.data.tbe
-git checkout develop
-git pull
-dbt build --select tag:res_epreuves
-```
-
-&gt; Please, read carefully each item before checking it. You PR&#39;s review might be delayed otherwise.
-
-* **Code** :
-  * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [ ] I have added DBT tests to my models (at least a `non null` / `unique` per model).
-* **Documentation** :
-  * [ ]  I have updated the documentation (README) accordingly to my changes.
-  * [ ]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [ ]  I have edited the merge commit message to remove the `Merged PR XXX :` so that my message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`
-  * [x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x]  I have added my CSS lead as a reviewer.
-  * [x]  My pull request is documented.
-  * [x]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
-* **Tasksboard** :
-  * [x] My work item is linked to the pull request.
-  * [x] My workw item has been moved to `review` in the taskboard.
-
-Related work items: #2219 ([`aa80750`](https://github.com/CDPVD/core.dashboards_store/commit/aa807507cdbf878b5bc16fb51a7e0107c2b2701d))
-
-* fix: remove blank results and correct subject evaluation code
-
-&gt; describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
-Cette PR a pour objectif de régler le problème des doublons qui proviennent de la table des résultats ministérielles de Jade. elle corrige aussi des typos dans les codes des matières des épreuves
-
-&gt; Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
-
-```bash
-cd core.data.tbe
-git checkout bugfix/doublons_res_epr
-git pull
-cd ../cssvdc.data.tbe
-git checkout develop
-git pull
-dbt build --select tag:res_epreuves
-```
-
-&gt; Please, read carefully each item before checking it. You PR&#39;s review might be delayed otherwise.
-
-* **Code** :
-  * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [x] I have added DBT tests to my models (at least a `non null` / `unique` per model).
-* **Documentation** :
-  * [ ]  I have updated the documentation (README) accordingly to my changes.
-  * [ ]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x]  I have added my CSS lead as a reviewer.
-  * [x]  My pull request is documented.
-  * [x]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
-* **Tasksboard** :
-  * [x] My work item is linked to the pull request.
-  * [x] My workw item has been moved to `review` in the taskboard.
-
-Related work items: #2014 ([`de87bc1`](https://github.com/CDPVD/core.dashboards_store/commit/de87bc13bb3b79917d77760f0249b9362358b24d))
-
-### Refactor
+Related work items: #2291 ([`91de6a4`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/91de6a4fa5131b5aa6dd390d724048a7c6e38cac))
 
 * refactor: renaming TBE to store, uniformizing code accross dashboards and enforcing conventions
 
 # Objectives of the Pull Request ?
-* The previous name of the dbt project : `tbe` (_tableau de bord equilibre_) wasn&#39;t making sense. This PR renames the project to `store`.
+* The previous name of the dbt project : `tbe` (_tableau de bord equilibre_) wasn't making sense. This PR renames the project to `store`.
 * The PR cleans the existing code base and improves code consistency across dashboards.
 * All dashboards have now their own schema, every single one being prefixed with `dashboard_`
 * The `.pbit` files have been plugged into the new schemas
@@ -1226,17 +1920,17 @@ Related work items: #2014 ([`de87bc1`](https://github.com/CDPVD/core.dashboards_
 * The PR does not introduces any changes to the code semantic.
 
 # How to run the pull request ?
-__It is advised to rename the folder `core.data.tbe` to `core.data.store` and to update the `&lt;cssXX&gt;.data.tbe/packages.yml` to references `core.data.store`__
+__It is advised to rename the folder `core.data.tbe` to `core.data.store` and to update the `<cssXX>.data.tbe/packages.yml` to references `core.data.store`__
 
-__a companion branch (named `uniformization`) has been created in `cssvdc.data.tbe`  to help you review the pull request__
+__a companion branch (named `uniformization`) has been created in `cssvdc.data.tbe` to help you review the pull request__
 
 ```bash
-# Assuming you are in a folder containing both the core.data.tbe and the &lt;cssXX&gt;.data.tbe folder.
+# Assuming you are in a folder containing both the core.data.tbe and the <cssXX>.data.tbe folder.
 # Update the code
 cd core.data.tbe # OR core.data.store
 git checkout feature/uniformization
 git pull
-cd ../&lt;cssXX&gt;.data.tbe # OR &lt;cssXX&gt;.data.store
+cd ../<cssXX>.data.tbe # OR <cssXX>.data.store
 git checkout feature/uniformization
 git pull
 
@@ -1246,25 +1940,25 @@ dbt run-operation drop_schema
 dbt build --full-refresh
 ```
 
-# Pull request&#39;s checklist
-&gt; Please, read carefully each item before checking it. Your PR&#39;s review might be delayed otherwise.
+# Pull request's checklist
+> Please, read carefully each item before checking it. Your PR's review might be delayed otherwise.
 
 * **Code** :
   * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
   * [X] My tables/variables naming follows the conventions described in the `readme.md`.
   * [ X I have added DBT tests to my models (at least a `non null` / `unique` per models).
 * **Documentation** :
-  * [X]  I have updated the documentation (README) accordingly to my changes.
-  * [X]  The models I have added are documented in a `schema.yml` file.
+  * [X] I have updated the documentation (README) accordingly to my changes.
+  * [X] The models I have added are documented in a `schema.yml` file.
 * **Pull-request** :
-  * [X]  I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`**
-  * [X]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [ ]  I have added my CSS lead as a reviewer.
-  * [X]  My pull request is documented. I have explained the needs for the PR and what was left out of the it.
-  * [X]  I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
+  * [X] I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`**
+  * [X] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [ ] I have added my CSS lead as a reviewer.
+  * [X] My pull request is documented. I have explained the needs for the PR and what was left out of the it.
+  * [X] I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
 * **Tasksboard** :
   * [ ] My work item is linked to the pull request.
-  * [ ] My work item has been moved to `review` in the taskboard. ([`e4110f2`](https://github.com/CDPVD/core.dashboards_store/commit/e4110f2811c7ab4287dc9d7d7ec1ce0f7119b649))
+  * [ ] My work item has been moved to `review` in the taskboard. ([`e4110f2`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e4110f2811c7ab4287dc9d7d7ec1ce0f7119b649))
 
 * refactor: moving the prospective dashboards s facts to the prospective dashboard folder
 
@@ -1276,40 +1970,40 @@ dbt build --full-refresh
 * The PR does not refactor the prospective dashboard to use the new population tables. This change should be a part of a more profound refactor of the dashboard.
 
 # How to run the pull request ?
-&gt; Running the pull request assumes you have the `prospective_tbe` dashboard enabled and configured as per the documentation.
+> Running the pull request assumes you have the `prospective_tbe` dashboard enabled and configured as per the documentation.
 
-**You must replace `&lt;cssXX&gt;` with the name of a (your ?) running CSS repo with the prospective dashboard enabled.
+**You must replace `<cssXX>` with the name of a (your ?) running CSS repo with the prospective dashboard enabled.
 
 ```bash
-# Assuming you are in a folder containing both the core.data.tbe and the &lt;cssXX&gt;.data.tbe folder.
+# Assuming you are in a folder containing both the core.data.tbe and the <cssXX>.data.tbe folder.
 # Update the code
 cd core.data.tbe
 git checkout feature/movingToDashboard
 git pull
-cd ../&lt;cssXX&gt;.data.tbe
+cd ../<cssXX>.data.tbe
 git checkout develop
 git pull
 
 dbt build --select +tag:prospectif_cdp
 ```
 
-# Pull request&#39;s checklist
-&gt; Please, read carefully each item before checking it. Your PR&#39;s review might be delayed otherwise.
+# Pull request's checklist
+> Please, read carefully each item before checking it. Your PR's review might be delayed otherwise.
 
 * **Code** :
   * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
 * **Pull-request** :
-  * [X]  I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`**
-  * [X]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [X]  My pull request is documented. I have explained the needs for the PR and what was left out of the it.
-  * [X]  I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
+  * [X] I have set the `set-auto-complete` of the PR and **edited the merge commit message to remove the `Merged PR XXX :` so that my merge message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`**
+  * [X] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [X] My pull request is documented. I have explained the needs for the PR and what was left out of the it.
+  * [X] I have carefully reviewd each changes made to a file and made sure the files included on the PR were actually added on purposes.
 
 # Commits
-refactor: moving the prospective dashboards s facts to the prospective dashboard folder ([`476c69b`](https://github.com/CDPVD/core.dashboards_store/commit/476c69b7b9abb63b4efdb5825b46f0456010f4c8))
+refactor: moving the prospective dashboards s facts to the prospective dashboard folder ([`476c69b`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/476c69b7b9abb63b4efdb5825b46f0456010f4c8))
 
-* refactor: renaming ressources -&gt; resources
+* refactor: renaming ressources -> resources
 
-* This PR correct a typo in the tags and in the models tree. `human resources`  was incorrectly labelled. The supernumerary `s` has been removed.
+* This PR correct a typo in the tags and in the models tree. `human resources` was incorrectly labelled. The supernumerary `s` has been removed.
 * This PR actually introduces a breaking change as all inherited dbt project will have to properly rewrite the path to the resources.
 
 You must have a valid `cssXX.data.tbe/dbt_project.yml` configured to use `human_resources` instead of `human_resources`
@@ -1318,355 +2012,44 @@ You must have a valid `cssXX.data.tbe/dbt_project.yml` configured to use `human_
 cd core.data.tbe
 git checkout feature/typoResources
 git pull
-cd ../&lt;cssXX&gt;.data.tbe
+cd ../<cssXX>.data.tbe
 git checkout develop
 git pull
 dbt build
 ```
 
-&gt; Please, read carefully each item before checking it. You PR&#39;s review might be delayed otherwise.
+> Please, read carefully each item before checking it. You PR's review might be delayed otherwise.
 
 * **Code** :
   * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
   * [] My tables/variables naming follows the conventions described in the `readme.md`.
   * [ ] I have added DBT tests to my models (at least a `non null` / `unique` per model).
 * **Documentation** :
-  * [ ]  I have updated the documentation (README) accordingly to my changes.
-  * [ ]  The models I have added are documented in a `schema.yml` file.
+  * [ ] I have updated the documentation (README) accordingly to my changes.
+  * [ ] The models I have added are documented in a `schema.yml` file.
 * **Pull-request** :
-  * [X]  I have edited the merge commit message to remove the `Merged PR XXX :` so that my message is something like `&lt;feat|fix|chore|doc|refactor|perf|style&gt;: foo bar`
-  * [X]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [ ]  I have added my CSS lead as a reviewer.
-  * [X]  My pull request is documented.
-  * [X]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+  * [X] I have edited the merge commit message to remove the `Merged PR XXX :` so that my message is something like `<feat|fix|chore|doc|refactor|perf|style>: foo bar`
+  * [X] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [ ] I have added my CSS lead as a reviewer.
+  * [X] My pull request is documented.
+  * [X] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
 * **Tasksboard** :
   * [ ] My work item is linked to the pull request.
-  * [ ] My workw item has been moved to `review` in the taskboard.
+  * [ ] My workw item has been moved to `review` in the taskboard. ([`48381fe`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/48381feeee5b03dac15d6d3f444b0926c4b9fcf4))
 
-refactor: renaming ressources -&gt; resources ([`48381fe`](https://github.com/CDPVD/core.dashboards_store/commit/48381feeee5b03dac15d6d3f444b0926c4b9fcf4))
+* refactor: renaming ressources -> resources ([`48381fe`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/48381feeee5b03dac15d6d3f444b0926c4b9fcf4))
 
-* refactor: defaulting docker URL on local socket ([`1f0cb0d`](https://github.com/CDPVD/core.dashboards_store/commit/1f0cb0d92677fb2189ac203cb361a4a5b08ae164))
-
-
-## v0.3.0 (2023-05-30)
-
-### Build
-
-* build: adding CICD
-
-build: adding missing workflows folder
-
-build: adding notifcation of failures
-
-build: renaming staging database to staging
-
-build: adding building of master images
-
-feat: adding semantic release
-
-feat: disabling all release ([`51aa803`](https://github.com/CDPVD/core.dashboards_store/commit/51aa80389fe86f0f21c5287c8fb52ca5d355c24d))
-
-* build: adding semantic release ([`5e6c24c`](https://github.com/CDPVD/core.dashboards_store/commit/5e6c24c5bd18f1bd9533db9f81e8963ce36aea59))
-
-* build: adding CICD
-
-build: adding missing workflows folder
-
-build: adding notifcation of failures
-
-build: renaming staging database to staging
-
-build: adding building of master images
-
-feat: adding semantic release
-
-feat: disabling all release ([`d689069`](https://github.com/CDPVD/core.dashboards_store/commit/d689069fcb984a2f68551d9f7bd84d7004baa8c5))
-
-* build: adding semantic release ([`8a80d88`](https://github.com/CDPVD/core.dashboards_store/commit/8a80d8833cbee0e1306447b51b0c2212d7814608))
-
-### Documentation
-
-* docs: fixing various typos in the docs and adding a placeholder for populations ([`27e8ee0`](https://github.com/CDPVD/core.dashboards_store/commit/27e8ee047b5d138343a263f279461b655d46cf0d))
-
-* docs: fixing a typo in the prospectif_cdep interfaces ([`982ab5c`](https://github.com/CDPVD/core.dashboards_store/commit/982ab5cbf455fd496a82c23e19f92a2d5408224f))
-
-### Feature
-
-* feat: adding the effectif_css dashboard
-
-&gt; describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
-
-Le but de ce tdb est de faire le dénombrement de la population au sein d&#39;un centre de service scolaire. La population étant séparé en 4 : Prescolaire, primaire régulier, primaire adapté, secondaire régulier et secondaire adapté.
-
-Cette population est divisé selon le niveau scolaire de l&#39;élève également. PRES4ANS, PRES5ANS, 1er année à la 6ème année, puis 1er secondaire au 5ème secondaire.
-
-&gt; Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
-
-```bash
-cd core.data.tbe
-git checkout feature/effectif_css
-git pull
-cd ../cssvt.data.tbe
-git checkout feature/tdb_effectif
-git pull
-dbt build --select tag:effectif_css
-```
-
-&gt; Please, read carefully each item before checking it. You PR&#39;s review might be delayed otherwise.
-
-* **Code** :
-  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [X] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [X] I have added DBT tests to my models (at least a `non null` / `unique` per model).
-* **Documentation** :
-  * [X]  I have updated the documentation (README) accordingly to my changes.
-  * [X]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [X]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [X]  I have added my CSS lead as a reviewer.
-  * [X]  My pull request is documented.
-  * [X]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
-* **Tasksboard** :
-  *  [X] My work item is linked to the pull request.
-  * [X] My workw item has been moved to `review` in the taskboard. ([`11f44d5`](https://github.com/CDPVD/core.dashboards_store/commit/11f44d5204857f2a4a21e98fe9d4aa25ef61fd73))
-
-* feat: adding sectors and filter-by-sectors to the transport dashboard
-
-make of filtering of circuits by sectors.
-
-The following section describe the specific for transport scolaire  dashboard in the READEME.md
- __236_ to 252_ lines
-
-How to run the pull request ?
-git checkout core.data.tbe/feature/trnsp_secteurs
-git pull
-cd ../csshc.data.tbe
-git checkout transport
-git pull
-dbt build --select tag:transport
-
-* **Code** :
-  * [ x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x ] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [x ] I have added DBT tests to my models (at least a `non null` / `unique` per model).
-* **Documentation** :
-  * [ x]  I have updated the documentation (README) accordingly to my changes.
-  * [ x]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [ x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x ]  I have added my CSS lead as a reviewer.
-  * [x ]  My pull request is documented.
-  * [x ]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
-* **Tasksboard** :
-  * [X ] My work item is linked to the pull request.
-  * [X ] My workw item has been moved to `review` in the taskboard.
-
-Related work items: #1935, #1938, #2003 ([`e3f7ff2`](https://github.com/CDPVD/core.dashboards_store/commit/e3f7ff243d83f2fec0366197b7132fb53bb77349))
-
-* feat: adding the effectif_css dashboard
-
-&gt; describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
-
-Le but de ce tdb est de faire le dénombrement de la population au sein d&#39;un centre de service scolaire. La population étant séparé en 4 : Prescolaire, primaire régulier, primaire adapté, secondaire régulier et secondaire adapté.
-
-Cette population est divisé selon le niveau scolaire de l&#39;élève également. PRES4ANS, PRES5ANS, 1er année à la 6ème année, puis 1er secondaire au 5ème secondaire.
-
-&gt; Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
-
-```bash
-cd core.data.tbe
-git checkout feature/effectif_css
-git pull
-cd ../cssvt.data.tbe
-git checkout feature/tdb_effectif
-git pull
-dbt build --select tag:effectif_css
-```
-
-&gt; Please, read carefully each item before checking it. You PR&#39;s review might be delayed otherwise.
-
-* **Code** :
-  * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [X] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [X] I have added DBT tests to my models (at least a `non null` / `unique` per model).
-* **Documentation** :
-  * [X]  I have updated the documentation (README) accordingly to my changes.
-  * [X]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [X]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [X]  I have added my CSS lead as a reviewer.
-  * [X]  My pull request is documented.
-  * [X]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
-* **Tasksboard** :
-  *  [X] My work item is linked to the pull request.
-  * [X] My workw item has been moved to `review` in the taskboard. ([`0f94a10`](https://github.com/CDPVD/core.dashboards_store/commit/0f94a102f887e50b17395787f0e767845b8d3022))
-
-* feat: adding sectors and filter-by-sectors to the transport dashboard
-
-make of filtering of circuits by sectors.
-
-The following section describe the specific for transport scolaire  dashboard in the READEME.md
- __236_ to 252_ lines
-
-How to run the pull request ?
-git checkout core.data.tbe/feature/trnsp_secteurs
-git pull
-cd ../csshc.data.tbe
-git checkout transport
-git pull
-dbt build --select tag:transport
-
-* **Code** :
-  * [ x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x ] My tables/variables naming follows the conventions described in the `readme.md`.
-  * [x ] I have added DBT tests to my models (at least a `non null` / `unique` per model).
-* **Documentation** :
-  * [ x]  I have updated the documentation (README) accordingly to my changes.
-  * [ x]  The models I have added are documented in a `schema.yml` file.
-* **Pull-request** :
-  * [ x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x ]  I have added my CSS lead as a reviewer.
-  * [x ]  My pull request is documented.
-  * [x ]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
-* **Tasksboard** :
-  * [X ] My work item is linked to the pull request.
-  * [X ] My workw item has been moved to `review` in the taskboard.
-
-Related work items: #1935, #1938, #2003 ([`b69e865`](https://github.com/CDPVD/core.dashboards_store/commit/b69e865c2afab0d52ea7ee410f4815e480ca33ea))
-
-* feat: improvind documentation of the PR template ([`c0c0841`](https://github.com/CDPVD/core.dashboards_store/commit/c0c084146462e3e86f2602a360c631aa478fe983))
-
-* feat: adding drop schema macro ([`e7c30de`](https://github.com/CDPVD/core.dashboards_store/commit/e7c30de1e916150396ccae85554dfce8e9ca47a9))
-
-* feat: adding missing seeds in core_dbt_project ([`3c5ecec`](https://github.com/CDPVD/core.dashboards_store/commit/3c5ecec4b1408884fed580ae6d9e5d2a555d87a2))
-
-* feat: adding MatieresEleve  interfaces ([`b627acd`](https://github.com/CDPVD/core.dashboards_store/commit/b627acd5f881c42ce8d7c98300505c3fb8c17a0a))
-
-* feat: add_masse_sal_to_this_table ([`64649b6`](https://github.com/CDPVD/core.dashboards_store/commit/64649b61681be40ee14b0b52d843b3c04fd61b8e))
-
-* feat: move_table_to_sub_folder_cout_roulement ([`7856608`](https://github.com/CDPVD/core.dashboards_store/commit/7856608825b45c39c459e14a6f719171e31a6aed))
-
-* feat: move_table_to_sub_folder_cout_roulement_and_modify_filter_and_annee_type ([`a7ffeaa`](https://github.com/CDPVD/core.dashboards_store/commit/a7ffeaa7c806bbe05d302e1a7b48ebbaf6f525a4))
-
-* feat: add taux roulement personnel ([`ca56f85`](https://github.com/CDPVD/core.dashboards_store/commit/ca56f85f400867b71defa3bda7ae1d1e08ad2c10))
-
-* feat: modify_filter ([`e13caf8`](https://github.com/CDPVD/core.dashboards_store/commit/e13caf8d7e08629cec44f63593e90c597380fdc7))
-
-* feat: addtable_empl_quitter ([`d97b1b1`](https://github.com/CDPVD/core.dashboards_store/commit/d97b1b1b9df848a9f4483f4ada209dc7d2de1683))
-
-* feat: delet_shema ([`bd9d293`](https://github.com/CDPVD/core.dashboards_store/commit/bd9d293b3f53fc1e2bb7c0cb152ca8fdf97c7847))
-
-* feat: add_schema_to_staging_res_etapes_table ([`6c9f7c5`](https://github.com/CDPVD/core.dashboards_store/commit/6c9f7c5673282817dfa72b78c4e6df392579c9c9))
-
-* feat:  detele_non_used_table ([`2911998`](https://github.com/CDPVD/core.dashboards_store/commit/29119981c5df10a6824d65128fc009703f82c4e2))
-
-* feat: freezing dbt-core and dbt-sql-server to ensure across CSS dependencies consistency ([`dc4e7da`](https://github.com/CDPVD/core.dashboards_store/commit/dc4e7da0c932f0688fcdfe6e74406c6cb8d04ed2))
-
-* feat: add_new_fields_i_e_ri_resultats ([`c577b84`](https://github.com/CDPVD/core.dashboards_store/commit/c577b84757925330fca70f9176b04b234add7de1))
-
-* feat: add_new_vars_to_dbt_project ([`11bdb39`](https://github.com/CDPVD/core.dashboards_store/commit/11bdb39fd2c850f9d550685e2d0faea08b7f8980))
-
-* feat: update_README_with_new_info_for_model_res_etapes ([`3cd96d1`](https://github.com/CDPVD/core.dashboards_store/commit/3cd96d172a31ef7457e4bcb7fbdd5066536a4916))
-
-* feat: add_diff_to_school_table ([`31f943e`](https://github.com/CDPVD/core.dashboards_store/commit/31f943e0750cd0d4633f5c6b609ed8500645f487))
-
-* feat: add_new_table_to _schema ([`c34fad2`](https://github.com/CDPVD/core.dashboards_store/commit/c34fad28abaa803cdaac3534bc1c3b81723060d3))
-
-* feat: add_gouv_evaluation_name _to_seed_table ([`445813d`](https://github.com/CDPVD/core.dashboards_store/commit/445813d3fee3faa4c6c9c77e7a67cbd632b2e41b))
-
-* feat: add_new_interface_table_to_schema ([`fbf0149`](https://github.com/CDPVD/core.dashboards_store/commit/fbf01498ac5decd3240f3235d5da0d99764fae12))
-
-* feat: extract_gouv_rslt_from_interface_table ([`89ae487`](https://github.com/CDPVD/core.dashboards_store/commit/89ae4873d7115429c78bf5909216cd36238e9a32))
-
-* feat: add_dbt_utils_package ([`2338780`](https://github.com/CDPVD/core.dashboards_store/commit/23387805c5af3ae5cd23994ff82091b55d57fd70))
-
-* feat: add_id_friendly_name ([`a7eea47`](https://github.com/CDPVD/core.dashboards_store/commit/a7eea476ea403228bdb3fba25b9fa884f6c8874f))
-
-* feat: add_new_model_emp_cong_to_dbtproject ([`ff11e76`](https://github.com/CDPVD/core.dashboards_store/commit/ff11e76db48b1163e6cba67ad8fac474a1b261fc))
-
-* feat: move_interface_table_cssrepo_to_core_modify_schema.yml ([`84bf8c8`](https://github.com/CDPVD/core.dashboards_store/commit/84bf8c80b822723005b9e5dc59bfa368c796a4f0))
-
-* feat: change in the dbt_project to manually activate the dashboards of interest on the css repo (enable option) ([`9ee5048`](https://github.com/CDPVD/core.dashboards_store/commit/9ee5048b96c2fc0ea17e3e1ac324d2a10396af6a))
-
-* feat: adapt macro test ([`c97cb31`](https://github.com/CDPVD/core.dashboards_store/commit/c97cb31433cd1acd53f8a00224f3eed4019aacd0))
-
-* feat: add a fact table that tracks the number of part-time employees in the last 10 years ([`c0df3ae`](https://github.com/CDPVD/core.dashboards_store/commit/c0df3ae02ec2a266606a789aa68dbaa2ce9c45e7))
-
-* feat: connection of databases: geobus and piastreto obtain data for analyzing school transport  efficiency ([`cb197de`](https://github.com/CDPVD/core.dashboards_store/commit/cb197dec0ebf67c67ca7526ea08577c44c2e3daa))
-
-* feat: add_new_model_emp_cong_to_dbtproject ([`baa58eb`](https://github.com/CDPVD/core.dashboards_store/commit/baa58eb89cc34ca0859480106572050294528944))
-
-* feat: move_interface_table_cssrepo_to_core_modify_schema.yml ([`6edb881`](https://github.com/CDPVD/core.dashboards_store/commit/6edb881d56c8495643e87f2470a1e91953832a08))
-
-* feat: change in the dbt_project to manually activate the dashboards of interest on the css repo (enable option) ([`f8dd5ab`](https://github.com/CDPVD/core.dashboards_store/commit/f8dd5abcfef0573f20632d5fbd2c1086c15b4b99))
-
-* feat: adapt macro test ([`c70431b`](https://github.com/CDPVD/core.dashboards_store/commit/c70431bb84fcbbf2b775b63ddc23c1967f0f672b))
-
-* feat: add a fact table that tracks the number of part-time employees in the last 10 years ([`87c16e2`](https://github.com/CDPVD/core.dashboards_store/commit/87c16e2c05ac4869efc1c08e93925ccf3594d995))
-
-* feat: connection of databases: geobus and piastreto obtain data for analyzing school transport  efficiency ([`4c21bd8`](https://github.com/CDPVD/core.dashboards_store/commit/4c21bd8c6cc509400b1f5ac11eb3b218ac91e218))
-
-* feat: add base_spine table ([`819cf5a`](https://github.com/CDPVD/core.dashboards_store/commit/819cf5ad3ce05b628d5522e363fc874b05a6d608))
-
-* feat: add stg_populations ([`512146d`](https://github.com/CDPVD/core.dashboards_store/commit/512146d40003a8151877c098b9af7ec48097ce05))
-
-* feat: add adapt macro ([`de7b290`](https://github.com/CDPVD/core.dashboards_store/commit/de7b290b3f442025d2823017a738c87096871e2f))
-
-* feat: adding test  in the core repo ([`a4acb2a`](https://github.com/CDPVD/core.dashboards_store/commit/a4acb2a9ab9e16155f780c4caf00b1692918495b))
-
-### Fix
-
-* fix: transports tests are now only executed if the transport is available ([`8231318`](https://github.com/CDPVD/core.dashboards_store/commit/8231318591708316e3df2d175ea9b6919a54820a))
-
-* fix: transports tests are now only executed if the transport is available ([`e7c2157`](https://github.com/CDPVD/core.dashboards_store/commit/e7c21572225a214fe6702a7cf14217a15769d412))
-
-* fix: propagating renaming ([`cc9de86`](https://github.com/CDPVD/core.dashboards_store/commit/cc9de86bdb61b77d02c955108f15b472da510a00))
-
-* fix: updating the code-placeholder since the commands in the placeholders were out of order ([`659a75b`](https://github.com/CDPVD/core.dashboards_store/commit/659a75b37419e2ad6dfaaf2377b35d0e30105601))
-
-* fix: correct_error_in_schema ([`831ecad`](https://github.com/CDPVD/core.dashboards_store/commit/831ecad6d37b20098516b9c316afb154b5ad383e))
-
-* fix: adding missing weighting ([`9739c88`](https://github.com/CDPVD/core.dashboards_store/commit/9739c88884affee5006b9bc293163a6c8de5cdfa))
-
-* fix: modification of the &#39;transport&#39; dashboard schema ([`6984b85`](https://github.com/CDPVD/core.dashboards_store/commit/6984b857dfe97e4ad119050c9326f5c537ec38a8))
-
-* fix: adding missing weighting ([`11bf79f`](https://github.com/CDPVD/core.dashboards_store/commit/11bf79f3cf625f8a00d28ee988812a33bdf777d7))
-
-* fix: add_model_prefix ([`cdabb33`](https://github.com/CDPVD/core.dashboards_store/commit/cdabb33ff4bd9a95c2ae00a77e900e52e562f3df))
-
-* fix: correcti models_name ([`83ca72b`](https://github.com/CDPVD/core.dashboards_store/commit/83ca72b3aff7976c3fb44347b9dc9f7c64a455e2))
-
-* fix: modify_var_naming ([`bb2e1e5`](https://github.com/CDPVD/core.dashboards_store/commit/bb2e1e5cc2247b37fec9581b78313165038a2e6c))
-
-* fix: fixing dbt project ([`5a6a4e6`](https://github.com/CDPVD/core.dashboards_store/commit/5a6a4e63f4bfaa1d9e8f24041dd67bf94f7ed532))
-
-* fix: removing dead code ([`a16cc66`](https://github.com/CDPVD/core.dashboards_store/commit/a16cc660b3750ce603632f01517f1a6968515723))
-
-* fix: add_prefix_to test_name_to_resolve_ambiguity ([`0338c88`](https://github.com/CDPVD/core.dashboards_store/commit/0338c88b01c9eb73cb7007080a469e191e72a75d))
-
-* fix: modify version_from_0_to_2 ([`cc16df3`](https://github.com/CDPVD/core.dashboards_store/commit/cc16df3305e3dca0c29e39827e45bb0e21677ff1))
-
-* fix: updated comments ([`178f319`](https://github.com/CDPVD/core.dashboards_store/commit/178f319bf9b2891e371e6ec9a6cf3485f9c4796e))
-
-* fix: add_prefix_to test_name_to_resolve_ambiguity ([`d8dacaa`](https://github.com/CDPVD/core.dashboards_store/commit/d8dacaa4f4d3d9012ada872f77bcb97d2e9873c4))
-
-* fix: modify version_from_0_to_2 ([`2a99c8e`](https://github.com/CDPVD/core.dashboards_store/commit/2a99c8ed44d896f663a6e56876380f80099cb544))
-
-* fix: delet_conflict_message ([`7c7dc62`](https://github.com/CDPVD/core.dashboards_store/commit/7c7dc62482c64e1ce70ff675b59b9c10f1ad950e))
-
-* fix: updated comments ([`13ce039`](https://github.com/CDPVD/core.dashboards_store/commit/13ce039e786a12ff6667aa65f5c89416fa8c6ccb))
-
-### Refactor
+* refactor: defaulting docker URL on local socket ([`1f0cb0d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1f0cb0d92677fb2189ac203cb361a4a5b08ae164))
 
 * refactor: renaming the prspctf_nb_el_fgj table
 
-&gt; describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
-cette PR a pour but de  :
+> describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
+cette PR a pour but de :
    - changer le nom de la table emp_retraite dans les connection de base de donner dans le PBIT du tdb preospectif
    - modifier le code de la table nb_el_fgj pour matcher le changement de la spine
    - modifier un typo dans le template des PR
 
-&gt; Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+> Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
 
 ```bash
 cd core.data.tbe
@@ -1679,20 +2062,20 @@ dbt run-operation drop_schema
 dbt build --select tag:prospectif_cdp
 ```
 
-&gt; Please, read carefully each item before checking it. You PR&#39;s review might be delayed otherwise.
+> Please, read carefully each item before checking it. You PR's review might be delayed otherwise.
 
 * **Code** :
   * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
   * [x] My tables/variables naming follows the conventions described in the `readme.md`.
   * [x] I have added DBT tests to my models (at least a `non null` / `unique` per model).
 * **Documentation** :
-  * [ ]  I have updated the documentation (README) accordingly to my changes.
-  * [ ]  The models I have added are documented in a `schema.yml` file.
+  * [ ] I have updated the documentation (README) accordingly to my changes.
+  * [ ] The models I have added are documented in a `schema.yml` file.
 * **Pull-request** :
-  * [x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x]  I have added my CSS lead as a reviewer.
-  * [x]  My pull request is documented.
-  * [x]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+  * [x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x] I have added my CSS lead as a reviewer.
+  * [x] My pull request is documented.
+  * [x] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
 * **Tasksboard** :
   * [x] My work item is linked to the pull request.
   * [x] My workw item has been moved to `review` in the taskboard.
@@ -1701,13 +2084,13 @@ Related work items: #1889
 
 Merged PR 392: refactor: renaming the prspctf_nb_el_fgj table
 
-&gt; describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
-cette PR a pour but de  :
+> describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
+cette PR a pour but de :
    - changer le nom de la table emp_retraite dans les connection de base de donner dans le PBIT du tdb preospectif
    - modifier le code de la table nb_el_fgj pour matcher le changement de la spine
    - modifier un typo dans le template des PR
 
-&gt; Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+> Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
 
 ```bash
 cd core.data.tbe
@@ -1720,102 +2103,116 @@ dbt run-operation drop_schema
 dbt build --select tag:prospectif_cdp
 ```
 
-&gt; Please, read carefully each item before checking it. You PR&#39;s review might be delayed otherwise.
+> Please, read carefully each item before checking it. You PR's review might be delayed otherwise.
 
 * **Code** :
   * [X] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
   * [x] My tables/variables naming follows the conventions described in the `readme.md`.
   * [x] I have added DBT tests to my models (at least a `non null` / `unique` per model).
 * **Documentation** :
-  * [ ]  I have updated the documentation (README) accordingly to my changes.
-  * [ ]  The models I have added are documented in a `schema.yml` file.
+  * [ ] I have updated the documentation (README) accordingly to my changes.
+  * [ ] The models I have added are documented in a `schema.yml` file.
 * **Pull-request** :
-  * [x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [x]  I have added my CSS lead as a reviewer.
-  * [x]  My pull request is documented.
-  * [x]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+  * [x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [x] I have added my CSS lead as a reviewer.
+  * [x] My pull request is documented.
+  * [x] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
 * **Tasksboard** :
   * [x] My work item is linked to the pull request.
   * [x] My workw item has been moved to `review` in the taskboard.
 
-Related work items: #1889 ([`7cce3bb`](https://github.com/CDPVD/core.dashboards_store/commit/7cce3bb1dc3102d0e887c85140181bf1568c3c2a))
+Related work items: #1889 ([`7cce3bb`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7cce3bb1dc3102d0e887c85140181bf1568c3c2a))
 
 * refactor: prospectif_cdp is now using the rh seed from the RH mart
 
-&gt; describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
+> describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
 - remove prefix from seed name
 - delete sources.yml
 - add stat_eng to the schema.yml
 - modification stat_eng name in fact tables
 
-&gt; Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+> Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
 
 ```bash
 cd core.data.tbe
 git checkout bugfix/correct_bug
 git pull
-cd ../&lt;cssvdc&gt;.data.tbe
+cd ../<cssvdc>.data.tbe
 git checkout develop
 git pull
 dbt build --select tag:prospectif_cdp
 ```
 
-&gt; Please, read carefully each item before checking it. You PR&#39;s review might be delayed otherwise.
+> Please, read carefully each item before checking it. You PR's review might be delayed otherwise.
 
 * **Code** :
   * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
   * [x] My tables/variables naming follows the conventions described in the `readme.md`.
   * [x] I have added DBT tests to my models (at least a `non null` / `unique` per model).
 * **Documentation** :
-  * [x]  I have updated the documentation (README) accordingly to my changes.
-  * [x]  The models I have added are documented in a `schema.yml` file.
+  * [x] I have updated the documentation (README) accordingly to my changes.
+  * [x] The models I have added are documented in a `schema.yml` file.
 * **Pull-request** :
-  * [x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [X]  I have added my CSS lead as a reviewer.
-  * [x]  My pull request is documented.
-  * [x]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+  * [x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [X] I have added my CSS lead as a reviewer.
+  * [x] My pull request is documented.
+  * [x] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
 * **Tasksboard** :
   * [x] My work item is linked to the pull request.
-  * [x] My work item has been moved to `review` in the taskboard. ([`4b3c755`](https://github.com/CDPVD/core.dashboards_store/commit/4b3c755e2d57c4d57a163ae61990277636718a08))
+  * [x] My work item has been moved to `review` in the taskboard. ([`4b3c755`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/4b3c755e2d57c4d57a163ae61990277636718a08))
 
 * refactor: prospectif_cdp is now using the rh seed from the RH mart
 
-&gt; describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
+> describe the high level purposes of your pull request. What are you trying to achieve ? How are you doing it ?*
 - remove prefix from seed name
 - delete sources.yml
 - add stat_eng to the schema.yml
 - modification stat_eng name in fact tables
 
-&gt; Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
+> Provide the code requiered to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
 
 ```bash
 cd core.data.tbe
 git checkout bugfix/correct_bug
 git pull
-cd ../&lt;cssvdc&gt;.data.tbe
+cd ../<cssvdc>.data.tbe
 git checkout develop
 git pull
 dbt build --select tag:prospectif_cdp
 ```
 
-&gt; Please, read carefully each item before checking it. You PR&#39;s review might be delayed otherwise.
+> Please, read carefully each item before checking it. You PR's review might be delayed otherwise.
 
 * **Code** :
   * [x] The code I m asking a review for is working. **I understand that my PR will be rejected as-is otherwise.**
   * [x] My tables/variables naming follows the conventions described in the `readme.md`.
   * [x] I have added DBT tests to my models (at least a `non null` / `unique` per model).
 * **Documentation** :
-  * [x]  I have updated the documentation (README) accordingly to my changes.
-  * [x]  The models I have added are documented in a `schema.yml` file.
+  * [x] I have updated the documentation (README) accordingly to my changes.
+  * [x] The models I have added are documented in a `schema.yml` file.
 * **Pull-request** :
-  * [x]  The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
-  * [X]  I have added my CSS lead as a reviewer.
-  * [x]  My pull request is documented.
-  * [x]  I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
+  * [x] The code *provided to run the pull request* is working. **I understand that my PR will be rejected as-is otherwise.**
+  * [X] I have added my CSS lead as a reviewer.
+  * [x] My pull request is documented.
+  * [x] I have carefully reviewd each change made to a file and made sure the files included on the PR has been actually changed on purposes.
 * **Tasksboard** :
   * [x] My work item is linked to the pull request.
-  * [x] My work item has been moved to `review` in the taskboard. ([`1416a75`](https://github.com/CDPVD/core.dashboards_store/commit/1416a75459e13f257b61dada9db51d0a390e1bb6))
+  * [x] My work item has been moved to `review` in the taskboard. ([`1416a75`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1416a75459e13f257b61dada9db51d0a390e1bb6))
 
-* refactor: fix the bug introduced earlier ([`5a1b94e`](https://github.com/CDPVD/core.dashboards_store/commit/5a1b94e9cf8cc5544ca7ffc2fb570330b03d2881))
+* refactor: added sources name employees_status
 
-* refactor: test if an error message is sent when dbt test fails ([`b9bd671`](https://github.com/CDPVD/core.dashboards_store/commit/b9bd671a7be4ec9b0444d4b7972ac73558c44783))
+Co-authored-by: hugoJuhel <juhel.hugo@stratemia.com> ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* refactor: added sources name employees_status
+
+Co-authored-by: hugoJuhel <juhel.hugo@stratemia.com> ([`04e9833`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/04e983372e4d66526d8cab6c692a81b0f0f8d3f1))
+
+* refactor: fix the bug introduced earlier ([`5a1b94e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/5a1b94e9cf8cc5544ca7ffc2fb570330b03d2881))
+
+* refactor: test if an error message is sent when dbt test fails ([`b9bd671`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/b9bd671a7be4ec9b0444d4b7972ac73558c44783))
+
+### Testing
+
+* test(fix): fixing the test populations ([`6be75a0`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6be75a085ab0d9fd5e5e6065b4f75fd2e9e9bebd))
+
+* test: adding a simple /default dbt project to be run as an integration test ([`46bc620`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/46bc6200e358b343779523da179bdfe4ff856c12))

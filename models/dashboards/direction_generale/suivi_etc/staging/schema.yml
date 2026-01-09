@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: stg_nomen_unit_adm
+    config:
+      tags:
+        - human_resources
+    description: >
+      Table auxiliaire qui met a jour le code / descriptif de certaines unités administratives.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - exer_fin
+            - current_lieu_trav

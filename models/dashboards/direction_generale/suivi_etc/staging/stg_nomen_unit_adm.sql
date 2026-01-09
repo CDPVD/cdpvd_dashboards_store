@@ -15,21 +15,22 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select
-    matr,
-    no_seq,
-    code_pmnt,
-    corp_empl,
-    lieu_trav,
-    mode,
-    nb_unit,
-    ref_empl,
-    no_cheq,
-    date_cheq,
-    date_deb,
-    date_fin,
-    code_prov,
-    mnt,
-    mnt_cour_trait_diff,
-    no_cmpt_cour_trait_diff
-from {{ var("database_paie") }}.dbo.pai_hchq_pmnt
+{% set use_adjust = (
+    var("dashboards", {})
+    .get("direction_generale", {})
+    .get("suivi_etc", {})
+    .get("use_adjust_nomen_unit_adm", False)
+) %}
+
+{% if use_adjust %} {% set join_table = ref("adjust_nomen_unit_adm") %}
+{% else %}
+    {% set join_table = "(select null as current_lieu_trav, null as new_lieu_trav, null as new_descr)" %}
+{% endif %}
+
+select distinct
+    t1.exer_fin,
+    t1.code as current_lieu_trav,
+    coalesce(t2.new_lieu_trav, t1.code) as new_lieu_trav,
+    lower(coalesce(t2.new_descr, t1.descr)) as descr
+from {{ ref("i_fin_nomen_unit_adm") }} as t1
+left join {{ join_table }} as t2 on t2.current_lieu_trav = t1.code

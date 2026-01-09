@@ -257,10 +257,13 @@ The `readme` is organized as follow :
 ## A tale of two repos
 
 > Once upon a time, in the CdeP, a little `cdpvd_dashboards_store` repo was born. The repo tried very hard to provide ETLs for all the CSS belonging to the CdeP. But the CSS were many and the SQL capabilites to retrofit itself to the CSS's context were few. So the `cdpvd_dashboards_store` repo decided to split itself into many little repos, one for each CSS.And the `cssXX.data.store` repo was born. And the `cssXX.data.store` repo was granted the power to override anything from `cdpvd_dashboards_store`. And the `cdpvd_dashboards_store` repo was happy. And the `cssXX.data.store` repo was happy. And the CdeP was happy. And they all merged develop into master happily ever after. 
+> Once upon a time, in the CdeP, a little `cdpvd_dashboards_store` repo was born. The repo tried very hard to provide ETLs for all the CSS belonging to the CdeP. But the CSS were many and the SQL capabilites to retrofit itself to the CSS's context were few. So the `cdpvd_dashboards_store` repo decided to split itself into many little repos, one for each CSS.And the `cssXX.data.store` repo was born. And the `cssXX.data.store` repo was granted the power to override anything from `cdpvd_dashboards_store`. And the `cdpvd_dashboards_store` repo was happy. And the `cssXX.data.store` repo was happy. And the CdeP was happy. And they all merged develop into master happily ever after. 
 
+The moral of the story is that the `cdpvd_dashboards_store` repo is the parent repo of all the `cssXX.data.store` repos. The `cdpvd_dashboards_store` repo contains all the ETLs that are common to all the CSS. The `cssXX.data.store` repo contains all the ETLs' code that are specific to the CSS XX. I you have already been exposed to some Object-Oriented Programing, the `cdpvd_dashboards_store` repo is the parent class and the `cssXX.data.store` repo is the child class. Yes, that's that simple.
 The moral of the story is that the `cdpvd_dashboards_store` repo is the parent repo of all the `cssXX.data.store` repos. The `cdpvd_dashboards_store` repo contains all the ETLs that are common to all the CSS. The `cssXX.data.store` repo contains all the ETLs' code that are specific to the CSS XX. I you have already been exposed to some Object-Oriented Programing, the `cdpvd_dashboards_store` repo is the parent class and the `cssXX.data.store` repo is the child class. Yes, that's that simple.
 
 Hence every CSS will end WITH TWO REPOS : 
+* `cdpvd_dashboards_store` : the parent repo providing sensitive default for all CSS
 * `cdpvd_dashboards_store` : the parent repo providing sensitive default for all CSS
 * `cssXX.data.store` : the child repo containing the ETLs specifics to the CSS XX
   * `XX` schould be replaced with the friendly name of your CSS (ex: cssdgs.data.store for Des-Grandes-Seigneuries)
@@ -283,8 +286,11 @@ We have got you covered, there is `cookiecutter` template ready for you to use.
 ```bash
 # Assuming you are in the <working_directory>, containing the `cdpvd_dashboards_store` cloned repo
 cd cdpvd_dashboards_store
+# Assuming you are in the <working_directory>, containing the `cdpvd_dashboards_store` cloned repo
+cd cdpvd_dashboards_store
 poetry shell & poetry install
 cd ../
+cookiecutter cdpvd_dashboards_store/template/
 cookiecutter cdpvd_dashboards_store/template/
 ```
 
@@ -311,6 +317,7 @@ We assume the reader as already set-up :
 * A working computer from the last decade (or a Potato (a Minitel won't work) connected to internet with a screen and a keyboard)
 * A working environement with `Python`, `Pyodbc`, `Poetry`, `wsl2` as per the wiki
 * The two repositories `cdpvd_dashboards_store` and `cssXX.data.store` cloned on his computer in the `<working directory>` of his choice. 
+* The two repositories `cdpvd_dashboards_store` and `cssXX.data.store` cloned on his computer in the `<working directory>` of his choice. 
   * The *Tale of two repos* explains why you need two repos : the core is common, the child is specific to your CSS. If you haven't read it yet, do-it ! It's a nice bedtime story.
 
 
@@ -320,6 +327,7 @@ We assume the reader as already set-up :
 * Activate an configure the _Poetry_ environement with the following snippet and install the required dependencies
 
 ```bash
+cd <working_directory>/cdpvd_dashboards_store
 cd <working_directory>/cdpvd_dashboards_store
 poetry shell
 poetry install
@@ -352,6 +360,7 @@ cssxx_store:
 > The ETLs schould be executed **from** your **css** package/project. 
 
 **Why schould ETLs being executed from your CSS repo ?**
+Remember the *Tale of Two Repos* and how little `cssXX.data.store` was granted the right to override everything ? Well that's it ! Since you are executing the ETLs from `cssXX.data.store` what you are overriding in your CSS WILL HAVE PRIORITY OVER what is defined in `cdpvd_dashboards_store` **Including what you are defining in `<working_directory>/cssXX.data.store/dbt_project.yml`**. That's the magic of the `dbt_project.yml` file.
 Remember the *Tale of Two Repos* and how little `cssXX.data.store` was granted the right to override everything ? Well that's it ! Since you are executing the ETLs from `cssXX.data.store` what you are overriding in your CSS WILL HAVE PRIORITY OVER what is defined in `cdpvd_dashboards_store` **Including what you are defining in `<working_directory>/cssXX.data.store/dbt_project.yml`**. That's the magic of the `dbt_project.yml` file.
 
 Let's get wild and run the ETL, with the following snippet :
@@ -389,6 +398,7 @@ models:
 * ETLs won't run well if there is no data for them to transform.
 * In the `store`, raw datas are accessed through `interfaces`.
 * By default, interfaces expects data to be exposed through *linked server*. If your CSS doesn't expose it's data through linked server, you will have to override the interfaces, in your `cssXX.data.store` repo.
+* Interfaces are implemented in the `cdpvd_dashboards_store` as a basic `SELECT * FROM my_table`.
 * Interfaces are implemented in the `cdpvd_dashboards_store` as a basic `SELECT * FROM my_table`.
 * Interfaces have for sole purpose to be overrided to fit the way your CSS exposes it's data.
 
@@ -465,7 +475,8 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 
 | Interfaces  | Marts         	  | Marts seeds     | Dashboard seeds | Additional config |
 |-------------|-------------------|-----------------|-----------------| ------------------|
-| paie        |human_ressources   | Yes            	| Yes             | Yes 	            |
+| paie, dofin |human_ressources   | Yes            	| Yes             | Yes 	            |
+
 
 #### Configurations 
 
@@ -484,6 +495,14 @@ dbt seed --full-refresh
 Veuillez consulter la section [seeds](/using/marts/seeds) pour plus d’informations sur la manière d’utiliser et de peupler les graines
 ::
 
+#### Actualiser les descriptifs des unités administratives, procéder à des regroupements
+
+* Pour fournir des descriptifs plus explicites à certaines unités administratives, regrouper certaines sous une même étiquette :
+  1. Ajoutez un fichier nommé `adjust_nomen_unit_adm.csv` dans le dossier `cssXX.dashboards_store/seeds/marts/human_ressources`. Ce fichier doit contenir les colonnes décrites dans `cdpvd_dashboards_store/seeds/marts/human_ressources/schema.yml` (référez-vous à la définition de la seed `adjust_nomen_unit_adm`). 
+
+  2. Déclenchez un rafraîchissement de vos seeds 
+  3. Configurez la variable `use_adjust_nomen_unit_adm` dans la section `vars` de votre fichier `dbt_project.yml`
+    
 #### Ajout des cibles ETC de votre CSS
 
 Cette seed est utilisée pour comparer les cibles ETC de votre CSS avec les heures et ETC réels.
@@ -532,6 +551,9 @@ models:
 cdpvd_dashboards_store:
   marts:        
     human_resources:
+      staging:
+        suivi_etc:
+          +enabled: true
       features:
         suivi_etc:
           +schema: suivi_etc
@@ -545,9 +567,16 @@ cdpvd_dashboards_store:
           +enabled: true
 
 vars:
+  database_dofin: "[Replace Me].[DOFIN]"
+
   marts:
     human_resources:
       date_pivot: 2024-07-01
+  
+  dashboards:
+    direction_generale:
+      suivi_etc:
+        use_adjust_nomen_unit_adm: true # à ajouter si l'on souhaite ajuster / regrouper des unités administratives
 ```
 Adaptez ces valeurs selon les besoins spécifiques de votre CSS.
 
@@ -659,11 +688,13 @@ Adaptez ces valeurs selon les besoins spécifiques de votre CSS.
 > This dashboard requiers the specification of the source file in your `cssXX.data.store` project.
 
 The source's code must be populated in `cssXX.data.store/models/dashboards/transport/staging/trnsprt_stg_sectors.sql` and as per the definition of the `cdpvd_dashboards_store/models/dashboards/transport/adapters.yml` file. Your file must be aliased to `stg_sectors`. Please, add the following config cartouche at the top of your file.
+The source's code must be populated in `cssXX.data.store/models/dashboards/transport/staging/trnsprt_stg_sectors.sql` and as per the definition of the `cdpvd_dashboards_store/models/dashboards/transport/adapters.yml` file. Your file must be aliased to `stg_sectors`. Please, add the following config cartouche at the top of your file.
 
 ```sql
 {{ config(alias='stg_sectors') }}
 ```
 
+Please refer to the `cdpvd_dashboards_store/models/dashboards/transport/adapters.yml`file to get the concrete implementation of the file. Make sure your implementation matches the one described in the file, including for the columns data types. 
 Please refer to the `cdpvd_dashboards_store/models/dashboards/transport/adapters.yml`file to get the concrete implementation of the file. Make sure your implementation matches the one described in the file, including for the columns data types. 
 
 #### Dbt project specification
@@ -856,7 +887,9 @@ dbt seed --full-refresh
 > This dashboard requiers the specification of the seeds in the `human_resources` mart.  
 
 The seed must be populated in `cssXX.data.store/seeds/marts/human_resources/` and as per the definition of the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart. 
+The seed must be populated in `cssXX.data.store/seeds/marts/human_resources/` and as per the definition of the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart. 
 
+Please refer to the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart documentation to get the concrete implementation.
 Please refer to the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart documentation to get the concrete implementation.
 
 Do not forget to refresh your seeds with the `dbt seeds --select tag:human_resources --full-refresh` command.
@@ -877,6 +910,7 @@ models:
 ```
 
 ##### Using the Report builder: empl_actif.rdl
+> An SSRS report is available to export the list of active employees of the CSS. The `emp_actif.rdl` can be found in a `cdpvd_dashboards_store/reporting/emp_actif/emp_actif.rdl`
 > An SSRS report is available to export the list of active employees of the CSS. The `emp_actif.rdl` can be found in a `cdpvd_dashboards_store/reporting/emp_actif/emp_actif.rdl`
 
 ### suivi_resultats
@@ -918,8 +952,10 @@ vars:
 
 ##### Overriding the default list of tracked courses
 > By default, the dashboard will only monitor the courses listed in `cdpvd_dashboards_store/seeds/dashboard/suivi_resultats/tracked_courses.csv`
+> By default, the dashboard will only monitor the courses listed in `cdpvd_dashboards_store/seeds/dashboard/suivi_resultats/tracked_courses.csv`
 
 You can provide your own implementation of `tracked_courses`. To do so :
+1. Write a CSV file named `tracked_courses` in the `cssXX.data.dbe/seeds/dashboards/suivi_resultats` folder populated as per the `cdpvd_dashboards_store/seeds/dashboards/suivi_resultats/schema.yml`'s definition.
 1. Write a CSV file named `tracked_courses` in the `cssXX.data.dbe/seeds/dashboards/suivi_resultats` folder populated as per the `cdpvd_dashboards_store/seeds/dashboards/suivi_resultats/schema.yml`'s definition.
 2. Disable the default seed by using the the following snippet in your `dbt_project.yml` file : 
 
@@ -936,6 +972,7 @@ seeds:
 __When overriding the tracked courses, you might want to override the tracked level as well.__
 
 ##### Overriding the default list of tracked levels
+> This step is optional. By default, the dashboard will only monitor the students currently enrolled in the livels listed in `cdpvd_dashboards_store/seeds/dashboards/suivi_resultats/tracked_level.csv`
 > This step is optional. By default, the dashboard will only monitor the students currently enrolled in the livels listed in `cdpvd_dashboards_store/seeds/dashboards/suivi_resultats/tracked_level.csv`
 
 You can provide you own list of `tracked_levels`. If, for instance, you add a new tracked course in sec 4, you will want to add the level 4 to the list of tracked levels. To do so, just write a CSV file named `tracked_levels` in the `cssXX/seeds/dashboards/suivi_resultats` folder and disable the default one by adding the following line in your `dbt_project.yml` file.
@@ -962,7 +999,9 @@ seeds:
 > This dashboard requiers the specification of the seeds in the `human_resources` mart.  
 
 The seed must be populated in `cssXX.data.store/seeds/marts/human_resources/` and as per the definition of the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart. 
+The seed must be populated in `cssXX.data.store/seeds/marts/human_resources/` and as per the definition of the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart. 
 
+Please refer to the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart documentation to get the concrete implementation.
 Please refer to the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart documentation to get the concrete implementation.
 
 Do not forget to refresh your seeds with the `dbt seeds --select tag:human_resources --full-refresh` command.
@@ -992,6 +1031,7 @@ models:
 ##### Populating the marts
 > This dashboard requiers the definition of a specicied population in the `educ_serv` mart.
 
+The marts must be populated in `cssXX.data.store/models/marts/educ_serv/populations/` and as per the definition of the `cdpvd_dashboards_store/marts/educ_serv/adapters.yml`.
 The marts must be populated in `cssXX.data.store/models/marts/educ_serv/populations/` and as per the definition of the `cdpvd_dashboards_store/marts/educ_serv/adapters.yml`.
 
 In order to build your population, you must define for each population the business rules for the previous years, including the current year, and for the forecast year. 
@@ -1136,6 +1176,7 @@ Les marts suivants doivent être activés pour que le tableau de bord fonctionne
 
 ```
 cd cdpvd_dashboards_store
+cd cdpvd_dashboards_store
 poetry shell
 poetry install 
 pre-commit install
@@ -1204,6 +1245,8 @@ Where :
 ### Integration test and the nightly build
 > The nightly build is an automated check on the repo happening at the end (the night ^^) of each day
 
+When introducting a new **NON-OPTIONAL** seed in the `cdpvd_dashboards_store` repo, you must add it into `cdpvd_dashboards_store/nightly/dbt/seeds` folder, so the next Nightly build won't fail because of a missing seed. The seed must be populated with data from CSSVDC, as the CSSVDC is used as a target database for the integration tests.
+You can also run the integration suit locally. Please, refer to the `cdpvd_dashboards_store/nightly/README.md` file for more details.
 When introducting a new **NON-OPTIONAL** seed in the `cdpvd_dashboards_store` repo, you must add it into `cdpvd_dashboards_store/nightly/dbt/seeds` folder, so the next Nightly build won't fail because of a missing seed. The seed must be populated with data from CSSVDC, as the CSSVDC is used as a target database for the integration tests.
 You can also run the integration suit locally. Please, refer to the `cdpvd_dashboards_store/nightly/README.md` file for more details.
 
@@ -1278,7 +1321,9 @@ __Développeurs : lors de la création d'un nouveau tableau de bord utilisant le
 > This dashboard requiers the specification of the seeds in the `human_resources` mart.  
 
 The seed must be populated in `cssXX.data.store/seeds/marts/human_resources/` and as per the definition of the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart. 
+The seed must be populated in `cssXX.data.store/seeds/marts/human_resources/` and as per the definition of the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart. 
 
+Please refer to the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart documentation to get the concrete implementation.
 Please refer to the `cdpvd_dashboards_store/seeds/marts/human_resources/schema.yml` mart documentation to get the concrete implementation.
 
 Do not forget to refresh your seeds with the `dbt seeds --select tag:human_resources --full-refresh` command.

@@ -19,9 +19,19 @@ clean-targets:
 {% raw %}
 on-run-start:
   - "{{ core_dashboards_store.init_metadata_table() }}"
+  - "{{ core_dashboards_store.init_metadata_table() }}"
 on-run-end:
   - "{{ core_dashboards_store.purge_metadata_table() }}"
+  - "{{ core_dashboards_store.purge_metadata_table() }}"
 {% endraw %}
+
+
+seeds:
+  ### WARN : !IMPORTANT : This configuration must be composed starting from the core_dashboards_store, as dbt does not natively support config inheritance.
+  # >>> BEGIN
+  core_dashboards_store:
+    +enabled: true
+    ### <<< END
 
 
 seeds:
@@ -35,6 +45,9 @@ models:
   ### WARN : !IMPORTANT : This configuration must be composed starting from the core_dashboards_store. Start from it and updated it as you nee
   core_dashboards_store:
     +enabled: true # By default, all models in the core schould be enabled
+  ### WARN : !IMPORTANT : This configuration must be composed starting from the core_dashboards_store. Start from it and updated it as you nee
+  core_dashboards_store:
+    +enabled: true # By default, all models in the core schould be enabled
     marts:
         human_resources:
             features:
@@ -42,7 +55,38 @@ models:
         educ_serv:
             features:
             staging:
+        human_resources:
+            features:
+            staging:
+        educ_serv:
+            features:
+            staging:
 
+    dashboards:     
+        human_resources:
+            emp_conge:
+                +enabled: False
+            emp_actif:
+                +enabled: False
+            # >>> Overridden by cdpvd_dashboards_store
+            retirement:
+                +enabled: false
+
+        educ_serv:
+            effectif_css:
+                +enabled: False
+            res_epreuves:
+                +enabled: False
+            res_scolaires:
+                +enabled: False
+            suivi_resultats:
+                +enabled: False
+            chronic_absenteeism:
+                +enabled: False
+            absenteeism:
+                +enabled: False
+            predictive_view_aggregated:
+                +enabled: False
     dashboards:     
         human_resources:
             emp_conge:
@@ -95,11 +139,18 @@ models:
     rls:
         +enabled: false
 
+        +enabled: false
+
 
 vars:
   # As the code is excuted from the inherited repo, sources schould behave as if there were refs.
     is_context_core: false
+    is_context_core: false
 
+    database_paie: "[{{ cookiecutter.server_ip }}].[PAIE]"
+    database_gpi: "[{{ cookiecutter.server_ip }}].[GPIPRIM]"
+    database_jade: "[{{ cookiecutter.server_ip }}].[JADE]"
+    database_prodrome: "[{{ cookiecutter.server_ip }}].[PRODROME]"
     database_paie: "[{{ cookiecutter.server_ip }}].[PAIE]"
     database_gpi: "[{{ cookiecutter.server_ip }}].[GPIPRIM]"
     database_jade: "[{{ cookiecutter.server_ip }}].[JADE]"

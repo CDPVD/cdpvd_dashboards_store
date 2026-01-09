@@ -65,6 +65,7 @@ with
             freq.date_deb,
             freq.date_fin_sifca,
             freq.activ_form,
+            freq.donpers,
             freq.cond_admiss,
             wlcon.cf_descr as descr_condadmiss,
             case
@@ -177,6 +178,7 @@ select
     date_deb,
     date_fin_sifca,
     activ_form,
+    donpers,
     cond_admiss,
     descr_condadmiss,
     case
