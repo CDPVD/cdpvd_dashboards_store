@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "core.data.store"
-version = "0.18.0"
-description = "core data store for dbt"
+name = "cdpvd_dashboards_store"
+version = "0.2.0"
+description = "cdpvd_dashboards_store data store for dbt"
 authors = ["Adama Fall <Adama.Fall@cssst.gouv.qc.ca>","Mohamed Sadqi <sadqim@cssvdc.gouv.qc.ca>"]
 package-mode = false
 
