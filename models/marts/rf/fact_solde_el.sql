@@ -25,8 +25,10 @@ with
 			, eco.eco
 			, dan.id_eco
         from {{ ref("i_gpm_e_dan") }} as dan
-		left join {{ ref("i_gpm_t_eco") }} as eco on eco.id_eco = dan.id_eco
-		left join {{ ref("i_gpm_e_ele") }} as el on el.fiche = dan.fiche
+		left join {{ ref("i_gpm_t_eco") }} as eco 
+			on eco.id_eco = dan.id_eco
+		left join {{ ref("i_gpm_e_ele") }} as el 
+			on el.fiche = dan.fiche
 		where eco.annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
 
 	-- soldes GPI
@@ -39,7 +41,8 @@ with
 			, sum(case when f.motif_fact in ('F','V') then f.solde else 0 end) as car_gpi
 			, sum(case when f.motif_fact = 'A' then f.solde else 0 end) as trp_gpi
         from fgj
-		left join {{ ref("i_gpm_n_fact") }} f on f.empr = fgj.fiche and f.id_eco = fgj.id_eco
+		left join {{ ref("i_gpm_n_fact") }} as f 
+			on f.empr = fgj.fiche and f.id_eco = fgj.id_eco
 		where 
 			f.type_empr = 'E'
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
@@ -53,7 +56,8 @@ with
 			, fgj.eco
 			, isnull(sum(el.solde), 0.0) as car_ag
         from fgj
-		left join {{ ref("i_sdg_e_fact") }} el on el.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and el.annee = fgj.annee
+		left join {{ ref("i_sdg_e_fact") }} as el 
+			on el.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and el.annee = fgj.annee
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 	
 	-- tp AG
@@ -65,9 +69,19 @@ with
 			, fgj.eco
 			, isnull(sum(tp.mnt), 0.0) + isnull(sum(rfnd.mnt), 0.0) as tp_ag
         from fgj
-		left join {{ ref("i_sdg_e_trop_percus") }} tp on tp.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and tp.annee = fgj.annee and tp.mnt > 0
+		left join {{ ref("i_sdg_e_trop_percus") }} as tp 
+			on tp.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and tp.annee = fgj.annee and tp.mnt > 0
 		-- tp remboursés
-		left join (select distinct fiche, id_sdg, sum(mnt) as mnt from {{ ref("i_sdg_e_trop_percus") }} where mnt < 0 group by fiche, id_sdg) as rfnd on rfnd.fiche = tp.fiche and rfnd.id_sdg = tp.id_sdg
+		left join (
+			select distinct 
+				fiche, 
+				id_sdg
+				, sum(mnt) as mnt 
+			from {{ ref("i_sdg_e_trop_percus") }} 
+			where mnt < 0 
+			group by fiche, id_sdg
+		) as rfnd 
+			on rfnd.fiche = tp.fiche and rfnd.id_sdg = tp.id_sdg
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 	
 	-- car tp PROCURE + recuperer les ecoles associées aux eleves inscrits en FP/FGA
@@ -86,7 +100,7 @@ with
 			on freq.fiche = pop.fiche and freq.annee = pop.annee and freq.freq = pop.freq
 		where car_tp_proc.annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
 	
-	-- perimetre
+	-- perimetre final FGJ + FGA
     ), perim as (
         select 
             code_perm,
@@ -119,8 +133,12 @@ select
 	, sum(isnull(car_tp_proc.car_proc, 0.0)) as car_proc
 	, sum(isnull(car_tp_proc.trp_proc, 0.0)) as trp_proc
 from perim
-left join soldes_gpi as gpi on gpi.code_perm = perim.code_perm and gpi.annee = perim.annee and gpi.eco = perim.eco
-left join car_ag on car_ag.code_perm = perim.code_perm and car_ag.annee = perim.annee and car_ag.eco = perim.eco
-left join tp_ag on tp_ag.code_perm = perim.code_perm and tp_ag.annee = perim.annee and tp_ag.eco = perim.eco
-left join car_tp_proc on car_tp_proc.code_perm = perim.code_perm and car_tp_proc.annee = perim.annee and car_tp_proc.eco = perim.eco
+left join soldes_gpi as gpi 
+	on gpi.code_perm = perim.code_perm and gpi.annee = perim.annee and gpi.eco = perim.eco
+left join car_ag 
+	on car_ag.code_perm = perim.code_perm and car_ag.annee = perim.annee and car_ag.eco = perim.eco
+left join tp_ag 
+	on tp_ag.code_perm = perim.code_perm and tp_ag.annee = perim.annee and tp_ag.eco = perim.eco
+left join car_tp_proc 
+	on car_tp_proc.code_perm = perim.code_perm and car_tp_proc.annee = perim.annee and car_tp_proc.eco = perim.eco
 group by perim.code_perm, perim.annee, perim.eco
