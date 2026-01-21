@@ -22,7 +22,6 @@ seeds:
         tests:
           - not_null
 
-
   - name: ens_qualification
     description: >
       Une table qui vient spécifier si les diplômes, certifications, brevets etc des enseignants font d'eux des enseignants légalement qualifiés ou non.
@@ -45,6 +44,7 @@ seeds:
     config:
       tags:
         - human_resources
+        - endb
       schema: human_resources_seeds
       column_types:
         code: nvarchar(3)
@@ -67,6 +67,7 @@ seeds:
     config:
       tags:
         - human_resources
+        - endb
       schema: human_resources_seeds
       column_types:
         code: nvarchar(3)
@@ -88,11 +89,10 @@ seeds:
     config:
       tags:
         - human_resources
+        - endb
       schema: human_resources_seeds
       column_types:
         lieu_trav: nvarchar(3)
-        secteur_Id: int
+        secteur_Id: nvarchar(20)
         secteur_Descr: nvarchar(32) 
         ordre_Ens: nvarchar(10)
-
-

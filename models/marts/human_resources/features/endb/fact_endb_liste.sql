@@ -15,7 +15,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-
 {{
     config(
         post_hook=[
@@ -40,9 +39,10 @@ with
             emp.stat_eng,  -- Code du statut dengagement
             emp.corp_empl,  -- Corp demploi
             qa.type_qualif as type_qualif,  -- Qualification / Certification
-            qa.date_expir, -- Date d'expiration de la qualification
+            qa.date_expir,  -- Date d'expiration de la qualification
             row_number() over (
-                partition by util.matr, qa.type_qualif order by util.matr, qa.type_qualif, qa.date_expir desc
+                partition by util.matr, qa.type_qualif
+                order by util.matr, qa.type_qualif, qa.date_expir desc
             ) as row_number
         from {{ ref("dim_employees") }} as util
         inner join {{ ref("i_pai_dos_empl") }} as emp on util.matr = emp.matr
