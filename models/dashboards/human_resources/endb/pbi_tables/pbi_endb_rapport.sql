@@ -34,7 +34,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 select
     ens.matr as matricule,
     emp.legal_name as 'nom_legal',
-    emp.sex_friendly_name as genre,
+    case
+        when emp.sex_friendly_name = 'femme' then 'Femme' else 'Homme' end as genre,
     case
         when datediff(year, emp.birth_date, getdate()) < 25
         then '24 ans et moins'
@@ -70,7 +71,8 @@ select
     statut_ens.statut as statut_enseignant,
     sect.ordre_ens,
     sect.secteur_descr as secteur,
-    ens.date_expir
+    ens.date_expir,
+    ens.type_qualif
 from {{ ref("fact_endb_liste") }} as ens
 
 inner join {{ ref("dim_employees") }} as emp on ens.matr = emp.matr
