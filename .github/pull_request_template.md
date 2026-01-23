@@ -10,7 +10,7 @@
 ```bash
 # Assuming you are in a folder containing both the core.data.store and the <cssXX>.data.store folder.
 # Update the code
-cd core.dashboards_store
+cd cdpvd_dashboards_store
 git checkout feature/<feature_name>
 git pull
 # Might be required if you update either the poetry file or the lock file
@@ -35,8 +35,8 @@ dbt build --select +tag:<my resources tag>+
     * [ ] I have you populated the `tooling/nightly` project with my new seed / adapter.
     * [ ] An exemple of how to populate the adapter can be found in the `analysis` folder.
   * I have added a new **dashboard** : 
-    * [ ] I have updated the `core.dashboards_store/tooling/template/{{ cookiecutter.css_short_name + '.dashboards_store' }}/dbt_project.yml` file with my new dashboard. 
-    * [ ] I have added a new `doc` page in the `core.dashboards_store/tooling/docs/content/` appropriate folder, describing what my dashboards does and how to configure it.
+    * [ ] I have updated the `cdpvd_dashboards_store/tooling/template/{{ cookiecutter.css_short_name + '.dashboards_store' }}/dbt_project.yml` file with my new dashboard. 
+    * [ ] I have added a new `doc` page in the `cdpvd_dashboards_store/tooling/docs/content/` appropriate folder, describing what my dashboards does and how to configure it.
     * [ ] The dashboard is saved with `.pbit` extension, **not** a `.pbix` extension, so it doesn't contains any data.
   * [ ] I have called `sqfmt .` to format my code, and **made sure my code was still running as expected after having been reformated**.
 * **Documentation** : 
