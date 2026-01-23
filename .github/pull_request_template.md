@@ -8,7 +8,7 @@
 > Provide the code required to run the pull request. This is the code that will be used to review your pull request. **The provided code must work as-is. If a DBT error is raised while running the code, the PR will be rejected. The following code / placeholder is only provided as documentation / helper to get you started and you will need to adjust it.**
 
 ```bash
-# Assuming you are in a folder containing both the core.data.store and the <cssXX>.data.store folder.
+# Assuming you are in a folder containing both the cdpvd_dashboards_store and the <cssXX>.data.store folder.
 # Update the code
 cd cdpvd_dashboards_store
 git checkout feature/<feature_name>
