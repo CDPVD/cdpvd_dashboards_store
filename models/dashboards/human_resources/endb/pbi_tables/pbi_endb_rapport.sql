@@ -30,6 +30,31 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         ]
     )
 }}
+{%- set source_relation = adapter.get_relation(
+    database=target.database,
+    schema=target.schema + "_human_resources_seeds",
+    identifier="secteur",
+) -%}
+{% set table_exists = source_relation is not none %}
+
+{% if execute %}
+    {% if table_exists %}
+        {{
+            log(
+                "La seed '*_human_resources_seeds.secteur' sera utilisée dans le modèle 'pbi_endb_rapport'.",
+                true,
+            )
+        }}
+    {% else %}
+        {% set source_relation = "(select null as ordre_ens, null as secteur_descr, null as lieu_trav)" %}
+        {{
+            log(
+                "La seed '*_human_resources_seeds.secteur' n'existe pas et sera utilisée pas dans le modèle 'pbi_endb_rapport'.",
+                true,
+            )
+        }}
+    {% endif %}
+{% endif %}
 
 select
     ens.matr as matricule,
@@ -86,7 +111,7 @@ inner join
 
 -- Left join pour aller chercher le secteur et l'ordre d'enseignement left au cas ou
 -- l'UA ne se troueve pas dans la table secteur
-left join {{ ref("secteur") }} as sect on ens.workplace = sect.lieu_trav
+left join {{ source_relation }} as sect on ens.workplace = sect.lieu_trav
 
 -- LEFT JOIN requis pour assurer une bonne représentation de la population
 left join {{ ref("ens_qualification") }} qualif on ens.type_qualif = qualif.code
