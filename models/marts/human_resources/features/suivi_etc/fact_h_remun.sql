@@ -109,7 +109,7 @@ with
             prd.date_deb,
             prd.date_fin,
             pmnt.matr,
-            perim.corp_emploi,
+            pmnt.corp_empl corp_emploi,
             perim.stat_eng,
             perim.sect,
             perim.aff,

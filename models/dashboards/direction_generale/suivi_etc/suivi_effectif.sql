@@ -44,10 +44,11 @@ with
             {{ ref("stg_nomen_unit_adm") }} as ua
             on ua.exer_fin = hrs.an_budg
             and ua.current_lieu_trav = hrs.unite_admin
-        join {{ ref("dim_mapper_job_group") }} as job on job.job_group = hrs.corp_emploi
-        join
+        left join
+            {{ ref("dim_mapper_job_group") }} as job on job.job_group = hrs.corp_emploi
+        left join
             {{ ref("i_pai_tab_corp_empl") }} as ptce on ptce.corp_empl = hrs.corp_emploi
-        join {{ ref("i_pai_tab_stat_eng") }} as eng on eng.stat_eng = hrs.stat_eng
+        left join {{ ref("i_pai_tab_stat_eng") }} as eng on eng.stat_eng = hrs.stat_eng
 
     -- sommer le tout    
     ),
