@@ -68,13 +68,6 @@ with
                 then ptce.nb_hres_an / 260.9
                 else ptce.nb_hres_an / 260.0
             end as hntj,
-            -- Corps d'emploi
-            case
-                when len(ptce.corp_empl_percos) = 4
-                then ptce.corp_empl_percos
-                else ptce.corp_empl
-            end as corp_emploi,
-            ptce.descr as corp_emploi_descr,
             -- Nombre d’heures annuelles
             case
                 when left(phe.corp_empl, 2) = '35' then 800.0 else 1080.0
@@ -109,7 +102,7 @@ with
             prd.date_deb,
             prd.date_fin,
             pmnt.matr,
-            pmnt.corp_empl corp_emploi,
+            pmnt.corp_empl as corp_emploi,
             perim.stat_eng,
             perim.sect,
             perim.aff,
@@ -185,7 +178,7 @@ with
             on typeremun.code_pmnt = pmnt.code_pmnt
             and typeremun.typeremun is not null
         where
-            left(perim.corp_emploi, 1) in ('1', '2', '3', '4', '5')
+            left(pmnt.corp_empl, 1) in ('1', '2', '3', '4', '5')
             and pmnt.mode <> ' '
             -- Exclusion des paiements dont le code commence par 103 et qui ont une
             -- entrée correspondante dans pai_tab_mot_abs (code_pmnt_a_exonerer)
