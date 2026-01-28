@@ -131,13 +131,15 @@ with
             and padd.event_kind = abs_.event_kind
         where abs_.n_events is not null
     ),
-	mat_unique as (
+    mat_unique as (
         select
-			mat.id_eco,
-			mat,
-			description_abreg,
-			row_number() over(partition by annee, mat order by mat.id_eco desc) as seq_id
-		from {{ ref("stg_descr_mat") }} as mat 
+            mat.id_eco,
+            mat,
+            description_abreg,
+            row_number() over (
+                partition by annee, mat order by mat.id_eco desc
+            ) as seq_id
+        from {{ ref("stg_descr_mat") }} as mat
         inner join {{ ref("dim_mapper_schools") }} as eco on mat.id_eco = eco.id_eco
     -- get rid of the grille dimension
     ),
@@ -149,14 +151,15 @@ with
             aug.date_evenement,
             aug.jour_semaine,
             aug.code_matiere,
-			description_abreg,
+            description_abreg,
             coalesce(aug.etape_friendly, 'Tout') as etape_friendly,
             aug.event_kind,
             sum(n_events) as n_events
         from augmented as aug
         left join {{ ref("dim_mapper_schools") }} as eco on aug.id_eco = eco.id_eco
-		left join mat_unique as mat on aug.code_matiere = mat.mat and aug.id_eco = mat.id_eco 
-        where seq_id = 1        
+        left join
+            mat_unique as mat on aug.code_matiere = mat.mat and aug.id_eco = mat.id_eco
+        where seq_id = 1
         group by
             eco.annee, cube (eco.school_friendly_name, aug.groupe, aug.etape_friendly),
             aug.date_evenement,

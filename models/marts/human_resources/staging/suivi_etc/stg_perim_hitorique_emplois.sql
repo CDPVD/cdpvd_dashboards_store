@@ -15,9 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-
 -- historique des emplois à considérer
-
 select distinct
     phe.matr,
     phe.date_eff,
@@ -30,10 +28,7 @@ select distinct
     phe.etat as etat_empl,
     -- Calcul du nb d'heures normales de travail par jour
     case
-        when
-            left(phe.corp_empl, 1) != '3'
-            and phe.mode = 'h'
-            and phe.nb_hre_sem != 0.0
+        when left(phe.corp_empl, 1) != '3' and phe.mode = 'h' and phe.nb_hre_sem != 0.0
         then phe.nb_hre_sem / 5.0
         when
             left(phe.corp_empl, 1) = '3'
@@ -46,18 +41,13 @@ select distinct
         else ptce.nb_hres_an / 260.0
     end as hntj,
     -- Nombre d’heures annuelles
-    case
-        when left(phe.corp_empl, 2) = '35' then 800.0 else 1080.0
-    end as nb_hres_an,
+    case when left(phe.corp_empl, 2) = '35' then 800.0 else 1080.0 end as nb_hres_an,
     phe.pourc_post,
     phe.pourc_temp,
     -- Traitement des emplois sur un plan sabbatique à traitement différé
     case
         when ptee.trait_spec = '1' and phe.pourc_sal >= 2.0
-        then
-            round(
-                ((phe.pourc_post * phe.pourc_temp / 100.0) - phe.pourc_sal), 4
-            )
+        then round(((phe.pourc_post * phe.pourc_temp / 100.0) - phe.pourc_sal), 4)
         when ptee.trait_spec = '2'
         then 0.0
         else 100.0

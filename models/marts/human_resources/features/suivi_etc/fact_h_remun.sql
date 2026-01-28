@@ -289,7 +289,7 @@ with
                     else nb_hre_remun * (mnt_dist / mnt_tot)
                 end
             ) as nb_hre_remun_dist,
-            sum(mnt_tot)as mnt_tot,
+            sum(mnt_tot) as mnt_tot,
             sum(mnt_dist) as mnt_dist
         from mnt_zeros
         group by
