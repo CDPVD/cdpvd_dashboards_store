@@ -39,61 +39,6 @@ with
         from {{ ref("i_pai_tab_cal_per") }}
         where date_fin >= {d '{{ date_pivot }}'}
 
-    -- historique des emplois à considérer
-    ),
-    perim as (
-        select distinct
-            phe.matr,
-            phe.date_eff,
-            phe.date_fin,
-            phe.lieu_trav,
-            phe.ref_empl,
-            phe.stat_eng,
-            phe.sect,
-            phe.aff,
-            phe.etat as etat_empl,
-            -- Calcul du nb d'heures normales de travail par jour
-            case
-                when
-                    left(phe.corp_empl, 1) != '3'
-                    and phe.mode = 'h'
-                    and phe.nb_hre_sem != 0.0
-                then phe.nb_hre_sem / 5.0
-                when
-                    left(phe.corp_empl, 1) = '3'
-                    and phe.stat_eng in ('E1', 'E2', 'E3', 'E8', 'E9')
-                then 6.4
-                when left(phe.corp_empl, 1) = '3'
-                then ptce.nb_hres_an / 200.0
-                when left(phe.corp_empl, 1) = '2'
-                then ptce.nb_hres_an / 260.9
-                else ptce.nb_hres_an / 260.0
-            end as hntj,
-            -- Nombre d’heures annuelles
-            case
-                when left(phe.corp_empl, 2) = '35' then 800.0 else 1080.0
-            end as nb_hres_an,
-            phe.pourc_post,
-            phe.pourc_temp,
-            -- Traitement des emplois sur un plan sabbatique à traitement différé
-            case
-                when ptee.trait_spec = '1' and phe.pourc_sal >= 2.0
-                then
-                    round(
-                        ((phe.pourc_post * phe.pourc_temp / 100.0) - phe.pourc_sal), 4
-                    )
-                when ptee.trait_spec = '2'
-                then 0.0
-                else 100.0
-            end as pourc_sabbatique_manquant
-        from {{ ref("i_pai_hemp") }} as phe
-        join
-            {{ ref("i_pai_tab_corp_empl_date") }} as ptce
-            on phe.corp_empl = ptce.corp_empl
-            and phe.date_eff between ptce.date_deb and ptce.date_fin
-        join {{ ref("i_pai_tab_etat_empl") }} as ptee on phe.etat = ptee.etat_empl
-        where phe.stat_eng not like '9_'
-
     -- Calculer le nbre d'heures remunerées
     ),
     hres_remun as (
@@ -159,7 +104,7 @@ with
             and pmnt.no_cheq = chq.no_cheq
             and pmnt.date_cheq = chq.date_cheq
         join
-            perim
+            {{ ref('stg_perim_hitorique_emplois') }} as perim
             on perim.matr = pmnt.matr
             and perim.ref_empl = pmnt.ref_empl
             and pmnt.date_deb between perim.date_eff and perim.date_fin
