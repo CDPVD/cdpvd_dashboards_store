@@ -51,6 +51,7 @@ with
             phe.stat_eng,
             phe.sect,
             phe.aff,
+            phe.etat as etat_empl,
             -- Calcul du nb d'heures normales de travail par jour
             case
                 when
@@ -106,6 +107,7 @@ with
             perim.stat_eng,
             perim.sect,
             perim.aff,
+            perim.etat_empl,
             typeremun.typeremun,
             pmnt.mode,
             case
@@ -253,6 +255,7 @@ with
             t1.stat_eng,
             t1.sect,
             t1.aff,
+            t1.etat_empl,
             t1.typeremun,
             t1.mode,
             t1.lieu_trav,
@@ -321,6 +324,7 @@ with
             stat_eng,
             sect,
             aff,
+            etat_empl,
             typeremun,
             mode,
             no_seq,
@@ -339,7 +343,9 @@ with
                     then nb_hre_remun
                     else nb_hre_remun * (mnt_dist / mnt_tot)
                 end
-            ) as nb_hre_remun_dist
+            ) as nb_hre_remun_dist,
+            sum(mnt_tot)as mnt_tot,
+            sum(mnt_dist) as mnt_dist
         from mnt_zeros
         group by
             annee,
@@ -357,6 +363,7 @@ with
             stat_eng,
             sect,
             aff,
+            etat_empl,
             typeremun,
             mode,
             no_seq,
@@ -381,6 +388,7 @@ select
     stat_eng,
     sect,
     aff,
+    etat_empl,
     typeremun,
     mode,
     no_seq,
@@ -388,6 +396,8 @@ select
     stuff(stuff(stuff(no_cmpt, 4, 0, '-'), 6, 0, '-'), 12, 0, '-') as no_cmpt,
     lieu_trav,
     lieu_trav_cpt_budg as unite_admin,
-    nb_hre_remun_dist
+    nb_hre_remun_dist,
+    mnt_tot,
+    mnt_dist
 from cal_renum
 where lieu_trav_cpt_budg is not null and nb_hre_remun_dist != 0
