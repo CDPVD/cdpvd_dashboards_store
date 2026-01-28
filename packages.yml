@@ -1,4 +1,4 @@
 packages:
   - git: git@github.com:Sciance-Inc/core.dashboards_store.git
-    revision: develop
+    revision: v0.19.3+20260108
   
