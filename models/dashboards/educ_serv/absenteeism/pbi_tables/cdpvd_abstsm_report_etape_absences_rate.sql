@@ -25,17 +25,20 @@ with
     source as (
         select
             annee,
-            school_friendly_name,
-            groupe,
+            coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
+            coalesce(groupe, 'Tout') as groupe,
             etape_friendly,
             event_kind,
-            max(n_events) as n_events,
-            max(n_students_daily) as n_students_daily,
-            max(absence_rate) as absence_rate
+            sum(n_events) as n_events,
+            sum(n_students_daily) as n_students_daily,
+            sum(absence_rate) as absence_rate,
+            sum(absence_rate * n_students_daily)
+            / sum(n_students_daily) as avg_absence_rate_etape,
+            avg(cast(n_students_daily as float)) as weight_etape
         from {{ ref("cdpvd_abstsm_stg_daily_metrics") }} as src
-        group by annee, school_friendly_name, groupe, etape_friendly, event_kind
+        group by annee, cube(school_friendly_name, groupe), etape_friendly, event_kind
     ),
-    agg as (
+/*     agg as (
         select
             annee,
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
@@ -54,16 +57,14 @@ with
 
     -- Estimate the per etape average absence_rate at the CSS level as the weighted
     -- average of the school's etape absence rate
-    ),
+    ), */
     css as (
         select
             annee,
             etape_friendly,
             event_kind,
-            sum(absence_rate * n_students_daily)
-            / sum(n_students_daily) as avg_absence_rate_etape_css
-        {# sum(avg_absence_rate_etape * weight_etape)
-            / sum(weight_etape) as avg_absence_rate_etape_css #}
+       sum(avg_absence_rate_etape * weight_etape)
+            / sum(weight_etape) as avg_absence_rate_etape_css
         from source
         group by annee, etape_friendly, event_kind
 
@@ -73,12 +74,12 @@ with
         select
             annee,
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
-            etape_friendly,
+            coalesce(groupe, 'Tout') as groupe,
             event_kind,
             sum(absence_rate * n_students_daily)
             / sum(n_students_daily) as avg_absence_rate_school
-        from source as src
-        group by annee, rollup (school_friendly_name), etape_friendly, event_kind
+        from {{ ref("cdpvd_abstsm_stg_daily_metrics") }} as src
+        group by annee, cube(school_friendly_name, groupe), event_kind
 
     -- add the css and school metrics to the table
     ),
@@ -97,7 +98,7 @@ with
             css.avg_absence_rate_etape_css,
             -- school
             school.avg_absence_rate_school
-        from agg as src
+        from source as src
         left join
             css
             on src.annee = css.annee
@@ -107,7 +108,7 @@ with
             school
             on src.annee = school.annee
             and src.school_friendly_name = school.school_friendly_name
-            and src.etape_friendly = school.etape_friendly
+            and src.groupe = school.groupe
             and src.event_kind = school.event_kind
     )
 
