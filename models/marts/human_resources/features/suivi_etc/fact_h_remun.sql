@@ -342,7 +342,6 @@ select
     lieu_trav,
     lieu_trav_cpt_budg as unite_admin,
     nb_hre_remun_dist,
-    mnt_tot,
     mnt_dist
 from cal_renum
 where lieu_trav_cpt_budg is not null and nb_hre_remun_dist != 0
