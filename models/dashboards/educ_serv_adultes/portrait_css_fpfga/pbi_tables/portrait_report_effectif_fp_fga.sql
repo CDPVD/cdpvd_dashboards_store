@@ -53,7 +53,8 @@ with
             freq.activ_form,
             freq.donpers,
             case
-                when freq.activ_form is null or freq.activ_form = '' then freq.donpers 
+                when freq.activ_form is null or freq.activ_form = ''
+                then freq.donpers
                 else freq.activ_form
             end as groupe_horaire,
             freq.cond_admiss,
