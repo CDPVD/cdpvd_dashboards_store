@@ -34,20 +34,18 @@ with
     e1 as (
         select
             util.matr,  -- Matricule
-            emp.etat as etat_empl,  -- Code de létat demploi
-            emp.lieu_trav as workplace,  -- Code du lieu de travail
-            emp.stat_eng,  -- Code du statut dengagement
-            emp.corp_empl,  -- Corp demploi
+            util.etat_empl as etat_empl,  -- Code de létat demploi
+            util.lieu_trav as workplace,  -- Code du lieu de travail
+            util.stat_eng,  -- Code du statut dengagement
+            util.corp_empl,  -- Corp demploi
             qa.type_qualif as type_qualif,  -- Qualification / Certification
             qa.date_expir,  -- Date d'expiration de la qualification
             row_number() over (
                 partition by util.matr, qa.type_qualif
                 order by util.matr, qa.type_qualif, qa.date_expir desc
             ) as row_number
-        from {{ ref("dim_employees") }} as util
-        inner join {{ ref("i_pai_dos_empl") }} as emp on util.matr = emp.matr
-        inner join {{ ref("etat_empl") }} as etat on emp.etat = etat.etat_empl
-        inner join {{ ref("fact_activity_current") }} as ca on util.matr = ca.matr  -- Employé actif ds paie
+        from {{ ref("fact_activity_current") }} as util
+        inner join {{ ref("etat_empl") }} as etat on util.etat_empl = etat.etat_empl
 
         -- LEFT JOIN Aller chercher les qualifications valides (date_expir NULL ou
         -- future)
@@ -58,15 +56,14 @@ with
 
         where
             etat.etat_actif = 1  -- Si l'employé est actif
-            and emp.ind_empl_princ = 1  -- Prendre en considération uniquement son emploi principal
-            and emp.corp_empl like '3%'  -- Enseignant(e)
+            and util.corp_empl like '3%'  -- Enseignant(e)
 
         group by
             util.matr,
-            emp.etat,
-            emp.lieu_trav,
-            emp.stat_eng,
-            emp.corp_empl,
+            util.etat_empl,
+            util.lieu_trav,
+            util.stat_eng,
+            util.corp_empl,
             qa.type_qualif,
             qa.date_expir
     )

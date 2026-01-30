@@ -43,10 +43,7 @@ models:
         description: Description de l'état d'emploi de l'employé.
         tests:
           - not_null
-      - name: femme
-        description: Nombre de femmes.
-      - name: homme
-        description: Nombre d'hommes.
+
       - name: edb
         description: Nombre d'enseignant(e)s qualifié(e)s.
       - name: endb

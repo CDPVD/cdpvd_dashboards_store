@@ -85,10 +85,8 @@ select
     end as 'tranche_age',
     lieu.workplace_name as lieu_principal,
     job_class.code_job_name as corp_empl,
-    case when qualif.code is null then 'Aucune' else qualif.descr end as qualification,
+    case when ens.type_qualif is null then 'Aucune' else qualif.descr end as qualification,
     state.descr as etat_empl,
-    case when emp.sex_friendly_name = 'femme' then 1 end as femme,
-    case when emp.sex_friendly_name = 'homme' then 1 end as homme,
     case when qualif.is_qualified = 1 then 1 else 0 end as edb,
     case
         when qualif.is_qualified is null or qualif.is_qualified != 1 then 1 else 0
