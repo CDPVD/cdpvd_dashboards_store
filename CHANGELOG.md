@@ -2,9 +2,14 @@
 
 
 
+## v1.1.0+20260203 (2026-02-03)
+
+
 ## v1.0.0+20260109 (2026-01-09)
 
 ### Bug fixes
+
+* fix: correction d'erreur de merge dans dbt_project.yml ([`453eea0`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/453eea095e70f2e835a953b512c1a8fa09d65f03))
 
 * fix(pevr): increasing seed field char limit ([`f3580f9`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f3580f9c56252aeef2a5565878d0be928ff68407))
 
@@ -17,6 +22,46 @@
 * fix(template): updating the human resources seed ([`42724f7`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/42724f730c0e6b31896c9fcb8ad3c5729c944ba5))
 
 * fix(stg_perimetre_eleve_frequentation_*): call to macros are now properly qualified ([`75bca69`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/75bca69c65db252cc1bb77b70c7768180829324d))
+
+* fix: correction préfix macro test résolution (#26)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`cf8c559`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/cf8c55983240b841fbf075dc836543a4420ce91e))
+
+* fix(absenteeisme): ajout année précédente a la table bris de scolarité 
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`c03e354`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c03e35454ff50961bb1012ee50d2273d9e37e13b))
+
+* fix: update fact_yearly_student to default year_of_data_student ([`6109d1e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6109d1e1c85710314568a0c925a77b8018264e08))
+
+* fix: Changement du nom de l'interface HEMP dans core (#13)
+
+Co-authored-by: sadqim <146247957+sadqim@users.noreply.github.com> ([`ab76ae3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ab76ae31010523efe23aed1682b89f44707d990f))
+
+* fix: ajout du préfix core aux tests de resolution (#12)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`d816db4`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d816db4b2251550cdb7374d13c0c0753a7ddc643))
+
+* fix: supprimé table en double ([`42fbd98`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/42fbd98c590213f79d503a1c946ac257f3627c59))
+
+* fix: desactiver cdpvd_dashboards_store par défaut dans le dbt_project (#11)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`14c26ff`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/14c26ff3a52eef4cc862ab40b890ce9eae8dd3d5))
+
+* fix: corriger nom de la database (#10)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`fd469f0`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/fd469f0577be349acba9766c2db109c19c86c8f1))
+
+* fix(pevr): increasing seed field char limit ([`0575a8e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0575a8effd5ac4f68a434ff9bbab21dff908e297))
+
+* fix(educ_serv): adding scope to test resolution ([`c0ba9b1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/c0ba9b17ca5970226b1a75686350a62c2a1f689c))
+
+* fix(interfaces): adding missing interfaces ([`92a59f5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/92a59f5eb0c19176d42dec52789106ef91091d57))
+
+* fix(packages): updating the template s dependencies to depend from cdpvd_dashboards_store ([`ed53e4a`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ed53e4a95e1fcf4a8c63377d02a48f551d0bec72))
+
+* fix(template): updating the human resources seed ([`43835d1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/43835d1b32b77e2b619020f3be97f87251a564bf))
+
+* fix(stg_perimetre_eleve_frequentation_*): call to macros are now properly qualified ([`a0d0eb8`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/a0d0eb881a311ff5858bb6684221a812761a87fe))
 
 * fix: naming incorrect dans la table suivi_diplomation (#20) ([`f2ffb98`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f2ffb98f2357529bcedd55038a723de5b674d6dc))
 
@@ -470,6 +515,14 @@ Co-authored-by: Gabriel Thiffault <thiffaultg@csvt.qc.ca>
 Co-authored-by: Adama Fall <adama.fall@cssst.gouv.qc.ca>
 Co-authored-by: martin_legault <martin_legault@cssmv.gouv.qc.ca> ([`0230928`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0230928747fec36603e217e12bd3132c80898319))
 
+* chore: update package revision to 'develop' ([`f79bed8`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f79bed8ff42d2ed1f353ecf2ba1f593634002173))
+
+* chore: Update package revision to v0.19.2 ([`0a8525c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0a8525c0eb6ff1fe9c97872cf405fd91aa4cdcd2))
+
+* chore: Remove duplicate copyright notice from SQL file
+
+Removed duplicate copyright notice. ([`5f3b002`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/5f3b002e90f504becdda16ae45ba2ad70d504e1a))
+
 * chore: adding a git keet commit file to preserve the folder ([`caca770`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/caca77066f07c42a831545cde347a3e2953beea4))
 
 * chore(retirement): disabling retirement dashboard override as the PR has not been accepted yet ([`344f1b1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/344f1b1116ca080714afb8505b5d0c390a6db7bb))
@@ -485,6 +538,33 @@ Co-authored-by: martin_legault <martin_legault@cssmv.gouv.qc.ca> ([`0230928`](ht
 * chore: propagating project renaming from cdpvd_store to cdpvd_dashboards_store ([`ce02229`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ce02229b3c4abb459cb769b3da199a271e30b1af))
 
 * chore: propagating core_dashboards_store renaming from store to core_dashboards_store ([`abd6de0`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/abd6de0b8edec7bbb6e7d7437d2ff44dc43162a2))
+
+* chore: modify license in scripts ([`76f34d1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/76f34d18f8cd765ca8b931501f2a0f9554499958))
+
+* chore: new try to license
+
+---------
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+Co-authored-by: Frederyk Busque <147734849+busquef@users.noreply.github.com>
+Co-authored-by: alluardj <alluardj@csvdc.qc.ca>
+Co-authored-by: Adama Fall <fallada@cs-soreltracy.qc.ca> ([`76f34d1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/76f34d18f8cd765ca8b931501f2a0f9554499958))
+
+* chore: adding a git keet commit file to preserve the folder ([`4cfd189`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/4cfd189513c88a2b4265df889511d4413b8dd46f))
+
+* chore(retirement): disabling retirement dashboard override as the PR has not been accepted yet ([`7a1c111`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7a1c111a247e3f9106a126570b88cbe3ceb9d489))
+
+* chore: updating dependency to a branch from sciance/core ([`32c5545`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/32c55458710bdf8641edfb8019f468b2d7924d14))
+
+* chore: removing dead code ([`fcde032`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/fcde0321a402a8503872fec0816d14f63e11826d))
+
+* chore(pevr): the pevr now lives in its dedicated subfolder ([`32a7c47`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/32a7c47ed14c0243f6c68d0a22210964a7ed828c))
+
+* chore: updating the licence to CDPVD instead of Sciance ([`e5ad7b6`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e5ad7b6fe3df3a0bc18d65981c6e94ace099ac55))
+
+* chore: propagating project renaming from cdpvd_store to cdpvd_dashboards_store ([`f770703`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f770703e53dd479bb6a6e6f4fcaaa6da1e1ba6e7))
+
+* chore: propagating core_dashboards_store renaming from store to core_dashboards_store ([`f8e4e03`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f8e4e0388a745a3f1a58ba69a5d9542c5fc628c5))
 
 * chore: modifier le perimetre fpt. ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
 
@@ -923,6 +1003,49 @@ chore: add a schema file for the spines folder ([`7357543`](https://github.com/C
 * feat(reporting): adding the diplimation and emp_actif alternative dashboards ([`30ec73d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/30ec73d4343be95ed99365f97ae9cc7cfd699525))
 
 * feat: update package.yml ([`573fa50`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/573fa506e4f8772e79acf1f0c08cb5c3ed6cbbca))
+
+* feat: mise à jour suite à une nouvelle version du Core (#27)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`84b9900`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/84b9900a3da2da94a5961ad02f45480b5b76aa89))
+
+* feat(rls): création de tables de rls pour les gestionnaires des unités de service (#25)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`26f7b10`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/26f7b104e1ae17346d4b75e5a84f774df5ab737d))
+
+* feat(suivi_effectif): Pipeline de calcul des heures rémunérées / ETC (DBT + reporting) (#22)
+
+Co-authored-by: alluardj <alluardj@csvdc.qc.ca>
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+Co-authored-by: Adama Fall <fallada@cs-soreltracy.qc.ca> ([`80a3b5d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/80a3b5dcf48f1ccc88129150da82dc80b09167d9))
+
+* feat: suppression de pevr ([`e1b0c79`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/e1b0c7987bcf29269c02e2f7dc4c18727a8e95dc))
+
+* feat: ajout de champs a la fact_ri_mention ([`224a1c9`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/224a1c9728ffb2a7cd9ea967638de1abd5e0bb19))
+
+* feat: Utilisation de la variable mois_reference pour les tableaux Retirement (#7) ([`0b7335c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/0b7335c727dd78761a1283db2f0e19da6db0a4e2))
+
+* feat(absenteeism): transformation du tdb absentéisme (#8)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca>
+Co-authored-by: Adama Fall <fallada@cs-soreltracy.qc.ca> ([`9fb085c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/9fb085ce64dab7a60d81336cc9e036a7eb8abe9a))
+
+* feat: add the descr_org_hor + interface ([`76f34d1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/76f34d18f8cd765ca8b931501f2a0f9554499958))
+
+* feat: add age_30_sept / june in fact_freq_adultes ([`76f34d1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/76f34d18f8cd765ca8b931501f2a0f9554499958))
+
+* feat: add type_parcours field to fact_freq and adjust interface field names ([`76f34d1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/76f34d18f8cd765ca8b931501f2a0f9554499958))
+
+* feat: interfaces jade adultes
+
+feat: dim_eleves_adultes ([`76f34d1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/76f34d18f8cd765ca8b931501f2a0f9554499958))
+
+* feat: fact_freq_adultes sqlfmt ([`76f34d1`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/76f34d18f8cd765ca8b931501f2a0f9554499958))
+
+* feat: uniformizing the project dbt project and the template one ([`7f39464`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7f394646d4f3924028e597107b171a909556383d))
+
+* feat(reporting): adding the diplimation and emp_actif alternative dashboards ([`ffa11cb`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/ffa11cbb8856c4e05c465bae3219c8c30fffa938))
+
+* feat: update package.yml ([`5502f37`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/5502f37b58dd3a2cfedd2cb25acfc919ce00a506))
 
 * feat: Ajout d'un nouveau tableau de bord PEVR (#18) ([`94a220d`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/94a220d9fbedbe0f78c537caff96017b97cca442))
 
@@ -1806,6 +1929,14 @@ feat: change in the dbt_project to manually activate the dashboards of interest 
 * refactor: reorganisation de cdpvd_dashboard_store ([`f7ab9a5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f7ab9a5b25058872c2f19af6775a638fe9b860de))
 
 * refactor: restrecturation du dissier dashboard ([`00dbb8b`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/00dbb8bc8375e184f5b8f5e128897774f26cf93f))
+
+* refactor: Changement sex à genre (#5)
+
+Co-authored-by: Gabriel Thiffault <thiffaultg@csvt.qc.ca> ([`3723006`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3723006c9db979c411f306dfc6f73699e322ec37))
+
+* refactor: reorganisation de cdpvd_dashboard_store ([`1bb15c3`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/1bb15c3107a469816e8ed2494a37806f93ae2a1a))
+
+* refactor: restrecturation du dissier dashboard ([`74ff8ee`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/74ff8ee24f8ad784bcf29c4e1f0aac8923b3245b))
 
 * refactor: renaming and add columns to interface (#8) ([`d40781e`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/d40781e4eb2f102178862836bb8e174c65302b3a))
 
