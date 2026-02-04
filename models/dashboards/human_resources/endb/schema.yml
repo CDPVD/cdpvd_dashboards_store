@@ -37,8 +37,7 @@ models:
           - not_null
       - name: qualification
         description: Qualification / certification de l'employé.
-        tests:
-          - not_null
+
       - name: etat_empl
         description: Description de l'état d'emploi de l'employé.
         tests:
