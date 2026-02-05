@@ -1,6 +1,6 @@
 {#
-CDPVD Dashboards store
-Copyright (C) 2024 CDPVD.
+Dashboards Store - Helping students, one dashboard at a time.
+Copyright (C) 2023  Sciance Inc.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -15,8 +15,8 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select
-    fiche,
+select 
+    fiche, 
     codeperm as code_perm,
     nom,
     pnom as prenom,
@@ -28,9 +28,6 @@ select
     pnomtuteur as pnom_tuteur,
     adr_electr_pere, 
     adr_electr_mere,
-    adr_electr_tuteur,
-    datenaiss as date_naissance,
-    indlieunaisselen as ind_lieu_naissance_n,
-    langmatern as lang_matern,
-    sexe as genre
-from {{ var("database_jade_adultes") }}.dbo.e_ele
+    adr_electr_tuteur
+from {{ var("database_jade") }}.dbo.e_ele
+with (nolock)
