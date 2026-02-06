@@ -16,22 +16,89 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
-with
-    -- Ajout du champs adresse et un seq_id pour conserver les dernieres lignes par type d'adresse
-    seq as (
+
+with 
+	-- Recuperer l'ensemble des adresses FGJ-FP-FGA
+	adr as (
+		-- FGJ
+        select
+			ele.code_perm,
+			right('0000000' + cast(adr.fiche as varchar(7)), 7) as fiche,
+			ele.nom, 
+    		ele.prenom, 
+    		ele.nom_mere, 
+			ele.pnom_mere,
+			ele.adr_electr_mere,
+			ele.nom_pere, 
+			ele.pnom_pere,
+			ele.adr_electr_pere, 
+			ele.nom_tuteur, 
+			ele.pnom_tuteur,
+			ele.adr_electr_tuteur,
+			adr.type_adr,
+			adr.date_effect,
+			adr.date_fin,
+			ltrim(rtrim(
+				isnull(nullif(adr.app, '') + '-', '') +
+				isnull(nullif(adr.no_civ, '') + ' ', '') +
+				isnull(nullif(adr.orient_rue, '') + ' ', '') +
+				isnull(nullif(adr.genre_rue, '') + ' ', '') +
+				isnull(nullif(adr.rue, '') + ', ', '') +
+				isnull(nullif(adr.ville, '') + ', ', '') +
+				isnull(nullif(adr.code_post, ''), '')
+			)) as adresse
+		from {{ ref("i_e_adr") }} adr
+		left join {{ ref("i_e_ele") }} ele
+			on ele.fiche = adr.fiche
+		where 
+			cast(getdate() as date) >= adr.date_effect 	-- l'adresse doit etre effective aujourd'hui
+			and ele.code_perm is not null
+
+		union all
+
+		-- FP et FGA
+		select
+			ele.code_perm,
+			case
+				when charindex('_', adr.fiche) > 0 then right('0000000' + left(adr.fiche, charindex('_', adr.fiche) - 1), 7)
+				else right('0000000' + cast(adr.fiche as varchar(7)), 7)
+			end as fiche,
+			ele.nom, 
+    		ele.prenom,
+    		ele.nom_mere, 
+			ele.pnom_mere,
+			ele.adr_electr_mere,
+			ele.nom_pere, 
+			ele.pnom_pere,
+			ele.adr_electr_pere, 
+			ele.nom_tuteur, 
+			ele.pnom_tuteur,
+			ele.adr_electr_tuteur,
+			adr.typeadr as type_adr,
+			adr.date_effect,
+			adr.date_fin,
+			ltrim(rtrim(
+				isnull(adr.app + '-', '') +
+				isnull(adr.no_civ + ' ', '') +
+				isnull(adr.orient_rue + ' ', '') +
+				isnull(adr.genrerue + ' ', '') +
+				isnull(adr.rue + ', ', '') +
+				isnull(adr.ville + ', ', '') +
+				isnull(adr.code_post, '')
+			)) as adresse
+		from {{ ref("i_e_adr_adultes") }} adr
+		left join {{ ref("i_e_ele_adultes") }} ele
+			on ele.fiche = adr.fiche
+	where 
+		cast(getdate() as date) >= adr.date_effect 	-- l'adresse doit etre effective aujourd'hui
+		and ele.code_perm is not null
+	
+	-- Ajout d'un seq_id pour conserver les dernieres lignes par type d'adresse
+	), seq as (
         select 
-			fiche,
-			type_adr,
-			date_effect,
-			iif(app is not null, app + '-', ' ') +
-			iif(no_civ is not null, no_civ + ' ', ' ') +
-			iif(orient_rue is not null, orient_rue + ' ', ' ') +
-			iif(genre_rue is not null, genre_rue + ' ', ' ') +
-			iif(rue is not null, rue + ', ', ' ') +
-			iif(ville is not null, ville + ', ', ' ') +
-			iif(code_post is not null, code_post, ' ') as adresse,
-			row_number() over (partition by fiche, type_adr order by date_effect desc) as seq_id
-        from {{ ref("i_gpm_e_adr") }}
+			*,
+			row_number() over (partition by code_perm, type_adr order by date_effect desc) as seq_id
+        from adr
 
 	-- Conserver les dernieres adresses par type
 	), latest as (
@@ -39,21 +106,72 @@ with
 		from seq
 		where seq_id = 1
 
-	-- redefinir les types d'adresses en role
+	-- Redefinir les types d'adresses en role
 	), roles as (
-		select fiche, 'mere' as role, date_effect, adresse
+		select 
+			fiche, 
+			code_perm,
+			nom, 
+    		prenom, 
+			'mere' as role, 
+			date_effect, 
+			date_fin,
+			adresse, 
+    		nom_mere, 
+			pnom_mere,
+			adr_electr_mere,
+			nom_pere, 
+			pnom_pere,
+			adr_electr_pere, 
+			nom_tuteur, 
+			pnom_tuteur,
+			adr_electr_tuteur
 		from latest
 		where type_adr in (1,3)
 
 		union all
 
-		select fiche, 'pere' as role, date_effect, adresse
+		select 
+			fiche, 
+			code_perm, 
+			nom, 
+    		prenom, 
+			'pere' as role, 
+			date_effect, 
+			date_fin, 
+			adresse, 
+    		nom_mere, 
+			pnom_mere,
+			adr_electr_mere,
+			nom_pere, 
+			pnom_pere,
+			adr_electr_pere, 
+			nom_tuteur, 
+			pnom_tuteur,
+			adr_electr_tuteur
 		from latest
 		where type_adr in (1,2)
 
 		union all
 
-		select fiche, 'tuteur' as role, date_effect, adresse
+		select 
+			fiche, 
+			code_perm, 
+			nom, 
+    		prenom, 
+			'tuteur' as role, 
+			date_effect, 
+			date_fin, 
+			adresse, 
+    		nom_mere, 
+			pnom_mere,
+			adr_electr_mere,
+			nom_pere, 
+			pnom_pere,
+			adr_electr_pere, 
+			nom_tuteur, 
+			pnom_tuteur,
+			adr_electr_tuteur
 		from latest
 		where type_adr = 4
 	
@@ -61,27 +179,26 @@ with
 	), seq2 as (
     select 
 		*,
-        row_number() over (partition by fiche, role order by date_effect desc) as seq_id
+        row_number() over (partition by code_perm, role order by date_effect desc) as seq_id
     from roles
 )
 
 select
-    el.code_perm,
-	el.nom, 
-    el.pnom, 
-	seq2.fiche,
-    el.nom_mere, 
-	el.pnom_mere,
-	el.adr_electr_mere,
-    max(case when seq2.role = 'mere' and seq2.seq_id = 1 then seq2.adresse end) as adresse_mere,
-	el.nom_pere, 
-	el.pnom_pere,
-	el.adr_electr_pere, 
-    max(case when seq2.role = 'pere' and seq2.seq_id = 1 then seq2.adresse end) as adresse_pere,
-	el.nom_tuteur, 
-	el.pnom_tuteur,
-	el.adr_electr_tuteur,
-    max(case when seq2.role = 'tuteur' and seq2.seq_id = 1 then seq2.adresse end) as adresse_tuteur
+    code_perm,
+	nom, 
+    prenom, 
+	fiche,
+    nom_mere, 
+	pnom_mere,
+	adr_electr_mere,
+    max(case when role = 'mere' and seq_id = 1 then adresse end) as adresse_mere,
+	nom_pere, 
+	pnom_pere,
+	adr_electr_pere, 
+    max(case when role = 'pere' and seq_id = 1 then adresse end) as adresse_pere,
+	nom_tuteur, 
+	pnom_tuteur,
+	adr_electr_tuteur,
+    max(case when role = 'tuteur' and seq_id = 1 then adresse end) as adresse_tuteur
 from seq2
-left join {{ ref("i_gpm_e_ele") }} as el on el.fiche = seq2.fiche
-group by el.code_perm, 	el.nom, el.pnom, seq2.fiche, el.nom_mere, el.pnom_mere, el.adr_electr_mere, el.nom_pere, el.pnom_pere, el.adr_electr_pere, el.nom_tuteur, el.pnom_tuteur, el.adr_electr_tuteur
+group by code_perm, nom, prenom, fiche, nom_mere, pnom_mere, adr_electr_mere, nom_pere, pnom_pere, adr_electr_pere, nom_tuteur, pnom_tuteur, adr_electr_tuteur
