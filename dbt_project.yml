@@ -120,6 +120,9 @@ models:
                     pbi_tables:
                         +post-hook:
                             - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
+
+                endb:
+                
             educ_serv_adultes:
                 portrait_css_fpfga:
             direction_generale:

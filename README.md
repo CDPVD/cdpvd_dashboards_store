@@ -1132,6 +1132,45 @@ vars:
                 years_of_data_absences: votre_nombre_annee # Combien d'années de données conserver pour les tableaux de bord centrés sur les absences.
                 years_of_data_student: votre_nombre_annee # Combien d'années de données conserver pour les données des élèves.
 ```
+### Endb 
+> Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | Gabriel Thiffault (CSSVT)
+
+| Interfaces  | Marts 	| Marts seeds     | Dashboard seeds | Additional config |
+|-------------|---------|-----------------|-----------------| ------------------|
+| paie         |human_resources |human_resources             	| Non              | Oui 	              |
+
+## Déploiement
+
+![Success](https://img.shields.io/badge/endb-success-brightgreen)  
+![New in v0.11.0](https://img.shields.io/badge/new%20in-v0.11.0-blue)
+
+
+## Bases de données
+
+La base de données `paie` doit être liée au projet. Veuillez vous référer à la section [Lier une base de données](/using/configuration/databases) pour plus d'informations sur la façon de lier une base de données.
+
+## Seed
+
+::alert{type=warning} 3 seeds sont requises pour le fonctionnement du tableau de bord. ::
+
+Le tableau de bord nécessite les 3 seeds suivantes :  
+### ens_qualification : 
+Seed obligatoire. La liste des codes de qualifications, leur description et si elle est considérée comme étant légalement qualifiante. Vous pouvez aller chercher la liste dans la table WL_DESCR de votre système de paie et aller chercher nom_table = 'BC_TYPE_QUALIF'
+
+### statut_enseignant
+Seed obligatoire. Liste des statuts d'engagement débutant par la lettre E (généralement les enseignants). Elle permet de catégoriser si les statuts sont considérés comme des titulaires, remplaçants , suppléants... Vous pouvez utiliser la table PAI_TAB_STAT_ENG pour aller chercher les statuts.
+
+### secteur :
+Seed optionnel. Elle est utilisée pour tenir compte de la subdivision du territoire de votre CSS, soit en quartier, en secteur. En plus, elle nous donne l'ordre d'enseignement, tel que vous voulez le voir dans les filtres 
+
+
+## Marts
+
+Les marts suivants doivent être activés pour que le tableau de bord fonctionne. Veuillez vous référer à la section [Activer un mart](/using/configuration/enabling) pour plus d'informations sur la façon d'activer un mart.
+
+- `human_resources`
+
+
 
 # Developer guidelines
 
