@@ -57,8 +57,8 @@ with
                 else 0.0
             end as is_qualified,
             case
-                when perim.school_friendly_name is null then '-'
-                else perim.school_friendly_name
+                when perimetre.school_friendly_name is null then '-'
+                else perimetre.school_friendly_name
             end as school_friendly_name,
             case 
                 when ele.genre is null then '-' 
@@ -105,6 +105,7 @@ with
         select
         -- Filtre
             annee_scolaire,
+            cohorte,
             mois_sanction,
             school_friendly_name,
             genre,
@@ -126,6 +127,7 @@ with
         from _filtre
         group by
             annee_scolaire,
+            cohorte,
             id_indicateur_cdpvd,
             id_indicateur_css,
             description_indicateur,
@@ -146,6 +148,7 @@ with
         select
         -- Filtre
             annee_scolaire,
+            cohorte,
             coalesce(school_friendly_name, 'CSS') as ecole,
             coalesce(mois_sanction, 'Tout') as mois_sanction,
             coalesce(genre, 'Tout') as genre,
@@ -160,14 +163,13 @@ with
             description_indicateur,
             cible,
         -- Agg
-            cohorte,
             nb_resultat,
             nb_qualified,
             taux_qualification_fpt,
             ecart_cible,
             LAG(taux_qualification_fpt) OVER (
             PARTITION BY 
-                id_indicateur,
+                id_indicateur_cdpvd,
                 coalesce(school_friendly_name, 'CSS'),
                 coalesce(genre, 'Tout'),
                 coalesce(plan_interv_ehdaa, 'Tout'),
