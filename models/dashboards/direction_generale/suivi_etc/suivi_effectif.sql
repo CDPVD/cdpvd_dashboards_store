@@ -38,7 +38,11 @@ with
                 then 'Temps supplémentaire'
                 else '-'
             end as type_remun,
-            hrs.nb_hre_remun_dist
+            hrs.nb_hre_remun_dist,
+            case 
+                when serv_eleve = 1 then 'Direct' 
+                else 'Indirect'
+            end as services_eleve
         from {{ ref("fact_h_remun") }} as hrs
         left join
             {{ ref("stg_nomen_unit_adm") }} as ua
@@ -65,7 +69,8 @@ with
             stat_eng,
             type_remun,
             sum(nb_hre_remun_dist) as nombre_heures_remun,
-            sum((nb_hre_remun_dist / 1826.3)) as equivalent_temps_plein
+            sum((nb_hre_remun_dist / 1826.3)) as equivalent_temps_plein,
+            services_eleve
         from reel
         group by
             an_budg,
@@ -77,7 +82,8 @@ with
             code_lieu_trav,
             descr_unite_admin,
             stat_eng,
-            type_remun
+            type_remun,
+            services_eleve
     )
 select
     an_budg,
@@ -91,5 +97,6 @@ select
     stat_eng,
     type_remun,
     nombre_heures_remun,
-    equivalent_temps_plein
+    equivalent_temps_plein,
+    services_eleve
 from tot
