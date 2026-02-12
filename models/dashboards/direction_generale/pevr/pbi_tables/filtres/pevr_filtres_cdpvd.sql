@@ -37,13 +37,14 @@ with
             {{ ref("fact_ri_mentions") }} as mentions
             on y_stud.fiche = mentions.fiche
             and m_school.annee = mentions.annee_sanction
+        where y_stud.annee between {{ core_dashboards_store.get_current_year() }} - 7 and {{ core_dashboards_store.get_current_year() }} - 1 
     ),
 
     _coalesce as (
         select
             school_friendly_name,
             annee_scolaire,
-            mois_sanction,
+            coalesce(mois_sanction, '-') as mois_sanction,
             plan_interv_ehdaa,
             genre,
             population,
