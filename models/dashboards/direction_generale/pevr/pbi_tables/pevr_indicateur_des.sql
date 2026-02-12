@@ -43,23 +43,44 @@ with
             and mentions.indice_des = 1.0  -- dip DES
     ),
 
+    -- Je cherche la cible visée du PEVR
+    cible_max as (
+        select
+            c.id_indicateur_cdpvd,
+            c.cible as cible_visee
+        from pevr_dim_cible_annuelle_cdpvd c
+        join (
+            select
+                id_indicateur_cdpvd,
+                max(annee_scolaire) as annee_scolaire
+            from pevr_dim_cible_annuelle_cdpvd
+            group by id_indicateur_cdpvd
+        ) m
+            on c.id_indicateur_cdpvd = m.id_indicateur_cdpvd
+        and c.annee_scolaire = m.annee_scolaire
+    ),
+
     -- Ajout des filtres utilisés dans le tableau de bord.
     _filtre as (
         select
             perim.annee,
             perim.annee_scolaire,
             perim.fiche,
-            perim.mois_sanction,
             ind_cdpvd.objectif,
             ind_cdpvd.id_indicateur_cdpvd,
             ind_cdpvd.id_indicateur_css,
             ind_cdpvd.description_indicateur,
             cible_annuelle.cible,
             perim.ind_obtention,
+            cible_max.cible_visee,
             case
                 when perim.school_friendly_name is null then '-'
                 else perim.school_friendly_name
             end as school_friendly_name,
+            case
+                when perim.mois_sanction is null then '-'
+                else perim.mois_sanction
+            end as mois_sanction,
             case 
                 when ele.genre is null then '-' 
                 else ele.genre 
@@ -98,6 +119,8 @@ with
             {{ ref("pevr_dim_cible_annuelle_cdpvd") }} as cible_annuelle
             on ind_cdpvd.id_indicateur_cdpvd = cible_annuelle.id_indicateur_cdpvd
             and perim.annee_scolaire = cible_annuelle.annee_scolaire
+        left join cible_max
+            on ind_cdpvd.id_indicateur_cdpvd = cible_max.id_indicateur_cdpvd
         where seqid = 1
     ),
 
@@ -115,10 +138,10 @@ with
             distribution,
             groupe_repere,
         -- Indicateurs
-            id_indicateur_cdpvd,
             id_indicateur_css,
             description_indicateur,
             cible,
+            cible_visee,
         -- Agg
             count(fiche) nb_resultat,
             CAST(SUM(ind_obtention) as integer) as nb_ind_obtention,
@@ -127,10 +150,9 @@ with
         from _filtre
         group by
             annee_scolaire,
-            id_indicateur_cdpvd,
             id_indicateur_css,
             description_indicateur,
-            cible, cube (
+            cible, cible_visee, cube (
                 mois_sanction,
                 school_friendly_name,
                 genre,
@@ -156,26 +178,25 @@ with
             coalesce(distribution, 'Tout') as distribution,
             coalesce(groupe_repere, 'Tout') as groupe_repere,
         -- Indicateurs
-            id_indicateur_cdpvd,
             id_indicateur_css,
             description_indicateur,
             cible,
+            cible_visee,
         -- Agg
             nb_resultat,
             nb_ind_obtention,
             taux_diplomation,
-            ecart_cible,
-            LAG(taux_diplomation) OVER (PARTITION BY id_indicateur_cdpvd ORDER BY cast(left(annee_scolaire, 4) as int)) as taux_previous_year
+            ecart_cible
         from agg_dip
     )
 
 select
 -- Indicateurs
-    id_indicateur_cdpvd,
     id_indicateur_css,
     description_indicateur,
-    cible,
 -- Agg
+    cible,
+    cible_visee,
     nb_resultat,
     taux_diplomation,
     CONCAT(
@@ -183,13 +204,11 @@ select
         CHAR(10),
         '(', nb_ind_obtention, '/', nb_resultat, ' él.) '
     ) AS taux_nbEleve,
-    ecart_cible,
-    CASE 
-        WHEN (taux_diplomation >= cible ) THEN 2 -- Vert
-        WHEN ( (taux_diplomation < taux_previous_year) AND (taux_diplomation > cible) ) THEN 2 -- Vert
-        WHEN ( (taux_diplomation > taux_previous_year) AND (taux_diplomation < cible) ) THEN 1 -- Jaune
-        WHEN (taux_diplomation < cible ) THEN 0 -- Rouge
-    END AS variation,
+    case
+        when ecart_cible >= 0 then 'V'
+        when ecart_cible >= -5 then 'J'
+        else 'R'
+    end as ecart_cible_couleur,
     {{
         dbt_utils.generate_surrogate_key(
             [

@@ -44,23 +44,44 @@ with
             and mentions.indice_cfms = 1.0  -- Filtre pour choisir la qualification fms
     ),
 
+    -- Je cherche la cible visée du PEVR
+    cible_max as (
+        select
+            c.id_indicateur_cdpvd,
+            c.cible as cible_visee
+        from pevr_dim_cible_annuelle_cdpvd c
+        join (
+            select
+                id_indicateur_cdpvd,
+                max(annee_scolaire) as annee_scolaire
+            from pevr_dim_cible_annuelle_cdpvd
+            group by id_indicateur_cdpvd
+        ) m
+            on c.id_indicateur_cdpvd = m.id_indicateur_cdpvd
+        and c.annee_scolaire = m.annee_scolaire
+    ),
+
     -- Ajout des filtres utilisés dans le tableau de bord.
     _filtre as (
         select
-            perim.annee,
-            perim.annee_scolaire,
-            perim.fiche,
-            perim.mois_sanction,
+            perimetre.annee,
+            perimetre.annee_scolaire,
+            perimetre.fiche,
             ind_cdpvd.objectif,
             ind_cdpvd.id_indicateur_cdpvd,
             ind_cdpvd.id_indicateur_css,
             ind_cdpvd.description_indicateur,
             cible_annuelle.cible,
-            perim.ind_obtention,
+            perimetre.ind_obtention,
+            cible_max.cible_visee,
             case
-                when perim.school_friendly_name is null then '-'
-                else perim.school_friendly_name
+                when perimetre.school_friendly_name is null then '-'
+                else perimetre.school_friendly_name
             end as school_friendly_name,
+            case
+                when perimetre.mois_sanction is null then '-'
+                else perimetre.mois_sanction
+            end as mois_sanction,
             case 
                 when ele.genre is null then '-' 
                 else ele.genre 
@@ -85,20 +106,22 @@ with
                 when y_stud.grp_rep is null then '-' 
                 else y_stud.grp_rep
             end as groupe_repere
-        from perimetre as perim
+        from perimetre
         inner join
             {{ ref("fact_yearly_student") }} as y_stud
-            on perim.fiche = y_stud.fiche
-            and perim.annee = y_stud.annee
+            on perimetre.fiche = y_stud.fiche
+            and perimetre.annee = y_stud.annee
         inner join
-            {{ ref("dim_eleve") }} as ele on perim.fiche = ele.fiche
+            {{ ref("dim_eleve") }} as ele on perimetre.fiche = ele.fiche
         inner join
             {{ ref("pevr_dim_objectif_cdpvd") }} as ind_cdpvd
-            on perim.id_indicateur_cdpvd = ind_cdpvd.id_indicateur_cdpvd
+            on perimetre.id_indicateur_cdpvd = ind_cdpvd.id_indicateur_cdpvd
         inner join
             {{ ref("pevr_dim_cible_annuelle_cdpvd") }} as cible_annuelle
             on ind_cdpvd.id_indicateur_cdpvd = cible_annuelle.id_indicateur_cdpvd
-            and perim.annee_scolaire = cible_annuelle.annee_scolaire
+            and perimetre.annee_scolaire = cible_annuelle.annee_scolaire
+        left join cible_max
+            on ind_cdpvd.id_indicateur_cdpvd = cible_max.id_indicateur_cdpvd
         where seqid = 1
     ),
 
@@ -116,10 +139,10 @@ with
             distribution,
             groupe_repere,
         -- Indicateurs
-            id_indicateur_cdpvd,
             id_indicateur_css,
             description_indicateur,
             cible,
+            cible_visee,
         -- Agg
             count(fiche) nb_resultat,
             CAST(SUM(ind_obtention) as integer) as nb_ind_obtention,
@@ -128,10 +151,9 @@ with
         from _filtre
         group by
             annee_scolaire,
-            id_indicateur_cdpvd,
             id_indicateur_css,
             description_indicateur,
-            cible, cube (
+            cible, cible_visee, cube (
                 mois_sanction,
                 school_friendly_name,
                 genre,
@@ -157,25 +179,24 @@ with
             coalesce(distribution, 'Tout') as distribution,
             coalesce(groupe_repere, 'Tout') as groupe_repere,
         -- Indicateurs
-            id_indicateur_cdpvd,
             id_indicateur_css,
             description_indicateur,
             cible,
+            cible_visee,
         -- Agg
             nb_resultat,
             nb_ind_obtention,
             taux_qualification_fms,
-            ecart_cible,
-            LAG(taux_qualification_fms) OVER (PARTITION BY id_indicateur_cdpvd ORDER BY cast(left(annee_scolaire, 4) as int)) as taux_previous_year
+            ecart_cible
         from agg_dip
     )
 
 select
 -- Indicateurs
-    id_indicateur_cdpvd,
     id_indicateur_css,
     description_indicateur,
     cible,
+    cible_visee,
 -- Agg
     nb_resultat,
     nb_ind_obtention,
@@ -185,14 +206,11 @@ select
         CHAR(10),
         '(', nb_ind_obtention, '/', nb_resultat, ' él.) '
     ) as taux_nbEleve,
-    ecart_cible,
-    cast(left(annee_scolaire, 4) as int) as annee,
-    CASE 
-        WHEN (taux_qualification_fms >= cible ) THEN 2 -- Vert
-        WHEN ( (taux_qualification_fms < taux_previous_year) AND (taux_qualification_fms > cible) ) THEN 2 -- Vert
-        WHEN ( (taux_qualification_fms > taux_previous_year) AND (taux_qualification_fms < cible) ) THEN 1 -- Jaune
-        WHEN (taux_qualification_fms < cible ) THEN 0 -- Rouge
-    END AS variation,
+    case
+        when ecart_cible >= 0 then 'V'
+        when ecart_cible >= -5 then 'J'
+        else 'R'
+    end as ecart_cible_couleur,
     {{
         dbt_utils.generate_surrogate_key(
             [
