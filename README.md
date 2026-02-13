@@ -350,7 +350,9 @@ cssxx_store:
       schema: <your name> # Lowercase, not spaces of any sort
       user: <The username to use to connect to the DB>
       password: <The password associated to the user you are connecting to>
+      authentication: sql
       trust_cert: True
+      threads: 3
 ```
 
 * Feel free to smoketest your connection with the awsome `dbt debug`
