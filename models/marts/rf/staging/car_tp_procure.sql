@@ -17,82 +17,127 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
 with
+-- Gerer le format de la fiche
+    el_cast as (
+        select
+            code_perm,
+            case
+                when charindex('_', fiche) > 0 then right('0000000' + left(fiche, charindex('_', fiche) - 1), 7)
+                else right('0000000' + cast(fiche as varchar(7)), 7)
+            end as fiche
+        from {{ ref("i_e_ele_adultes") }}
+
 -- CAR PROCURE
-car_agg as (
-    select 
-        el.code_perm,
-        case
-            when charindex('_', car.code_emprunt) > 0 
-                then right('0000000' + left(code_emprunt, charindex('_', code_emprunt) - 1), 7)
-            else right('0000000' + cast(car.code_emprunt as varchar(7)), 7)
-        end as fiche,
-        car.eco_cen,
-        car.annee,
-        sum(car.solde) as solde
-    from {{ ref("i_pro_art_emprunt") }} as car
-    left join {{ ref("i_e_ele_adultes") }} as el 
-			on el.fiche = car.code_emprunt
-    where 
-        car.statut != 15
-        and el.code_perm is not null
-    group by 
-        el.code_perm,
-        case
-            when charindex('_', car.code_emprunt) > 0 
-                then right('0000000' + left(car.code_emprunt, charindex('_', car.code_emprunt) - 1), 7)
-            else right('0000000' + cast(car.code_emprunt as varchar(7)), 7)
-        end,
-        car.eco_cen,
-        car.annee
-),
--- TP PROCURE
-tp_agg as (
+), car as (
     select
-        el.code_perm,
         case
-            when charindex('_', tp.code_emprunt) > 0 
-                then right('0000000' + left(tp.code_emprunt, charindex('_', tp.code_emprunt) - 1), 7)
-            else right('0000000' + cast(tp.code_emprunt as varchar(7)), 7)
-        end as fiche,
-        tp.eco_cen,
-        case
-            when month(tp.date_paiemnt) < 7 then year(tp.date_paiemnt) - 1 
-            else year(tp.date_paiemnt)
-        end as annee,
-        sum(tp.mont_non_repart) as mont_non_repart
-    from {{ ref("i_pro_paiemnt") }} as tp
-        left join {{ ref("i_e_ele_adultes") }} as el 
-			on el.fiche = tp.code_emprunt
-    where 
-        tp.type_emprunt = '1'
-        and tp.date_annul is null
-        and tp.type_paiemnt = '4'
-        and el.code_perm is not null
+            when charindex('_', code_emprunt) > 0 
+                then right('0000000' + left(code_emprunt, charindex('_', code_emprunt) - 1), 7)
+            else right('0000000' + cast(code_emprunt as varchar(7)), 7)
+        end as fiche_key,
+        eco_cen,
+        annee,
+        solde 
+    from {{ ref("i_pro_art_emprunt") }}
+    where statut != 15
+
+-- aggreger CAR par fiche, annee, eco_cen
+), car_agg as (
+    select 
+        fiche_key as fiche,
+        eco_cen,
+        annee,
+        sum(solde) as solde
+    from car
     group by 
-        el.code_perm,
+        fiche_key,
+        eco_cen,
+        annee
+
+-- TP PROCURE
+), tp as (
+    select
         case
-            when charindex('_', tp.code_emprunt) > 0 
-                then right('0000000' + left(tp.code_emprunt, charindex('_', tp.code_emprunt) - 1), 7)
-            else right('0000000' + cast(tp.code_emprunt as varchar(7)), 7)
-        end,
+            when charindex('_', code_emprunt) > 0 
+                then right('0000000' + left(code_emprunt, charindex('_', code_emprunt) - 1), 7)
+            else right('0000000' + cast(code_emprunt as varchar(7)), 7)
+        end as fiche_key,
+        case
+            when month(date_paiemnt) < 7 then year(date_paiemnt) - 1
+            else year(date_paiemnt)
+        end as annee,
+        eco_cen,
+        mont_non_repart
+    from {{ ref("i_pro_paiemnt") }}
+    where type_emprunt = '1'
+      and date_annul is null
+      and type_paiemnt = '4'
+
+-- aggreger TP par fiche, annee, eco_cen
+), tp_agg as (
+    select
+        fiche_key as fiche,
+        eco_cen,
+        annee,
+        sum(mont_non_repart) as mont_non_repart
+    from tp
+    group by 
+        tp.fiche_key,
         tp.eco_cen,
-        case
-            when month(tp.date_paiemnt) < 7 then year(tp.date_paiemnt) - 1 
-            else year(tp.date_paiemnt)
-        end
+        tp.annee
+
+-- CAR-TP
+), car_tp as (
+    select
+        c.fiche,
+        c.annee,
+        c.eco_cen,
+        c.solde as car_proc,
+        isnull(t.mont_non_repart, 0) as trp_proc
+    from car_agg as c
+    left join tp_agg as t
+        on t.fiche = c.fiche
+        and t.annee = c.annee
+        and t.eco_cen = c.eco_cen
+
+    union all
+
+    select
+        t.fiche,
+        t.annee,
+        t.eco_cen,
+        0,
+        t.mont_non_repart
+    from tp_agg as t
+    left join car_agg as c
+        on t.fiche = c.fiche
+        and t.annee = c.annee
+        and t.eco_cen = c.eco_cen
+    where c.fiche is null
 )
 
--- REQUETE FINALE : joindre CAR et TP par fiche + annee + eco_cen
+-- REQUETE FINALE
 select
+    el.code_perm,
+    ct.fiche,
+    ct.annee,
+    ct.eco_cen as eco,
+    ct.car_proc,
+    ct.trp_proc
+from car_tp as ct
+inner join el_cast as el
+    on el.fiche = ct.fiche
+
+{# select
     coalesce(c.code_perm, t.code_perm) as code_perm,
     coalesce(c.fiche, t.fiche) as fiche,
     coalesce(c.annee, t.annee) as annee,
     coalesce(c.eco_cen, t.eco_cen) as eco,
     isnull(c.solde, 0) as car_proc,
     isnull(t.mont_non_repart, 0) as trp_proc
-from car_agg as c
-full outer join tp_agg as t
+from car_f as c
+full outer join tp_f as t
     on t.code_perm = c.code_perm
     and t.fiche = c.fiche
     and t.annee = c.annee
-    and t.eco_cen = c.eco_cen
+    and t.eco_cen = c.eco_cen #}
