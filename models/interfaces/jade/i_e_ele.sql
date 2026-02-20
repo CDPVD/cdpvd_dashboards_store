@@ -26,6 +26,7 @@ select
     pnommere as pnom_mere,
     nomtuteur as nom_tuteur, 
     pnomtuteur as pnom_tuteur,
+    adr_electr_ele, 
     adr_electr_pere, 
     adr_electr_mere,
     adr_electr_tuteur
