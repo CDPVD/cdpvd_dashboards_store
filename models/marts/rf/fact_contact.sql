@@ -175,6 +175,29 @@ with
 		from latest
 		where type_adr = 4
 	
+		union all
+
+		select 
+			fiche, 
+			code_perm, 
+			nom, 
+    		prenom, 
+			'eleve' as role, 
+			date_effect, 
+			date_fin, 
+			adresse, 
+    		nom_mere, 
+			pnom_mere,
+			adr_electr_mere,
+			nom_pere, 
+			pnom_pere,
+			adr_electr_pere, 
+			nom_tuteur, 
+			pnom_tuteur,
+			adr_electr_tuteur
+		from latest
+		where type_adr = 5
+
 	-- ajout d'un nouveau seq_id par role
 	), seq2 as (
     select 
@@ -188,6 +211,7 @@ select
 	nom, 
     prenom, 
 	fiche,
+	max(case when role = 'eleve' and seq_id = 1 then adresse end) as adresse_eleve,
     nom_mere, 
 	pnom_mere,
 	adr_electr_mere,
