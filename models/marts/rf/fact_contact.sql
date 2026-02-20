@@ -16,7 +16,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
-
 with 
 	-- Recuperer l'ensemble des adresses FGJ-FP-FGA
 	adr as (
@@ -127,7 +126,7 @@ with
 			pnom_tuteur,
 			adr_electr_tuteur
 		from latest
-		where type_adr in (1,3)
+		where type_adr in ('1','3')
 
 		union all
 
@@ -150,7 +149,7 @@ with
 			pnom_tuteur,
 			adr_electr_tuteur
 		from latest
-		where type_adr in (1,2)
+		where type_adr in ('1','2')
 
 		union all
 
@@ -173,7 +172,7 @@ with
 			pnom_tuteur,
 			adr_electr_tuteur
 		from latest
-		where type_adr = 4
+		where type_adr = '4'
 	
 		union all
 
