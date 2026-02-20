@@ -88,32 +88,18 @@ with
 
 -- CAR-TP
 ), car_tp as (
-    select
-        c.fiche,
-        c.annee,
-        c.eco_cen,
-        c.solde as car_proc,
+
+    select 
+        coalesce(c.fiche, t.fiche) as fiche,
+        coalesce(c.annee, t.annee) as annee,
+        coalesce(c.eco_cen, t.eco_cen) as eco_cen,
+        isnull(c.solde, 0) as car_proc,
         isnull(t.mont_non_repart, 0) as trp_proc
     from car_agg as c
-    left join tp_agg as t
-        on t.fiche = c.fiche
-        and t.annee = c.annee
-        and t.eco_cen = c.eco_cen
-
-    union all
-
-    select
-        t.fiche,
-        t.annee,
-        t.eco_cen,
-        0,
-        t.mont_non_repart
-    from tp_agg as t
-    left join car_agg as c
-        on t.fiche = c.fiche
-        and t.annee = c.annee
-        and t.eco_cen = c.eco_cen
-    where c.fiche is null
+    full join tp_agg as t 
+        on c.fiche = t.fiche 
+        and c.annee = t.annee 
+        and c.eco_cen = t.eco_cen
 )
 
 -- REQUETE FINALE
@@ -127,17 +113,3 @@ select
 from car_tp as ct
 inner join el_cast as el
     on el.fiche = ct.fiche
-
-{# select
-    coalesce(c.code_perm, t.code_perm) as code_perm,
-    coalesce(c.fiche, t.fiche) as fiche,
-    coalesce(c.annee, t.annee) as annee,
-    coalesce(c.eco_cen, t.eco_cen) as eco,
-    isnull(c.solde, 0) as car_proc,
-    isnull(t.mont_non_repart, 0) as trp_proc
-from car_f as c
-full outer join tp_f as t
-    on t.code_perm = c.code_perm
-    and t.fiche = c.fiche
-    and t.annee = c.annee
-    and t.eco_cen = c.eco_cen #}
