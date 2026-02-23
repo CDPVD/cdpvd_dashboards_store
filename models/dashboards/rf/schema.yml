@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: report_car_tp
+    config:
+      tags:
+        - rf
+        - car_trp
+      schema: dashboard_rf
+    description: >
+        Table qui comptabilise les comptes à recevoir et trop-perçus par année scolaire, école et fiche. la table fournit également les informations de contact associées.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - code_perm
+            - fiche
+            - annee
+            - eco
