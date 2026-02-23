@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 with 
 	-- Recuperer l'ensemble des adresses FGJ-FP-FGA
 	adr as (
-		-- FGJ
+		-- FGJ (priorité 2)
         select
 			ele.code_perm,
 			right('0000000' + cast(adr.fiche as varchar(7)), 7) as fiche,
@@ -45,7 +45,8 @@ with
 				isnull(nullif(adr.rue, '') + ', ', '') +
 				isnull(nullif(adr.ville, '') + ', ', '') +
 				isnull(nullif(adr.code_post, ''), '')
-			)) as adresse
+			)) as adresse,
+        	2 as priorite
 		from {{ ref("i_e_adr") }} adr
 		left join {{ ref("i_e_ele") }} ele
 			on ele.fiche = adr.fiche
@@ -55,7 +56,7 @@ with
 
 		union all
 
-		-- FP et FGA
+		-- FP et FGA (priorité 1)
 		select
 			ele.code_perm,
 			case
@@ -84,7 +85,8 @@ with
 				isnull(adr.rue + ', ', '') +
 				isnull(adr.ville + ', ', '') +
 				isnull(adr.code_post, '')
-			)) as adresse
+			)) as adresse,
+        	1 as priorite
 		from {{ ref("i_e_adr_adultes") }} adr
 		left join {{ ref("i_e_ele_adultes") }} ele
 			on ele.fiche = adr.fiche
@@ -104,6 +106,20 @@ with
 		select *
 		from seq
 		where seq_id = 1
+
+	-- Priorité inter-secteur FP-FGA > FGJ. Si l’élève existe en FP-FGA, on ignore complètement FGJ pour lui.
+	), prioritized as (
+    select *
+    from (
+        select 
+			*,
+            row_number() over (
+                partition by code_perm
+                order by priorite asc
+            ) as rn_prior
+        from latest
+    ) as temp
+    where rn_prior = 1
 
 	-- Redefinir les types d'adresses en role
 	), roles as (
@@ -125,7 +141,7 @@ with
 			nom_tuteur, 
 			pnom_tuteur,
 			adr_electr_tuteur
-		from latest
+		from prioritized
 		where type_adr in ('1','3')
 
 		union all
@@ -148,7 +164,7 @@ with
 			nom_tuteur, 
 			pnom_tuteur,
 			adr_electr_tuteur
-		from latest
+		from prioritized
 		where type_adr in ('1','2')
 
 		union all
@@ -171,7 +187,7 @@ with
 			nom_tuteur, 
 			pnom_tuteur,
 			adr_electr_tuteur
-		from latest
+		from prioritized
 		where type_adr = '4'
 	
 		union all
@@ -194,7 +210,7 @@ with
 			nom_tuteur, 
 			pnom_tuteur,
 			adr_electr_tuteur
-		from latest
+		from prioritized
 		where type_adr = 5
 
 	-- ajout d'un nouveau seq_id par role

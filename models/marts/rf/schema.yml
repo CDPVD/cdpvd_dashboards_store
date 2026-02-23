@@ -26,4 +26,4 @@ models:
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:
-            - fiche
+            - code_perm
