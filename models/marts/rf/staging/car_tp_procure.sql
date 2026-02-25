@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 with
 -- Gerer le format de la fiche
     el_cast as (
-        select
+        select distinct
             code_perm,
             case
                 when charindex('_', fiche) > 0 then right('0000000' + left(fiche, charindex('_', fiche) - 1), 7)
