@@ -44,15 +44,26 @@ with
                 when res = '' or res is null
                 then null
                 else
-                    cast(
-                        concat(
-                            annee_sanct,
-                            '-',
-                            right(concat('0', mois_sanct), 2),
-                            '-',
-                            right(concat('0', jour_sanct), 2)
-                        ) as date
-                    )
+                    case
+                        when
+                            annee_sanct = ''
+                            or annee_sanct is null
+                            or mois_sanct = ''
+                            or mois_sanct is null
+                            or jour_sanct = ''
+                            or jour_sanct is null
+                        then null
+                        else
+                            cast(
+                                concat(
+                                    annee_sanct,
+                                    '-',
+                                    right(concat('0', mois_sanct), 2),
+                                    '-',
+                                    right(concat('0', jour_sanct), 2)
+                                ) as date
+                            )
+                    end
             end as date_sanct,
             facr.indtransm,
             service,
@@ -76,9 +87,9 @@ with
             fac.interv_age_fp,
             fac.org_hor,
             fac.descr_org_hor,
-            fac.activform,
-            fac.condadmiss,
-            concat(fac.condadmiss, ' - ', fac.descr_condadmiss) as condition_admission,
+            fac.activ_form,
+            fac.cond_admiss,
+            concat(fac.cond_admiss, ' - ', fac.descr_condadmiss) as condition_admission,
             fac.descr_condadmiss,
             fac.etat_formation,
             fac.prog,
@@ -108,7 +119,7 @@ with
             concat('(', facr.fiche, ') ', el.prenom, ' ', el.nom) as prenom_nom,
             el.lang_matern,
             el.desc_lang_matern
-        from {{ ref("fact_reussite_adultes") }} facr
+        from {{ ref("fact_sanction_adultes") }} facr
         inner join
             {{ ref("fact_freq_adultes") }} as fac
             on fac.code_perm = facr.code_perm
