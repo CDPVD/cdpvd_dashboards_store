@@ -70,7 +70,7 @@ with
 			, isnull(sum(tp.mnt), 0.0) as tp_ag
         from fgj
 		left join {{ ref("i_sdg_e_trop_percus") }} as tp 
-			on tp.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and tp.annee = fgj.annee and tp.mnt > 0
+			on tp.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and tp.annee = fgj.annee
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 	
 	-- car tp PROCURE + recuperer les ecoles associées aux eleves inscrits en FP/FGA
