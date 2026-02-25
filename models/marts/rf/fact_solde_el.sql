@@ -56,7 +56,7 @@ with
 			, fgj.eco
 			, isnull(sum(el.solde), 0.0) as car_ag
         from fgj
-		left join {{ ref("i_sdg_e_fact") }} as el 
+		left join {{ ref("i_sdg_e_fact") }} as el
 			on el.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and el.annee = fgj.annee
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 	
@@ -67,21 +67,10 @@ with
 			, fgj.fiche
 			, fgj.annee
 			, fgj.eco
-			, isnull(sum(tp.mnt), 0.0) + isnull(sum(rfnd.mnt), 0.0) as tp_ag
+			, isnull(sum(tp.mnt), 0.0) as tp_ag
         from fgj
 		left join {{ ref("i_sdg_e_trop_percus") }} as tp 
 			on tp.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and tp.annee = fgj.annee and tp.mnt > 0
-		-- tp remboursés
-		left join (
-			select distinct 
-				fiche, 
-				id_sdg
-				, sum(mnt) as mnt 
-			from {{ ref("i_sdg_e_trop_percus") }} 
-			where mnt < 0 
-			group by fiche, id_sdg
-		) as rfnd 
-			on rfnd.fiche = tp.fiche and rfnd.id_sdg = tp.id_sdg
 		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
 	
 	-- car tp PROCURE + recuperer les ecoles associées aux eleves inscrits en FP/FGA
