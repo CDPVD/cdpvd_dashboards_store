@@ -16,63 +16,59 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 with
-    -- Recuperer l'ensemble des eleves qui ont des inscriptions ces 15 dernieres annees en FGJ
-    fgj as (
-        select distinct 
-			el.code_perm
-			, dan.fiche
+	-- soldes GPI
+	soldes_gpi as (
+		select 
+			el.code_perm 
+			, f.empr as fiche
 			, eco.annee
 			, eco.eco
-			, dan.id_eco
-        from {{ ref("i_gpm_e_dan") }} as dan
-		left join {{ ref("i_gpm_t_eco") }} as eco 
-			on eco.id_eco = dan.id_eco
-		left join {{ ref("i_gpm_e_ele") }} as el 
-			on el.fiche = dan.fiche
-		where eco.annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
-
-	-- soldes GPI
-	), soldes_gpi as (
-		select 
-			fgj.code_perm 
-			, fgj.fiche
-			, fgj.annee
-			, fgj.eco
 			, sum(case when f.motif_fact in ('F','V') then f.solde else 0 end) as car_gpi
 			, sum(case when f.motif_fact = 'A' then f.solde else 0 end) as trp_gpi
-        from fgj
-		left join {{ ref("i_gpm_n_fact") }} as f 
-			on f.empr = fgj.fiche and f.id_eco = fgj.id_eco
+        from {{ ref("i_gpm_n_fact") }} as f 
+		left join {{ ref("i_gpm_t_eco") }} as eco 
+			on eco.id_eco = f.id_eco
+		left join {{ ref("i_gpm_e_ele") }} as el 
+			on el.fiche = f.empr
 		where 
-			f.type_empr = 'E'
-		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
+			eco.annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
+			and f.type_empr = 'E'
+		group by el.code_perm, f.empr, eco.annee, eco.eco
 	
 	-- car AG
 	), car_ag as (
 		select 
-			fgj.code_perm 
-			, fgj.fiche
-			, fgj.annee
-			, fgj.eco
-			, isnull(sum(el.solde), 0.0) as car_ag
-        from fgj
-		left join {{ ref("i_sdg_e_fact") }} as el
-			on el.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and el.annee = fgj.annee
-		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
+			el.code_perm
+			, car.fiche
+			, car.annee
+			, bat_sdg.eco
+			, isnull(sum(car.solde), 0.0) as car_ag
+        from {{ ref("i_sdg_e_fact") }} as car
+		left join {{ ref("i_sdg_e_ele") }} as el
+			on el.fiche = car.fiche
+		left join {{ ref("mapping_bat_sdg_eco") }} as bat_sdg 
+			on bat_sdg.id_sdg = car.id_sdg
+		where 
+			car.annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
+		group by el.code_perm, car.fiche, car.annee, bat_sdg.eco
 	
 	-- tp AG
 	), tp_ag as (
 		select 
-			fgj.code_perm 
-			, fgj.fiche
-			, fgj.annee
-			, fgj.eco
+			el.code_perm
+			, tp.fiche
+			, tp.annee
+			, bat_sdg.eco
 			, isnull(sum(tp.mnt), 0.0) as tp_ag
-        from fgj
-		left join {{ ref("i_sdg_e_trop_percus") }} as tp 
-			on tp.fiche = right('0000000' + cast(fgj.fiche as varchar(7)), 7) and tp.annee = fgj.annee
-		group by fgj.code_perm, fgj.fiche, fgj.annee, fgj.eco
-	
+        from {{ ref("i_sdg_e_trop_percus") }} as tp
+		left join {{ ref("i_sdg_e_ele") }} as el 
+			on el.fiche = tp.fiche
+		left join {{ ref("mapping_bat_sdg_eco") }} as bat_sdg
+			on bat_sdg.id_sdg = tp.id_sdg
+		where 
+			tp.annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
+		group by el.code_perm, tp.fiche, tp.annee, bat_sdg.eco
+
 	-- car tp PROCURE + recuperer les ecoles associées aux eleves inscrits en FP/FGA
 	), car_tp_proc as (
 		select
@@ -87,16 +83,31 @@ with
 			on pop.code_perm = car_tp_proc.code_perm and pop.fiche = car_tp_proc.fiche and pop.annee = car_tp_proc.annee 
 		left join {{ ref("i_e_freq_adultes") }} as freq
 			on freq.fiche = pop.fiche and freq.annee = pop.annee and freq.freq = pop.freq
-		where car_tp_proc.annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
+		where 
+			car_tp_proc.annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
 	
 	-- perimetre final FGJ + FGA
     ), perim as (
         select 
             code_perm,
-            right('0000000' + cast(fiche as varchar(7)), 7) fiche,
+            fiche,
             annee,
             eco
-        from fgj
+        from soldes_gpi
+        union
+        select 
+            code_perm,
+            fiche,
+            annee,
+            eco
+        from car_ag
+        union
+        select 
+            code_perm,
+            fiche,
+            annee,
+            eco
+        from tp_ag
         union
         select 
             code_perm,
@@ -109,7 +120,7 @@ with
 -- REQUETE FINALE
 select 
     perim.code_perm,
-	string_agg(perim.fiche, ', ') AS fiche, -- pour considerer les eleves avec 1 CP, 2 fiches la meme annee
+	string_agg(perim.fiche, ', ') AS fiche, -- pour considerer les eleves avec 1 code_perm, 2 fiches la meme annee
     perim.annee,
     perim.eco
 	-- GPI
