@@ -1,6 +1,13 @@
 version: 2
 
 models:
+  - name: i_sdg_e_ele
+    tags: 
+      - interface
+      - rf
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'sdg_e_ele' de la base de données source.
+
   - name: i_sdg_e_fact
     tags: 
       - interface
@@ -14,6 +21,13 @@ models:
       - rf
     description: >
       Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'sdg_e_trop_percus' de la base de données source.
+
+  - name: i_sdg_t_bat
+    tags: 
+      - interface
+      - rf
+    description: >
+      Table d'interface. Utilisée uniquement pour pallier à une enventuelle absence (complète ou partielle) de la table 'sdg_t_bat' de la base de données source.
 
   - name: i_sdg_t_service
     tags: 
