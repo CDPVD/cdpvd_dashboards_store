@@ -40,6 +40,7 @@ select
 	ct.adr_electr_tuteur,
     ct.adresse,
 	ct.adresse_contact
-from {{ ref("fact_solde_el") }} sld
-left join {{ ref("fact_contact") }} ct
-    on ct.code_perm = sld.code_perm and ct.fiche = sld.fiche
+from {{ ref("fact_contact") }} ct
+left join {{ ref("fact_solde_el") }} sld
+	on sld.code_perm = ct.code_perm
+where sld.code_perm is not null
