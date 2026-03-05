@@ -19,5 +19,6 @@ select
     fiche,
     code_perm,
     nom,
-    pnom
+    pnom,
+    date_maj
 from {{ var("database_sdg") }}.dbo.sdg_e_ele

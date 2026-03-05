@@ -33,5 +33,6 @@ select
     datenaiss as date_naissance,
     indlieunaisselen as ind_lieu_naissance_n,
     langmatern as lang_matern,
-    sexe as genre
+    sexe as genre,
+    datemaj as date_maj
 from {{ var("database_jade_adultes") }}.dbo.e_ele

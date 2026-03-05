@@ -29,6 +29,7 @@ select
     adr_electr_ele, 
     adr_electr_pere, 
     adr_electr_mere,
-    adr_electr_tuteur
+    adr_electr_tuteur,
+    datemaj as date_maj
 from {{ var("database_jade") }}.dbo.e_ele
 with (nolock)
