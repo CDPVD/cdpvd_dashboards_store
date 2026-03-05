@@ -29,19 +29,17 @@ select
 	sld.tp_ag,
 	sld.car_proc,
 	sld.trp_proc,
-	ct.adresse_eleve,
     ct.nom_mere, 
 	ct.pnom_mere,
 	ct.adr_electr_mere,
-    ct.adresse_mere,
 	ct.nom_pere, 
 	ct.pnom_pere,
 	ct.adr_electr_pere, 
-    ct.adresse_pere,
 	ct.nom_tuteur, 
 	ct.pnom_tuteur,
 	ct.adr_electr_tuteur,
-    ct.adresse_tuteur
+    ct.adresse,
+	ct.adresse_contact
 from {{ ref("fact_solde_el") }} sld
 left join {{ ref("fact_contact") }} ct
-    on ct.code_perm = sld.code_perm
+    on ct.code_perm = sld.code_perm and ct.fiche = sld.fiche
