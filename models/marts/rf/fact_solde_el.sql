@@ -24,7 +24,7 @@ with
 			, eco.annee
 			, eco.eco
 			, sum(case when f.motif_fact in ('F','V') then f.solde else 0 end) as car_gpi
-			, sum(case when f.motif_fact = 'A' then f.solde else 0 end) as trp_gpi
+			, sum(case when f.motif_fact = 'A' then f.solde else 0 end) * -1 as trp_gpi
         from {{ ref("i_gpm_n_fact") }} as f 
 		left join {{ ref("i_gpm_t_eco") }} as eco 
 			on eco.id_eco = f.id_eco
