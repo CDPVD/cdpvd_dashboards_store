@@ -41,16 +41,16 @@ with
 			el.code_perm
 			, car.fiche
 			, car.annee
-			, bat_sdg.eco
+			, dan.eco
 			, isnull(sum(car.solde), 0.0) as car_ag
         from {{ ref("i_sdg_e_fact") }} as car
 		left join {{ ref("i_sdg_e_ele") }} as el
 			on el.fiche = car.fiche
-		left join {{ ref("mapping_bat_sdg_eco") }} as bat_sdg 
-			on bat_sdg.id_sdg = car.id_sdg
+		left join {{ ref("i_sdg_e_dan") }} as dan 
+			on dan.id_sdg = car.id_sdg and dan.annee = car.annee and dan.fiche = car.fiche
 		where 
 			car.annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
-		group by el.code_perm, car.fiche, car.annee, bat_sdg.eco
+		group by el.code_perm, car.fiche, car.annee, dan.eco
 	
 	-- tp AG
 	), tp_ag as (
@@ -58,16 +58,16 @@ with
 			el.code_perm
 			, tp.fiche
 			, tp.annee
-			, bat_sdg.eco
+			, dan.eco
 			, isnull(sum(tp.mnt), 0.0) as tp_ag
         from {{ ref("i_sdg_e_trop_percus") }} as tp
 		left join {{ ref("i_sdg_e_ele") }} as el 
 			on el.fiche = tp.fiche
-		left join {{ ref("mapping_bat_sdg_eco") }} as bat_sdg
-			on bat_sdg.id_sdg = tp.id_sdg
+		left join {{ ref("i_sdg_e_dan") }} as dan
+			on dan.id_sdg = tp.id_sdg and dan.annee = tp.annee and dan.fiche = tp.fiche
 		where 
 			tp.annee between {{ core_dashboards_store.get_current_year() }}-15 and {{ core_dashboards_store.get_current_year() }}
-		group by el.code_perm, tp.fiche, tp.annee, bat_sdg.eco
+		group by el.code_perm, tp.fiche, tp.annee, dan.eco
 
 	-- car tp PROCURE + recuperer les ecoles associées aux eleves inscrits en FP/FGA
 	), car_tp_proc as (
