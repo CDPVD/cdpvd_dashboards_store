@@ -23,7 +23,7 @@ with
 			, f.empr as fiche
 			, eco.annee
 			, eco.eco
-			, sum(case when f.motif_fact in ('F','V') then f.solde else 0 end) as car_gpi
+			, sum(case when f.motif_fact not in ('A','D','R') then f.solde else 0 end) as car_gpi
 			, sum(case when f.motif_fact = 'A' then f.solde else 0 end) * -1 as trp_gpi
         from {{ ref("i_gpm_n_fact") }} as f 
 		left join {{ ref("i_gpm_t_eco") }} as eco 
