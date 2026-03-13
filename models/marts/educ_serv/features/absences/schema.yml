@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: cdpvd_fact_absences_retards_sequence
+  - name: cdpvd_fact_absences_sequence
     tags: ["absenteeism"]
     description: >
       Lister les séquences d'absences pour chaque étudiant.
@@ -10,11 +10,11 @@ models:
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:
-            - school_year
             - fiche
+            - event_start_date
             - id_eco
-            - absence_sequence_id
             - event_kind
+            - category_abs
 
   - name: cdpvd_fact_absences_daily
     tags: ["absenteeism"]
@@ -27,4 +27,5 @@ models:
             - date_abs
             - id_eco
             - event_kind
+            - category_abs
             - code_matiere
