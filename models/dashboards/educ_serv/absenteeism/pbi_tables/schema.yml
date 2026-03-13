@@ -97,3 +97,17 @@ models:
             - id_eco
             - nom_prenom_fiche
             - date_abs
+
+  - name: cdpvd_abstsm_report_jours_classe
+    description: calendrier complet des jours d'école par établissement et grille, 
+                  enrichi avec des métriques mensuelles (MTD) et annuelles (YTD), 
+                  ainsi que des indicateurs d'« année scolaire en cours » et « mois en cours » pour faciliter les analyses comparatives.
+    config:
+      tags: 
+        - absenteeism
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - id_eco
+            - grille
+            - date_evenement
