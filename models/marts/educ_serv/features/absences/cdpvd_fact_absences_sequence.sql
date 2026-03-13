@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     config(
         post_hook=[
             core_dashboards_store.create_clustered_index(
-                "{{ this }}", ["id_eco",  "fiche"]
+                "{{ this }}", ["id_eco", "fiche"]
             ),
             core_dashboards_store.create_nonclustered_index("{{ this }}", ["fiche"]),
         ]
@@ -91,7 +91,8 @@ with
                 partition by id_eco, grille order by date_evenement
             ) as day_id
         from expected_cal
-        where date_evenement <= getdate() 
+        where
+            date_evenement <= getdate()
             and school_year
             >= {{ core_dashboards_store.get_current_year() }}
             - {{ nbre_annee_a_extraire }}
@@ -104,7 +105,7 @@ with
             exp.day_id,
             exp.grille,
             abs.fiche,
-			abs.category_abs,            
+            abs.category_abs,
             abs.event_kind,
             abs.event_description,
             abs.remarque,
@@ -122,23 +123,23 @@ with
     /* 3) Niveau JOUR (clé: fiche + date_evenement).
         Une ligne par jour/élève pour détecter les ruptures GLOBALes,
         même si plusieurs event_kind existent le même jour. */
-        observed_daylevel as (
-            select 
-                id_eco,
-                date_evenement,
-                day_id,
-                fiche,
-                max(etape) as etape,
-                max(etape_description) as etape_description,
-                max(seq_etape) as seq_etape,
-                max(event_description) as event_description,
-                max(remarque) as remarque                
-            from observed
-    		group by id_eco, date_evenement, day_id, fiche
+    observed_daylevel as (
+        select
+            id_eco,
+            date_evenement,
+            day_id,
+            fiche,
+            max(etape) as etape,
+            max(etape_description) as etape_description,
+            max(seq_etape) as seq_etape,
+            max(event_description) as event_description,
+            max(remarque) as remarque
+        from observed
+        group by id_eco, date_evenement, day_id, fiche
 
-    ) 
-    ,
-    -- 4) Ruptures PAR TYPE (comme chez toi, mais on va aussi produire la version globale)
+    ),
+    -- 4) Ruptures PAR TYPE (comme chez toi, mais on va aussi produire la version
+    -- globale)
     breaks_by_kind as (
         select
             id_eco,
@@ -146,17 +147,20 @@ with
             day_id,
             fiche,
             event_kind,
-			category_abs,
+            category_abs,
             event_description,
             remarque,
             etape,
             etape_description,
             seq_etape,
             case
-                when day_id - lag(day_id) over (
-                        partition by  id_eco, fiche, event_kind
-                        order by day_id
-                    ) > 1 then 1 else 0
+                when
+                    day_id - lag(day_id) over (
+                        partition by id_eco, fiche, event_kind order by day_id
+                    )
+                    > 1
+                then 1
+                else 0
             end as sequence_break
         from observed
     ),
@@ -170,12 +174,14 @@ with
             remarque,
             etape,
             etape_description,
-            seq_etape,            
+            seq_etape,
             case
-                when day_id - lag(day_id) over (
-                        partition by id_eco, fiche
-                        order by day_id
-                    ) > 1 then 1 else 0
+                when
+                    day_id
+                    - lag(day_id) over (partition by id_eco, fiche order by day_id)
+                    > 1
+                then 1
+                else 0
             end as sequence_break_all
         from observed_daylevel
     ),
@@ -195,7 +201,7 @@ with
             etape_description,
             seq_etape,
             sum(sequence_break) over (
-                partition by id_eco, fiche, event_kind ,category_abs
+                partition by id_eco, fiche, event_kind, category_abs
                 order by day_id
                 rows between unbounded preceding and current row
             ) as absence_sequence_id_kind
@@ -234,12 +240,22 @@ with
             s.etape_description,
             s.seq_etape,
             last_value(s.event_description) over (
-                partition by s.fiche, s.id_eco, s.event_kind, s.category_abs, s.absence_sequence_id_kind
+                partition by
+                    s.fiche,
+                    s.id_eco,
+                    s.event_kind,
+                    s.category_abs,
+                    s.absence_sequence_id_kind
                 order by s.day_id
                 rows between unbounded preceding and unbounded following
             ) as last_event_description,
             last_value(s.remarque) over (
-                partition by s.fiche, s.id_eco, s.event_kind, s.category_abs, s.absence_sequence_id_kind
+                partition by
+                    s.fiche,
+                    s.id_eco,
+                    s.event_kind,
+                    s.category_abs,
+                    s.absence_sequence_id_kind
                 order by s.day_id
                 rows between unbounded preceding and unbounded following
             ) as last_remarque,
@@ -249,33 +265,39 @@ with
     ),
 
     -- 7) Contextualisation – GLOBALE (au-delà des event_kind)
-    --    On rattache la dernière description/remarque du jour (s'il y en a plusieurs, on prend celle du "dernier" day_id de la séquence).
-
-        -- on récupère, pour chaque jour/élève, une description/remarque "du jour"
-        day_context as (
-            select
-                sa.id_eco,
-                sa.date_evenement,
-                sa.day_id,
-                sa.fiche,
-                -- Heuristique: dernière description/remarque du jour (sur les lignes observées)
-                last_value(sa.event_description) over (
-                    partition by sa.id_eco, sa.fiche, sa.absence_sequence_id_all
-                    order by sa.day_id  -- ordre quelconque, on étend à tout le jour
-                    rows between unbounded preceding and unbounded following
-                ) as day_event_description,
-                last_value(sa.remarque) over (
-                    partition by  sa.id_eco, sa.fiche, sa.absence_sequence_id_all
-                    order by sa.day_id
-                    rows between unbounded preceding and unbounded following
-                ) as day_remarque,
-                max(sa.etape) over (partition by sa.id_eco, sa.fiche, sa.date_evenement) as etape, -- agrégations "dummy"
-                max(sa.etape_description) over (partition by sa.id_eco, sa.fiche, sa.date_evenement) as etape_description,
-                max(sa.seq_etape) over (partition by sa.id_eco, sa.fiche, sa.date_evenement) as seq_etape
-            from sequences_all sa
-        )
-
-    ,context_all as (
+    -- On rattache la dernière description/remarque du jour (s'il y en a plusieurs, on
+    -- prend celle du "dernier" day_id de la séquence).
+    -- on récupère, pour chaque jour/élève, une description/remarque "du jour"
+    day_context as (
+        select
+            sa.id_eco,
+            sa.date_evenement,
+            sa.day_id,
+            sa.fiche,
+            -- Heuristique: dernière description/remarque du jour (sur les lignes
+            -- observées)
+            last_value(sa.event_description) over (
+                partition by sa.id_eco, sa.fiche, sa.absence_sequence_id_all
+                order by sa.day_id  -- ordre quelconque, on étend à tout le jour
+                rows between unbounded preceding and unbounded following
+            ) as day_event_description,
+            last_value(sa.remarque) over (
+                partition by sa.id_eco, sa.fiche, sa.absence_sequence_id_all
+                order by sa.day_id
+                rows between unbounded preceding and unbounded following
+            ) as day_remarque,
+            max(sa.etape) over (
+                partition by sa.id_eco, sa.fiche, sa.date_evenement
+            ) as etape,  -- agrégations "dummy"
+            max(sa.etape_description) over (
+                partition by sa.id_eco, sa.fiche, sa.date_evenement
+            ) as etape_description,
+            max(sa.seq_etape) over (
+                partition by sa.id_eco, sa.fiche, sa.date_evenement
+            ) as seq_etape
+        from sequences_all sa
+    ),
+    context_all as (
 
         select
             sa.id_eco,
@@ -292,18 +314,21 @@ with
             sa.absence_sequence_id_all as absence_sequence_id,
             'all' as sequence_scope
         from sequences_all sa
-        join day_context dc
-            on sa.id_eco      = dc.id_eco
-            and sa.fiche       = dc.fiche
+        join
+            day_context dc
+            on sa.id_eco = dc.id_eco
+            and sa.fiche = dc.fiche
             and sa.date_evenement = dc.date_evenement
 
     ),
 
     -- 8) Union des deux portées
     context_union as (
-        select * from context_by_kind
+        select *
+        from context_by_kind
         union all
-        select * from context_all
+        select *
+        from context_all
 
     ),
 
@@ -315,21 +340,26 @@ with
             sequence_scope,
             absence_sequence_id,
             coalesce(event_kind, 'Tout') as event_kind,
-			coalesce(category_abs, 'Tout') as category_abs, 
+            coalesce(category_abs, 'Tout') as category_abs,
             min(last_event_description) as last_event_description,  -- dummy agg
-            min(last_remarque)        as last_remarque,            -- dummy agg
-            min(date_evenement)       as event_start_date,
-            max(date_evenement)       as event_end_date,
+            min(last_remarque) as last_remarque,  -- dummy agg
+            min(date_evenement) as event_start_date,
+            max(date_evenement) as event_end_date,
             max(day_id) - min(day_id) + 1 as events_sequence_length,
-            min(etape)              as etape,
-            min(etape_description)  as etape_description,
-            min(seq_etape)          as seq_etape
+            min(etape) as etape,
+            min(etape_description) as etape_description,
+            min(seq_etape) as seq_etape
         from context_union
-        group by fiche, id_eco, sequence_scope, absence_sequence_id, coalesce(event_kind, 'Tout'), coalesce(category_abs, 'Tout')  
+        group by
+            fiche,
+            id_eco,
+            sequence_scope,
+            absence_sequence_id,
+            coalesce(event_kind, 'Tout'),
+            coalesce(category_abs, 'Tout')
     )
 
-    -- 10) Filtre années scolaires et projection (comme chez toi)
-
+-- 10) Filtre années scolaires et projection (comme chez toi)
 select
     fiche,
     id_eco,
@@ -342,4 +372,4 @@ select
     category_abs,
     sequence_scope,
     coalesce(etape_description, 'inconnue') as etape_description
-from aggregated 
+from aggregated

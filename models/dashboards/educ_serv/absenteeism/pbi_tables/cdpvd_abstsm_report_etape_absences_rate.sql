@@ -49,9 +49,8 @@ with
             date_evenement,
             jour_semaine,
             etape_friendly,
-            event_kind,
-            rollup (category_abs)
-	),
+            event_kind, rollup (category_abs)
+    ),
     agg as (
         select
             annee_scolaire,
@@ -60,12 +59,18 @@ with
             groupe,
             etape_friendly,
             event_kind,
-			category_abs,
-			sum(n_events) as n_events,
+            category_abs,
+            sum(n_events) as n_events,
             max(n_students_daily) as n_students_daily,
-            sum(cast(n_events as float)) / sum(n_students_daily) as avg_absence_rate_etape
+            sum(cast(n_events as float))
+            / sum(n_students_daily) as avg_absence_rate_etape
         from source as src
-        group by annee_scolaire, cube(school_friendly_name, ordre_enseignement), groupe, category_abs, etape_friendly, event_kind
+        group by
+            annee_scolaire, cube (school_friendly_name, ordre_enseignement),
+            groupe,
+            category_abs,
+            etape_friendly,
+            event_kind
     ),
     -- ========================================================================
     -- ÉTAPE 2: Moyennes annuelles par établissement
@@ -77,13 +82,17 @@ with
             coalesce(ordre_enseignement, 'Tout') as ordre_enseignement,
             groupe,
             event_kind,
-			category_abs,
+            category_abs,
             sum(cast(n_events as float))
             / sum(n_students_daily) as avg_absence_rate_school
         from source as src
-        group by annee_scolaire, cube(school_friendly_name,ordre_enseignement), groupe, category_abs, event_kind
+        group by
+            annee_scolaire, cube (school_friendly_name, ordre_enseignement),
+            groupe,
+            category_abs,
+            event_kind
 
-    ),    
+    ),
     -- ========================================================================
     -- ÉTAPE 3: Assemblage final des métriques (CSS, école)
     -- ========================================================================
@@ -100,7 +109,7 @@ with
             -- css
             css.avg_absence_rate_etape as avg_absence_rate_etape_css,
             -- school
-            school.avg_absence_rate_school            
+            school.avg_absence_rate_school
         from agg as src
         left join
             agg css
@@ -109,23 +118,22 @@ with
             and src.event_kind = css.event_kind
             and src.category_abs = css.category_abs
             and src.ordre_enseignement = css.ordre_enseignement
-            and css.school_friendly_name = 'Tout le CSS' 
+            and css.school_friendly_name = 'Tout le CSS'
             and css.groupe = 'Tout'
         left join
-            school 
+            school
             on src.annee_scolaire = school.annee_scolaire
             and src.school_friendly_name = school.school_friendly_name
             and src.ordre_enseignement = school.ordre_enseignement
             and src.groupe = school.groupe
             and src.event_kind = school.event_kind
-			and src.category_abs = school.category_abs            
+            and src.category_abs = school.category_abs
 
     )
 
 -- ============================================================================
 -- ÉTAPE 4: Sélection finale avec clé de filtre pour Power BI
 -- ============================================================================
-
 select
     {{
         dbt_utils.generate_surrogate_key(

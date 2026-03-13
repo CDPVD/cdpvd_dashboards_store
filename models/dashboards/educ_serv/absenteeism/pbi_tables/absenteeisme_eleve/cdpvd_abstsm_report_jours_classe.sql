@@ -23,7 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     des indicateurs d'« année scolaire en cours » et « mois en cours » pour
     faciliter les analyses comparatives.
 #}
-
 {{ config(alias="cdpvd_report_jours_classe") }}
 
 {% if execute %}
@@ -66,28 +65,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- Extrait tous les jours avec cycle pédagogique (jour_cycle IS NOT NULL)
 -- pour chaque établissement et grille, limité aux N dernières années.
 -- ============================================================================
-
 with
     expected_cal as (
-        select
-            annee,
-            cal.id_eco,
-            grille,
-            date_evenement
+        select annee, cal.id_eco, grille, date_evenement
         from {{ ref("i_gpm_t_cal") }} as cal
-        inner join {{ ref("i_gpm_t_eco") }} as eco
-            on cal.id_eco = eco.id_eco
-        where jour_cycle is not null
-            and annee >= {{ core_dashboards_store.get_current_year() }}
+        inner join {{ ref("i_gpm_t_eco") }} as eco on cal.id_eco = eco.id_eco
+        where
+            jour_cycle is not null
+            and annee
+            >= {{ core_dashboards_store.get_current_year() }}
             - {{ nbre_annee_a_extraire }}
     ),
--- ============================================================================
--- ÉTAPE 2: Enrichissement du calendrier (dates de contexte)
--- ============================================================================
--- Ajoute les bornes mensuelles/annuelles et calcule l'année scolaire
--- (juillet = début de l'année scolaire suivante, ex: 2024-2025).
--- ============================================================================
-
+    -- ============================================================================
+    -- ÉTAPE 2: Enrichissement du calendrier (dates de contexte)
+    -- ============================================================================
+    -- Ajoute les bornes mensuelles/annuelles et calcule l'année scolaire
+    -- (juillet = début de l'année scolaire suivante, ex: 2024-2025).
+    -- ============================================================================
     expected_cal_days_nbr as (
         select
             id_eco,
@@ -95,37 +89,66 @@ with
             date_evenement,
             datefromparts(year(date_evenement), month(date_evenement), 1) as debut_mois,
             eomonth(date_evenement) as fin_mois,
-            case when month(date_evenement) >= 7 then year(date_evenement) else year(date_evenement)-1 end as debut_annee_scolaire,
-            case 
-                when month(date_evenement) >= 7 
-                then concat(cast(year(date_evenement) as varchar(4)),'-', cast(year(date_evenement)+1 as varchar(4)))
-                else concat(cast(year(date_evenement)-1 as varchar(4)),'-', cast(year(date_evenement) as varchar(4)))
-            end as labelle_annee_scolaire,            
-            datefromparts( case when month(date_evenement) >= 7 then year(date_evenement) else year(date_evenement)-1 end, 7, 1) as date_debut_annee_scolaire,
-            datefromparts( case when month(date_evenement) >= 7 then year(date_evenement) else year(date_evenement)-1 end + 1, 6, 30) as date_fin_annee_scolaire
+            case
+                when month(date_evenement) >= 7
+                then year(date_evenement)
+                else year(date_evenement) - 1
+            end as debut_annee_scolaire,
+            case
+                when month(date_evenement) >= 7
+                then
+                    concat(
+                        cast(year(date_evenement) as varchar(4)),
+                        '-',
+                        cast(year(date_evenement) + 1 as varchar(4))
+                    )
+                else
+                    concat(
+                        cast(year(date_evenement) - 1 as varchar(4)),
+                        '-',
+                        cast(year(date_evenement) as varchar(4))
+                    )
+            end as labelle_annee_scolaire,
+            datefromparts(
+                case
+                    when month(date_evenement) >= 7
+                    then year(date_evenement)
+                    else year(date_evenement) - 1
+                end,
+                7,
+                1
+            ) as date_debut_annee_scolaire,
+            datefromparts(
+                case
+                    when month(date_evenement) >= 7
+                    then year(date_evenement)
+                    else year(date_evenement) - 1
+                end
+                + 1,
+                6,
+                30
+            ) as date_fin_annee_scolaire
         from expected_cal
-        where date_evenement <= getdate() 
-    ), 
--- ============================================================================
--- ÉTAPE 3: Récupération de la dernière date connue
--- ============================================================================
--- Identifie la date maximale du calendrier pour détecter les périodes
--- en cours (mois actuel, année scolaire actuelle).
--- ============================================================================
-
-    derniere_date as (
-               select max(date_evenement) as derniere_date
-            from expected_cal_days_nbr
+        where date_evenement <= getdate()
     ),
--- ============================================================================
--- ÉTAPE 4: Agrégations et window functions (MTD, YTD, marqueurs)
--- ============================================================================
--- Calcule pour chaque jour/établissement/grille :
--- - mtd_jour : cumul des jours depuis le début du mois
--- - total_jours_mois : nombre total de jours d'école du mois
--- - jours_ytd : cumul des jours depuis le début de l'année scolaire
--- - total_jours_annee_scolaire : nombre total de jours de l'année scolaire
--- ============================================================================    
+    -- ============================================================================
+    -- ÉTAPE 3: Récupération de la dernière date connue
+    -- ============================================================================
+    -- Identifie la date maximale du calendrier pour détecter les périodes
+    -- en cours (mois actuel, année scolaire actuelle).
+    -- ============================================================================
+    derniere_date as (
+        select max(date_evenement) as derniere_date from expected_cal_days_nbr
+    ),
+    -- ============================================================================
+    -- ÉTAPE 4: Agrégations et window functions (MTD, YTD, marqueurs)
+    -- ============================================================================
+    -- Calcule pour chaque jour/établissement/grille :
+    -- - mtd_jour : cumul des jours depuis le début du mois
+    -- - total_jours_mois : nombre total de jours d'école du mois
+    -- - jours_ytd : cumul des jours depuis le début de l'année scolaire
+    -- - total_jours_annee_scolaire : nombre total de jours de l'année scolaire
+    -- ============================================================================    
     calendrier_enrichi as (
         select
             cal.id_eco,
@@ -138,34 +161,42 @@ with
             cal.date_debut_annee_scolaire,
             cal.date_fin_annee_scolaire,
             ld.derniere_date,
-        -- cumul mois jusqu'à ce jour     
+            -- cumul mois jusqu'à ce jour     
             count(*) over (
                 partition by cal.id_eco, cal.grille, cal.debut_mois
                 order by cal.date_evenement
                 rows between unbounded preceding and current row
-            ) as mtd_jour,            
-        -- total mois
+            ) as mtd_jour,
+            -- total mois
             count(*) over (
                 partition by cal.id_eco, cal.grille, cal.debut_mois
-            ) as total_jours_mois,             
-        -- cumul année scolaire jusqu'à ce jour
+            ) as total_jours_mois,
+            -- cumul année scolaire jusqu'à ce jour
             count(*) over (
                 partition by cal.id_eco, cal.grille, cal.labelle_annee_scolaire
                 order by cal.date_evenement
                 rows between unbounded preceding and current row
             ) as jours_ytd,
-        -- total année scolaire
+            -- total année scolaire
             count(*) over (
                 partition by cal.id_eco, cal.grille, cal.labelle_annee_scolaire
-            ) as total_jours_annee_scolaire,            
-            case 
-                when year(cal.debut_mois)=year(ld.derniere_date) 
-                and month(cal.debut_mois)=month(ld.derniere_date) then 1 else 0 
+            ) as total_jours_annee_scolaire,
+            case
+                when
+                    year(cal.debut_mois) = year(ld.derniere_date)
+                    and month(cal.debut_mois) = month(ld.derniere_date)
+                then 1
+                else 0
             end as is_mois_en_cours,
 
             case
-                when ld.derniere_date between cal.date_debut_annee_scolaire and cal.date_fin_annee_scolaire then 1 else 0
-            end as is_annee_scolaire_en_cours                          
+                when
+                    ld.derniere_date
+                    between cal.date_debut_annee_scolaire
+                    and cal.date_fin_annee_scolaire
+                then 1
+                else 0
+            end as is_annee_scolaire_en_cours
         from expected_cal_days_nbr as cal
         cross join derniere_date as ld
     )
@@ -184,7 +215,7 @@ select
                 "date_evenement",
             ]
         )
-    }} as id_unique, 
+    }} as id_unique,
     id_eco,
     grille,
     date_evenement,
@@ -200,4 +231,4 @@ select
     total_jours_annee_scolaire,
     is_mois_en_cours,
     is_annee_scolaire_en_cours
-from calendrier_enrichi     
+from calendrier_enrichi

@@ -61,7 +61,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- Récupération des absences distinctes avec tous les détails et dimensions
 with
     source as (
-        select distinct 
+        select distinct
             fiche,
             date_abs as date_evenement,
             jour_semaine,
@@ -69,9 +69,19 @@ with
             groupe,
             case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
             event_kind,
--- Gestion des journées multi‑motifs : si 100% des périodes observées et plusieurs motifs, regrouper en 'Absence mixte' / 'Motifs multiples'.        
-            case when count_overdate_fiche_id_eco >1 then 'Absence mixte M-NM' else category_abs end as category_abs,
-            case when count_overdate_fiche_id_eco >1 then 'Motifs multiples' else event_description end as event_description
+            -- Gestion des journées multi‑motifs : si 100% des périodes observées et
+            -- plusieurs motifs, regrouper en 'Absence mixte' / 'Motifs multiples'.
+            -- 
+            case
+                when count_overdate_fiche_id_eco > 1
+                then 'Absence mixte M-NM'
+                else category_abs
+            end as category_abs,
+            case
+                when count_overdate_fiche_id_eco > 1
+                then 'Motifs multiples'
+                else event_description
+            end as event_description
         from {{ ref("cdpvd_fact_absences_daily") }}
         where
             school_year
@@ -98,10 +108,9 @@ with
         group by
             date_evenement,
             jour_semaine,
-            id_eco,
-            rollup(groupe),
+            id_eco, rollup (groupe),
             etape,
-            event_kind, 
+            event_kind,
             category_abs,
             event_description
     ),
@@ -110,16 +119,10 @@ with
         -- ÉTAPE 3: Création de la table de padding sans la dimension étape
         -- ====================================================================
         -- Réduit le padding à jours d'école et agrège par dimensions sans l'étape
-        select
-            id_eco,
-            groupe,
-            date_evenement,
-            jour_semaine,
-            etape as etape_friendly
+        select id_eco, groupe, date_evenement, jour_semaine, etape as etape_friendly
         from {{ ref("cdpvd_abstsm_stg_padding") }} as padd
         where padd.is_school_day = 1
         group by id_eco, groupe, date_evenement, jour_semaine, etape
-
 
     ),
     augmented as (
@@ -161,13 +164,14 @@ with
             aug.jour_semaine,
             coalesce(aug.etape_friendly, 'Tout') as etape_friendly,
             coalesce(aug.event_kind, 'Tout') as event_kind,
-			coalesce(aug.category_abs, 'Tout') as category_abs,
+            coalesce(aug.category_abs, 'Tout') as category_abs,
             aug.event_description,
             sum(n_events) as n_events
         from augmented as aug
         left join {{ ref("dim_mapper_schools") }} as eco on aug.id_eco = eco.id_eco
         group by
-            eco.annee_scolaire, cube (eco.school_friendly_name, eco.cat_eco, aug.category_abs),
+            eco.annee_scolaire,
+            cube (eco.school_friendly_name, eco.cat_eco, aug.category_abs),
             aug.groupe,
             aug.date_evenement,
             aug.jour_semaine,

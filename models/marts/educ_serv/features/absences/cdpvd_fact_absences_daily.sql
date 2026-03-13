@@ -114,7 +114,13 @@ with
             {{ ref("cdpvd_stg_dim_absences_inclusion") }} as dim
             on src.id_eco = dim.id_eco
             and src.motif_abs = dim.motif_abs
-        group by src.date_abs, src.fiche, src.id_eco, dim.is_absence, category_abs, code_matiere
+        group by
+            src.date_abs,
+            src.fiche,
+            src.id_eco,
+            dim.is_absence,
+            category_abs,
+            code_matiere
 
     -- Add the calendar grille the student follows from the DAN
     ),
@@ -132,7 +138,7 @@ with
             dan.grille,
             src.is_absence,
             src.n_periods_events,
-			category_abs,            
+            category_abs,
             src.remarque,
             src.event_description
         from src
@@ -174,7 +180,7 @@ with
             src.n_periods_events,
             grid.n_periods_expected,
             src.event_description,
-			category_abs,
+            category_abs,
             src.remarque,
             src.n_periods_events
             * 100.0
@@ -201,7 +207,7 @@ with
             is_absence,
             n_periods_events,
             n_periods_expected,
-			category_abs,
+            category_abs,
             event_description,
             remarque,
             prct_observed_periods_over_expected,
@@ -221,7 +227,7 @@ with
             is_absence,
             n_periods_events,
             n_periods_expected,
-			category_abs,
+            category_abs,
             event_description,
             remarque,
             fiche,
@@ -255,7 +261,7 @@ with
             case
                 when event_kind is null then null else min(is_absence)
             end as is_absence,
-   			category_abs,
+            category_abs,
             min(remarque) as remarque,
             case
                 when event_kind is null then 'tous types' else min(event_description)
@@ -267,7 +273,15 @@ with
             sum(prct_observed_daily_over_expected) as prct_observed_daily_over_expected
 
         from event_kind
-        group by date_abs, jour_semaine, fiche, id_eco, groupe, code_matiere, category_abs, event_kind  -- Superseed is_absence
+        group by
+            date_abs,
+            jour_semaine,
+            fiche,
+            id_eco,
+            groupe,
+            code_matiere,
+            category_abs,
+            event_kind  -- Superseed is_absence
     -- Handle the weird case where 0.0001% of students have more observed periods of
     -- absences than
     -- expected periods
@@ -285,7 +299,7 @@ with
             event_kind,
             is_aggregate_kind,
             is_absence,
-			category_abs,
+            category_abs,
             event_description,
             remarque,
             case
@@ -320,8 +334,9 @@ select
     src.remarque,
     src.prct_observed_periods_over_expected,
     src.prct_observed_daily_over_expected,
-    count(src.fiche) over ( 
-		partition by src.date_abs, src.fiche, src.id_eco) as count_overdate_fiche_id_eco,
+    count(src.fiche) over (
+        partition by src.date_abs, src.fiche, src.id_eco
+    ) as count_overdate_fiche_id_eco,
     etp.etape,
     etp.etape_description,
     etp.seq_etape,

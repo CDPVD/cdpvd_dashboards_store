@@ -35,10 +35,14 @@ with
             eco,
             coalesce(ordre_enseignement, 'Tout') as ordre_enseignement,
             event_kind,
-			coalesce(category_abs, 'Tout') as category_abs,
+            coalesce(category_abs, 'Tout') as category_abs,
             groupe
         from {{ ref("cdpvd_abstsm_stg_daily_metrics") }} dly
-        group by annee_scolaire,annee, cube (eco, ordre_enseignement, category_abs),groupe, event_kind
+        group by
+            annee_scolaire,
+            annee, cube (eco, ordre_enseignement, category_abs),
+            groupe,
+            event_kind
     ),
     -- ========================================================================
     -- ÉTAPE 2: Enrichissement des libellés d'école
@@ -57,12 +61,11 @@ with
         left join
             {{ ref("dim_mapper_schools") }} as eco
             on src.eco = eco.eco
-            and src.annee = eco.annee        
+            and src.annee = eco.annee
     )
 -- ============================================================================
 -- ÉTAPE 3: Sélection finale avec génération de la clé de filtre
 -- ============================================================================
-
 select
     annee_scolaire,
     annee,
@@ -86,4 +89,3 @@ select
     -- RLS hooks :
     eco
 from nomeco
-

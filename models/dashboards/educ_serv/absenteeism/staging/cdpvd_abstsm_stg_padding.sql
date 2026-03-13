@@ -28,7 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         alias="cdpvd_stg_padding",
         post_hook=[
             core_dashboards_store.create_clustered_index(
-                "{{ this }}", ["id_eco",  "date_evenement"]
+                "{{ this }}", ["id_eco", "date_evenement"]
             ),
             core_dashboards_store.create_nonclustered_index(
                 "{{ this }}", ["date_evenement"]
@@ -84,7 +84,8 @@ with
         join {{ ref("i_gpm_t_eco") }} as eco on cal.id_eco = eco.id_eco
         where
             date_evenement <= getdate()
-            and cal.id_eco in (select id_eco from {{ ref("cdpvd_fact_absences_daily") }})
+            and cal.id_eco
+            in (select id_eco from {{ ref("cdpvd_fact_absences_daily") }})
             and annee
             >= {{ core_dashboards_store.get_current_year() }}
             - {{ nbre_annee_a_extraire }}
@@ -101,7 +102,7 @@ with
             etape,
             min(etape_date_debut) as etape_date_debut,
             max(etape_date_fin) as etape_date_fin
-        from {{ ref("cdpvd_abstsm_stg_daily_students") }} 
+        from {{ ref("cdpvd_abstsm_stg_daily_students") }}
         group by id_eco, groupe, etape
 
     -- ============================================================================
@@ -118,7 +119,7 @@ with
             etp.etape_date_debut,
             etp.etape_date_fin
         from padding_cal as cal
-        inner join etapes as etp on cal.id_eco = etp.id_eco 
+        inner join etapes as etp on cal.id_eco = etp.id_eco
     ),
     daily_unpadded as (
         -- ====================================================================
@@ -137,18 +138,20 @@ with
         left join
             {{ ref("cdpvd_abstsm_stg_daily_students") }} as dly
             on pad.id_eco = dly.id_eco
-			and pad.date_evenement = dly.date_evenement
+            and pad.date_evenement = dly.date_evenement
             and pad.etape = dly.etape
             and pad.groupe = dly.groupe
-    ), 
+    ),
     first_known as (
         select
             id_eco,
             groupe,
-            min(case when n_students_daily is not null then date_evenement end) as first_known_date
+            min(
+                case when n_students_daily is not null then date_evenement end
+            ) as first_known_date
         from daily_unpadded
         group by id_eco, groupe
-	), 
+    ),
     first_value as (
         select
             d.id_eco,
@@ -156,26 +159,27 @@ with
             fk.first_known_date,
             max(d.n_students_daily) as first_known_value
         from daily_unpadded d
-        join first_known fk
-        on fk.id_eco = d.id_eco
-        and fk.groupe = d.groupe
-        and d.date_evenement = fk.first_known_date
+        join
+            first_known fk
+            on fk.id_eco = d.id_eco
+            and fk.groupe = d.groupe
+            and d.date_evenement = fk.first_known_date
         group by d.id_eco, d.groupe, fk.first_known_date
-    )
-    ,daily_prefilled as (
+    ),
+    daily_prefilled as (
         select
             d.*,
             case
-                when d.n_students_daily is null
-                and fv.first_known_date is not null
-                and d.date_evenement between d.etape_date_debut and fv.first_known_date
+                when
+                    d.n_students_daily is null
+                    and fv.first_known_date is not null
+                    and d.date_evenement
+                    between d.etape_date_debut and fv.first_known_date
                 then fv.first_known_value
                 else d.n_students_daily
             end as n_students_daily_prefilled
         from daily_unpadded d
-        left join first_value fv
-        on fv.id_eco = d.id_eco
-        and fv.groupe = d.groupe
+        left join first_value fv on fv.id_eco = d.id_eco and fv.groupe = d.groupe
 
     ),
     backfilled as (
@@ -184,38 +188,38 @@ with
         -- ====================================================================
         -- Propagation de la dernière valeur connue du nombre d'étudiants
         -- pour chaque partition (établissement, classe, étape)
-	select 
-		src.id_eco, 
-		src.date_evenement, 
-		src.groupe,
-		src.is_school_day, 
-		src.etape, 
-		src.etape_date_debut, 
-		src.etape_date_fin, 
-		src.backfill_partition, 
-		max(src.n_students_daily_prefilled) over ( 
-			partition by id_eco,  groupe, backfill_partition 
-			order by date_evenement 
-			rows between unbounded preceding and unbounded following 
-		) as n_students_daily 
-		from 
-			( 
-				select 
-					id_eco, 
-					date_evenement, 
-					groupe, 
-					is_school_day, 
-					etape, 
-					etape_date_debut, 
-					etape_date_fin, 
-					n_students_daily_prefilled, 
-					sum(case when n_students_daily is not null then 1 else 0 end) over ( 
-						partition by id_eco, groupe
-						order by date_evenement 
-						rows between unbounded preceding and current row 
-					) as backfill_partition 
-				from daily_prefilled ) 
-			as src 
+        select
+            src.id_eco,
+            src.date_evenement,
+            src.groupe,
+            src.is_school_day,
+            src.etape,
+            src.etape_date_debut,
+            src.etape_date_fin,
+            src.backfill_partition,
+            max(src.n_students_daily_prefilled) over (
+                partition by id_eco, groupe, backfill_partition
+                order by date_evenement
+                rows between unbounded preceding and unbounded following
+            ) as n_students_daily
+        from
+            (
+                select
+                    id_eco,
+                    date_evenement,
+                    groupe,
+                    is_school_day,
+                    etape,
+                    etape_date_debut,
+                    etape_date_fin,
+                    n_students_daily_prefilled,
+                    sum(case when n_students_daily is not null then 1 else 0 end) over (
+                        partition by id_eco, groupe
+                        order by date_evenement
+                        rows between unbounded preceding and current row
+                    ) as backfill_partition
+                from daily_prefilled
+            ) as src
 
     )
 

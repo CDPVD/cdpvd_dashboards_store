@@ -49,8 +49,7 @@ with
             groupe,
             date_evenement,
             jour_semaine,
-            event_kind,
-            rollup(category_abs)
+            event_kind, rollup (category_abs)
     ),
     -- ========================================================================
     -- ÉTAPE 2: Agrégation et calcul du taux d'absence au niveau demandé
@@ -70,7 +69,7 @@ with
             sum(cast(n_events as float)) / sum(n_students_daily) as absence_rate
         from source as src
         group by
-            annee_scolaire, cube(school_friendly_name, ordre_enseignement), 
+            annee_scolaire, cube (school_friendly_name, ordre_enseignement),
             groupe,
             date_evenement,
             jour_semaine,
@@ -86,13 +85,17 @@ with
             annee_scolaire,
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
             coalesce(ordre_enseignement, 'Tout') as ordre_enseignement,
-            groupe,            
+            groupe,
             event_kind,
             category_abs,
             sum(cast(n_events as float))
             / sum(n_students_daily) as avg_absence_rate_school
         from source
-        group by annee_scolaire, cube(school_friendly_name, ordre_enseignement), groupe, event_kind, category_abs 
+        group by
+            annee_scolaire, cube (school_friendly_name, ordre_enseignement),
+            groupe,
+            event_kind,
+            category_abs
     ),
     -- ========================================================================
     -- ÉTAPE 4: Moyennes par jour de la semaine
@@ -110,7 +113,11 @@ with
             / sum(n_students_daily) as avg_absence_rate_jour
         from source
         group by
-            annee_scolaire, cube(school_friendly_name, ordre_enseignement), groupe, category_abs, event_kind, jour_semaine
+            annee_scolaire, cube (school_friendly_name, ordre_enseignement),
+            groupe,
+            category_abs,
+            event_kind,
+            jour_semaine
     ),
     -- ========================================================================
     -- ÉTAPE 5: Assemblage final des métriques (CSS, école, jour)
@@ -141,9 +148,9 @@ with
             and src.date_evenement = css.date_evenement
             and src.event_kind = css.event_kind
             and src.category_abs = css.category_abs
-			and src.jour_semaine = css.jour_semaine
+            and src.jour_semaine = css.jour_semaine
             and src.ordre_enseignement = css.ordre_enseignement
-			and css.school_friendly_name = 'Tout le CSS'
+            and css.school_friendly_name = 'Tout le CSS'
             and css.groupe = 'Tout'
         left join
             school
@@ -157,7 +164,7 @@ with
             jour
             on src.annee_scolaire = jour.annee_scolaire
             and src.school_friendly_name = jour.school_friendly_name
-            and src.ordre_enseignement = jour.ordre_enseignement            
+            and src.ordre_enseignement = jour.ordre_enseignement
             and src.groupe = jour.groupe
             and src.jour_semaine = jour.jour_semaine
             and src.event_kind = jour.event_kind
@@ -168,7 +175,6 @@ with
 -- ============================================================================
 -- ÉTAPE 6: Sélection finale avec clé de filtre pour Power BI
 -- ============================================================================
-
 select
     {{
         dbt_utils.generate_surrogate_key(

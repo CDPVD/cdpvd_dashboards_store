@@ -69,40 +69,51 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- 3) conserver l'information qu'il s'agit d'une journée avec motifs hétérogènes.
 ==================================================================================================
 #}
+with
+    source as (
+        select
+            school_year,
+            date_abs,
+            jour_semaine,
+            fiche,
+            id_eco,
+            groupe,
+            code_matiere,
+            grille,
+            event_kind,
+            is_aggregate_kind,
+            is_absence,
+            -- Gestion des journées multi‑motifs : si 100% des périodes observées et
+            -- plusieurs motifs, regrouper en 'Absence mixte' / 'Motifs multiples'.
+            -- 
+            case
+                when count_overdate_fiche_id_eco > 1
+                then 'Absence mixte M-NM'
+                else category_abs
+            end as category_abs,
+            case
+                when count_overdate_fiche_id_eco > 1
+                then 'Motifs multiples'
+                else event_description
+            end as event_description,
+            remarque,
+            prct_observed_periods_over_expected,
+            prct_observed_daily_over_expected,
+            count_overdate_fiche_id_eco,
+            case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
+            etape_description,
+            seq_etape
+        from {{ ref("cdpvd_fact_absences_daily") }}
+        where
+            school_year
+            >= {{ core_dashboards_store.get_current_year() }}
+            - {{ nbre_annee_a_extraire }}
 
-with source as (
-	select
-		school_year,
-		date_abs,
-		jour_semaine,
-		fiche,
-		id_eco,
-		groupe,
-		code_matiere,
-		grille,
-		event_kind,
-		is_aggregate_kind,
-		is_absence,
--- Gestion des journées multi‑motifs : si 100% des périodes observées et plusieurs motifs, regrouper en 'Absence mixte' / 'Motifs multiples'.        
-		case when count_overdate_fiche_id_eco >1 then 'Absence mixte M-NM' else category_abs end as category_abs,
-		case when count_overdate_fiche_id_eco >1 then 'Motifs multiples' else event_description end as event_description,
-		remarque,
-		prct_observed_periods_over_expected,
-		prct_observed_daily_over_expected,
-		count_overdate_fiche_id_eco,
-        case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
-		etape_description,
-		seq_etape
-	from {{ ref("cdpvd_fact_absences_daily") }}
-	where
-        school_year
-        >= {{ core_dashboards_store.get_current_year() }}
-        - {{ nbre_annee_a_extraire }}
-
--- ============================================================================
--- ÉTAPE 1: Agrégation des absences par jour, établissement et étape
--- ============================================================================        
-),
+    -- ============================================================================
+    -- ÉTAPE 1: Agrégation des absences par jour, établissement et étape
+    -- ============================================================================
+    -- 
+    ),
     abs_aggregated as (
         select
             date_abs as date_evenement,
@@ -117,8 +128,7 @@ with source as (
         group by
             date_abs,
             id_eco,
-            jour_semaine,
-            rollup(groupe),
+            jour_semaine, rollup (groupe),
             etape,
             event_kind,
             category_abs
@@ -126,7 +136,6 @@ with source as (
     -- ============================================================================
     -- ÉTAPE 2: Combinaison des absences avec les données de padding
     -- ============================================================================
-
     ),
     augmented as (
         select
@@ -146,8 +155,7 @@ with source as (
             and padd.date_evenement = abs_.date_evenement
             and padd.groupe = abs_.groupe
             and padd.etape = abs_.etape
-        where padd.is_school_day = 1 
-
+        where padd.is_school_day = 1
 
     -- ============================================================================
     -- ÉTAPE 4: Calcul du taux d'absence (n_events / n_students_daily)

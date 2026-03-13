@@ -47,8 +47,11 @@ select
     end as category_abs, #}
     cf_descr as category_abs,
     case when cpt_abs in (1, 2) then 1 else 0 end as is_absence  -- Flag for complete absence
-from {{ ref("i_gpm_t_motif_abs") }} as abs 
-left join {{ ref("i_wl_descr") }} as descr on abs.cpt_abs = descr.code and nom_table ='CPT_ABS'
+from {{ ref("i_gpm_t_motif_abs") }} as abs
+left join
+    {{ ref("i_wl_descr") }} as descr
+    on abs.cpt_abs = descr.code
+    and nom_table = 'CPT_ABS'
 where
     cpt_abs is not null  -- Filter out the motiveless absences / lateness
     and cpt_abs != 3  -- exclude the retard  
