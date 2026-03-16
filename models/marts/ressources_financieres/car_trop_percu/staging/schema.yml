@@ -5,9 +5,10 @@ models:
     config:
       tags:
         - rf
-      schema: "rf_staging"
+        - car_trop_percu
+      schema: rf_staging
     description: >
-      Table de fait qui fournit l'historique du solde 
+      Table qui fournit l'historique du solde 
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:
@@ -20,9 +21,10 @@ models:
     config:
       tags:
         - rf
-      schema: "rf_staging"
+        - car_trop_percu
+      schema: rf_staging
     description: >
-      Table de fait qui fournit les prenoms / nom des parents et tuteur pour chaque code_perm, fiche du SDG
+      Table qui fournit les prenoms / nom des parents et tuteur pour chaque code_perm, fiche du SDG
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:

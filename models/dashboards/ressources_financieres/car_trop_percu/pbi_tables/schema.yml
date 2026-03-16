@@ -1,12 +1,12 @@
 version: 2
 
 models:
-  - name: report_car_tp
+  - name: car_tp_balance_annuelle
     config:
       tags:
         - rf
-        - car_trp
-      schema: dashboard_rf
+        - car_trop_percu
+      schema: dashboard_car_trop_percu
     description: >
         Table qui comptabilise les comptes à recevoir et trop-perçus par année scolaire, école et fiche. la table fournit également les informations de contact associées.
     tests:

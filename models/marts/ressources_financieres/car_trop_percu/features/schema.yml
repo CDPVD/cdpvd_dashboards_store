@@ -5,7 +5,8 @@ models:
     config:
       tags:
         - rf
-      schema: "rf"
+        - car_trop_percu
+      schema: mart_rf
     description: >
       Table de fait qui fournit l'historique du solde 
     tests:
@@ -20,7 +21,8 @@ models:
     config:
       tags:
         - rf
-      schema: "rf"
+        - car_trop_percu
+      schema: mart_rf
     description: >
       Table de fait contenant les contacts des parents et tuteurs des élèves.
     tests:

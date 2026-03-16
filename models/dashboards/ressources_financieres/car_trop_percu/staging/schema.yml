@@ -5,7 +5,8 @@ models:
     config:
       tags:
         - rf
-      schema: "rf_staging"
+        - car_trop_percu
+      schema: rf_staging
     description: >
       Table qui recupere les lieux de travail administratifs (code et description) pour l'exercice en cours.
     tests:
