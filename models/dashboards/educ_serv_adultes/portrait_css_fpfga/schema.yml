@@ -81,3 +81,23 @@ models:
       - core_dashboards_store.resolution:
           combination_of_columns:
             - id_filtre
+
+  - name: report_sanction_adultes
+    config:
+      alias: report_sanction_adultes
+      tags:
+        - educ_serv_adultes
+        - sanction_adultes
+        - portrait_css_fpfga
+      schema: dashboard_portrait_css_fpfga
+    description: >
+        Table de rapports qui comptabilise la population adulte au sein du CSS selon le centre, le batisse, l'année, l'état de la formation, le type de parcours, le genre et le motif/raison de départ.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - code_perm
+            - population
+            - année
+            - freq
+            - fiche
+            - noseqmat
