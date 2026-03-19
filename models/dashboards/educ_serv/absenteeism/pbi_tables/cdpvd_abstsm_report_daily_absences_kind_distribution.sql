@@ -71,17 +71,9 @@ with
             event_kind,
             -- Gestion des journées multi‑motifs : si 100% des périodes observées et
             -- plusieurs motifs, regrouper en 'Absence mixte' / 'Motifs multiples'.
-            -- 
-            case
-                when count_overdate_fiche_id_eco > 1
-                then 'Absence mixte M-NM'
-                else category_abs
-            end as category_abs,
-            case
-                when count_overdate_fiche_id_eco > 1
-                then 'Motifs multiples'
-                else event_description
-            end as event_description
+            --
+            category_abs,
+            event_description
         from {{ ref("cdpvd_fact_absences_daily") }}
         where
             school_year

@@ -29,3 +29,4 @@ models:
             - event_kind
             - category_abs
             - code_matiere
+            - remarque

@@ -59,16 +59,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         }}
     {% endif %}
 {% endif %}
-{# 
-==================================================================================================
--- Gestion des journées multi‑motifs :
--- Si l'élève couvre 100% des périodes sur la journée mais plusieurs motifs/catégories apparaissent,
--- on normalise la journée en une seule ligne « Absence mixte / Motifs multiples » afin de :
--- 1) simplifier la détection de séquences (éviter plusieurs séquences le même jour),
--- 2) éviter le double‑comptage dans les agrégations journalières,
--- 3) conserver l'information qu'il s'agit d'une journée avec motifs hétérogènes.
-==================================================================================================
-#}
+
 with
     source as (
         select
@@ -83,23 +74,9 @@ with
             event_kind,
             is_aggregate_kind,
             is_absence,
-            -- Gestion des journées multi‑motifs : si 100% des périodes observées et
-            -- plusieurs motifs, regrouper en 'Absence mixte' / 'Motifs multiples'.
-            -- 
-            case
-                when count_overdate_fiche_id_eco > 1
-                then 'Absence mixte M-NM'
-                else category_abs
-            end as category_abs,
-            case
-                when count_overdate_fiche_id_eco > 1
-                then 'Motifs multiples'
-                else event_description
-            end as event_description,
+            category_abs,
+            event_description,
             remarque,
-            prct_observed_periods_over_expected,
-            prct_observed_daily_over_expected,
-            count_overdate_fiche_id_eco,
             case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
             etape_description,
             seq_etape
@@ -112,7 +89,7 @@ with
     -- ============================================================================
     -- ÉTAPE 1: Agrégation des absences par jour, établissement et étape
     -- ============================================================================
-    -- 
+    --
     ),
     abs_aggregated as (
         select

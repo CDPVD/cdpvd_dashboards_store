@@ -61,7 +61,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- ============================================================================
 -- Crée une ligne par élève/jour/absence avec :
 -- - Clé unique (id_eco, grille, date_abs)
--- - Normalisation des multi-motifs (si >1 motif sur la journée → 'Absence mixte')
 -- ============================================================================
 select distinct
     {{
@@ -82,16 +81,8 @@ select distinct
     src.groupe,
     src.grille,
     src.event_kind,
-    case
-        when src.count_overdate_fiche_id_eco > 1
-        then 'Absence mixte M-NM'
-        else src.category_abs
-    end as category_abs,
-    case
-        when src.count_overdate_fiche_id_eco > 1
-        then 'Motifs multiples'
-        else src.event_description
-    end as event_description,
+    category_abs,
+    event_description,
     concat('étape : ', src.etape) as etape,
     src.date_debut,
     src.date_fin,
