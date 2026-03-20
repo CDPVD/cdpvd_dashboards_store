@@ -90,11 +90,7 @@ with
                 then pmnt.nb_unit * (perim.hntj * 3.0 / 4.0)
             end as nombre_heures_remun,
             pmnt.mnt,
-            pmnt.mnt_cour_trait_diff,
-            case
-                when srv.service = 1 then 1 
-                else 0 
-            end as serv_eleve
+            pmnt.mnt_cour_trait_diff
         from prd
         left join
             {{ ref("i_pai_hchq") }} as chq
@@ -128,9 +124,6 @@ with
             ) as typeremun
             on typeremun.code_pmnt = pmnt.code_pmnt
             and typeremun.typeremun is not null
-        left join
-            {{ ref("services_eleve") }} as srv
-            on pmnt.corp_empl = srv.corp_empl        
         where
             left(pmnt.corp_empl, 1) in ('1', '2', '3', '4', '5')
             and pmnt.mode <> ' '
@@ -213,7 +206,6 @@ with
             t1.lieu_trav,
             t1.no_seq,
             t1.code_pmnt,
-            t1.serv_eleve,
             convert(
                 numeric(7, 2),
                 case
@@ -285,7 +277,6 @@ with
             no_cmpt,
             lieu_trav,
             lieu_trav_cpt_budg,
-            serv_eleve,
             sum(
                 case
                     -- Répartir les heures CNESST malgré des mnt nuls
@@ -323,8 +314,8 @@ with
             code_pmnt,
             no_cmpt,
             lieu_trav,
-            lieu_trav_cpt_budg,
-            serv_eleve
+            lieu_trav_cpt_budg
+            
     )
 select
     annee,
@@ -351,7 +342,6 @@ select
     lieu_trav,
     lieu_trav_cpt_budg as unite_admin,
     nb_hre_remun_dist,
-    mnt_dist,
-    serv_eleve
+    mnt_dist
 from cal_renum
 where lieu_trav_cpt_budg is not null and nb_hre_remun_dist != 0

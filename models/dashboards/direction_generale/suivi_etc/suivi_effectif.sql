@@ -40,7 +40,7 @@ with
             end as type_remun,
             hrs.nb_hre_remun_dist,
             case 
-                when serv_eleve = 1 then 'Direct' 
+                when srv.service = 1 then 'Direct' 
                 else 'Indirect'
             end as services_eleve
         from {{ ref("fact_h_remun") }} as hrs
@@ -53,6 +53,9 @@ with
         left join
             {{ ref("i_pai_tab_corp_empl") }} as ptce on ptce.corp_empl = hrs.corp_emploi
         left join {{ ref("i_pai_tab_stat_eng") }} as eng on eng.stat_eng = hrs.stat_eng
+        left join
+            {{ ref("services_eleve") }} as srv
+            on hrs.corp_emploi = srv.corp_empl            
 
     -- sommer le tout    
     ),
@@ -70,7 +73,7 @@ with
             type_remun,
             sum(nb_hre_remun_dist) as nombre_heures_remun,
             sum((nb_hre_remun_dist / 1826.3)) as equivalent_temps_plein,
-            services_eleve
+            max(services_eleve) as services_eleve -- Agrégation arbitraire
         from reel
         group by
             an_budg,
@@ -82,8 +85,7 @@ with
             code_lieu_trav,
             descr_unite_admin,
             stat_eng,
-            type_remun,
-            services_eleve
+            type_remun
     )
 select
     an_budg,
