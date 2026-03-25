@@ -54,30 +54,19 @@ select
     matele.service,
     matele.res,
     matele.nbhresstage,
-    -- fac.client,
-    -- fac.population,
-    -- fac.interv_age,
-    -- fac.interv_age_fp,
-    -- fac.org_hor,
-    -- fac.descr_org_hor,
-    -- fac.activform,
-    -- fac.condadmiss,
-    -- fac.descr_condadmiss,
-    -- fac.etat_formation,
-    -- fac.prog,
-    -- fac.descr_prog,
-    -- fac.type_diplome,
-    -- fac.raison_grat_scol,
-    -- fac.descr_raison_grat_scol,
-    -- fac.type_parcours,
-    -- fac.descr_type_parcours,
-    -- fac.service_enseign,
-    -- fac.descr_service_enseign,
-    -- fac.motif_depart,
-    -- fac.descr_motif_dep,
-    -- fac.raison_depart,
-    -- fac.desc_raison_depart,
-    matd.descrmat
+    matd.descrmat,
+    promat.typeprofil,
+    promat.ordchrono ord_chrono,
+    promat.occurrence,
+    promat.noseqmat noseq_mat,
+    promat.statutprofil statut_profil,
+    promat.nbminsl,
+    promat.nbminso,
+    promat.nbminsr,
+    promat.nbminrea nbmin_rea,
+    promat.datesanct,
+    promat.res resultat,
+    promat.typmat
 from {{ ref("i_e_elematfpfga_adultes") }} as matfpfga
 inner join
     {{ ref("stg_populations_adultes") }} as pop
@@ -85,6 +74,12 @@ inner join
     and pop.annee = matfpfga.annee
     and pop.freq = matfpfga.freq
 inner join
-    {{ ref("i_e_matele_adultes") }} as matele on matfpfga.noseqmat = matele.noseqmat
+    {{ ref("i_e_matele_adultes") }} as matele on matfpfga.noseqmat = matele.noseqmat and matfpfga.freq = matele.freq and matfpfga.fiche = matele.fiche
 inner join {{ ref("i_t_mat_adultes") }} as matd on matd.mat = matfpfga.mat
-where matfpfga.annee >= 2020
+inner join
+    {{ ref("i_e_promat_adultes") }} as promat
+    on promat.mat = matfpfga.mat
+    and promat.noseqmat = matfpfga.noseqmat
+    and promat.fiche = matfpfga.fiche
+    and promat.ordchrono = matfpfga.ordchrono
+where matfpfga.annee >= {{ core_dashboards_store.get_current_year() - 5 }} and matele.res !='' 

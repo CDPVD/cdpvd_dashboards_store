@@ -59,8 +59,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 select
     ens.matr as matricule,
     emp.legal_name as 'nom_legal',
-    case
-        when emp.sex_friendly_name = 'femme' then 'Femme' else 'Homme' end as genre,
+    case when emp.sex_friendly_name = 'femme' then 'Femme' else 'Homme' end as genre,
     case
         when datediff(year, emp.birth_date, getdate()) < 25
         then '24 ans et moins'
@@ -85,7 +84,9 @@ select
     end as 'tranche_age',
     lieu.workplace_name as lieu_principal,
     job_class.code_job_name as corp_empl,
-    case when ens.type_qualif is null then 'Aucune' else qualif.descr end as qualification,
+    case
+        when ens.type_qualif is null then 'Aucune' else qualif.descr
+    end as qualification,
     state.descr as etat_empl,
     case when qualif.is_qualified = 1 then 1 else 0 end as edb,
     case

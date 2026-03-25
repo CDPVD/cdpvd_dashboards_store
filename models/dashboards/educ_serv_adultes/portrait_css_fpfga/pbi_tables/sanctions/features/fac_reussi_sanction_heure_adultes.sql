@@ -78,7 +78,7 @@ with
             end as sanc,
             res,
             nbhresstage,
-            descrmat,
+            concat(mat, ' - ', descrmat) as descrmat,
             fac.eco_cen,
             fac.bat,
             fac.client,
@@ -98,6 +98,11 @@ with
                 then descr_prog
                 else concat(prog, ' - ', descr_prog)
             end as programme,
+            case
+                when fac.activ_form is null or fac.activ_form = ''
+                then fac.donpers
+                else fac.activ_form
+            end as groupe_horaire,
             fac.descr_prog,
             fac.type_diplome,
             fac.raison_grat_scol,
@@ -118,7 +123,19 @@ with
             el.genre,
             concat('(', facr.fiche, ') ', el.prenom, ' ', el.nom) as prenom_nom,
             el.lang_matern,
-            el.desc_lang_matern
+            el.desc_lang_matern,
+            facr.typeprofil,
+            facr.ord_chrono,
+            facr.occurrence,
+            facr.noseq_mat,
+            facr.statut_profil,
+            facr.nbminsl,
+            facr.nbminso,
+            facr.nbminsr,
+            facr.nbmin_rea,
+            facr.datesanct,
+            facr.resultat,
+            facr.typmat
         from {{ ref("fact_sanction_adultes") }} facr
         inner join
             {{ ref("fact_freq_adultes") }} as fac
