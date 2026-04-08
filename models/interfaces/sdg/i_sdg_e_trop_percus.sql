@@ -15,9 +15,4 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select
-    fiche,
-    id_sdg,
-    annee,
-    mnt
-from {{ var("database_sdg") }}.dbo.sdg_e_trop_percus
+select fiche, id_sdg, annee, mnt from {{ var("database_sdg") }}.dbo.sdg_e_trop_percus

@@ -15,12 +15,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-
-{{ config(tags=["rf","car_trop_percu"],schema="rf_staging") }}
+{{ config(tags=["rf", "car_trop_percu"], schema="rf_staging") }}
 
 select distinct
-    code,
-    upper(left(descr,1)) + lower(substring(descr,2,len(descr))) as descr
+    code, upper(left(descr, 1)) + lower(substring(descr, 2, len(descr))) as descr
 from {{ ref("i_fin_nomen_unit_adm") }}
-where left(exer_fin, 4) = {{ core_dashboards_store.get_current_year() }} 
-
+where left(exer_fin, 4) = {{ core_dashboards_store.get_current_year() }}

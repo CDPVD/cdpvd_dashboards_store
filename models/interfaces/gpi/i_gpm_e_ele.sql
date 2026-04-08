@@ -15,20 +15,20 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select 
-    fiche, 
-    nom, 
-    pnom, 
-    code_perm, 
-    sexe, 
+select
+    fiche,
+    nom,
+    pnom,
+    code_perm,
+    sexe,
     date_naiss as date_naissance,
-    nom_pere, 
+    nom_pere,
     pnom_pere,
-    nom_mere, 
+    nom_mere,
     pnom_mere,
-    nom_tuteur, 
+    nom_tuteur,
     pnom_tuteur,
-    adr_electr_pere, 
+    adr_electr_pere,
     adr_electr_mere,
     adr_electr_tuteur
 from {{ var("database_gpi") }}.dbo.gpm_e_ele

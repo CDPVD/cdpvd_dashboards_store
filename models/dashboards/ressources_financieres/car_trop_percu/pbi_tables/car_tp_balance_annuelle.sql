@@ -15,34 +15,32 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
+{{ config(tags=["rf", "car_trop_percu"], schema="dashboard_car_trop_percu") }}
 
-{{ config(tags=["rf","car_trop_percu"],schema="dashboard_car_trop_percu") }}
-
-select 
+select
     sld.code_perm,
-    ct.nom, 
-    ct.prenom, 
-	sld.fiche,
+    ct.nom,
+    ct.prenom,
+    sld.fiche,
     sld.annee,
     sld.eco,
-	sld.car_gpi,
-	sld.trp_gpi,
-	sld.car_ag,
-	sld.tp_ag,
-	sld.car_proc,
-	sld.trp_proc,
-    ct.nom_mere, 
-	ct.pnom_mere,
-	ct.adr_electr_mere,
-	ct.nom_pere, 
-	ct.pnom_pere,
-	ct.adr_electr_pere, 
-	ct.nom_tuteur, 
-	ct.pnom_tuteur,
-	ct.adr_electr_tuteur,
+    sld.car_gpi,
+    sld.trp_gpi,
+    sld.car_ag,
+    sld.tp_ag,
+    sld.car_proc,
+    sld.trp_proc,
+    ct.nom_mere,
+    ct.pnom_mere,
+    ct.adr_electr_mere,
+    ct.nom_pere,
+    ct.pnom_pere,
+    ct.adr_electr_pere,
+    ct.nom_tuteur,
+    ct.pnom_tuteur,
+    ct.adr_electr_tuteur,
     ct.adresse,
-	ct.adresse_contact
+    ct.adresse_contact
 from {{ ref("fact_contact") }} ct
-left join {{ ref("fact_solde_el") }} sld
-	on sld.code_perm = ct.code_perm
+left join {{ ref("fact_solde_el") }} sld on sld.code_perm = ct.code_perm
 where sld.code_perm is not null

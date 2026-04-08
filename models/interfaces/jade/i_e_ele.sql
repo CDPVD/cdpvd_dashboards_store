@@ -15,19 +15,19 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select 
-    fiche, 
+select
+    fiche,
     codeperm as code_perm,
     nom,
     pnom as prenom,
-    nompere as nom_pere, 
+    nompere as nom_pere,
     pnompere as pnom_pere,
-    nommere as nom_mere, 
+    nommere as nom_mere,
     pnommere as pnom_mere,
-    nomtuteur as nom_tuteur, 
+    nomtuteur as nom_tuteur,
     pnomtuteur as pnom_tuteur,
-    adr_electr_ele, 
-    adr_electr_pere, 
+    adr_electr_ele,
+    adr_electr_pere,
     adr_electr_mere,
     adr_electr_tuteur,
     datemaj as date_maj

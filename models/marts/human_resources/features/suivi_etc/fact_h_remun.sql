@@ -104,7 +104,7 @@ with
             and pmnt.no_cheq = chq.no_cheq
             and pmnt.date_cheq = chq.date_cheq
         join
-            {{ ref('stg_perim_hitorique_emplois') }} as perim
+            {{ ref("stg_perim_hitorique_emplois") }} as perim
             on perim.matr = pmnt.matr
             and perim.ref_empl = pmnt.ref_empl
             and pmnt.date_deb between perim.date_eff and perim.date_fin

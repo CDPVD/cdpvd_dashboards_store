@@ -15,9 +15,4 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select
-    fiche,
-    id_sdg,
-    annee,
-    solde
-from {{ var("database_sdg") }}.dbo.sdg_e_fact
+select fiche, id_sdg, annee, solde from {{ var("database_sdg") }}.dbo.sdg_e_fact
