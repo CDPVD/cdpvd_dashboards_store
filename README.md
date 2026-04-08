@@ -81,6 +81,9 @@ models:
                 # >>> Overridden by cdpvd_dashboards_store
                 i_gpm_e_dan:
                     +enabled: false
+                # >>> Overridden by cdpvd_dashboards_store
+                i_gpm_e_ele:
+                    +enabled: false
             jade:
                 +enabled: True
                 # >>> Overridden by cdpvd_dashboards_store
@@ -102,6 +105,8 @@ models:
                 +enabled: false/true
             educ_serv_adultes:
                 +enabled: false/true
+            ressources_financieres:
+                +enabled: false/true
         dashboards:
             educ_serv_adultes:
                 portrait_css_fpfga
@@ -113,16 +118,25 @@ models:
                 pevr:
                     +enabled: false/true
                     pbi_tables:
-                        +enabled: false/true                             
+                        +enabled: false/true  
+            ressources_financieres:
+                car_trop_percu:
+                    +enabled: false/true                           
         interfaces:
             gpi:
                 i_gpm_e_dan:
                     +enabled: true
                 i_gpm_e_abs:
-                    +enabled: true                         
+                    +enabled: true 
+                i_gpm_e_ele:
+                    +enabled: true                        
             jade:
                 +enabled: true
             jade_adultes:
+                +enabled: true
+            proc:
+                +enabled: true
+            paie:
                 +enabled: true
 
         cssxxx_dashboards_store:
@@ -140,7 +154,8 @@ vars:
     database_gpi: "[SERVEUR_IP].[GPIP]"
     database_jade: "[SERVEUR_IP].[JADE]"
     database_jade_adultes: "[SERVEUR_IP].[JADE_ADULTES]"
-    database_jade_adultes: "[SERVEUR_IP].[JADE_ADULTES]"
+    database_sdg: "[SERVEUR_IP].[AVANT_GARDE]"
+    database_proc: "[SERVEUR_IP].[PROCURE]"
     database_prodrome: "[SERVEUR_IP]"
 
     interfaces:
@@ -466,7 +481,8 @@ Some dashboards might need extra configuration to be provided through `seeds`. I
 | [retirement](#retirement) | Tracks the number of retired employees by job categories and workplace. Forecast, for up to five years, the number of retiring employees | (Sciance) Hugo Juhel
 | [absenteeism](#absenteeism) | Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | (Sciance) Hugo Juhel, Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
 | [portrait_css_fpfga](#portrait_css_fpfga) | Une vue d'ensemble en fonction des objectifs et des types de formation suivis par les élèves inscrits à notre centre de service scolaire. | Martin Legault (CSSMV), Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
-| [suivi_etc](#suivi_etc) | Vue permettant d’analyser les heures rémunérées et les ETC selon divers axes (catégorie d’emploi, type de rémunération, etc.). | Mohamed Sadqi (CSSVDC), Alluard Jérémie (CSSVDC)
+| [suivi_etc](#suivi_etc) | Vue permettant d’analyser les heures rémunérées et les ETC selon divers axes (catégorie d’emploi, type de rémunération, etc.). | Mohamed Sadqi (CSSVDC), Jérémie Alluard (CSSVDC)
+| [car_trop_percu](#car_trop_percu) | Solde actuel des comptes à recevoir et des trop perçus, des applications : GPI, Avant-Garde et Procure. | Caroline Tessier (CSSVDC), Jérémie Alluard (CSSVDC)
 
 
 > The following section describe the specific for each dashboard. Bear with me, we are gonna drill down into the specifics of each dashboard ! Stay focused ! In each of the following section, you will learn how to tame a specific dashboard.
@@ -796,14 +812,16 @@ sources:
 |-----------	|-------------	|-------	|-------	| -------	|
 | gpi, jade |  No | No 	| Yes 	| Yes 	|
 
-# Déploiement
+#### Déploiement
 :badge[tag:res_epreuves]{type="success"}
 :badge[new in v0.7.0]
 
-## Bases de données
+#### Bases de données
 
 Les base de données `gpi` et `jade` doivent être liées au projet. Veuillez consulter  la section [linking a database](/using/configuration/linking) pour plus d’informations sur la façon de lier une base de données.
-## Spécification du projet DBT
+
+#### Spécification du projet DBT
+
 > Mettez à jour votre fichier `cssXX.dashboards_store/dbt_project.yml` avec l’extrait suivant.
 
 1. Activer les modèles.
@@ -836,9 +854,9 @@ vars:
         cod_css: ###% --Les trois premiers chiffres de votre code d’organisation 
 ```
 
-# Configuration 
+#### Configuration 
 
-## Personnalisation des épreuves locales
+##### Personnalisation des épreuves locales
 ::alert{type=warning}
 La configuration est facultative. Si vous ne fournissez pas de configuration, le tableau de bord utilisera la configuration par défaut
 ::
@@ -857,7 +875,7 @@ dbt seed --full-refresh
 ::alert{type=info}
 Veuillez consulter la section [seeds](/using/marts/seeds) pour plus d’informations sur la manière d’utiliser et de peupler les graines
 ::
-## Ajout des données ministérielles 
+##### Ajout des données ministérielles 
 ::alert{type=warning}
 Cette configuration est obligatoire. Si vous ne fournissez les données de charlemagne , la partie des épreuves uniques du tableau de bord n'affichera pas de données.
 ::
@@ -1087,6 +1105,7 @@ vars:
 ```
 
 > This dashboard requiers the specification of the `human_resources` seeds.
+
 ### Absentéisme 
 > Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | (Sciance) Hugo Juhel, Mohamed Sadqi (CSSVDC), Adama Fall (CSSST)
 
@@ -1134,45 +1153,96 @@ vars:
                 years_of_data_absences: votre_nombre_annee # Combien d'années de données conserver pour les tableaux de bord centrés sur les absences.
                 years_of_data_student: votre_nombre_annee # Combien d'années de données conserver pour les données des élèves.
 ```
-### Endb 
+
+### Endb
+
 > Suivi du taux d'absence et des absences de longue durée (bris de service) des élèves. | Gabriel Thiffault (CSSVT)
 
 | Interfaces  | Marts 	| Marts seeds     | Dashboard seeds | Additional config |
 |-------------|---------|-----------------|-----------------| ------------------|
 | paie         |human_resources |human_resources             	| Non              | Oui 	              |
 
-## Déploiement
+#### Déploiement
 
 ![Success](https://img.shields.io/badge/endb-success-brightgreen)  
 ![New in v0.11.0](https://img.shields.io/badge/new%20in-v0.11.0-blue)
 
 
-## Bases de données
+#### Bases de données
 
 La base de données `paie` doit être liée au projet. Veuillez vous référer à la section [Lier une base de données](/using/configuration/databases) pour plus d'informations sur la façon de lier une base de données.
 
-## Seed
+#### Seed
 
 ::alert{type=warning} 3 seeds sont requises pour le fonctionnement du tableau de bord. ::
 
 Le tableau de bord nécessite les 3 seeds suivantes :  
-### ens_qualification : 
+
+##### ens_qualification : 
 Seed obligatoire. La liste des codes de qualifications, leur description et si elle est considérée comme étant légalement qualifiante. Vous pouvez aller chercher la liste dans la table WL_DESCR de votre système de paie et aller chercher nom_table = 'BC_TYPE_QUALIF'
 
-### statut_enseignant
+##### statut_enseignant
 Seed obligatoire. Liste des statuts d'engagement débutant par la lettre E (généralement les enseignants). Elle permet de catégoriser si les statuts sont considérés comme des titulaires, remplaçants , suppléants... Vous pouvez utiliser la table PAI_TAB_STAT_ENG pour aller chercher les statuts.
 
-### secteur :
+##### secteur :
 Seed optionnel. Elle est utilisée pour tenir compte de la subdivision du territoire de votre CSS, soit en quartier, en secteur. En plus, elle nous donne l'ordre d'enseignement, tel que vous voulez le voir dans les filtres 
 
-
-## Marts
+#### Marts
 
 Les marts suivants doivent être activés pour que le tableau de bord fonctionne. Veuillez vous référer à la section [Activer un mart](/using/configuration/enabling) pour plus d'informations sur la façon d'activer un mart.
 
 - `human_resources`
 
+### car_trop_percu
 
+> Solde actuel des comptes à recevoir et des trop perçus, des applications
+
+| Interfaces              | Marts         	        | Marts seeds     | Dashboard seeds | Additional config |
+|-------------------------|-------------------------|-----------------|-----------------| ------------------|
+| jade_adultes, proc, sdg |ressources_financieres   | No            	| No              | No  	            |
+
+#### Spécification du `dbt_project`
+
+> Mettez à jour votre fichier `cssxx_store/dbt_project.yml` avec l'extrait suivant
+
+```yaml
+# cssXX.data.store/dbt_project.yml
+models:
+  core_dashboards_store:     
+    interfaces:
+      +enabled: True
+      +materialized: ephemeral        
+      gpi:
+        i_gpm_e_ele:
+            +enabled: false  
+
+cdpvd_dashboards_store:
+  marts:        
+    ressources_financieres:
+      car_trop_percu:
+        +enabled: true
+    dashboards: 
+      ressources_financieres:
+        car_trop_percu:
+          +enabled: true                       
+      interfaces:
+        gpi:
+          i_gpm_e_ele:
+            +enabled: true
+        jade_adultes:
+            +enabled: true
+        proc:
+            +enabled: true
+        paie:
+            +enabled: true
+
+vars:
+    database_gpi: "[SERVEUR_IP].[GPIP]"
+    database_jade: "[SERVEUR_IP].[JADE]"
+    database_jade_adultes: "[SERVEUR_IP].[JADE_ADULTES]"
+    database_sdg: "[SERVEUR_IP].[AVANT_GARDE]"
+    database_proc: "[SERVEUR_IP].[PROCURE]"
+```
 
 # Developer guidelines
 
