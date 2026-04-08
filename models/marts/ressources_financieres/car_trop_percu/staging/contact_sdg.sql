@@ -16,6 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
+{{ config(tags=["rf","car_trop_percu"],schema="rf_staging") }}
+
 -- pour chaque code_perm, fiche, indiquer les infos des parents sur une meme ligne
 with wide as (
     select

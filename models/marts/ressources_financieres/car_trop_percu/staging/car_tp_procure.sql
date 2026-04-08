@@ -16,6 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 
+{{ config(tags=["rf","car_trop_percu"],schema="rf_staging") }}
+
 with
 -- Gerer le format de la fiche
     el_cast as (

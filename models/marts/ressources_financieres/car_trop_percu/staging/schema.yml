@@ -2,11 +2,6 @@ version: 2
 
 models:
   - name: car_tp_procure
-    config:
-      tags:
-        - rf
-        - car_trop_percu
-      schema: rf_staging
     description: >
       Table qui fournit l'historique du solde 
     tests:
@@ -18,11 +13,6 @@ models:
             - eco
 
   - name: contact_sdg
-    config:
-      tags:
-        - rf
-        - car_trop_percu
-      schema: rf_staging
     description: >
       Table qui fournit les prenoms / nom des parents et tuteur pour chaque code_perm, fiche du SDG
     tests:
