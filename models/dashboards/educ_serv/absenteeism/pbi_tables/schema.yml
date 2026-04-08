@@ -14,6 +14,9 @@ models:
             - school_friendly_name
             - fiche
             - event_start_date
+            - event_kind
+            - category_abs
+      
 
   - name: cdpvd_abstsm_report_daily_absences_kind_distribution
     description: >
@@ -27,6 +30,7 @@ models:
             - filter_key
             - date_evenement
             - event_description
+            - etape_friendly
 
   - name: cdpvd_abstsm_report_daily_absences_matiere_distribution
     description: >
@@ -40,6 +44,8 @@ models:
             - filter_key
             - date_evenement
             - code_matiere
+            - description_abreg
+            - etape_friendly
 
   - name: cdpvd_abstsm_report_daily_absences_rate
     description: >
@@ -79,3 +85,29 @@ models:
           combination_of_columns:
             - filter_key
             - eco
+
+  - name: cdpvd_abstsm_report_absence_eleve
+    description: liste d'absence par élève, date_abs, event_kind, category_abs et event_description
+    config:
+      tags: 
+        - absenteeism
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - id_eco
+            - nom_prenom_fiche
+            - date_abs
+
+  - name: cdpvd_abstsm_report_jours_classe
+    description: calendrier complet des jours d'école par établissement et grille, 
+                  enrichi avec des métriques mensuelles (MTD) et annuelles (YTD), 
+                  ainsi que des indicateurs d'« année scolaire en cours » et « mois en cours » pour faciliter les analyses comparatives.
+    config:
+      tags: 
+        - absenteeism
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - id_eco
+            - grille
+            - date_evenement

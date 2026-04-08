@@ -18,10 +18,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {#
     Compute an unpadded version of the daily number of students.
     The daily number of students is computed using the DAN table (namely date_debut and date_depart), by integrating the delta between the new students and the leavers every day (ie, the Bathtub algorithm).
-    The daily number of studends is computed at a school, grille and etape level. 
-    Since their is no functor mapping the (grille, id_eco) tuple to an etape, the DAN is first transformed to have one row per student and etape.
-    By repeating the student for every etape it belongs to, the set of (etape, grille, id_eco) tuples are non-overlapping and independent. They can be treated in complete isolation.
-    The bathtub algorithm is applied to every element of the set of (etape, grille, id_eco) tuples independently.
+    The daily number of studends is computed at a school and etape level. 
+    Since their is no functor mapping the ( id_eco) tuple to an etape, the DAN is first transformed to have one row per student and etape.
+    By repeating the student for every etape it belongs to, the set of (etape,  id_eco) tuples are non-overlapping and independent. They can be treated in complete isolation.
+    The bathtub algorithm is applied to every element of the set of (etape, id_eco) tuples independently.
 
     The integration of delta is of O(N) complexity.
     The alternative would be to use a fan-out then aggregate pattern, through a cross join on the seq_int_0_to_1000 table. This would have had something like a O(360*N) complexity. 
@@ -32,7 +32,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         alias="cdpvd_stg_daily_students",
         post_hook=[
             core_dashboards_store.create_clustered_index(
-                "{{ this }}", ["id_eco", "grille", "date_evenement"]
+                "{{ this }}", ["id_eco", "date_evenement"]
             ),
             core_dashboards_store.create_nonclustered_index(
                 "{{ this }}", ["date_evenement"]
@@ -117,9 +117,14 @@ with
     -- Extract a subset of etapes we want to compute the absences for.
     ),
     etapes as (
-        select id_eco, fiche, seq_etape, etape, etape_description, date_debut, date_fin
+        select
+            id_eco,
+            coalesce(etape, 0) as etape,
+            min(date_debut) as etape_date_debut,
+            max(date_fin) as etape_date_fin
         from {{ ref("stg_fact_fiche_etapes") }}
         where etape in ('1', '2', '3')  -- If you want to consider ALL etapes, remove the the where clause and add a CASE WHEN etape in ('1', '2', '3') then etape else 0 end
+        group by id_eco, etape
 
     -- Expanse the DAN to get one row per student and etape (The bathtub algorithm
     -- needs the cells to be disjunctive. But, because of the grid depends on some low
@@ -132,50 +137,30 @@ with
             base.id_eco,
             coalesce(groupe, '-') as groupe,
             base.date_debut,
-            base.date_depart,
-            base.grille,
-            coalesce(etp.etape, 0) as etape,
-            -- If no etape can be matched against the student, use the year's start
-            -- and end date. Dates are required to later down filter out-of-etape days
-            coalesce(etp.date_debut, base.annee_date_debut) as etape_date_debut,
-            coalesce(etp.date_fin, base.annee_date_fin) as etape_date_fin
+            base.date_depart
         from base
-        left join etapes as etp on base.fiche = etp.fiche and base.id_eco = etp.id_eco
-        -- Remove the students that are not in the etape's date range
-        where
-            base.date_debut between etp.date_debut and etp.date_fin
-            or base.date_depart between etp.date_debut and etp.date_fin
-            or (base.date_debut <= etp.date_debut and base.date_depart >= etp.date_fin)
 
     -- Compute the number of new students every day
     ),
     ingress as (
         select
             expa.id_eco,
-            expa.groupe,
-            expa.grille,
+            coalesce(expa.groupe, 'Tout') as groupe,
             expa.date_debut as date_evenement,
-            expa.etape as etape,
-            min(expa.etape_date_debut) as etape_date_debut,
-            max(expa.etape_date_fin) as etape_date_fin,
             count(distinct expa.fiche) as n_students
         from expansed as expa
-        group by expa.date_debut, expa.id_eco, expa.grille, expa.groupe, expa.etape
+        group by expa.date_debut, expa.id_eco, rollup (expa.groupe)
 
     -- Compute the number of students leaving every day
     ),
     egress as (
         select
             expa.id_eco,
-            expa.groupe,
-            expa.grille,
+            coalesce(expa.groupe, 'Tout') as groupe,
             expa.date_depart as date_evenement,
-            expa.etape as etape,
-            min(expa.etape_date_debut) as etape_date_debut,
-            max(expa.etape_date_fin) as etape_date_fin,
             count(distinct expa.fiche) as n_students
         from expansed as expa
-        group by expa.date_depart, expa.id_eco, expa.grille, expa.groupe, expa.etape
+        group by expa.date_depart, expa.id_eco, rollup (expa.groupe)
 
     -- Compute the daily delta between the new students, and the leavers.
     ),
@@ -183,19 +168,13 @@ with
         select
             coalesce(ing.id_eco, eg.id_eco) as id_eco,
             coalesce(ing.groupe, eg.groupe) as groupe,
-            coalesce(ing.grille, eg.grille) as grille,
             coalesce(ing.date_evenement, eg.date_evenement) as date_evenement,
-            coalesce(ing.n_students, 0) - coalesce(eg.n_students, 0) as delta,
-            coalesce(ing.etape, eg.etape) as etape,
-            coalesce(ing.etape_date_debut, eg.etape_date_debut) as etape_date_debut,
-            coalesce(ing.etape_date_fin, eg.etape_date_fin) as etape_date_fin
+            coalesce(ing.n_students, 0) - coalesce(eg.n_students, 0) as delta
         from ingress as ing
         full outer join
             egress as eg
             on ing.date_evenement = eg.date_evenement
             and ing.id_eco = eg.id_eco
-            and ing.etape = eg.etape
-            and ing.grille = eg.grille
             and ing.groupe = eg.groupe
 
     -- Compute the daily number of students by cumulating the delta
@@ -207,25 +186,22 @@ with
             date_evenement,
             id_eco,
             groupe,
-            grille,
-            etape,
+
             sum(delta) over (
-                partition by id_eco, groupe, grille, etape
+                partition by id_eco, groupe
                 order by date_evenement
                 rows between unbounded preceding and current row
-            ) as n_students_daily,
-            etape_date_debut,
-            etape_date_fin
+            ) as n_students_daily
         from daily_students
     )
 
 select
-    date_evenement,
-    id_eco,
-    groupe,
-    grille,
-    etape,
-    etape_date_debut,
-    etape_date_fin,
-    n_students_daily
+    delta.date_evenement,
+    delta.id_eco,
+    delta.groupe,
+    etp.etape,
+    etp.etape_date_debut,
+    etp.etape_date_fin,
+    delta.n_students_daily
 from delta
+left join etapes as etp on delta.id_eco = etp.id_eco
