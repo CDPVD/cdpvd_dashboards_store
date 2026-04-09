@@ -1,9 +1,9 @@
 version: 2
 
 models:
-  - name: stg_unit_adm
+  - name: stg_car_tp_nomen_unit_adm
     description: >
-      Table qui recupere les lieux de travail administratifs (code et description) pour l'exercice en cours.
+      Table auxiliaire qui met a jour le code / descriptif de certaines unités administratives.
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:
