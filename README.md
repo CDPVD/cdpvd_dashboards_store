@@ -1201,6 +1201,14 @@ Les marts suivants doivent être activés pour que le tableau de bord fonctionne
 |-------------------------|-------------------------|-----------------|-----------------| ------------------|
 | jade_adultes, proc, sdg |ressources_financieres   | No            	| No              | No  	            |
 
+#### Actualiser les descriptifs des unités administratives, procéder à des regroupements
+
+* Pour fournir des descriptifs plus explicites à certaines unités administratives, regrouper certaines sous une même étiquette :
+  1. Ajoutez un fichier nommé `adjust_nomen_unit_adm_car_tp.csv` dans le dossier `cssXX.dashboards_store/seeds/dashboards/ressources_financieres/car_trop_percu`. Ce fichier doit contenir les colonnes décrites dans `cdpvd_dashboards_store/seeds/dashboards/ressources_financieres/schema.yml` (référez-vous à la définition de la seed `adjust_nomen_unit_adm_car_tp`). 
+
+  2. Déclenchez un rafraîchissement de vos seeds 
+  3. Configurez la variable `use_adjust_nomen_unit_adm` dans la section `vars` de votre fichier `dbt_project.yml`
+
 #### Spécification du `dbt_project`
 
 > Mettez à jour votre fichier `cssxx_store/dbt_project.yml` avec l'extrait suivant
@@ -1242,6 +1250,11 @@ vars:
     database_jade_adultes: "[SERVEUR_IP].[JADE_ADULTES]"
     database_sdg: "[SERVEUR_IP].[AVANT_GARDE]"
     database_proc: "[SERVEUR_IP].[PROCURE]"
+
+    dashboards:
+      ressources_financieres:
+        car_trop_percu:
+          use_adjust_nomen_unit_adm: false # à ajouter si l'on souhaite ajuster / regrouper des unités administratives
 ```
 
 # Developer guidelines
