@@ -24,6 +24,8 @@ select
     sld.fiche,
     sld.annee,
     sld.eco,
+    ua.new_lieu_trav as unite_admin,
+    coalesce(concat(ua.new_lieu_trav, ' - ', ua.descr), '-') as descr_unite_admin,
     sld.car_gpi,
     sld.trp_gpi,
     sld.car_ag,
@@ -43,4 +45,6 @@ select
     ct.adresse_contact
 from {{ ref("fact_contact") }} ct
 left join {{ ref("fact_solde_el") }} sld on sld.code_perm = ct.code_perm
+left join {{ ref("stg_car_tp_nomen_unit_adm") }} as ua
+    on ua.code = sld.eco
 where sld.code_perm is not null
