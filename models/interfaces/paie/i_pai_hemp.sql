@@ -28,8 +28,12 @@ select
     type,
     ref_empl,
     date_fin,
+    ind_retr_indiv,
     pourc_post,
     pourc_sal,
     pourc_temp,
+    pourc_post_prec,
+    pourc_temp_prec,
+    anc_pourc_sal,
     nb_hre_sem
 from {{ var("database_paie") }}.dbo.pai_hemp

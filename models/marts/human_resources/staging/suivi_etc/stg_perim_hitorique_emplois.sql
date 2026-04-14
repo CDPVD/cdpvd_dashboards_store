@@ -42,12 +42,18 @@ select distinct
     end as hntj,
     -- Nombre d’heures annuelles
     case when left(phe.corp_empl, 2) = '35' then 800.0 else 1080.0 end as nb_hres_an,
-    phe.pourc_post,
-    phe.pourc_temp,
+    case when phe.ind_retr_indiv = '1' then phe.pourc_post_prec else phe.pourc_post end as pourc_post,
+    case when phe.ind_retr_indiv = '1' then phe.pourc_temp_prec else phe.pourc_temp end as pourc_temp,
+    case when phe.ind_retr_indiv = '1' then phe.anc_pourc_sal else phe.pourc_sal end as pourc_sal,
     -- Traitement des emplois sur un plan sabbatique à traitement différé
     case
         when ptee.trait_spec = '1' and phe.pourc_sal >= 2.0
-        then round(((phe.pourc_post * phe.pourc_temp / 100.0) - phe.pourc_sal), 4)
+        then round((
+                (
+                    case when phe.ind_retr_indiv = '1' then phe.pourc_post_prec else phe.pourc_post end * 
+                    case when phe.ind_retr_indiv = '1' then phe.pourc_temp_prec else phe.pourc_temp / 100.0
+                ) - case when phe.ind_retr_indiv = '1' then phe.anc_pourc_sal else phe.pourc_sal end
+            ), 4)
         when ptee.trait_spec = '2'
         then 0.0
         else 100.0
