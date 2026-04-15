@@ -144,7 +144,7 @@ with
                         or pmnt.code_pmnt like '1015__'
                     )
                     and pmnt.code_prov not in (
-                        'A6', 'AJ', 'AW', 'AK', 'A5', 'AL', 'AJ', 'AT', 'AV', 'AS', 'AU'
+                        'A6', 'AJ', 'A5', 'AL', 'AJ', 'AS', 'AU'
                     )
                 )
                 or (
@@ -154,7 +154,7 @@ with
                 )
                 or (
                     pmnt.code_pmnt = '105001'
-                    and (pmnt.code_prov = 'AY' or pmnt.code_prov = 'A0')
+                    and pmnt.code_prov in ('AY', 'A0', 'AZ', 'AW', 'AK', 'AT', 'AV')
                 )
             )
 
