@@ -22,6 +22,7 @@ with
     el_cast as (
         select distinct
             code_perm,
+            fiche as fiche_key,
             case
                 when charindex('_', fiche) > 0
                 then right('0000000' + left(fiche, charindex('_', fiche) - 1), 7)
@@ -33,6 +34,7 @@ with
     ),
     car as (
         select
+            code_emprunt as fiche_key,
             case
                 when charindex('_', code_emprunt) > 0
                 then
@@ -42,7 +44,7 @@ with
                         7
                     )
                 else right('0000000' + cast(code_emprunt as varchar(7)), 7)
-            end as fiche_key,
+            end as fiche,
             eco_cen,
             annee,
             solde
@@ -52,14 +54,15 @@ with
     -- aggreger CAR par fiche, annee, eco_cen
     ),
     car_agg as (
-        select fiche_key as fiche, eco_cen, annee, sum(solde) as solde
+        select fiche_key, fiche, eco_cen, annee, sum(solde) as solde
         from car
-        group by fiche_key, eco_cen, annee
+        group by fiche_key, fiche, eco_cen, annee
 
     -- TP PROCURE
     ),
     tp as (
         select
+            code_emprunt as fiche_key,
             case
                 when charindex('_', code_emprunt) > 0
                 then
@@ -69,7 +72,7 @@ with
                         7
                     )
                 else right('0000000' + cast(code_emprunt as varchar(7)), 7)
-            end as fiche_key,
+            end as fiche,
             case
                 when month(date_paiemnt) < 7
                 then year(date_paiemnt) - 1
@@ -84,15 +87,16 @@ with
     ),
     tp_agg as (
         select
-            fiche_key as fiche, eco_cen, annee, sum(mont_non_repart) as mont_non_repart
+            fiche_key, fiche, eco_cen, annee, sum(mont_non_repart) as mont_non_repart
         from tp
-        group by tp.fiche_key, tp.eco_cen, tp.annee
+        group by fiche_key, fiche, eco_cen, annee
 
     -- CAR-TP
     ),
     car_tp as (
 
         select
+            coalesce(c.fiche_key, t.fiche_key) as fiche_key,
             coalesce(c.fiche, t.fiche) as fiche,
             coalesce(c.annee, t.annee) as annee,
             coalesce(c.eco_cen, t.eco_cen) as eco_cen,
@@ -101,7 +105,8 @@ with
         from car_agg as c
         full join
             tp_agg as t
-            on c.fiche = t.fiche
+            on c.fiche_key = t.fiche_key
+            and c.fiche = t.fiche
             and c.annee = t.annee
             and c.eco_cen = t.eco_cen
     )
@@ -109,4 +114,4 @@ with
 -- REQUETE FINALE
 select el.code_perm, ct.fiche, ct.annee, ct.eco_cen as eco, ct.car_proc, ct.trp_proc
 from car_tp as ct
-inner join el_cast as el on el.fiche = ct.fiche
+inner join el_cast as el on el.fiche_key = ct.fiche_key
