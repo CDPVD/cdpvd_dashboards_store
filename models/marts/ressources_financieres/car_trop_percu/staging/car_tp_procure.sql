@@ -86,8 +86,7 @@ with
     -- aggreger TP par fiche, annee, eco_cen
     ),
     tp_agg as (
-        select
-            fiche_key, fiche, eco_cen, annee, sum(mont_non_repart) as mont_non_repart
+        select fiche_key, fiche, eco_cen, annee, sum(mont_non_repart) as mont_non_repart
         from tp
         group by fiche_key, fiche, eco_cen, annee
 
