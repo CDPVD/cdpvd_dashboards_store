@@ -113,4 +113,4 @@ with
 -- REQUETE FINALE
 select el.code_perm, ct.fiche, ct.annee, ct.eco_cen as eco, ct.car_proc, ct.trp_proc
 from car_tp as ct
-inner join el_cast as el on el.fiche_key = ct.fiche_key
+inner join el_cast as el on cast(el.fiche_key as nvarchar) = cast(ct.fiche_key as nvarchar)

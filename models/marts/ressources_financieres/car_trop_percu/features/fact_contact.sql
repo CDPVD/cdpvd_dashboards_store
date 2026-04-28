@@ -35,7 +35,7 @@ with
             ele.nom_tuteur,
             ele.pnom_tuteur,
             null as adr_electr_tuteur,
-            adr.type_contact as type_adr,
+            cast(adr.type_contact as nvarchar) as type_adr,
             ele.date_maj,
             ltrim(
                 rtrim(
