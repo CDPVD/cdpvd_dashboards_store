@@ -1201,6 +1201,10 @@ Les marts suivants doivent être activés pour que le tableau de bord fonctionne
 |------------------------------|-------------------------|-----------------|-----------------| ------------------|
 | jade_adultes, proc, sdg, gpi |ressources_financieres   | No            	| No              | No  	            |
 
+#### Prérecquis
+
+Afin d’assurer le bon fonctionnement de l’ETL, il est indispensable de définir vos populations FP-FGA. Veuillez vous référer à la section [service educatif des adultes](/3.using/5.marts/4.service educatif des adultes.md)
+
 #### Actualiser les descriptifs des unités administratives, procéder à des regroupements
 
 * Pour fournir des descriptifs plus explicites à certaines unités administratives, regrouper certaines sous une même étiquette :
