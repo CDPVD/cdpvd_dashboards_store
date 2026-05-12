@@ -1197,9 +1197,9 @@ Les marts suivants doivent être activés pour que le tableau de bord fonctionne
 
 > Solde actuel des comptes à recevoir et des trop perçus, des applications
 
-| Interfaces              | Marts         	        | Marts seeds     | Dashboard seeds | Additional config |
-|-------------------------|-------------------------|-----------------|-----------------| ------------------|
-| jade_adultes, proc, sdg |ressources_financieres   | No            	| No              | No  	            |
+| Interfaces                   | Marts         	        | Marts seeds     | Dashboard seeds | Additional config |
+|------------------------------|-------------------------|-----------------|-----------------| ------------------|
+| jade_adultes, proc, sdg, gpi |ressources_financieres   | No            	| No              | No  	            |
 
 #### Actualiser les descriptifs des unités administratives, procéder à des regroupements
 
@@ -1245,7 +1245,7 @@ cdpvd_dashboards_store:
             +enabled: true
 
 vars:
-    database_gpi: "[SERVEUR_IP].[GPIP]"
+    database_gpi: "[SERVEUR_IP].[GPI]"
     database_jade: "[SERVEUR_IP].[JADE]"
     database_jade_adultes: "[SERVEUR_IP].[JADE_ADULTES]"
     database_sdg: "[SERVEUR_IP].[AVANT_GARDE]"
