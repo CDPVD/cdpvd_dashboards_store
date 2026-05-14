@@ -110,18 +110,26 @@ with
     -- perimetre final FGJ + FGA
     ),
     perim as (
+        select distinct
+            code_perm,
+            fiche,
+            annee,
+            eco
+    from (
         select code_perm, fiche, annee, eco
         from soldes_gpi
-        union
+        union all
         select code_perm, fiche, annee, eco
         from car_ag
-        union
+        union all
         select code_perm, fiche, annee, eco
         from tp_ag
-        union
-        select code_perm, cast(fiche as varchar(7)) as fiche, annee, eco
+        union all
+        select
+            code_perm, cast(fiche as varchar(7)) as fiche, annee, eco
         from car_tp_proc
-    )
+    ) x
+)
 
 -- REQUETE FINALE
 select
