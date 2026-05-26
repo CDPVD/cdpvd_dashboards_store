@@ -1,28 +1,6 @@
 version: 2
 
 models:
-  - name: pevr_dim_objectif_cdpvd
-    description: >
-      Table de dimension qui mappe les indicateurs communs avec les indicateurs personalisés.
-      La table est constuite en unionant la dimension commune (core/seeds/pevr/indicateurs_pevr_cdpvd.csv) et la dimension personalisée (cssss/seeds/pevr/custom_indicateurs_pevr_cdpvd.csv).
-      La table `custom` peut-etre adaptée pour chaque CSS pour rajouter des indicateurs.
-    columns:
-      - name: id_indicateur_cdpvd
-        description: Identifiant unique crée par la cdpvd.
-      - name: id_indicateur_css
-        description: Identifiant unique optionel crée par la CSS.
-      - name: description_indicateur
-        description: Description de l'indicateur, soit crée par la cdpvd ou par la CSS.
-      - name: code_matiere
-        description: Code la matière. Ex -> 132508 (Français secondaire 5)
-      - name: no_competence
-        description: Numéro de la compétence.
-    tests:
-      - core_dashboards_store.resolution:
-          combination_of_columns:
-            - id_indicateur_meq
-            - id_indicateur_cdpvd
-
   - name: pevr_dim_cible_annuelle_cdpvd
     description: >
       Table de dimension qui mappe les données prévisionnelles.
@@ -31,17 +9,45 @@ models:
       - name: id_indicateur_meq
         description: Identifiant meq unique de l'indicateur.
       - name: id_indicateur_css
-        description: Identifiant css unique de l'indicateur si l'id est différent du meq.
+        description: Identifiant créer par la css, lorsque nécessaire.
       - name: annee_scolaire
         description: L'année scolaire
       - name: cible
-        description: La cible qu'on veut atteindre (%)
+        description: La cible annuelle en pourcentage (%) visée.
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:
             - id_indicateur_meq
             - id_indicateur_cdpvd
             - annee_scolaire
+
+  - name: pevr_dim_objectif_cdpvd
+    description: >
+      Table de dimension qui associe les indicateurs communs aux indicateurs personnalisés.
+      La table est construite en effectuant l’union de la dimension commune
+      (`core/seeds/pevr/indicateurs_pevr_cdpvd.csv`)
+      et de la dimension personnalisée
+      (`cssss/seeds/pevr/custom_indicateurs_pevr_cdpvd.csv`).
+
+      La table `custom` peut être adaptée par chaque CSS afin d’ajouter des indicateurs supplémentaires.
+    columns:
+      - name: Objectif
+        description: Description de la catégorie à laquelle appartient l’indicateur.
+      - name: id_indicateur_cdpvd
+        description: Identifiant unique créé par la CDPVD.
+      - name: id_indicateur_css
+        description: Identifiant unique optionnel créé par le CSS.
+      - name: description_indicateur
+        description: Description de l’indicateur créé par le CSS ou par la CDPVD.
+      - name: code_matiere
+        description: Code de la matière.
+      - name: no_competence
+        description: Numéro de la compétence liée à la matière.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - id_indicateur_meq
+            - id_indicateur_cdpvd
 
   - name: pevr_filtres_cdpvd
     description: >
@@ -51,34 +57,89 @@ models:
     description: >
         Taux de diplomation annuel secondaire 5.
         Donnée provenant des BD locaux.
-        Indicateur '1.1' de la cdpvd.
+    columns:
+      - name: id_indicateur_css
+        description: Indicateur de la css
+      - name: description_indicateur
+        description: Description de l'indicateur
+      - name: cible
+        description: Le pourcentage (%) de la cible annuelle
+      - name: cible_visee
+        description: La cible visée de l'indicateur (Période du PEVR)
+      - name: nb_resultat
+        description: Le nombre de résultat distinct
+      - name: taux_diplomation
+        description: Le pourcentage d'élève ayant reçu un diplôme DES
+      - name: taux_nbEleve
+        description: Le pourcentage d'élève ayant reçu un diplôme DES avec le numérateur et le dénominateur.
+      - name: ecart_cible_couleur
+        description: Visualisation de la progression avec un code de couleur
+      - name: id_filtre
+        description: L'id unique du filtre.
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:
-            - annee_scolaire
-            - id_indicateur
+            - id_indicateur_css
             - id_filtre
 
   - name: pevr_indicateur_fms
     description: >
         Taux de qualification annuel FMS.
         Donnée provenant des BD locaux.
-        Indicateur '1.2' de la cpdvd.
+    columns:
+      - name: id_indicateur_css
+        description: Indicateur de la css
+      - name: description_indicateur
+        description: Description de l'indicateur
+      - name: cible
+        description: Le pourcentage (%) de la cible annuelle
+      - name: cible_visee
+        description: La cible visée de l'indicateur (Période du PEVR)
+      - name: nb_resultat
+        description: Le nombre de résultat distinct
+      - name: nb_ind_obtention
+        description: Le nombre d'élève distinct ayant reçu un diplôme fms
+      - name: taux_qualification_fms
+        description: Le pourcentage d'élève ayant reçu un diplôme FMS
+      - name: taux_nbEleve
+        description: Le pourcentage d'élève ayant reçu un diplôme FMS avec le numérateur et le dénominateur.
+      - name: ecart_cible_couleur
+        description: Visualisation de la progression avec un code de couleur
+      - name: id_filtre
+        description: L'identifiant unique du filtre.
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:
-            - annee_scolaire
-            - id_indicateur
+            - id_indicateur_css
             - id_filtre
 
   - name: pevr_indicateur_fpt
     description: >
         Taux de qualification annuel FPT.
         Donnée provenant des BD locaux.
-        Indicateur '1.3' de la cpdvd.
+    columns:
+      - name: id_indicateur_css
+        description: Indicateur de la css
+      - name: description_indicateur
+        description: Description de l'indicateur
+      - name: nb_resultat
+        description: Le nombre de résultat distinct
+      - name: nb_is_qualified
+        description: Le nombre d'élève ayant eu un diplôme FPT
+      - name: taux_qualification_fpt
+        description: Le pourcentage d'élève ayant reçu un diplôme FPT
+      - name: cible
+        description: Le pourcentage (%) de la cible annuelle
+      - name: cible_visee
+        description: La cible visée de l'indicateur (Période du PEVR)
+      - name: taux_nbEleve
+        description: Le pourcentage d'élève ayant reçu un FMS avec le numérateur et le dénominateur.
+      - name: ecart_cible_couleur
+        description: Visualisation de la progression avec un code de couleur
+      - name: id_filtre
+        description: L'identifiant unique du filtre.
     tests:
       - core_dashboards_store.resolution:
           combination_of_columns:
-            - cohorte
-            - id_indicateur
+            - id_indicateur_css
             - id_filtre
