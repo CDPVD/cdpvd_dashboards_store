@@ -33,9 +33,7 @@ with
         left join {{ ref("i_gpm_t_eco") }} as eco on eco.id_eco = f.id_eco
         left join {{ ref("i_gpm_e_ele") }} as el on el.fiche = f.empr
         where
-            eco.annee
-            between {{ core_dashboards_store.get_current_year() }}-15
-            and {{ core_dashboards_store.get_current_year() }}
+            eco.annee <= {{ core_dashboards_store.get_current_year() }}
             and f.type_empr = 'E'
         group by el.code_perm, f.empr, eco.annee, eco.eco
 
@@ -55,9 +53,7 @@ with
             and dan.annee = car.annee
             and dan.fiche = car.fiche
         where
-            car.annee
-            between {{ core_dashboards_store.get_current_year() }}-15
-            and {{ core_dashboards_store.get_current_year() }}
+            car.annee <= {{ core_dashboards_store.get_current_year() }}
         group by el.code_perm, car.fiche, car.annee, dan.eco
 
     -- tp AG
@@ -76,9 +72,7 @@ with
             and dan.annee = tp.annee
             and dan.fiche = tp.fiche
         where
-            tp.annee
-            between {{ core_dashboards_store.get_current_year() }}-15
-            and {{ core_dashboards_store.get_current_year() }}
+            tp.annee <= {{ core_dashboards_store.get_current_year() }}
         group by el.code_perm, tp.fiche, tp.annee, dan.eco
 
     -- car tp PROCURE + recuperer les ecoles associées aux eleves inscrits en FP/FGA
@@ -103,9 +97,7 @@ with
             and freq.annee = pop.annee
             and freq.freq = pop.freq
         where
-            car_tp_proc.annee
-            between {{ core_dashboards_store.get_current_year() }}-15
-            and {{ core_dashboards_store.get_current_year() }}
+            car_tp_proc.annee <= {{ core_dashboards_store.get_current_year() }}
 
     -- perimetre final FGJ + FGA
     ),
