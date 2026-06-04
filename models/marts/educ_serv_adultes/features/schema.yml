@@ -6,6 +6,7 @@ models:
       tags:
         - educ_serv_adultes
         - populations_adultes
+        - sanction_adultes
       schema: "educ_serv_adultes"
     description: >
       Table de fait pour la population adulte 
@@ -55,6 +56,7 @@ models:
             - freq
             - population
             - noseqmat
+            - mat
             - ordchrono
     columns:
       - name: code_perm

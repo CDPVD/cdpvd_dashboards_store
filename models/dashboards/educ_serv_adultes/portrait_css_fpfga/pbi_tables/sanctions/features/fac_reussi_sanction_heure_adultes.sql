@@ -70,7 +70,7 @@ with
             case
                 when res = ''
                 then null
-                when try_cast(res as int) >= 60 or res = 'SU'
+                when try_cast(res as int) >= 60 or res = 'SU' or res = 'CT'
                 then 'SU'
                 when try_cast(res as int) < 60
                 then 'EC'

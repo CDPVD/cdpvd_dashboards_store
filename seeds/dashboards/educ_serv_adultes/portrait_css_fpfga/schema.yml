@@ -1,0 +1,25 @@
+version: 2
+
+seeds:
+  - name: depassement_heure_mat
+    description: depassement d'heures par matière
+    config:
+      tags: 
+        - educ_serv_adultes
+        - populations_adultes
+        - portrait_css_fpfga
+        - sanction_adultes
+      schema: dashboard_effectif_css_adultes
+      column_types:
+        matieres: nvarchar(20)
+        depassement: float
+    columns:
+      - name: matieres
+        description: Matières sanctionnées
+        tests:
+          - not_null
+          - unique
+      - name: depassement
+        description: Dépassement d'heures
+        tests:
+          - not_null

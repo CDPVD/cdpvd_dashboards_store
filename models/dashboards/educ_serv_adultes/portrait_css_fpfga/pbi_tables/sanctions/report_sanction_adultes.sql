@@ -22,6 +22,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         ]
     )
 }}
-
-select *, round(cast(nbminrea as float) / 60, 2) as nbhresrea
-from {{ ref("fac_reussi_sanction_heure_adultes") }} facr
+with
+    cte as (
+        select *, round(cast(nbminrea as float) / 60, 2) as nbhresrea
+        from {{ ref("fac_reussi_sanction_heure_adultes") }} facr
+    ),
+    depasse as (
+        select cte.*, coalesce(dep.depassement, 150) as depassement
+        from cte
+        left join {{ ref("depassement_heure_mat") }} dep on cte.mat = dep.matieres
+    )
+select *, CASE WHEN nbhresrea > depassement THEN nbhresrea - depassement ELSE 0 END as depassement_heure, CASE WHEN nbhresrea > depassement THEN 1 ELSE 0 END as nbre_ele_depasse
+from depasse

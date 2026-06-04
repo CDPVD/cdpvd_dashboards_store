@@ -74,7 +74,10 @@ inner join
     and pop.annee = matfpfga.annee
     and pop.freq = matfpfga.freq
 inner join
-    {{ ref("i_e_matele_adultes") }} as matele on matfpfga.noseqmat = matele.noseqmat and matfpfga.freq = matele.freq and matfpfga.fiche = matele.fiche
+    {{ ref("i_e_matele_adultes") }} as matele
+    on matfpfga.noseqmat = matele.noseqmat
+    and matfpfga.freq = matele.freq
+    and matfpfga.fiche = matele.fiche
 inner join {{ ref("i_t_mat_adultes") }} as matd on matd.mat = matfpfga.mat
 inner join
     {{ ref("i_e_promat_adultes") }} as promat
@@ -82,4 +85,6 @@ inner join
     and promat.noseqmat = matfpfga.noseqmat
     and promat.fiche = matfpfga.fiche
     and promat.ordchrono = matfpfga.ordchrono
-where matfpfga.annee >= {{ core_dashboards_store.get_current_year() - 5 }} and matele.res !='' 
+where
+    matfpfga.annee >= {{ core_dashboards_store.get_current_year() - 5 }}
+    and matele.res != ''
