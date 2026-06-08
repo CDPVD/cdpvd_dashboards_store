@@ -1,18 +1,22 @@
 [tool.poetry]
 name = "cdpvd_dashboards_store"
-version = "0.1.0"
-description = ""
-authors = ["Mohamed Sadqi <sadqim@cssvdc.gouv.qc.ca>"]
+version = "0.2.0"
+description = "cdpvd_dashboards_store data store for dbt"
+authors = ["Adama Fall <Adama.Fall@cssst.gouv.qc.ca>","Mohamed Sadqi <sadqim@cssvdc.gouv.qc.ca>"]
+package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.8"
-dbt-core = "~1.6"
-dbt-fabric = {git = "https://github.com/Sciance-Inc/dbt-fabric.git", rev = "v0.16.0"}
-pyodbc = "~4.0"
+python = "^3.10"
+dbt-core = "~1.9"
+
+pyodbc = ">=5.2.0"
 python-semantic-release = "^7.33.4"
+docutils = "0.20.1"
+dbt-fabric = {git = "https://git@github.com/Sciance-Inc/dbt-fabric.git", rev = "v0.19.5"}
+sqlparse = "0.5.4" # temp. December 2025. v0.5.5 introduced the '1000 tokens' regression issue. 
 
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 cookiecutter = "^2.3.0"
 shandy-sqlfmt = {extras = ["jinjafmt"], version = "^0.19.2"}
 pre-commit = "^3.3.3"
@@ -26,14 +30,26 @@ version_variable = [
     "dbt_project.yml:version",
     "pyproject.toml:tool.poetry:version",
 ]
+branch              = "master"
+upload_to_pypi      = false
+upload_to_release   = true
+changelog_sections  = ["feature", "fix", "breaking"]
+changelog_scope     = "all"
+allow_zero_version  = true 
+major_on_zero       = false
+
+[tool.semantic_release.version]
+pattern = "v(?P<major>0|[1-9]\\d*)\\.(?P<minor>0|[1-9]\\d*)\\.(?P<patch>0|[1-9]\\d*)(?:-(?P<prerelease>(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?"
 
 [tool.semantic_release.changelog]
 template_dir = "tooling/release/templates"
+mode = "init"
+changelog_file = "CHANGELOG.md"
 
 [tool.semantic_release.branches.master]
-match = "(main|master)"
-prerelease = false
-
+match            = "(main|master)"
+prerelease       = false
+strict           = 1
 
 [tool.sqlfmt]
 line_length = 88
