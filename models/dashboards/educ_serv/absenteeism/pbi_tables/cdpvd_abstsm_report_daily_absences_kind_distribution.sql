@@ -16,7 +16,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 {#
-    Compute the distribution of the daily absences splitted down by absence's kind.
+    Rapport de distribution des absences quotidiennes par type.
+    
 #}
 {{ config(alias="cdpvd_report_daily_absences_kind_distribution") }}
 
@@ -54,59 +55,80 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     }}
 {% endif %}
 
+-- ============================================================================
+-- ÉTAPE 1: Extraction des absences journalières brutes
+-- ============================================================================
+-- Récupération des absences distinctes avec tous les détails et dimensions
 with
-    abs_aggregated as (
-        select
+    source as (
+        select distinct
+            fiche,
             date_abs as date_evenement,
             jour_semaine,
             id_eco,
             groupe,
-            grille,
             case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
             event_kind,
-            event_description,
-            count(fiche) as n_events
+            -- Gestion des journées multi‑motifs : si 100% des périodes observées et
+            -- plusieurs motifs, regrouper en 'Absence mixte' / 'Motifs multiples'.
+            --
+            category_abs,
+            event_description
         from {{ ref("cdpvd_fact_absences_daily") }}
         where
             school_year
             >= {{ core_dashboards_store.get_current_year() }}
             - {{ nbre_annee_a_extraire }}
-            and is_aggregate_kind = 0  -- Do not consider the aggregated type
-        group by
-            date_abs,
-            jour_semaine,
-            id_eco,
-            groupe,
-            grille,
-            case when etape in ('1', '2', '3') then etape else 0 end,
-            event_kind,
-            event_description
-
-    -- Create a variation of the padding table without the etape 
+            and is_aggregate_kind = 0  -- Do not consider the aggregated type           
     ),
-    padding as (
+    abs_aggregated as (
+        -- ====================================================================
+        -- ÉTAPE 2: Agrégation des absences par dimensions
+        -- ====================================================================
+        -- Compte les occurrences d'absence pour chaque combinaison de dimensions
         select
-            id_eco,
-            groupe,
             date_evenement,
             jour_semaine,
-            etape as etape_friendly,
+            id_eco,
+            coalesce(groupe, 'Tout') as groupe,
+            etape,  -- Map the etape to the same kind of values as the ones from the daily students
             event_kind,
-            grille
+            category_abs,
+            event_description,
+            count(distinct fiche) as n_events
+        from source
+        group by
+            date_evenement,
+            jour_semaine,
+            id_eco, rollup (groupe),
+            etape,
+            event_kind,
+            category_abs,
+            event_description
+    ),
+    padding as (
+        -- ====================================================================
+        -- ÉTAPE 3: Création de la table de padding sans la dimension étape
+        -- ====================================================================
+        -- Réduit le padding à jours d'école et agrège par dimensions sans l'étape
+        select id_eco, groupe, date_evenement, jour_semaine, etape as etape_friendly
         from {{ ref("cdpvd_abstsm_stg_padding") }} as padd
         where padd.is_school_day = 1
-        group by id_eco, groupe, date_evenement, jour_semaine, event_kind, grille, etape
+        group by id_eco, groupe, date_evenement, jour_semaine, etape
 
-    -- Inner join on the padding table to reduce to the work days only (so the table
-    -- is not a padding table anymore)
     ),
     augmented as (
+        -- ====================================================================
+        -- ÉTAPE 4: Jointure avec padding et formatage des dimensions
+        -- ====================================================================
+        -- Limite aux jours d'école et formate les dimensions (étape, etc.)
         select
             padd.id_eco,
             padd.date_evenement,
             padd.jour_semaine,
             padd.groupe,
-            padd.event_kind,
+            abs_.event_kind,
+            abs_.category_abs,
             event_description,
             concat('étape : ', padd.etape_friendly) as etape_friendly,
             n_events
@@ -116,46 +138,58 @@ with
             on padd.id_eco = abs_.id_eco
             and padd.date_evenement = abs_.date_evenement
             and padd.groupe = abs_.groupe
-            and padd.grille = abs_.grille
             and padd.etape_friendly = abs_.etape
-            and padd.event_kind = abs_.event_kind
         where abs_.n_events is not null
 
-    -- get rid of the grille dimension
     ),
     aggregated as (
+        -- ====================================================================
+        -- ÉTAPE 5: Agrégation multidimensionnelle avec CUBE
+        -- ====================================================================
+        -- Génère les totaux à tous les niveaux (école, groupe, étape, etc.)
         select
-            eco.annee,
+            eco.annee_scolaire,
             coalesce(eco.school_friendly_name, 'Tout le CSS') as school_friendly_name,
-            coalesce(aug.groupe, 'Tout') as groupe,
+            coalesce(eco.cat_eco, 'Tout') as ordre_enseignement,
+            aug.groupe,
             aug.date_evenement,
             aug.jour_semaine,
             coalesce(aug.etape_friendly, 'Tout') as etape_friendly,
-            aug.event_kind,
+            coalesce(aug.event_kind, 'Tout') as event_kind,
+            coalesce(aug.category_abs, 'Tout') as category_abs,
             aug.event_description,
             sum(n_events) as n_events
         from augmented as aug
         left join {{ ref("dim_mapper_schools") }} as eco on aug.id_eco = eco.id_eco
         group by
-            eco.annee, cube (eco.school_friendly_name, aug.groupe, aug.etape_friendly),
+            eco.annee_scolaire,
+            cube (eco.school_friendly_name, eco.cat_eco, aug.category_abs),
+            aug.groupe,
             aug.date_evenement,
             aug.jour_semaine,
+            aug.etape_friendly,
             aug.event_kind,
             aug.event_description
     )
 
+-- ============================================================================
+-- ÉTAPE 6: Sélection finale avec clé de filtre pour Power BI
+-- ============================================================================
+-- Génération de clé de surrogat pour l'intégration Power BI
 select
     {{
         dbt_utils.generate_surrogate_key(
             [
-                "annee",
+                "annee_scolaire",
                 "school_friendly_name",
-                "etape_friendly",
+                "ordre_enseignement",
                 "event_kind",
+                "category_abs",
                 "groupe",
             ]
         )
     }} as filter_key,
+    etape_friendly,
     cast(date_evenement as date) as date_evenement,
     jour_semaine,
     event_description,
