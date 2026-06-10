@@ -9,7 +9,7 @@ seeds:
         - populations_adultes
         - portrait_css_fpfga
         - sanction_adultes
-      schema: dashboard_effectif_css_adultes
+      schema: dashboard_effectif_css_adultes_seeds
       column_types:
         matieres: nvarchar(20)
         depassement: float
