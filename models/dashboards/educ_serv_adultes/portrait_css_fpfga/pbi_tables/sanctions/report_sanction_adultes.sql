@@ -18,13 +18,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {{
     config(
         post_hook=[
-            core_dashboards_store.stamp_model("dashboard_effectif_css_adultes")
+            core_dashboards_store.stamp_model("dashboard_portrait_css_fpfga")
         ]
     )
 }}
 {%- set source_relation = adapter.get_relation(
     database=target.database,
-    schema=target.schema + "_dashboard_effectif_css_adultes_seeds",
+    schema=target.schema + "_dashboard_portrait_css_fpfga_seeds",
     identifier="depassement_heure_mat",
 ) -%}
 {% set table_exists = source_relation is not none %}
