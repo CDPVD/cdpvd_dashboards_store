@@ -69,7 +69,6 @@ with
             fiche,
             id_eco,
             groupe,
-            code_matiere,
             grille,
             event_kind,
             is_aggregate_kind,
