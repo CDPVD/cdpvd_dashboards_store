@@ -68,6 +68,7 @@ select
     ind_obtention,
     regime_sanct_charl,
     date_obt_mention,
+    type_diplome,
     indice_des,
     indice_cfpt,
     indice_cfms
