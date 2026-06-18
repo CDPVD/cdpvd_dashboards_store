@@ -42,9 +42,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     {% endif %}
 {% else %}
     {% if execute %}
-        {{
-            log("La seed 'depassement_heure_mat' n'existe pas. La valeur par défaut de " ~ depassement_par_defaut ~ " sera utilisée pour toutes les matières. Elle est configurable dans les variables du projet.", true)
-        }}
+        {{ log("La seed 'depassement_heure_mat' n'existe pas. La valeur par défaut de " ~ depassement_par_defaut ~ " sera utilisée pour toutes les matières. Elle est configurable dans les variables du projet.", true) }}
     {% endif %}
 {% endif %}
 
@@ -54,18 +52,40 @@ with
         from {{ ref("fac_reussi_sanction_heure_adultes") }} facr
     ),
     depasse as (
-        select cte.*,
-        {%- if table_exists %}
-        coalesce(dep.depassement, {{ depassement_par_defaut }}) as depassement
-        {% else -%}
-        {{ depassement_par_defaut }} as depassement
-        {% endif -%}
+        select
+            cte.*,
+            {%- if table_exists %}
+                case
+                    when
+                        dep.depassement is null
+                        and right(ltrim(rtrim(mat)), 1) like '[0-9]'
+                    then right(ltrim(rtrim(mat)), 1) * 25
+                    when
+                        dep.depassement is null
+                        and right(ltrim(rtrim(mat)), 1) like '[^0-9]'
+                    then {{ depassement_par_defaut }}
+                    else dep.depassement
+                end as depassement
+            {% else -%}
+                case
+                    when right(ltrim(rtrim(mat)), 1) like '[0-9]'
+                    then right(ltrim(rtrim(mat)), 1) * 25
+                    else {{ depassement_par_defaut }}
+                end as depassement
+            {% endif -%}
         from cte
         {%- if table_exists %}
-        left join {{source_relation}} dep on cte.mat = dep.matieres
+            left join {{ source_relation }} dep on cte.mat = dep.matieres
         {% endif -%}
     ),
     compt_depass as (
-select *, CASE WHEN nbhresrea > depassement THEN nbhresrea - depassement ELSE 0 END as depassement_heure, CASE WHEN nbhresrea > depassement THEN 1 ELSE 0 END as nbre_ele_depasse
-from depasse )
-select *, CASE WHEN nbre_ele_depasse = 1 THEN 'Oui' ELSE 'Non' END as 'En dépassement' from compt_depass
+        select
+            *,
+            case
+                when nbhresrea > depassement then nbhresrea - depassement else 0
+            end as depassement_heure,
+            case when nbhresrea > depassement then 1 else 0 end as nbre_ele_depasse
+        from depasse
+    )
+select *, case when nbre_ele_depasse = 1 then 'Oui' else 'Non' end as 'En dépassement'
+from compt_depass
