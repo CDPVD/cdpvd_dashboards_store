@@ -32,20 +32,6 @@ models:
             - event_description
             - etape_friendly
 
-  - name: cdpvd_abstsm_report_daily_absences_matiere_distribution
-    description: >
-      Agrége les événements d'absence par matiere pour les deux dernières années. Utiliser pour approfondir et mieux comprendre les raisons des absences.
-    config:
-      tags: 
-        - absenteeism
-    tests:
-      - core_dashboards_store.resolution:
-          combination_of_columns:
-            - filter_key
-            - date_evenement
-            - code_matiere
-            - description_abreg
-            - etape_friendly
 
   - name: cdpvd_abstsm_report_daily_absences_rate
     description: >
