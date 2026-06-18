@@ -126,6 +126,10 @@ with
             el.desc_lang_matern,
             facr.typeprofil,
             facr.ord_chrono,
+            CASE 
+                WHEN  facr.occurrence = 1 THEN 'Non'
+                ELSE  'Oui'
+            END as "En reprise",
             facr.occurrence,
             facr.noseq_mat,
             facr.statut_profil,

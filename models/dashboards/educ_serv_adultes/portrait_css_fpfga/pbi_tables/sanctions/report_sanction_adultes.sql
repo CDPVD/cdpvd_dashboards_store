@@ -64,6 +64,8 @@ with
         {%- if table_exists %}
         left join {{source_relation}} dep on cte.mat = dep.matieres
         {% endif -%}
-    )
+    ),
+    compt_depass as (
 select *, CASE WHEN nbhresrea > depassement THEN nbhresrea - depassement ELSE 0 END as depassement_heure, CASE WHEN nbhresrea > depassement THEN 1 ELSE 0 END as nbre_ele_depasse
-from depasse
+from depasse )
+select *, CASE WHEN nbre_ele_depasse = 1 THEN 'Oui' ELSE 'Non' END as 'En dépassement' from compt_depass
