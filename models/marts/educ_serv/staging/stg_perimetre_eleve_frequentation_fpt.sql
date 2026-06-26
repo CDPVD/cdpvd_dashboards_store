@@ -23,6 +23,8 @@ with
         where
             y_stud.ordre_ens = '4'  -- Secondaire
             and type_parcours in ('07')  -- FPT
+            and cycle_ref = '2'
+            and annee_cycle_ref in ('3','9')
             and y_stud.annee < {{ core_dashboards_store.get_current_year() }} + 1  -- Enlève l'année prévisionnelle de GPI
     )
 
