@@ -30,7 +30,7 @@ with
             mentions.ind_reus_sanct_charl,
             mentions.regime_sanct_charl
         from {{ ref("i_e_ri_mentions") }} as mentions
-    ),
+    ),  
 
     -- Création de la notion de l'année dans e_ri_mentions
     mentions_annee as (
@@ -39,6 +39,7 @@ with
             mentions.code_perm,
             mentions.eco_cen_off,
             mentions.prog_charl,
+            prog.type_diplome,
             mentions.regime_sanct_charl,
             mentions.date_obt_mention,
             case
