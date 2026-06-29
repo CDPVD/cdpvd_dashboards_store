@@ -49,6 +49,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {{ log("identifier core: " ~ source_relation_core.identifier, true) }}
 {{ log("database core: " ~ source_relation_core.database, true) }} */
 
+
 {% set table_exists_css = source_relation_css is not none %}
 {% set table_exists_core = source_relation_core is not none %}
 
@@ -130,7 +131,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             description_indicateur,
             code_matiere,
             no_competence
-        from {{ ref("cibles_indicateurs_annuelles_pevr_cdpvd") }}
+        from {{ ref("indicateurs_pevr_cdpvd") }}
         Union
         Select 
             objectif,
@@ -143,11 +144,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         from {{ source_relation_core}} -- La dimension du core
 
     {% else %}
-        -- La seed CSS n'existe pas et la dimensin du core n'existe pas.
+        -- La seed CSS n'existe pas et la dimension du core n'existe pas.
         {% if execute %}
             {{
                 log(
-                    "⚠️  La seed '*_dashboard_pevr_seeds.custom_indicateurs_pevr_css' n'existe pas et la dimension du core 'dim_indicateurs_pevr' existe pas. La dimension cdpvd 'pevr_dim_objectif_cdpvd' va prendre les données de la seed cdpvd 'cibles_indicateurs_annuelles_pevr_cdpvd'.",
+                    "⚠️  La seed '*_dashboard_pevr_seeds.custom_indicateurs_pevr_css' n'existe pas et la dimension du core 'dim_indicateurs_pevr' existe pas. La dimension cdpvd 'pevr_dim_objectif_cdpvd' va prendre les données de la seed cdpvd 'indicateurs_pevr_cdpvd'.",
                     true,
                 )
             }}
@@ -161,7 +162,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         description_indicateur,
         code_matiere,
         no_competence
-    from {{ ref("cibles_indicateurs_annuelles_pevr_cdpvd") }}
+    from {{ ref("indicateurs_pevr_cdpvd") }}
 
     {% endif %}
 {% endif %}
