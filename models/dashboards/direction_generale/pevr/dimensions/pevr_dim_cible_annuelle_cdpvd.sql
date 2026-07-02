@@ -15,6 +15,9 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
+
+{{ config(alias="pevr_dim_cible_annuelle_cdpvd") }}
+
 {#
     This table unionize the always-present DEFAULT table and maybe-present CUSTOM table.
     The default table is defined in the core repo while the custom table, as all the CSS''s specifics table is created in the repo css.
@@ -24,7 +27,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         * named 'custom_cibles_indicateurs_annuelles_pevr_css'
         * located in the schema 'dashboard_pevr_seeds'
 #}
-{{ config(alias="pevr_dim_cible_annuelle_cdpvd") }}
+
 
 {%- set source_relation_css = adapter.get_relation(
     database=target.database,
