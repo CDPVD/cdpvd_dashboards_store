@@ -11,10 +11,7 @@ models:
             - id_eco
             - date_evenement
             - groupe
-            - event_kind
-            - code_matiere
             - etape
-            - grille
             
   - name: cdpvd_abstsm_stg_daily_metrics
     description: Le taux d'absence quotidien et le nombre d'élèves actifs.
@@ -27,7 +24,8 @@ models:
             - date_evenement
             - etape_friendly
             - event_kind
-            - code_matiere
+            - category_abs
+
 
   - name: cdpvd_abstsm_stg_daily_students
     description: Calculer le nombre quotidien d'élèves actifs.
@@ -37,5 +35,4 @@ models:
             - date_evenement
             - id_eco
             - groupe
-            - grille
             - etape

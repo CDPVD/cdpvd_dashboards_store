@@ -14,3 +14,24 @@ models:
       - name: category_abs
         tests:
           - not_null
+  - name: cdpvd_stg_absence_daily_src
+    tags: ["absenteeism"]
+    description: >
+      Table intermédiaire technique préparant les événements d'absence et les informations de groupe et de grille associées à chaque élève.
+  - name: cdpvd_stg_absence_daily_grid
+    tags: ["absenteeism"]
+    description: >
+      Table intermédiaire technique calculant le nombre de périodes attendues et le pourcentage de périodes d'absence observées par élève et par jour.        
+  - name: cdpvd_stg_absence_daily
+    tags: ["absenteeism"]
+    description: >
+      Table auxiliaire calculant le nombre agrégé d'absences et de retards par jour, pour chaque étudiant ayant au MOINS une absence pour une période donnée.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - fiche
+            - date_abs
+            - id_eco
+            - event_kind
+            - category_abs
+

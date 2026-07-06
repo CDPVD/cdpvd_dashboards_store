@@ -16,21 +16,19 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 {#
-    Compute the grille / etape / day / eco padding table.
+    Table de remplissage (padding) pour l'absentéisme.
     
-    Backfilled is done by / etape.
-    Padding is needed to properly aggregate absences rate : if no absences has been recorded for a given day, the absences rate should be 0.
-    Padding is done by / etape, / grille, / id_eco, / date_evenement, / event_kind to accound for various grid per school and allow number of aggregation leves
-
-    To minimize computation, and to avoid having to expose unnecessarary rows to the downstream tables, backfilling the number of students is done in it's table too.
-    backfilled and padded version of the daily number of students.    
+    Crée une table complète avec toutes les combinaisons de (établissement, 
+    étape, jour, groupe) pour garantir que les jours sans absence 
+    soient comptés comme 0% et non omis. Remplit aussi le nombre d'étudiants
+    de façon rétroactive pour chaque partition.
 #}
 {{
     config(
         alias="cdpvd_stg_padding",
         post_hook=[
             core_dashboards_store.create_clustered_index(
-                "{{ this }}", ["id_eco", "grille", "date_evenement"]
+                "{{ this }}", ["id_eco", "date_evenement"]
             ),
             core_dashboards_store.create_nonclustered_index(
                 "{{ this }}", ["date_evenement"]
@@ -73,75 +71,64 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     }}
 {% endif %}
 
--- Extract all the dates and grid to padd the data with
+-- ============================================================================
+-- ÉTAPE 1: Extraction du calendrier pour le remplissage des données
+-- ============================================================================
 with
     padding_cal as (
         select
-            id_eco,
+            cal.id_eco,
             date_evenement,
-            grille,
             max(case when jour_cycle is null then 0 else 1 end) as is_school_day
         from {{ ref("i_gpm_t_cal") }} as cal
+        join {{ ref("i_gpm_t_eco") }} as eco on cal.id_eco = eco.id_eco
         where
             date_evenement <= getdate()
-            and id_eco in (select id_eco from {{ ref("cdpvd_fact_absences_daily") }})
-            and year(date_evenement)
+            and cal.id_eco
+            in (select id_eco from {{ ref("cdpvd_fact_absences_daily") }})
+            and annee
             >= {{ core_dashboards_store.get_current_year() }}
             - {{ nbre_annee_a_extraire }}
-        group by id_eco, date_evenement, grille
+        group by cal.id_eco, date_evenement
 
-    -- Extract all the absences event kind 
-    ),
-    kinds as (select distinct event_kind from {{ ref("cdpvd_fact_absences_daily") }}),
-    matieres as (
-        select distinct id_eco, groupe, code_matiere
-        from {{ ref("cdpvd_fact_absences_daily") }}
-
-    -- Extract all the etapes per grid, eco and day
+    -- ============================================================================
+    -- ÉTAPE 2: Extraction des étapes par établissement et jour
+    -- ============================================================================
     ),
     etapes as (
         select
             id_eco,
             groupe,
-            grille,
             etape,
             min(etape_date_debut) as etape_date_debut,
             max(etape_date_fin) as etape_date_fin
         from {{ ref("cdpvd_abstsm_stg_daily_students") }}
-        group by id_eco, groupe, grille, etape
+        group by id_eco, groupe, etape
 
-    -- Combine all the dimensions into one padding table (to rule them all and in the
-    -- shadows bind them, tout ca, tout ca)
+    -- ============================================================================
+    -- ÉTAPE 3: Combinaison de toutes les dimensions dans une table de remplissage
+    -- ============================================================================
     ),
     padding as (
         select
             cal.id_eco,
             etp.groupe,
             cal.date_evenement,
-            cal.grille,
             cal.is_school_day,
-            mat.code_matiere,
-            kind.event_kind,
             etp.etape,
             etp.etape_date_debut,
             etp.etape_date_fin
         from padding_cal as cal
-        cross join kinds as kind
-        inner join etapes as etp on cal.id_eco = etp.id_eco and cal.grille = etp.grille
-        inner join
-            matieres as mat on cal.id_eco = mat.id_eco and mat.groupe = etp.groupe
-    -- DO NOT restrict to the etape's date range. We want to backfill the data for the
-    -- whole year.
-    -- Add the daily number of students
+        inner join etapes as etp on cal.id_eco = etp.id_eco
     ),
     daily_unpadded as (
+        -- ====================================================================
+        -- ÉTAPE 4: Ajout du nombre quotidien d'étudiants à la table de remplissage
+        -- ====================================================================
         select
             pad.id_eco,
             pad.date_evenement,
-            pad.grille,
             pad.is_school_day,
-            pad.event_kind,
-            pad.code_matiere,
             pad.etape,
             pad.etape_date_debut,
             pad.etape_date_fin,
@@ -152,28 +139,66 @@ with
             {{ ref("cdpvd_abstsm_stg_daily_students") }} as dly
             on pad.id_eco = dly.id_eco
             and pad.date_evenement = dly.date_evenement
-            and pad.grille = dly.grille
             and pad.etape = dly.etape
             and pad.groupe = dly.groupe
+    ),
+    first_known as (
+        select
+            id_eco,
+            groupe,
+            min(
+                case when n_students_daily is not null then date_evenement end
+            ) as first_known_date
+        from daily_unpadded
+        group by id_eco, groupe
+    ),
+    first_value as (
+        select
+            d.id_eco,
+            d.groupe,
+            fk.first_known_date,
+            max(d.n_students_daily) as first_known_value
+        from daily_unpadded d
+        join
+            first_known fk
+            on fk.id_eco = d.id_eco
+            and fk.groupe = d.groupe
+            and d.date_evenement = fk.first_known_date
+        group by d.id_eco, d.groupe, fk.first_known_date
+    ),
+    daily_prefilled as (
+        select
+            d.*,
+            case
+                when
+                    d.n_students_daily is null
+                    and fv.first_known_date is not null
+                    and d.date_evenement
+                    between d.etape_date_debut and fv.first_known_date
+                then fv.first_known_value
+                else d.n_students_daily
+            end as n_students_daily_prefilled
+        from daily_unpadded d
+        left join first_value fv on fv.id_eco = d.id_eco and fv.groupe = d.groupe
 
-    -- Backfill the number of daily students
     ),
     backfilled as (
+        -- ====================================================================
+        -- ÉTAPE 5: Remplissage (backfill) du nombre quotidien d'étudiants
+        -- ====================================================================
+        -- Propagation de la dernière valeur connue du nombre d'étudiants
+        -- pour chaque partition (établissement, classe, étape)
         select
             src.id_eco,
             src.date_evenement,
             src.groupe,
-            src.grille,
             src.is_school_day,
-            src.event_kind,
-            src.code_matiere,
             src.etape,
             src.etape_date_debut,
             src.etape_date_fin,
             src.backfill_partition,
-            src.n_students_daily as n_students_daily_ctrl,
-            max(src.n_students_daily) over (
-                partition by id_eco, grille, groupe, etape, backfill_partition
+            max(src.n_students_daily_prefilled) over (
+                partition by id_eco, groupe, backfill_partition
                 order by date_evenement
                 rows between unbounded preceding and unbounded following
             ) as n_students_daily
@@ -183,34 +208,32 @@ with
                     id_eco,
                     date_evenement,
                     groupe,
-                    grille,
                     is_school_day,
-                    event_kind,
-                    code_matiere,
                     etape,
                     etape_date_debut,
                     etape_date_fin,
-                    n_students_daily,
+                    n_students_daily_prefilled,
                     sum(case when n_students_daily is not null then 1 else 0 end) over (
-                        partition by id_eco, grille, groupe, etape
+                        partition by id_eco, groupe
                         order by date_evenement
                         rows between unbounded preceding and current row
                     ) as backfill_partition
-                from daily_unpadded
+                from daily_prefilled
             ) as src
 
-    -- Since the backfill is done, out of etape events can now be removed 
     )
 
+-- ============================================================================
+-- ÉTAPE 6: Sélection finale avec filtrage par date d'étape
+-- ============================================================================
+-- Récupération des données complètes en excluant les lignes en dehors
+-- de la plage de dates des étapes et ajout du jour de la semaine
 select
     src.id_eco,
     src.date_evenement,
     datename(weekday, date_evenement) as jour_semaine,
     src.groupe,
-    src.grille,
     src.is_school_day,
-    src.event_kind,
-    src.code_matiere,
     src.etape,
     src.etape_date_debut,
     src.etape_date_fin,
