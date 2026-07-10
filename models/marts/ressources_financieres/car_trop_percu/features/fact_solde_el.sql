@@ -44,7 +44,8 @@ with
             el.code_perm,
             car.fiche,
             car.annee,
-            dan.eco, isnull (sum(car.solde), 0.0) as car_ag
+            coalesce(dan.eco, 'SdG') as eco,  -- cas ou l'eleve n'a pas de dossier Avant-Garde
+            isnull (sum(car.solde), 0.0) as car_ag
         from {{ ref("i_sdg_e_fact") }} as car
         left join {{ ref("i_sdg_e_ele") }} as el on el.fiche = car.fiche
         left join
@@ -52,8 +53,7 @@ with
             on dan.id_sdg = car.id_sdg
             and dan.annee = car.annee
             and dan.fiche = car.fiche
-        where
-            car.annee <= {{ core_dashboards_store.get_current_year() }}
+        where car.annee <= {{ core_dashboards_store.get_current_year() }}
         group by el.code_perm, car.fiche, car.annee, dan.eco
 
     -- tp AG
@@ -63,7 +63,8 @@ with
             el.code_perm,
             tp.fiche,
             tp.annee,
-            dan.eco, isnull (sum(tp.mnt), 0.0) as tp_ag
+            coalesce(dan.eco, 'SdG') as eco,  -- cas ou l'eleve n'a pas de dossier Avant-Garde
+            isnull (sum(tp.mnt), 0.0) as tp_ag
         from {{ ref("i_sdg_e_trop_percus") }} as tp
         left join {{ ref("i_sdg_e_ele") }} as el on el.fiche = tp.fiche
         left join
@@ -71,8 +72,7 @@ with
             on dan.id_sdg = tp.id_sdg
             and dan.annee = tp.annee
             and dan.fiche = tp.fiche
-        where
-            tp.annee <= {{ core_dashboards_store.get_current_year() }}
+        where tp.annee <= {{ core_dashboards_store.get_current_year() }}
         group by el.code_perm, tp.fiche, tp.annee, dan.eco
 
     -- car tp PROCURE + recuperer les ecoles associées aux eleves inscrits en FP/FGA
@@ -96,32 +96,27 @@ with
             on freq.fiche = pop.fiche
             and freq.annee = pop.annee
             and freq.freq = pop.freq
-        where
-            car_tp_proc.annee <= {{ core_dashboards_store.get_current_year() }}
+        where car_tp_proc.annee <= {{ core_dashboards_store.get_current_year() }}
 
     -- perimetre final FGJ + FGA
     ),
     perim as (
-        select distinct
-            code_perm,
-            fiche,
-            annee,
-            eco
-    from (
-        select code_perm, fiche, annee, eco
-        from soldes_gpi
-        union all
-        select code_perm, fiche, annee, eco
-        from car_ag
-        union all
-        select code_perm, fiche, annee, eco
-        from tp_ag
-        union all
-        select
-            code_perm, cast(fiche as varchar(7)) as fiche, annee, eco
-        from car_tp_proc
-    ) x
-)
+        select distinct code_perm, fiche, annee, eco
+        from
+            (
+                select code_perm, fiche, annee, eco
+                from soldes_gpi
+                union all
+                select code_perm, fiche, annee, eco
+                from car_ag
+                union all
+                select code_perm, fiche, annee, eco
+                from tp_ag
+                union all
+                select code_perm, cast(fiche as varchar(7)) as fiche, annee, eco
+                from car_tp_proc
+            ) x
+    )
 
 -- REQUETE FINALE
 select
