@@ -1,0 +1,40 @@
+﻿version: 2
+
+models:
+  - name: cdpvd_fact_retention
+    description: >
+    config:
+      tags:
+        - rrm
+        - human_resources
+      schema: human_resources_features
+    columns:
+      - name: matr
+        description: Matricule de l'employé
+        tests:
+          - not_null
+      - name: Date_eng
+        description: Date d'engagement de l'employé
+        tests:
+          - not_null
+      - name: workplace
+        description: Lieu de travail de l'employé
+        tests:
+          - not_null
+      - name: corp_empl
+        description: Corp d'emploi de l'employé
+        tests:
+          - not_null  
+      - name: id_periode
+        description: Période d'embauche
+        tests:
+          - not_null                      
+  - name: cdpvd_fact_roulement
+    description: >
+    config:
+      tags:
+        - rrm
+        - human_resources
+      schema: human_resources_features          
+
+
