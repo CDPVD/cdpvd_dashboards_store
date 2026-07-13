@@ -17,18 +17,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 select
     mat,
-    descrmat,
-    descrabregee,
+    descrmat as descr_mat,
+    descrabregee as descr_abregee,
     credit,
-    genreform,
-    regimesanct,
-    typecred,
-    seuilreuss,
-    nbhrestheo,
-    nbhresrev,
-    siglesimca,
-    typecours,
-    anneecycle,
-    secteurform,
-    descrmatlongue
+    genreform as genre_form,
+    regimesanct as regime_sanct,
+    typecred as type_cred,
+    seuilreuss as seuil_reuss,
+    nbhrestheo as nb_hres_theo,
+    nbhresrev as nb_hres_rev,
+    siglesimca as sigle_simca,
+    typecours as type_cours,
+    anneecycle as annee_cycle,
+    secteurform as secteur_form,
+    descrmatlongue as descr_mat_longue
 from {{ var("database_jade_adultes") }}.dbo.t_mat

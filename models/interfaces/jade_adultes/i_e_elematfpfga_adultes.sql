@@ -22,14 +22,14 @@ select
     mat,
     grp,
     ecocen as eco_cen,
-    noseqmat,
-    indmatetei,
+    noseqmat as no_seq_mat,
+    indmatetei as ind_mat_etei,
     grh,
     disc,
-    ordchrono,
-    nbhresprev,
-    nbminrea,
+    ordchrono as ord_chrono,
+    nbhresprev as nb_hres_prev,
+    nbminrea as nb_min_rea,
     datefin as date_fin,
-    statutprofil,
-    resens
+    statutprofil as statut_profil,
+    resens as res_ens
 from {{ var("database_jade_adultes") }}.dbo.e_elematfpfga

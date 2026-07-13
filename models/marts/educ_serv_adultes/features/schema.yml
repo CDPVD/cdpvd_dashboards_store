@@ -55,9 +55,9 @@ models:
             - annee
             - freq
             - population
-            - noseqmat
+            - no_seq_mat
             - mat
-            - ordchrono
+            - ord_chrono
     columns:
       - name: code_perm
         description: Code de l'école adulte

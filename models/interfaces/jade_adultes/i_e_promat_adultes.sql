@@ -17,19 +17,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 select
     fiche,
-    typeprofil,
+    typeprofil as type_profil,
     ses,
     disc,
-    ordchrono,
+    ordchrono as ord_chrono,
     mat,
     occurrence,
-    noseqmat,
-    statutprofil,
-    nbminsl,
-    nbminso,
-    nbminsr,
-    nbminrea,
-    datesanct,
+    noseqmat as no_seq_mat,
+    statutprofil as statut_profil,
+    nbminsl as nb_mins_l,
+    nbminso as nb_mins_o,
+    nbminsr as nb_mins_r,
+    nbminrea as nb_min_rea,
+    datesanct as date_sanct,
     res,
-    typmat
+    typmat as typ_mat
 from {{ var("database_jade_adultes") }}.dbo.e_promat

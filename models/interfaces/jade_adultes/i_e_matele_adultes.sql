@@ -25,11 +25,11 @@ select
     anneesanct as annee_sanct,
     moissanct as mois_sanct,
     joursanct as jour_sanct,
-    indtransm,
+    indtransm as ind_transm,
     etat,
     service,
     res,
-    noseqmat,
-    dateinscriptionres,
-    nbhresstage
+    noseqmat as no_seq_mat,
+    dateinscriptionres as date_inscription_res,
+    nbhresstage as nb_hres_stage
 from {{ var("database_jade_adultes") }}.dbo.e_matele
