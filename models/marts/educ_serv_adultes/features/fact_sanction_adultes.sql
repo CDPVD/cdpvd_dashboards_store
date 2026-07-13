@@ -35,56 +35,41 @@ select
     matfpfga.freq,
     matfpfga.mat,
     matfpfga.grp,
-    -- fac.eco_cen,
-    matfpfga.noseqmat,
-    matfpfga.indmatetei,
+    matfpfga.no_seq_mat,
+    matfpfga.ind_mat_etei,
     matfpfga.grh,
     matfpfga.disc,
-    matfpfga.ordchrono,
-    matfpfga.nbhresprev,
-    matfpfga.nbminrea,
+    matfpfga.ord_chrono,
+    matfpfga.nb_hres_prev,
     matfpfga.date_fin,
-    matfpfga.statutprofil,
-    matfpfga.resens,
+    matfpfga.statut_profil,
+    matfpfga.res_ens,
     matele.date_deb,
     matele.annee_sanct,
     matele.mois_sanct,
     matele.jour_sanct,
-    matele.indtransm,
+    matele.ind_transm,
     matele.service,
     matele.res,
-    matele.nbhresstage,
-    matd.descrmat,
-    promat.typeprofil,
-    promat.ordchrono ord_chrono,
+    matele.nb_hres_stage,
+    matd.descr_mat,
+    promat.type_profil,
     promat.occurrence,
-    promat.noseqmat noseq_mat,
-    promat.statutprofil statut_profil,
-    promat.nbminsl,
-    promat.nbminso,
-    promat.nbminsr,
-    promat.nbminrea nbmin_rea,
-    promat.datesanct,
-    promat.res resultat,
-    promat.typmat
+    promat.nb_mins_l,
+    promat.nb_mins_o,
+    promat.nb_mins_r,
+    promat.nb_min_rea,
+    promat.date_sanct,
+    promat.typ_mat
 from {{ ref("i_e_elematfpfga_adultes") }} as matfpfga
-inner join
-    {{ ref("stg_populations_adultes") }} as pop
-    on pop.fiche = matfpfga.fiche
-    and pop.annee = matfpfga.annee
-    and pop.freq = matfpfga.freq
-inner join
-    {{ ref("i_e_matele_adultes") }} as matele
-    on matfpfga.noseqmat = matele.noseqmat
-    and matfpfga.freq = matele.freq
-    and matfpfga.fiche = matele.fiche
-inner join {{ ref("i_t_mat_adultes") }} as matd on matd.mat = matfpfga.mat
-inner join
-    {{ ref("i_e_promat_adultes") }} as promat
-    on promat.mat = matfpfga.mat
-    and promat.noseqmat = matfpfga.noseqmat
-    and promat.fiche = matfpfga.fiche
-    and promat.ordchrono = matfpfga.ordchrono
+inner join {{ ref("stg_populations_adultes") }} as pop
+    on pop.fiche = matfpfga.fiche and pop.annee = matfpfga.annee and pop.freq = matfpfga.freq
+inner join {{ ref("i_e_matele_adultes") }} as matele
+    on matfpfga.no_seq_mat = matele.no_seq_mat and matfpfga.freq = matele.freq and matfpfga.fiche = matele.fiche
+inner join {{ ref("i_t_mat_adultes") }} as matd 
+    on matd.mat = matfpfga.mat
+inner join {{ ref("i_e_promat_adultes") }} as promat
+    on promat.mat = matfpfga.mat and promat.no_seq_mat = matfpfga.no_seq_mat and promat.fiche = matfpfga.fiche and promat.ord_chrono = matfpfga.ord_chrono
 where
     matfpfga.annee >= {{ core_dashboards_store.get_current_year() - 5 }}
     and matele.res != ''
