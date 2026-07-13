@@ -118,6 +118,12 @@ models:
                     pbi_tables:
                         +post-hook:
                             - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
+                rrm:
+                    +tags: ["rrm"]
+                    +schema: "dashboard_rrm"
+                    pbi_tables:
+                        +post-hook:
+                            - "{{ core_dashboards_store.stamp_model('dashboard_rrm') }}"                            
 
                 endb:
                 
