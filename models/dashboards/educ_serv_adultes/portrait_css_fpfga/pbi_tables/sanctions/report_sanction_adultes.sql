@@ -15,6 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
+
 {{
     config(
         post_hook=[
@@ -22,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         ]
     )
 }}
+
+-- Validation de la config des seuils de dépassement : si la seed depassement_heure_mat existe, les seuils personnalisés qu'elle contient sont utilisés. Sinon, le seuil de dépassement par défaut défini dans les variables du projet est appliqué à toutes les matières.
 {%- set source_relation = adapter.get_relation(
     database=target.database,
     schema=target.schema + "_dashboard_portrait_css_fpfga_seeds",
@@ -29,7 +32,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ) -%}
 {% set table_exists = source_relation is not none %}
 {% set depassement_par_defaut = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("depassement_par_defaut", "150") %}
-
 {% if table_exists %}
     {% set table_seed = "{{ ref('depassement_heure_mat') }}" %}
     {% if execute %}
@@ -47,45 +49,57 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 {% endif %}
 
 with
+    -- Ajout de la colonne nb_hres_rea
     cte as (
-        select *, round(cast(nbminrea as float) / 60, 2) as nbhresrea
-        from {{ ref("fac_reussi_sanction_heure_adultes") }} facr
-    ),
-    depasse as (
+        select 
+            *, 
+            round(cast(nb_min_rea as float) / 60, 2) as nb_hres_rea
+        from {{ ref("fac_reussi_sanction_heure_adultes") }}
+    
+    -- Déterminer du seuil de dépassement pour chaque matière. 
+    -- Si la seed depassement_heure_mat existe, on utilise la valeur personnalisée de la seed lorsque disponible. 
+    -- Si la seed n'existe pas pour une matiere, on utilise le dernier chiffre du code matière x 25 ou on utilise la valeur de dépassement par défaut configurée.
+    ), depasse as (
         select
             cte.*,
             {%- if table_exists %}
                 case
-                    when
-                        dep.depassement is null
-                        and right(ltrim(rtrim(mat)), 1) like '[0-9]'
-                    then right(ltrim(rtrim(mat)), 1) * 25
-                    when
-                        dep.depassement is null
-                        and right(ltrim(rtrim(mat)), 1) like '[^0-9]'
-                    then {{ depassement_par_defaut }}
+                    when dep.depassement is null and right(ltrim(rtrim(mat)), 1) like '[0-9]' then right(ltrim(rtrim(mat)), 1) * 25
+                    when dep.depassement is null and right(ltrim(rtrim(mat)), 1) like '[^0-9]' then {{ depassement_par_defaut }}
                     else dep.depassement
                 end as depassement
             {% else -%}
                 case
-                    when right(ltrim(rtrim(mat)), 1) like '[0-9]'
-                    then right(ltrim(rtrim(mat)), 1) * 25
+                    when right(ltrim(rtrim(mat)), 1) like '[0-9]' then right(ltrim(rtrim(mat)), 1) * 25
                     else {{ depassement_par_defaut }}
                 end as depassement
             {% endif -%}
         from cte
         {%- if table_exists %}
-            left join {{ source_relation }} dep on cte.mat = dep.matieres
+            left join {{ source_relation }} dep 
+                on cte.mat = dep.matieres
         {% endif -%}
+    
+    -- Calcul du nombre d'heures de dépassement
     ),
     compt_depass as (
         select
             *,
             case
-                when nbhresrea > depassement then nbhresrea - depassement else 0
+                when nb_hres_rea > depassement then nb_hres_rea - depassement 
+                else 0
             end as depassement_heure,
-            case when nbhresrea > depassement then 1 else 0 end as nbre_ele_depasse
+            case 
+                when nb_hres_rea > depassement then 1 
+                else 0 
+            end as nbre_ele_depasse
         from depasse
     )
-select *, case when nbre_ele_depasse = 1 then 'Oui' else 'Non' end as 'En dépassement'
+
+select 
+    *, 
+    case 
+        when nbre_ele_depasse = 1 then 'Oui' 
+        else 'Non'
+    end as 'En dépassement'
 from compt_depass
