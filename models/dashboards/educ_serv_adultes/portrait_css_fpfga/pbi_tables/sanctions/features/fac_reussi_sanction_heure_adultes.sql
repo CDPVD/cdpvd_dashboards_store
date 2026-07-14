@@ -24,61 +24,57 @@ with
             concat(fac.annee, '-', fac.annee + 1) as annnee_scolaire,
             fac.freq,
             fac.nom_centre,
-            mat,
-            grp,
-            noseqmat,
-            indmatetei,
-            grh,
-            disc,
-            ordchrono,
-            nbhresprev,
-            nbminrea,
+            facr.mat,
+            facr.grp,
+            facr.no_seq_mat,
+            facr.ind_mat_etei,
+            facr.grh,
+            facr.disc,
+            facr.ord_chrono,
+            facr.nb_hres_prev,
+            facr.nb_min_rea,
             facr.date_fin,
-            statutprofil,
-            resens,
+            facr.statut_profil,
+            facr.res_ens,
             facr.date_deb,
-            annee_sanct,
-            mois_sanct,
-            jour_sanct,
+            facr.annee_sanct,
+            facr.mois_sanct,
+            facr.jour_sanct,
             case
-                when res = '' or res is null
-                then null
+                when facr.res = '' or facr.res is null then null
                 else
                     case
                         when
-                            annee_sanct = ''
-                            or annee_sanct is null
-                            or mois_sanct = ''
-                            or mois_sanct is null
-                            or jour_sanct = ''
-                            or jour_sanct is null
+                            facr.annee_sanct = ''
+                            or facr.annee_sanct is null
+                            or facr.mois_sanct = ''
+                            or facr.mois_sanct is null
+                            or facr.jour_sanct = ''
+                            or facr.jour_sanct is null
                         then null
                         else
                             cast(
                                 concat(
-                                    annee_sanct,
+                                    facr.annee_sanct,
                                     '-',
-                                    right(concat('0', mois_sanct), 2),
+                                    right(concat('0', facr.mois_sanct), 2),
                                     '-',
-                                    right(concat('0', jour_sanct), 2)
+                                    right(concat('0', facr.jour_sanct), 2)
                                 ) as date
                             )
                     end
             end as date_sanct,
-            facr.indtransm,
-            service,
+            facr.ind_transm,
+            facr.service,
             case
-                when res = ''
-                then null
-                when try_cast(res as int) >= 60 or res = 'SU' or res = 'CT'
-                then 'SU'
-                when try_cast(res as int) < 60
-                then 'EC'
-                else res
+                when facr.res = '' then null
+                when try_cast(facr.res as int) >= 60 or facr.res = 'SU' or facr.res = 'CT' then 'SU'
+                when try_cast(facr.res as int) < 60 then 'EC'
+                else facr.res
             end as sanc,
-            res,
-            nbhresstage,
-            concat(mat, ' - ', descrmat) as descrmat,
+            facr.res,
+            facr.nb_hres_stage,
+            concat(mat, ' - ', facr.descr_mat) as descr_mat,
             fac.eco_cen,
             fac.bat,
             fac.client,
@@ -94,9 +90,9 @@ with
             fac.etat_formation,
             fac.prog,
             case
-                when descr_prog is null
-                then descr_prog
-                else concat(prog, ' - ', descr_prog)
+                when fac.descr_prog is null
+                then fac.descr_prog
+                else concat(fac.prog, ' - ', fac.descr_prog)
             end as programme,
             case
                 when fac.activ_form is null or fac.activ_form = ''
@@ -108,12 +104,12 @@ with
             fac.raison_grat_scol,
             fac.descr_raison_grat_scol,
             fac.type_parcours,
-            concat(type_parcours, ' - ', descr_type_parcours) as desc_type_parcours,
+            concat(fac.type_parcours, ' - ', fac.descr_type_parcours) as desc_type_parcours,
             fac.service_enseign,
             case
-                when descr_service_enseign is null
-                then descr_service_enseign
-                else concat(service_enseign, ' - ', descr_service_enseign)
+                when fac.descr_service_enseign is null
+                then fac.descr_service_enseign
+                else concat(fac.service_enseign, ' - ', fac.descr_service_enseign)
             end as service_enseignement,
             fac.descr_service_enseign,
             fac.motif_depart,
@@ -124,28 +120,22 @@ with
             concat('(', facr.fiche, ') ', el.prenom, ' ', el.nom) as prenom_nom,
             el.lang_matern,
             el.desc_lang_matern,
-            facr.typeprofil,
-            facr.ord_chrono,
+            facr.type_profil,
             case when facr.occurrence = 1 then 'Non' else 'Oui' end as "En reprise",
             facr.occurrence,
-            facr.noseq_mat,
-            facr.statut_profil,
-            facr.nbminsl,
-            facr.nbminso,
-            facr.nbminsr,
-            facr.nbmin_rea,
-            facr.datesanct,
-            facr.resultat,
-            facr.typmat
+            facr.nb_mins_l,
+            facr.nb_mins_o,
+            facr.nb_mins_r,
+            facr.typ_mat
         from {{ ref("fact_sanction_adultes") }} facr
-        inner join
-            {{ ref("fact_freq_adultes") }} as fac
+        inner join {{ ref("fact_freq_adultes") }} as fac
             on fac.code_perm = facr.code_perm
             and fac.fiche = facr.fiche
             and fac.annee = facr.annee
             and fac.freq = facr.freq
-        inner join {{ ref("dim_eleve_adultes") }} as el on el.code_perm = facr.code_perm
-    -- where res !=''
+        inner join {{ ref("dim_eleve_adultes") }} as el 
+            on el.code_perm = facr.code_perm
     )
+
 select *
 from cte
