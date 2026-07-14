@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: car_tp_procure
+    description: >
+      Table qui fournit l'historique du solde 
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - code_perm
+            - fiche
+            - annee
+            - eco
+
+  - name: contact_sdg
+    description: >
+      Table qui fournit les prenoms / nom des parents et tuteur pour chaque code_perm, fiche du SDG
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - code_perm
+            - fiche

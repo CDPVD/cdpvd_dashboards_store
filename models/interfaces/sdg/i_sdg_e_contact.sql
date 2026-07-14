@@ -17,18 +17,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 select
     fiche,
-    typeadr,
-    nociv as no_civ,
-    orientrue as orient_rue,
-    genrerue,
+    type_contact,
+    nom,
+    pnom,
+    adr_eleve,
+    no_civ,
+    orient_rue,
+    genre_rue,
     rue,
     app,
     ville,
-    casierpost,
     prov,
-    codepost as code_post,
-    pays,
-    envoimeq,
-    datefin as date_fin,
-    dateeffect as date_effect
-from {{ var("database_jade_adultes") }}.dbo.e_adr
+    code_post,
+    date_maj
+from {{ var("database_sdg") }}.dbo.sdg_e_contact

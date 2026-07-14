@@ -17,18 +17,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 select
     fiche,
-    typeadr,
-    nociv as no_civ,
-    orientrue as orient_rue,
-    genrerue,
-    rue,
-    app,
-    ville,
-    casierpost,
-    prov,
-    codepost as code_post,
-    pays,
-    envoimeq,
-    datefin as date_fin,
-    dateeffect as date_effect
-from {{ var("database_jade_adultes") }}.dbo.e_adr
+    codeperm as code_perm,
+    nom,
+    pnom as prenom,
+    nompere as nom_pere,
+    pnompere as pnom_pere,
+    nommere as nom_mere,
+    pnommere as pnom_mere,
+    nomtuteur as nom_tuteur,
+    pnomtuteur as pnom_tuteur,
+    adr_electr_ele,
+    adr_electr_pere,
+    adr_electr_mere,
+    adr_electr_tuteur,
+    datemaj as date_maj
+from {{ var("database_jade") }}.dbo.e_ele
+with (nolock)

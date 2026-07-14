@@ -15,20 +15,4 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
-select
-    fiche,
-    typeadr,
-    nociv as no_civ,
-    orientrue as orient_rue,
-    genrerue,
-    rue,
-    app,
-    ville,
-    casierpost,
-    prov,
-    codepost as code_post,
-    pays,
-    envoimeq,
-    datefin as date_fin,
-    dateeffect as date_effect
-from {{ var("database_jade_adultes") }}.dbo.e_adr
+select id_sdg, annee, fiche, eco from {{ var("database_sdg") }}.dbo.sdg_e_dan
