@@ -63,54 +63,7 @@ SELECT
 
 	-- Date de début du RRM
 	DATE_ENTR AS DATE_RRM,
-		-- Catégorie de période depuis la date d'entrée
-	CASE
-		WHEN DATE_ENTR >= DATEADD(MONTH, -3, GETDATE())
-		THEN 0
-
-		WHEN DATE_ENTR >= DATEADD(MONTH, -5, GETDATE())
-			 AND DATE_ENTR < DATEADD(MONTH, -3, GETDATE())
-		THEN 1
-
-		WHEN DATE_ENTR >= DATEADD(YEAR, -1, GETDATE())
-			 AND DATE_ENTR < DATEADD(MONTH, -5, GETDATE())
-		THEN 2
-
-		WHEN DATE_ENTR >= DATEADD(YEAR, -2, GETDATE())
-			 AND DATE_ENTR < DATEADD(YEAR, -1, GETDATE())
-		THEN 3
-
-		WHEN DATE_ENTR >= DATEADD(YEAR, -3, GETDATE())
-			 AND DATE_ENTR < DATEADD(YEAR, -2, GETDATE())
-		THEN 4
-
-		WHEN DATE_ENTR >= DATEADD(YEAR, -4, GETDATE())
-			 AND DATE_ENTR < DATEADD(YEAR, -3, GETDATE())
-		THEN 5
-
-		WHEN DATE_ENTR >= DATEADD(YEAR, -5, GETDATE())
-			 AND DATE_ENTR < DATEADD(YEAR, -4, GETDATE())
-		THEN 6
-
-		WHEN DATE_ENTR < DATEADD(YEAR, -5, GETDATE())
-		THEN 7
-	END AS PERIODE,
-	-- Année de la date d'entrée
-	YEAR(DATE_ENTR) AS ANNEE,
-
-	-- Mois à partir du mois de juillet
-	((MONTH(DATE_ENTR) + 5) % 12) + 1 AS MOIS,
-
-	-- Semaine à partir du mois de juillet
-	DATEDIFF(
-		WEEK, 
-		DATEFROMPARTS(
-			YEAR(DATE_ENTR) - CASE WHEN MONTH(DATE_ENTR) < 7 THEN 1 ELSE 0 END, 7, 1
-		), DATE_ENTR) + 1 AS SEMAINE
-
-
-
-
+	{{ informations_date("DATE_ENTR") }}
 
 FROM CTE2
 -- Élimine les emplois qui chevauchent une période existante

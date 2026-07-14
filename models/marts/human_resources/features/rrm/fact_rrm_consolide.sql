@@ -26,7 +26,7 @@ SELECT
     ANNEE,
     MOIS,
     SEMAINE
-FROM {{ ref("stg_rrm_retention") }}
+FROM {{ ref("fact_rrm_retention") }}
 
 UNION ALL
 
@@ -40,4 +40,18 @@ SELECT
     ANNEE,
     MOIS,
     SEMAINE
-FROM {{ ref("stg_rrm_roulement") }}
+FROM {{ ref("fact_rrm_roulement") }}
+
+UNION ALL
+
+SELECT 
+    TYPE_RRM,
+    MATR,
+    CORP_EMPL,
+    LIEU_TRAV,
+    DATE_RRM,
+    PERIODE,
+    ANNEE,
+    MOIS,
+    SEMAINE
+FROM {{ ref("fact_rrm_mouvement") }}
