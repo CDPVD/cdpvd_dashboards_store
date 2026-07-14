@@ -16,21 +16,18 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 select
-    matr,
-    date_eff,
-    sect,
-    aff,
-    lieu_trav,
-    corp_empl,
-    etat,
-    mode,
-    stat_eng,
-    type,
-    ref_empl,
-    date_fin,
-    pourc_post,
-    pourc_sal,
-    pourc_temp,
-    gr_paie,
-    nb_hre_sem
-from {{ var("database_paie") }}.dbo.pai_hemp
+    fiche,
+    type_contact,
+    nom,
+    pnom,
+    adr_eleve,
+    no_civ,
+    orient_rue,
+    genre_rue,
+    rue,
+    app,
+    ville,
+    prov,
+    code_post,
+    date_maj
+from {{ var("database_sdg") }}.dbo.sdg_e_contact
