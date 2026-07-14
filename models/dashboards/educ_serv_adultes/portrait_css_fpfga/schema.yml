@@ -81,7 +81,6 @@ models:
       - core_dashboards_store.resolution:
           combination_of_columns:
             - id_filtre
-
   - name: report_sanction_adultes
     config:
       alias: report_sanction_adultes
@@ -100,5 +99,5 @@ models:
             - année
             - freq
             - fiche
-            - noseqmat
-            - typeprofil
+            - no_seq_mat
+            - type_profil
