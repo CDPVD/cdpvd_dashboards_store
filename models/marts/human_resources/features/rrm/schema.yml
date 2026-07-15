@@ -1,7 +1,7 @@
 ﻿version: 2
 
 models:
-  - name: cdpvd_fact_retention
+  - name: fact_rrm_retention
     description: >
     config:
       tags:
@@ -13,28 +13,138 @@ models:
         description: Matricule de l'employé
         tests:
           - not_null
-      - name: Date_eng
-        description: Date d'engagement de l'employé
-        tests:
-          - not_null
-      - name: workplace
-        description: Lieu de travail de l'employé
-        tests:
-          - not_null
       - name: corp_empl
-        description: Corp d'emploi de l'employé
+        description: Code du corps d'emploi
         tests:
-          - not_null  
-      - name: id_periode
-        description: Période d'embauche
+          - not_null          
+      - name: lieu_trav
+        description: Code du lieu de travail
         tests:
-          - not_null                      
-  - name: cdpvd_fact_roulement
+          - not_null
+      - name: date_rrm
+        description: Date d'embauche
+        tests:
+          - not_null
+      - name: annee
+        description: Annee de la date d'embauche
+        tests:
+          - not_null
+      - name: mois
+        description: Mois de la date d'embauche
+        tests:
+          - not_null
+      - name: semaine
+        description: Semaine de la date d'embauche
+        tests:
+          - not_null                                                    
+  
+  - name: fact_rrm_roulement
     description: >
     config:
       tags:
         - rrm
         - human_resources
-      schema: human_resources_features          
-
-
+      schema: human_resources_features
+    columns:
+      - name: matr
+        description: Matricule de l'employé
+        tests:
+          - not_null
+      - name: corp_empl
+        description: Code du corps d'emploi
+        tests:
+          - not_null          
+      - name: lieu_trav
+        description: Code du lieu de travail
+        tests:
+          - not_null
+      - name: date_rrm
+        description: Date de démission
+        tests:
+          - not_null
+      - name: annee
+        description: Annee de la date de démission
+        tests:
+          - not_null
+      - name: mois
+        description: Mois de la date de démission
+        tests:
+          - not_null
+      - name: semaine
+        description: Semaine de la date de démission
+        tests:
+          - not_null
+  
+  - name: fact_rrm_mouvement
+    description: >
+    config:
+      tags:
+        - rrm
+        - human_resources
+      schema: human_resources_features
+    columns:
+      - name: matr
+        description: Matricule de l'employé
+        tests:
+          - not_null
+      - name: corp_empl
+        description: Code du corps d'emploi
+        tests:
+          - not_null          
+      - name: lieu_trav
+        description: Code du lieu de travail
+        tests:
+          - not_null
+      - name: date_rrm
+        description: Date de la promotion
+        tests:
+          - not_null
+      - name: annee
+        description: Annee de la date de la promotion
+        tests:
+          - not_null
+      - name: mois
+        description: Mois de la date de la promotion
+        tests:
+          - not_null
+      - name: semaine
+        description: Semaine de la date de la promotion
+        tests:
+          - not_null
+  
+  - name: fact_rrm_consolide
+    description: >
+    config:
+      tags:
+        - rrm
+        - human_resources
+      schema: human_resources_features
+    columns:
+      - name: matr
+        description: Matricule de l'employé
+        tests:
+          - not_null
+      - name: corp_empl
+        description: Code du corps d'emploi
+        tests:
+          - not_null          
+      - name: lieu_trav
+        description: Code du lieu de travail
+        tests:
+          - not_null
+      - name: date_rrm
+        description: Date RRM
+        tests:
+          - not_null
+      - name: annee
+        description: Annee de la date RRM
+        tests:
+          - not_null
+      - name: mois
+        description: Mois de la date RRM
+        tests:
+          - not_null
+      - name: semaine
+        description: Semaine de la date RRM
+        tests:
+          - not_null
