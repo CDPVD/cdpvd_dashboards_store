@@ -20,7 +20,7 @@ SELECT
     1 AS TYPE_RRM,
     MATR,
     CORP_EMPL,
-    LIEU_TRAV,
+	COALESCE(LIEU_TRAV,'-') AS LIEU_TRAV,
     DEMISSION_DATE AS DATE_RRM,
     {{ informations_date("DEMISSION_DATE") }}
 
