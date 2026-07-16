@@ -135,17 +135,17 @@ models:
                     +schema: "dashboard_suivi_etc"
                     +post-hook:
                             - "{{ core_dashboards_store.stamp_model('dashboard_suivi_etc') }}"
-            ressources_financieres:
-                car_trop_percu:
-                    pbi_tables:
-                        +post-hook:
-                            - "{{ core_dashboards_store.stamp_model('dashboard_car_trop_percu') }}"
                 pevr:
                     +tags: ["pevr"]
                     +schema: "dashboard_pevr"
                     pbi_tables:
                         +post-hook:
-                            - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"
+                            - "{{ core_dashboards_store.stamp_model('dashboard_pevr') }}"                            
+            ressources_financieres:
+                car_trop_percu:
+                    pbi_tables:
+                        +post-hook:
+                            - "{{ core_dashboards_store.stamp_model('dashboard_car_trop_percu') }}"
 
         interfaces:
             +enabled: true
