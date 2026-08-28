@@ -1,0 +1,6 @@
+packages:
+  - git: git@github.com:Sciance-Inc/core.dashboards_store.git
+    revision: e773129187fad77c0457a0cee7edb026c43c0814
+  - package: dbt-labs/dbt_utils
+    version: 1.3.0
+sha1_hash: 10176bec93b75c3f9fdc8ec957bb2ab53af9e389
