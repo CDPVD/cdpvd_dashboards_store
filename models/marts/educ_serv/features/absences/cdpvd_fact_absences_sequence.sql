@@ -156,7 +156,7 @@ with
             case
                 when
                     day_id - lag(day_id) over (
-                        partition by id_eco, fiche, event_kind order by day_id
+                        partition by id_eco, fiche, event_kind,category_abs order by day_id
                     )
                     > 1
                 then 1
