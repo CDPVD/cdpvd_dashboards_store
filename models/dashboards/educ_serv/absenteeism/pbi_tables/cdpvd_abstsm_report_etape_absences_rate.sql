@@ -51,6 +51,34 @@ with
             etape_friendly,
             event_kind, rollup (category_abs)
     ),
+
+-- ========================================================================
+    -- CTE dédiée au niveau école/CSS, SANS etape_friendly.
+    -- Empêche n_students_daily d'être compté plusieurs fois quand une même
+    -- date a plusieurs étapes.
+    -- ========================================================================
+    source_ecole as (
+        select
+            annee_scolaire,
+            school_friendly_name,
+            ordre_enseignement,
+            date_evenement,
+            jour_semaine,
+            groupe,
+            event_kind,
+            coalesce(category_abs, 'Tout') as category_abs,
+            sum(n_events) as n_events,
+            max(n_students_daily) as n_students_daily
+        from {{ ref("cdpvd_abstsm_stg_daily_metrics") }}  as src
+        group by
+            annee_scolaire,
+            school_friendly_name,
+            ordre_enseignement,
+            groupe,
+            date_evenement,
+            jour_semaine,
+            event_kind, rollup (category_abs)
+    ),    
     agg as (
         select
             annee_scolaire,
@@ -85,7 +113,7 @@ with
             category_abs,
             sum(cast(n_events as float))
             / sum(n_students_daily) as avg_absence_rate_school
-        from source as src
+        from source_ecole as src
         group by
             annee_scolaire, cube (school_friendly_name, ordre_enseignement),
             groupe,
