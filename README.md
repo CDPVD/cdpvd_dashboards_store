@@ -533,6 +533,17 @@ Cette seed est utilisée pour comparer les cibles ETC de votre CSS avec les heur
 dbt seed --full-refresh
 ```
 
+#### Ajout des services directs à l'élève de votre CSS
+
+Cette seed est utilisée pour distinguer les services directs et indirects à l'élève de votre CSS en tenant compte des corps d'emploi.
+
+  1. Ajoutez un fichier nommé `services_eleve.csv` dans le dossier `cssXX.dashboards_store/seeds/dashboards/direction_generale/services_eleve`. Ce fichier doit contenir les colonnes décrites dans `cdpvd_dashboards_store/seeds/dashboards/direction_generale/suivi_etc/schema.yml` (référez-vous à la définition de la seed `services_eleve`). 
+
+  2. Déclenchez un rafraîchissement de vos seeds 
+
+```bash
+dbt seed --full-refresh
+
 ::alert{type=info}
 Veuillez consulter la section [seeds](/using/marts/seeds) pour plus d’informations sur la manière d’utiliser et de peupler les graines
 ::
