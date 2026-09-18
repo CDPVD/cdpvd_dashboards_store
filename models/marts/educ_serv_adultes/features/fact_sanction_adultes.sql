@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 "{{ this }}",
                 ["code_perm", "fiche", "annee", "freq", "population", "mat", "grp"],
             ),
-            create_nonclustered_index("{{ this }}", ["noseqmat"]),
+            create_nonclustered_index("{{ this }}", ["no_seq_mat"]),
         ]
     )
 }}
@@ -41,6 +41,7 @@ select
     matfpfga.disc,
     matfpfga.ord_chrono,
     matfpfga.nb_hres_prev,
+    matfpfga.nb_min_rea,
     matfpfga.date_fin,
     matfpfga.statut_profil,
     matfpfga.res_ens,
@@ -58,7 +59,6 @@ select
     promat.nb_mins_l,
     promat.nb_mins_o,
     promat.nb_mins_r,
-    promat.nb_min_rea,
     promat.date_sanct,
     promat.typ_mat
 from {{ ref("i_e_elematfpfga_adultes") }} as matfpfga
