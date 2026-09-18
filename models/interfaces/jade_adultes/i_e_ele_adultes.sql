@@ -18,10 +18,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 select
     fiche,
     codeperm as code_perm,
-    nom as nom,
+    nom,
     pnom as prenom,
+    nompere as nom_pere,
+    pnompere as pnom_pere,
+    nommere as nom_mere,
+    pnommere as pnom_mere,
+    nomtuteur as nom_tuteur,
+    pnomtuteur as pnom_tuteur,
+    adr_electr_ele,
+    adr_electr_pere,
+    adr_electr_mere,
+    adr_electr_tuteur,
     datenaiss as date_naissance,
     indlieunaisselen as ind_lieu_naissance_n,
     langmatern as lang_matern,
-    sexe as genre
+    sexe as genre,
+    datemaj as date_maj
 from {{ var("database_jade_adultes") }}.dbo.e_ele

@@ -16,7 +16,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 {#
-    Identify the students who are absent for more than 8 days
+    Rapport des bris de service (longues absences).
+    
+    identifie les étudiants avec des séquences d'absence prolongées et les 
+    catégorise par durée. Enrichit les données avec les informations d'établissement, 
+    d'élève et de groupement configurable (primaire vs secondaire).
 #}
 {{ config(alias="cdpvd_report_bris_service") }}
 
@@ -71,26 +75,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     {% endif %}
 {% endif %}
 
+-- ============================================================================
+-- ÉTAPE 1: Enrichissement avec les informations d'établissements et étudiants
+-- ============================================================================
+-- Jointure des données de séquences d'absence avec les infos d'élève et d'école
 with
-    src as (
-        select
-            fiche,
-            id_eco,
-            last_event_description,
-            last_remarque,
-            event_start_date,
-            event_end_date,
-            events_sequence_length,
-            event_kind,
-            coalesce(etape_description, 'inconnue') as etape_description
-        from {{ ref("cdpvd_fact_absences_sequence") }}
-        where
-            school_year
-            between {{ core_dashboards_store.get_current_year() }}
-            - 1 and {{ core_dashboards_store.get_current_year() }}
-
-    -- Add some metadata to better identify the sutdent
-    ),
     named as (
         select
             eco.school_friendly_name,
@@ -109,9 +98,10 @@ with
             event_end_date,
             events_sequence_length,
             event_kind,
+            category_abs,
             last_event_description,
             last_remarque
-        from src
+        from {{ ref("cdpvd_fact_absences_sequence") }} as src
         join {{ ref("i_gpm_e_ele") }} as ele on src.fiche = ele.fiche
         join
             {{ ref("i_gpm_e_dan") }} as dan
@@ -120,6 +110,10 @@ with
         left join {{ ref("dim_mapper_schools") }} as eco on src.id_eco = eco.id_eco
     )
 
+-- ============================================================================
+-- ÉTAPE 2: Sélection finale avec catégorisation des durées d'absence
+-- ============================================================================
+-- Formatage et catégorisation des séquences d'absence en intervalles de durée
 select
     school_friendly_name,
     annee_scolaire,
@@ -136,10 +130,13 @@ select
         then 'entre 10 et 19 jours'
         when events_sequence_length between 20 and 29
         then 'entre 20 et 29 jours'
-        else 'plus de 30 jours'
+        when events_sequence_length between 30 and 59
+        then 'entre 30 et 59 jours'
+        else '60 jours et plus'
     end as events_sequence_interval,
     events_sequence_length,
     event_kind,
+    category_abs,
     last_event_description,
     last_remarque,
     -- RLS hooks 

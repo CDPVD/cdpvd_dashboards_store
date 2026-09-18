@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 select
     fiche,
     typeadr,
+    nociv as no_civ,
+    orientrue as orient_rue,
     genrerue,
     rue,
     app,
@@ -27,5 +29,6 @@ select
     codepost as code_post,
     pays,
     envoimeq,
-    datefin date_fin
+    datefin as date_fin,
+    dateeffect as date_effect
 from {{ var("database_jade_adultes") }}.dbo.e_adr

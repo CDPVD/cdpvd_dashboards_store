@@ -1,0 +1,28 @@
+version: 2
+
+seeds:
+  - name: adjust_nomen_unit_adm_car_tp
+    description: Ajustement / regroupement d'unites administratives descriptives. 
+    config:
+      tags: 
+        - rf
+        - car_trop_percu
+      schema: rf_seeds
+      column_types:
+        current_lieu_trav: nvarchar(3)
+        new_lieu_trav: nvarchar(3)
+        new_descr: nvarchar(50)
+    columns:
+      - name: current_lieu_trav
+        description: Code unique d'origine représentant le lieu de travail
+        tests:
+          - not_null
+          - unique    
+      - name: new_lieu_trav
+        description: Code du lieu de travail à remplacer ou regrouper
+        tests:
+          - not_null
+      - name: new_descr
+        description: Descriptif du lieu de travail ou de l'unité administrative
+        tests:
+          - not_null

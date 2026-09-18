@@ -16,154 +16,174 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 {#
-    Compute the daily absences rate for each students by day of absence.
-    Add the CSS level metrics to ease comparison.
+    Taux d'absence quotidien.
+
+    Calcule le taux d'absence journalier (par école, groupe, étape, type
+    et catégorie) et ajoute des métriques de comparaison au niveau CSS et
+    établissement.
 #}
 {{ config(alias="cdpvd_report_daily_absences_rate") }}
 
 
+-- ============================================================================
+-- ÉTAPE 1: Extraction / regroupement des métriques sources
+-- ============================================================================
 with
     source as (
         select
-            annee,
+            annee_scolaire,
             school_friendly_name,
+            ordre_enseignement,
             date_evenement,
             jour_semaine,
             groupe,
-            etape_friendly,
             event_kind,
-            max(n_events) as n_events,
-            max(n_students_daily) as n_students_daily,
-            max(absence_rate) as absence_rate
+            coalesce(category_abs, 'Tout') as category_abs,
+            sum(n_events) as n_events,
+            max(n_students_daily) as n_students_daily
         from {{ ref("cdpvd_abstsm_stg_daily_metrics") }} as src
         group by
-            annee,
+            annee_scolaire,
             school_friendly_name,
+            ordre_enseignement,
             groupe,
             date_evenement,
             jour_semaine,
-            etape_friendly,
-            event_kind
+            event_kind, rollup (category_abs)
     ),
+    -- ========================================================================
+    -- ÉTAPE 2: Agrégation et calcul du taux d'absence au niveau demandé
+    -- ========================================================================
     agg as (
         select
-            annee,
+            annee_scolaire,
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
+            coalesce(ordre_enseignement, 'Tout') as ordre_enseignement,
             date_evenement,
             jour_semaine,
-            coalesce(groupe, 'Tout') as groupe,
-            -- coalesce(code_matiere, 'Tout') as code_matiere,
-            coalesce(etape_friendly, 'Tout') as etape_friendly,
+            groupe,
             event_kind,
-            -- The daily is rate is compute as the weighted average of the etapes rates.
+            category_abs,
             sum(n_events) as n_events,
             sum(n_students_daily) as n_students_daily,
-            sum(absence_rate * n_students_daily) / sum(n_students_daily) as absence_rate
+            sum(cast(n_events as float)) / sum(n_students_daily) as absence_rate
         from source as src
         group by
-            annee, cube (school_friendly_name, groupe, etape_friendly),
+            annee_scolaire, cube (school_friendly_name, ordre_enseignement),
+            groupe,
             date_evenement,
             jour_semaine,
+            category_abs,
             event_kind
 
-    -- Compute the absence_rate at the CSS level (use the weighted absence_rate to
-    -- avoid having to re apply corrections on the raw metrics)
     ),
-    css as (
-        select
-            annee,
-            date_evenement,
-            jour_semaine,
-            etape_friendly,
-            event_kind,
-            sum(absence_rate * n_students_daily)
-            / sum(n_students_daily) as absence_rate_css
-        from agg
-        group by annee, date_evenement, jour_semaine, etape_friendly, event_kind
-
-    -- Compute the Average (past and future) absence rate for each school
-    ),
+    -- ========================================================================
+    -- ÉTAPE 3: Moyennes par établissement par étape et type d'absence
+    -- ========================================================================
     school as (
         select
-            annee,
-            school_friendly_name,
-            etape_friendly,
+            annee_scolaire,
+            coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
+            coalesce(ordre_enseignement, 'Tout') as ordre_enseignement,
+            groupe,
             event_kind,
-            sum(absence_rate * n_students_daily)
+            category_abs,
+            sum(cast(n_events as float))
             / sum(n_students_daily) as avg_absence_rate_school
-        from agg
-        group by annee, school_friendly_name, etape_friendly, event_kind
-    -- Compute the Average (past and future) absence rate for each school
+        from source
+        group by
+            annee_scolaire, cube (school_friendly_name, ordre_enseignement),
+            groupe,
+            event_kind,
+            category_abs
     ),
+    -- ========================================================================
+    -- ÉTAPE 4: Moyennes par jour de la semaine
+    -- ========================================================================
     jour as (
         select
-            annee,
+            annee_scolaire,
             coalesce(school_friendly_name, 'Tout le CSS') as school_friendly_name,
-            coalesce(etape_friendly, 'Tout') as etape_friendly,
+            coalesce(ordre_enseignement, 'Tout') as ordre_enseignement,
             event_kind,
+            category_abs,
             jour_semaine,
-            coalesce(groupe, 'Tout') as groupe,
-            sum(absence_rate * n_students_daily)
+            groupe,
+            sum(cast(n_events as float))
             / sum(n_students_daily) as avg_absence_rate_jour
         from source
         group by
-            annee, cube (school_friendly_name, groupe, etape_friendly),
-            jour_semaine,
-            event_kind
-
-    -- add the css and school metrics to the table
+            annee_scolaire, cube (school_friendly_name, ordre_enseignement),
+            groupe,
+            category_abs,
+            event_kind,
+            jour_semaine
     ),
+    -- ========================================================================
+    -- ÉTAPE 5: Assemblage final des métriques (CSS, école, jour)
+    -- ========================================================================
     aggregated as (
         select
-            src.annee,
+            src.annee_scolaire,
             src.school_friendly_name,
+            src.ordre_enseignement,
             src.groupe,
             src.jour_semaine,
             src.date_evenement,
             src.n_students_daily,
-            src.etape_friendly,
             src.event_kind,
             src.n_events,
+            src.category_abs,
             src.absence_rate,
             -- css
-            css.absence_rate_css,
+            css.absence_rate as absence_rate_css,
             -- school
             school.avg_absence_rate_school,
             -- jour
             jour.avg_absence_rate_jour
         from agg as src
         left join
-            css
-            on src.annee = css.annee
+            agg as css
+            on src.annee_scolaire = css.annee_scolaire
             and src.date_evenement = css.date_evenement
             and src.event_kind = css.event_kind
-            and src.etape_friendly = css.etape_friendly
+            and src.category_abs = css.category_abs
+            and src.jour_semaine = css.jour_semaine
+            and src.ordre_enseignement = css.ordre_enseignement
+            and css.school_friendly_name = 'Tout le CSS'
+            and css.groupe = 'Tout'
         left join
             school
-            on src.annee = school.annee
+            on src.annee_scolaire = school.annee_scolaire
+            and src.ordre_enseignement = school.ordre_enseignement
             and src.school_friendly_name = school.school_friendly_name
+            and src.groupe = school.groupe
             and src.event_kind = school.event_kind
-            and src.etape_friendly = school.etape_friendly
+            and src.category_abs = school.category_abs
         left join
             jour
-            on src.annee = jour.annee
+            on src.annee_scolaire = jour.annee_scolaire
             and src.school_friendly_name = jour.school_friendly_name
+            and src.ordre_enseignement = jour.ordre_enseignement
             and src.groupe = jour.groupe
             and src.jour_semaine = jour.jour_semaine
             and src.event_kind = jour.event_kind
-            and src.etape_friendly = jour.etape_friendly
+            and src.category_abs = jour.category_abs
 
     )
 
+-- ============================================================================
+-- ÉTAPE 6: Sélection finale avec clé de filtre pour Power BI
+-- ============================================================================
 select
-    -- Add a filter key to sync filters accross vues
     {{
         dbt_utils.generate_surrogate_key(
             [
-                "annee",
+                "annee_scolaire",
                 "school_friendly_name",
-                "etape_friendly",
+                "ordre_enseignement",
                 "event_kind",
+                "category_abs",
                 "groupe",
             ]
         )

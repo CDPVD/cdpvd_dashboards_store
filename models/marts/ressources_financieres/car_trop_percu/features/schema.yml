@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: fact_solde_el
+    description: >
+      Table de fait qui fournit l'historique du solde 
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - code_perm
+            - fiche
+            - annee
+            - eco
+
+  - name: fact_contact
+    description: >
+      Table de fait contenant les contacts des parents et tuteurs des élèves.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - code_perm
