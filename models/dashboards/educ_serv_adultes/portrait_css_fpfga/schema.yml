@@ -96,7 +96,7 @@ models:
           combination_of_columns:
             - code_perm
             - population
-            - année
+            - annee
             - freq
             - fiche
             - no_seq_mat
