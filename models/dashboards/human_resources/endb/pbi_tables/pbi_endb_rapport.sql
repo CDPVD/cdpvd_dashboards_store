@@ -95,13 +95,14 @@ select
     sect.ordre_ens,
     sect.secteur_descr as secteur,
     ens.date_expir,
-    ens.type_qualif
+    ens.type_qualif,
+    dos.adr_electrnq_portail as courriel
 from {{ ref("fact_endb_liste") }} as ens
 
 inner join {{ ref("dim_employees") }} as emp on ens.matr = emp.matr
 inner join {{ ref("dim_mapper_workplace") }} lieu on ens.workplace = lieu.workplace
 inner join {{ ref("etat_empl") }} state on ens.etat_empl = state.etat_empl
-
+INNER JOIN {{ ref("i_pai_dos_2") }} as dos on emp.matr = dos.matr
 inner join
     {{ ref("dim_mapper_job_class") }} as job_class on job_class.code_job = ens.corp_empl
 inner join
