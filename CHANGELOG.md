@@ -2,6 +2,54 @@
 
 
 
+## v1.2.0+20260921 (2026-09-21)
+
+### Bug fixes
+
+* fix(absenteeism): corriger avg_absence_rate_school et ajout category_abs comme clé de partition dans la cte breaks_by_kind (#45)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`1636202`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/16362020203e4a4e51ea9541cfe753c31f89d18b))
+
+* fix: Ajustement avec des modifications dans core. (#42) ([`093888c`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/093888c207774df6fd950d89a85ec8c8e8fb98c7))
+
+### Features
+
+* feat(pevr): ajout du tableau de bord personnalisé (#40)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`f5f3671`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/f5f367157839a28e1f191b35e0ade440fc0b341d))
+
+* feat: mise à jour PBIT car_tp (#44)
+
+Co-authored-by: Caroline Tessier <tessierc@cssvdc.gouv.qc.ca>
+Co-authored-by: sadqim <146247957+sadqim@users.noreply.github.com> ([`751f2b8`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/751f2b8ebd01fc6704770c1f0c94698ff2766989))
+
+* feat: Nouveau tableau PMO (#43) ([`7cdf06b`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/7cdf06b642989dfb072cb195f77e6f60d13d75b9))
+
+* feat(car-trop percu): Suivi des comptes à recevoir / trop-perçus des élèves (code + tableau de bord) (#39)
+
+Co-authored-by: alluardj <alluardj@csvdc.qc.ca>
+Co-authored-by: Caroline Tessier <tessierc@cssvdc.gouv.qc.ca> ([`b42f1a5`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/b42f1a5941928efbaac5dd88b6d3f1fdfeb4e751))
+
+* feat: Mise a jour du DBT vers 1.9.4
+
+Co-authored-by: Adama Fall <fallada@cs-soreltracy.qc.ca>
+Co-authored-by: sadqim <146247957+sadqim@users.noreply.github.com> ([`30b9434`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/30b943459f01de97b080b9a1398935e46cde2cc3))
+
+* feat: restructuration du tdb des absences et ajout des absences par élève (#37)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`850189b`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/850189b1b75bf939dbd8355619f1fb0e6794fd6c))
+
+* feat(endb): Ajout tableau de bord ENDB (#24)
+
+Co-authored-by: Adama Fall <fallada@cs-soreltracy.qc.ca> ([`6e0afce`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/6e0afce183752d16ab068cbeb8c22423c2168689))
+
+### Refactoring
+
+* refactor(absenteeism): division cdpvd_stg_absence_daily en 3 modèles intermédiaires (#41)
+
+Co-authored-by: sadqim <sadqim@csvdc.qc.ca> ([`3a03883`](https://github.com/CDPVD/cdpvd_dashboards_store/commit/3a03883349e17796f1c4d18820002388d917059a))
+
+
 ## v1.1.0+20260203 (2026-02-03)
 
 
