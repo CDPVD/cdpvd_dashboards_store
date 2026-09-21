@@ -16,10 +16,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #}
 {#
-    Compute the backfilled and padded version of the daily number of students and absences
-    Backfilled is done by / etape.
-    Padding is needed to properly aggregate absences rate : if no absences has been recorded for a given day, the absences rate should be 0.
-    Padding is done by / etape, / grille, / id_eco, / date_evenement, / event_kind to accound for various grid per school and allow number of aggregation leves
+    Métriques quotidiennes d'absentéisme avec taux d'absence calculé.
+    
+    Combine les nombres d'absences avec les nombres d'étudiants (padded et 
+    backfilled) pour calculer le taux d'absence par jour, établissement, groupe 
+    et étape. Inclut les jours sans absence (taux = 0).
 #}
 {{
     config(
@@ -34,31 +35,83 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         ],
     )
 }}
-{# #}
--- Aggregate the number of absences / retards so it can be joined with the daily metrics
+
+{% if execute %}
+    {% if "nbre_annee_a_extraire" in var("dashboards")["absenteeism"] %}
+        {% set nbre_annee_a_extraire = var("dashboards")["absenteeism"][
+            "nbre_annee_a_extraire"
+        ] %}
+        {{
+            log(
+                "Le nombre d'années de données à extraire pour le tableau de bord d'absentéisme est : "
+                ~ nbre_annee_a_extraire,
+                true,
+            )
+        }}
+    {% else %}
+        {% set nbre_annee_a_extraire = 5 %}
+        {{
+            log(
+                "Le nombre d'années de données à extraire pour le tableau de bord d'absentéisme est par défaut : "
+                ~ nbre_annee_a_extraire,
+                true,
+            )
+        }}
+    {% endif %}
+{% endif %}
+
 with
+    source as (
+        select
+            school_year,
+            date_abs,
+            jour_semaine,
+            fiche,
+            id_eco,
+            groupe,
+            grille,
+            event_kind,
+            is_aggregate_kind,
+            is_absence,
+            category_abs,
+            event_description,
+            remarque,
+            case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
+            etape_description,
+            seq_etape
+        from {{ ref("cdpvd_fact_absences_daily") }}
+        where
+            school_year
+            >= {{ core_dashboards_store.get_current_year() }}
+            - {{ nbre_annee_a_extraire }}
+
+    -- ============================================================================
+    -- ÉTAPE 1: Agrégation des absences par jour, établissement et étape
+    -- ============================================================================
+    --
+    ),
     abs_aggregated as (
         select
             date_abs as date_evenement,
             id_eco,
-            grille,
             jour_semaine,
-            groupe,
-            case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
+            coalesce(groupe, 'Tout') as groupe,
+            etape,
             event_kind,
+            category_abs,
             count(distinct fiche) as n_events
-        from {{ ref("cdpvd_fact_absences_daily") }}
+        from source
         group by
             date_abs,
             id_eco,
-            grille,
-            jour_semaine,
-            groupe,
-            case when etape in ('1', '2', '3') then etape else 0 end,
-            event_kind
+            jour_semaine, rollup (groupe),
+            etape,
+            event_kind,
+            category_abs
 
-    -- Combine the number of absences with the daily number of students (padded and
-    -- backfilled)
+    -- ============================================================================
+    -- ÉTAPE 2: Combinaison des absences avec les données de padding
+    -- ============================================================================
     ),
     augmented as (
         select
@@ -66,74 +119,23 @@ with
             padd.date_evenement,
             padd.jour_semaine,
             padd.groupe,
-            padd.grille,
-            padd.event_kind,
+            abs_.event_kind,
+            abs_.category_abs,
             padd.etape,
             padd.n_students_daily,
             coalesce(abs_.n_events, 0) as n_events
         from {{ ref("cdpvd_abstsm_stg_padding") }} as padd
-        left join
+        inner join
             abs_aggregated as abs_
             on padd.id_eco = abs_.id_eco
             and padd.date_evenement = abs_.date_evenement
-            and padd.grille = abs_.grille
             and padd.groupe = abs_.groupe
             and padd.etape = abs_.etape
-            and padd.event_kind = abs_.event_kind
         where padd.is_school_day = 1
 
-    -- Get rid of the grille dimensions, add add the school friendly name
-    ),
-    aggregated as (
-        select
-            id_eco,
-            date_evenement,
-            jour_semaine,
-            groupe,
-            etape,
-            event_kind,
-            -- By orthogonality of the grids (ath the time the ETL run, one student as
-            -- only one grid.)
-            sum(n_events) as n_events,
-            sum(n_students_daily) as n_students_daily
-        from augmented as aug
-        group by id_eco, date_evenement, jour_semaine, groupe, etape, event_kind
-    ),
-    -- aggreger les matieres
-    matiere_aggregated as (
-        select
-            date_abs,
-            id_eco,
-            jour_semaine,
-            code_matiere,
-            groupe,
-            case when etape in ('1', '2', '3') then etape else 0 end as etape,  -- Map the etape to the same kind of values as the ones from the daily students
-            event_kind,
-            count(distinct fiche) as n_events_matiere
-        from {{ ref("cdpvd_fact_absences_daily") }}
-        group by
-            date_abs,
-            id_eco,
-            jour_semaine,
-            code_matiere,
-            groupe,
-            case when etape in ('1', '2', '3') then etape else 0 end,
-            event_kind
-
-    -- récuperer les matieres    
-    ),
-    matiere as (
-        select src.*, n_events_matiere, absc.code_matiere
-        from aggregated as src
-        left join
-            matiere_aggregated as absc
-            on src.id_eco = absc.id_eco
-            and src.date_evenement = absc.date_abs
-            and src.groupe = absc.groupe
-            and src.etape = absc.etape
-            and src.event_kind = absc.event_kind
-
-    -- Compute the absence rate
+    -- ============================================================================
+    -- ÉTAPE 4: Calcul du taux d'absence (n_events / n_students_daily)
+    -- ============================================================================
     ),
     rate as (
         select
@@ -141,19 +143,20 @@ with
             date_evenement,
             jour_semaine,
             groupe,
-            code_matiere,
             etape,
             event_kind,
+            category_abs,
             n_events,
-            n_events_matiere,
             n_students_daily,
             case
                 when n_students_daily = 0 then 0. else n_events * 1.0 / n_students_daily
             end as absence_rate
-        from matiere
+        from augmented
         where n_students_daily > 0  -- Avoid division by 0
 
-    -- Handle the smôôôôl percentage of degenerates cases, and reformat the dimensions
+    -- ============================================================================
+    -- ÉTAPE 5: Correction des cas dégénérés et formatage des dimensions
+    -- ============================================================================
     ),
     corrected as (
         select
@@ -161,29 +164,32 @@ with
             date_evenement,
             jour_semaine,
             groupe,
-            code_matiere,
             case
                 when etape = 0 then 'inconnue' else cast(etape as varchar)
             end as etape_friendly,
             event_kind,
-            n_events_matiere,
+            category_abs,
             n_events,
             n_students_daily,
             case when absence_rate > 1. then 1. else absence_rate end as absence_rate
         from rate
     )
 
+-- ============================================================================
+-- ÉTAPE 6: Sélection finale avec enrichissement des noms d'écoles et RLS
+-- ============================================================================
 select
     annee,
+    annee_scolaire,
     school_friendly_name,
+    eco.cat_eco as ordre_enseignement,
     date_evenement,
     jour_semaine,
     groupe,
-    coalesce(code_matiere, '-') as code_matiere,
     concat('étape : ', etape_friendly) as etape_friendly,
     event_kind,
+    category_abs,
     n_events,
-    n_events_matiere,
     n_students_daily,
     absence_rate,
     -- RLS hooks:

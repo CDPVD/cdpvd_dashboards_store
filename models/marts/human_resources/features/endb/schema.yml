@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: fact_endb_liste
+    config:
+      tags:
+        - endb
+        - human_resources
+      schema: human_resources_features
+    description: >
+      Table permettant de comptabiliser le nombre d'enseignant(e)s qui sont qualifiés pour enseigner.
+    columns:
+      - name: matr
+        description: Matricule de l'employé
+        tests:
+          - not_null
+      - name: etat_empl
+        description: État d'emploi de l'employé
+        tests:
+          - not_null
+      - name: workplace
+        description: Lieu de travail de l'employé
+        tests:
+          - not_null
+      - name: stat_eng
+        description: Statut d'engagement de l'emploi de l'employé
+        tests:
+          - not_null
+      - name: corp_empl
+        description: Corp d'emploi de l'employé
+        tests:
+          - not_null
+      - name: type_qualif
+        description: Qualification de l'enseignant(e)
+      - name: date_expir
+        description: Date d'expiration de la qualification de l'enseignant(e)
+    tests: 
+      - core_dashboards_store.resolution: 
+          combination_of_columns: 
+            - matr
+            - etat_empl
+            - workplace
+            - stat_eng
+            - corp_empl
+            - type_qualif
+            

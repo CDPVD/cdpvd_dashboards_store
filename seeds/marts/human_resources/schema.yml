@@ -22,6 +22,53 @@ seeds:
         tests:
           - not_null
 
+  - name: ens_qualification
+    description: >
+      Une table qui vient spécifier si les diplômes, certifications, brevets etc des enseignants font d'eux des enseignants légalement qualifiés ou non.
+    columns:
+      - name: code
+        description: Représentation codifiée des papiers
+        tests:
+          - not_null
+          - unique  # Si les codes sont censés être uniques
+      - name: descr
+        description: Description des papiers
+        tests:
+          - not_null
+      - name: is_qualified
+        description: Légalement qualifié ou non ?
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]  # Pour assurer que les valeurs sont 0 ou 1
+    config:
+      tags:
+        - human_resources
+        - endb
+      schema: human_resources_seeds
+      column_types:
+        code: nvarchar(3)
+        descr: nvarchar(255)
+        is_qualified: bit
 
-
-
+  - name: statut_enseignant
+    description: >
+      Une table qui spécifie les statuts d'engagement des enseignant(e)s.
+    columns:
+      - name: code
+        description: Représentation codifiée des statuts d'engagement
+        tests:
+          - not_null
+          - unique  # Assure que les codes sont uniques
+      - name: statut
+        description: Description des statuts d'engagement
+        tests:
+          - not_null
+    config:
+      tags:
+        - human_resources
+        - endb
+      schema: human_resources_seeds
+      column_types:
+        code: nvarchar(3)
+        statut: nvarchar(64)

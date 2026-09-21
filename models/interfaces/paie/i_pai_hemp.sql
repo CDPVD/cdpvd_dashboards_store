@@ -31,5 +31,6 @@ select
     pourc_post,
     pourc_sal,
     pourc_temp,
+    gr_paie,
     nb_hre_sem
 from {{ var("database_paie") }}.dbo.pai_hemp

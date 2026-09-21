@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: stg_car_tp_nomen_unit_adm
+    description: >
+      Table auxiliaire qui met a jour le code / descriptif de certaines unités administratives.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - code
