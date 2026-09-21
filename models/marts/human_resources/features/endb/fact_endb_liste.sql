@@ -57,7 +57,7 @@ with
         where
             etat.etat_actif = 1  -- Si l'employé est actif
             and util.corp_empl like '3%'  -- Enseignant(e)
-            and util.corp_empl != 3201  -- Enseignant(e)
+            and util.corp_empl != 3201  -- Suppléant(e)
         group by
             util.matr,
             util.etat_empl,
