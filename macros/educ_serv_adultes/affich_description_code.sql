@@ -23,7 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     {% set data = dbt_utils.get_column_values(
         table=ref(nom_table),
         where=where_clause,
-        column=desc_colonne
+        column=desc_colonne,
+        default=[]
 ) %}
     {% if data %}
         {{ log(txt ~ nom_tableau ~ " sont les suivants "~ val_condition ~ ":",info=True,) }}
