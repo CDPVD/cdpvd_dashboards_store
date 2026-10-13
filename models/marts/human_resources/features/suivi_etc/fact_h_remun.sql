@@ -315,6 +315,7 @@ with
             no_cmpt,
             lieu_trav,
             lieu_trav_cpt_budg
+            
     )
 select
     annee,

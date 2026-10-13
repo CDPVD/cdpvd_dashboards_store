@@ -52,3 +52,23 @@ seeds:
         description: Descriptif du lieu de travail ou de l’unité administrative
         tests:
           - not_null
+  - name: services_eleve
+    description: Les services directs (Corps d'emploi) aux élèves du CSS
+    config:
+      tags: 
+        - human_resources
+        - suivi_etc
+      schema: suivi_etc_seeds
+      column_types:
+        corp_empl: nvarchar(4)
+        direct: bit
+    columns:
+      - name: corp_empl
+        description: Code unique représentant un emploi
+        tests:
+          - not_null
+          - unique    
+      - name: service
+        description: Services aux élèves => direct (1)
+        tests:
+          - not_null        
