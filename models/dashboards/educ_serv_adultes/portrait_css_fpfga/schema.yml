@@ -35,6 +35,7 @@ models:
             - code_perm
             - fiche
             - freq
+            - année
             - id_filtre
   - name: portrait_report_liste_eleves_reussite_fga
     config:

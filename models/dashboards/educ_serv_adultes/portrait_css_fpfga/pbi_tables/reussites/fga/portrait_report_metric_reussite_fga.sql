@@ -39,12 +39,31 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- par défaut)
 {% if execute %}
     {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("criteres_reussites", "(22, 12, 4, 2)") %}
+    {# Appelle la macro affich_description_code pour afficher les descriptions des raisons de réussite sélectionnées #}
+    {{ affich_description_code("portrait_report_effectif_fp_fga","desc_raison_depart","raison_depart",criteres_reussites,"portrait_css_fpfga") }}
+
     {% set serv_ens = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("serv_ens_exclut", "") %}
     {% if serv_ens != '' %}
         {% set serv_ens_exclut = 'and service_enseign not in ' ~ serv_ens %}
         {# Appelle la macro affich_description_code pour afficher les descriptions des codes sélectionnées #}
-        {{ affich_description_code("portrait_report_effectif_fp_fga","service_enseignement","service_enseign",serv_ens,"portrait_css_fpfga", "Les codes service d'enseignement exlus en réussite pour le tableau de bord ") }}
+        {{ affich_description_code("portrait_report_effectif_fp_fga","service_enseignement","service_enseign",serv_ens,"FGA", "Les codes service d'enseignement exlus en réussite pour le tableau de bord ") }}
     {% else %} {% set serv_ens_exclut = '' %}
+    {% endif %}
+
+    {% set raison_dep = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("raison_depart_exclut_fga", "") %}
+    {% if raison_dep != '' %}
+        {% set raison_dep_exclut = 'and raison_depart not in ' ~ raison_dep %}
+        {# Appelle la macro affich_description_code pour afficher les descriptions des codes sélectionnées #}
+        {{ affich_description_code("portrait_report_effectif_fp_fga","desc_raison_depart","raison_depart",raison_dep,"FGA", "Les codes raison de départ exlus en réussite pour le tableau de bord ") }}
+    {% else %} {% set raison_dep_exclut = '' %}
+    {% endif %}
+
+    {% set motif_depart = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("motif_depart_exclut_fga", "") %}
+    {% if motif_depart != '' %}
+        {% set motif_depart_exclut = 'and motif_depart not in ' ~ motif_depart %}
+        {# Appelle la macro affich_description_code pour afficher les descriptions des codes sélectionnées #}
+        {{ affich_description_code("portrait_report_effectif_fp_fga","descr_motif_dep","motif_depart",motif_depart,"FGA", "Les codes motif de départ exlus en réussite pour le tableau de bord ") }}
+    {% else %} {% set motif_depart_exclut = '' %}
     {% endif %}
 
 {% endif %}
@@ -65,7 +84,8 @@ with
         from {{ ref("portrait_report_effectif_fp_fga") }} as fac
         where
             etat_formation = 'Terminé'
-            and population = 'Formation générale des adultes' {{ serv_ens_exclut }}
+            and population
+            = 'Formation générale des adultes' {{ serv_ens_exclut }} {{ raison_dep_exclut }} {{ motif_depart_exclut }}
     ),
     -- Agrégation avec CUBE pour obtenir toutes les combinaisons possibles des
     -- dimensions

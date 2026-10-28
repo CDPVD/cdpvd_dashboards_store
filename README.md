@@ -660,10 +660,11 @@ models:
 
 Afin de construire votre population, vous devez définir pour chaque population les règles d'affaire pour les années précedente y compris l'année en cours. 
 
-#### Module réussites 
+#### Module de réussite
 
-Dans ce module, l'intégrateur ou l'analyste du CSS a la possibilité de choisir les critères de réussite. Sinon, les critères de réussite par défaut seront activés.
-On a aussi la possibilité d'exclure certains services d'enseignement via la variable `serv_ens_exclut`. De plus, il est possible d'exclure ou de spécifier le motif de départ de la formation en cours à l'aide de la variable `motif_reussite_exclut`. Ces paramètres sont à configurer dans la section `vars` de votre fichier `dbt_project.yml` :
+Dans ce module, l'intégrateur ou l'analyste du CSS peut choisir les critères de réussite. À défaut, les critères de réussite par défaut sont activés.
+
+Il est également possible d'exclure certains services d'enseignement à l'aide de la variable `serv_ens_exclut`, certaines raisons de départ à l'aide des variables `raison_depart_exclut_fga` et `raison_depart_exclut_fp`, ainsi que certains motifs de départ à l'aide des variables `motif_depart_exclut_fga` et `motif_depart_exclut_fp`. La variable `motif_reussite_exclut` permet également d'exclure ou de préciser le motif de départ de la formation en cours. Ces paramètres sont à configurer dans la section `vars` de votre fichier `dbt_project.yml`
 
 #### Spécification du Dbt project
 > Mettez à jour votre fichier `cssxx_store/dbt_project.yml` avec l'extrait suivant
@@ -689,7 +690,12 @@ vars:
       portrait_css_fpfga:
         criteres_reussites: replaceme #(22, 12, 04, 02)
         serv_ens_exclut: replaceme #(06, 01, 08, 03) # Exclure certains services d'enseignement
-        motif_reussite_exclut: replaceme #10         # Exclure ou préciser le motif de départ
+        motif_reussite_exclut: replaceme #10         # Exclure ou préciser le motif de départ de la formation en cours ou periode estivale
+        raison_depart_exclut_fga: replaceme (10,03,01,11,15) # Exclure certaines raisons de depart de ton calcul taux de reussite en FGA
+        raison_depart_exclut_fp: replaceme #(10,03,01,11,15) Exclure certaines raisons de depart de ton calcul taux de reussite en FP
+        motif_depart_exclut_fga: replaceme #('E','M','T','F','R','N')Exclure certaines motifs de depart de ton calcul taux de reussite FGA
+        motif_depart_exclut_fp: replaceme #('E','M','T','F','R','N') Exclure certaines motifs de depart de ton calcul taux de reussite FP
+        depassement_par_defaut: replaceme # 200 Nombre d’heures seuil par défaut. Si ce seuil est dépassé, un dépassement sera calculé.
 ```
 Adaptez ces valeurs selon les besoins spécifiques de votre CSS.
 

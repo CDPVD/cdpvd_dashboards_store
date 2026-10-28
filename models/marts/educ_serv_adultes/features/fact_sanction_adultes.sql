@@ -62,14 +62,23 @@ select
     promat.date_sanct,
     promat.typ_mat
 from {{ ref("i_e_elematfpfga_adultes") }} as matfpfga
-inner join {{ ref("stg_populations_adultes") }} as pop
-    on pop.fiche = matfpfga.fiche and pop.annee = matfpfga.annee and pop.freq = matfpfga.freq
-inner join {{ ref("i_e_matele_adultes") }} as matele
-    on matfpfga.no_seq_mat = matele.no_seq_mat and matfpfga.freq = matele.freq and matfpfga.fiche = matele.fiche
-inner join {{ ref("i_t_mat_adultes") }} as matd 
-    on matd.mat = matfpfga.mat
-inner join {{ ref("i_e_promat_adultes") }} as promat
-    on promat.mat = matfpfga.mat and promat.no_seq_mat = matfpfga.no_seq_mat and promat.fiche = matfpfga.fiche and promat.ord_chrono = matfpfga.ord_chrono
+inner join
+    {{ ref("stg_populations_adultes") }} as pop
+    on pop.fiche = matfpfga.fiche
+    and pop.annee = matfpfga.annee
+    and pop.freq = matfpfga.freq
+inner join
+    {{ ref("i_e_matele_adultes") }} as matele
+    on matfpfga.no_seq_mat = matele.no_seq_mat
+    and matfpfga.freq = matele.freq
+    and matfpfga.fiche = matele.fiche
+inner join {{ ref("i_t_mat_adultes") }} as matd on matd.mat = matfpfga.mat
+inner join
+    {{ ref("i_e_promat_adultes") }} as promat
+    on promat.mat = matfpfga.mat
+    and promat.no_seq_mat = matfpfga.no_seq_mat
+    and promat.fiche = matfpfga.fiche
+    and promat.ord_chrono = matfpfga.ord_chrono
 where
     matfpfga.annee >= {{ core_dashboards_store.get_current_year() - 5 }}
     and matele.res != ''

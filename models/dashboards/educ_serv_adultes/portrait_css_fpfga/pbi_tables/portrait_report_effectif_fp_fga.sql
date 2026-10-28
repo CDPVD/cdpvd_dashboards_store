@@ -114,7 +114,11 @@ select
     end as service_enseignement,
     service_enseign,
     motif_depart,
-    descr_motif_dep,
+    case
+        when descr_motif_dep is null
+        then motif_depart
+        else concat(motif_depart, ' - ', descr_motif_dep)
+    end as descr_motif_dep,
     raison_depart,
     case
         when desc_raison_depart is null

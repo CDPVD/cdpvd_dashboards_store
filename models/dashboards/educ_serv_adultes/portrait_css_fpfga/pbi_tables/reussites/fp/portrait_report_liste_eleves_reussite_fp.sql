@@ -28,15 +28,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- valeur par défaut si non définie
 {% if execute %}
     {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("criteres_reussites", "(22, 12, 4, 2)") %}
-    {#
-    Appelle la macro affich_description_code pour afficher les descriptions des raisons de réussite sélectionnées
-    #}
-    {{ affich_description_code("portrait_report_effectif_fp_fga","desc_raison_depart","raison_depart",criteres_reussites,"portrait_css_fpfga") }}
+
+    {% set raison_dep = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("raison_depart_exclut_fp", "") %}
+    {% if raison_dep != '' %}
+        {% set raison_dep_exclut = 'and raison_depart not in ' ~ raison_dep %}
+    {% else %} {% set raison_dep_exclut = '' %}
+    {% endif %}
+
+    {% set motif_depart = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("motif_depart_exclut_fp", "") %}
+    {% if motif_depart != '' %}
+        {% set motif_depart_exclut = 'and motif_depart not in ' ~ motif_depart %}
+    {% else %} {% set motif_depart_exclut = '' %}
+    {% endif %}
+
 {% endif %}
 
 -- Définition de la liste des dimensions utilisées pour les combinaisons et l'agrégation
 {% set dims = [
    "programme",
+   "annee_scolaire",
    "groupe_horaire",
    "desc_type_parcours",
    "condition_admission",
@@ -63,7 +73,6 @@ with
             fiche,
             population,
             année,
-            annee_scolaire,
             eco_cen,
             bat,
             ind_transm,
@@ -77,9 +86,9 @@ with
             descr_motif_dep
         from {{ ref("portrait_report_effectif_fp_fga") }}
         where
-            raison_depart in {{ criteres_reussites }}
-            and population = 'Formation professionnelle'
-            and etat_formation = 'Terminé'
+            population = 'Formation professionnelle'
+            and etat_formation
+            = 'Terminé' {{ raison_dep_exclut }} {{ motif_depart_exclut }}
     ),
     all_combinations as (
         -- Génère toutes les combinaisons possibles des dimensions en remplaçant
@@ -94,7 +103,6 @@ with
                 fiche,
                 population,
                 année,
-                annee_scolaire,
                 eco_cen,
                 bat,
                 ind_transm,
@@ -123,14 +131,13 @@ with
 -- dimensions
 select
     {% for dim in dims -%} {{ dim }}_bis, {% endfor -%}
-    {{ dbt_utils.generate_surrogate_key(["année"] + dims) }} as id_filtre,
+    {{ dbt_utils.generate_surrogate_key(dims) }} as id_filtre,
     freq,
     prenom_nom,
     code_perm,
     fiche,
     population,
     année,
-    annee_scolaire,
     eco_cen,
     bat,
     ind_transm,

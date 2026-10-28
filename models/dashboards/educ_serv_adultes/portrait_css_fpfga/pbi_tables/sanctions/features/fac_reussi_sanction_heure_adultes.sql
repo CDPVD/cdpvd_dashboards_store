@@ -41,7 +41,8 @@ with
             facr.mois_sanct,
             facr.jour_sanct,
             case
-                when facr.res = '' or facr.res is null then null
+                when facr.res = '' or facr.res is null
+                then null
                 else
                     case
                         when
@@ -67,9 +68,15 @@ with
             facr.ind_transm,
             facr.service,
             case
-                when facr.res = '' then null
-                when try_cast(facr.res as int) >= 60 or facr.res = 'SU' or facr.res = 'CT' then 'SU'
-                when try_cast(facr.res as int) < 60 then 'EC'
+                when facr.res = ''
+                then null
+                when
+                    try_cast(facr.res as int) >= 60
+                    or facr.res = 'SU'
+                    or facr.res = 'CT'
+                then 'SU'
+                when try_cast(facr.res as int) < 60
+                then 'EC'
                 else facr.res
             end as sanc,
             facr.res,
@@ -104,7 +111,9 @@ with
             fac.raison_grat_scol,
             fac.descr_raison_grat_scol,
             fac.type_parcours,
-            concat(fac.type_parcours, ' - ', fac.descr_type_parcours) as desc_type_parcours,
+            concat(
+                fac.type_parcours, ' - ', fac.descr_type_parcours
+            ) as desc_type_parcours,
             fac.service_enseign,
             case
                 when fac.descr_service_enseign is null
@@ -128,13 +137,13 @@ with
             facr.nb_mins_r,
             facr.typ_mat
         from {{ ref("fact_sanction_adultes") }} facr
-        inner join {{ ref("fact_freq_adultes") }} as fac
+        inner join
+            {{ ref("fact_freq_adultes") }} as fac
             on fac.code_perm = facr.code_perm
             and fac.fiche = facr.fiche
             and fac.annee = facr.annee
             and fac.freq = facr.freq
-        inner join {{ ref("dim_eleve_adultes") }} as el 
-            on el.code_perm = facr.code_perm
+        inner join {{ ref("dim_eleve_adultes") }} as el on el.code_perm = facr.code_perm
     )
 
 select *
