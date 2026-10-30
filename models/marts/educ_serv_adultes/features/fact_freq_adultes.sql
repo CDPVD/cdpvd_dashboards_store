@@ -64,6 +64,8 @@ with
             org.descr as descr_org_hor,
             freq.date_deb,
             freq.date_fin_sifca,
+            freq.cohorte,
+            freq.grh,
             freq.activ_form,
             freq.donpers,
             freq.cond_admiss,
@@ -177,8 +179,16 @@ select
     descr_org_hor,
     date_deb,
     date_fin_sifca,
+    cohorte,
+    grh,
     activ_form,
     donpers,
+    coalesce(
+        nullif(cohorte, ''),
+        nullif(activ_form, ''),
+        nullif(grh, ''),
+        nullif(donpers, '')
+    ) as groupe_horaire,
     cond_admiss,
     descr_condadmiss,
     case

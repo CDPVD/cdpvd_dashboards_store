@@ -50,13 +50,11 @@ with
             el.ville,
             el.code_post,
             freq.ind_transm,
+            freq.cohorte,
+            freq.grh,
             freq.activ_form,
             freq.donpers,
-            case
-                when freq.activ_form is null or freq.activ_form = ''
-                then freq.donpers
-                else freq.activ_form
-            end as groupe_horaire,
+            freq.groupe_horaire,
             freq.cond_admiss,
             freq.descr_condadmiss,
             freq.prog,
