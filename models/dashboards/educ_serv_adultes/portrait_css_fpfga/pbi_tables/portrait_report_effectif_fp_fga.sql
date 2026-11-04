@@ -50,13 +50,12 @@ with
             el.ville,
             el.code_post,
             freq.ind_transm,
+            freq.cohorte,
+            freq.grh,
             freq.activ_form,
             freq.donpers,
-            case
-                when freq.activ_form is null or freq.activ_form = ''
-                then freq.donpers
-                else freq.activ_form
-            end as groupe_horaire,
+            freq.cohorte_aep,
+            freq.groupe_horaire,
             freq.cond_admiss,
             freq.descr_condadmiss,
             freq.prog,
@@ -114,7 +113,11 @@ select
     end as service_enseignement,
     service_enseign,
     motif_depart,
-    descr_motif_dep,
+    case
+        when descr_motif_dep is null
+        then motif_depart
+        else concat(motif_depart, ' - ', descr_motif_dep)
+    end as descr_motif_dep,
     raison_depart,
     case
         when desc_raison_depart is null
