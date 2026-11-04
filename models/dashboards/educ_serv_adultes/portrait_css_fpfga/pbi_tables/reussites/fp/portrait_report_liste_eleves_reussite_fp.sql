@@ -27,7 +27,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- Récupère la variable criteres_reussites depuis les variables dbt_project, avec une
 -- valeur par défaut si non définie
 {% if execute %}
-    {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("criteres_reussites", "(22, 12, 4, 2)") %}
+    {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("criteres_reussites", "('22', '12', '04', '02')") %}
 
     {% set raison_dep = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("raison_depart_exclut_fp", "") %}
     {% if raison_dep != '' %}
@@ -62,10 +62,8 @@ with
         -- dimension
         select
             {% for dim in dims -%}
-                case
-                    when {{ dim }} is null or {{ dim }} = '' then '-' else {{ dim }}
-                end as {{ dim }},
-                {{ dim }} as {{ dim }}_bis,
+                coalesce(nullif({{ dim }}, ''), '-') as {{ dim }},
+                coalesce(nullif({{ dim }}, ''), '-') as {{ dim }}_bis,
             {%- endfor %}
             freq,
             prenom_nom,

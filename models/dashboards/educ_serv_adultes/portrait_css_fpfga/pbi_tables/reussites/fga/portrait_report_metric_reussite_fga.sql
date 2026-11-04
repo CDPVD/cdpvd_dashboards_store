@@ -38,7 +38,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- Récupération des critères de réussite depuis les variables dbt_project (ou valeur
 -- par défaut)
 {% if execute %}
-    {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("criteres_reussites", "(22, 12, 4, 2)") %}
+    {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("criteres_reussites", "('22', '12', '04', '02')") %}
     {# Appelle la macro affich_description_code pour afficher les descriptions des raisons de réussite sélectionnées #}
     {{ affich_description_code("portrait_report_effectif_fp_fga","desc_raison_depart","raison_depart",criteres_reussites,"portrait_css_fpfga") }}
 
@@ -76,9 +76,7 @@ with
             raison_depart,
             -- Remplacement des valeurs nulles ou vides par '-' pour chaque dimension
             {% for dim in dims -%}
-                case
-                    when {{ dim }} is null or {{ dim }} = '' then '-' else {{ dim }}
-                end as {{ dim }}
+                coalesce(nullif({{ dim }}, ''), '-') as {{ dim }}
                 {% if not loop.last %},{% endif %}
             {%- endfor -%}
         from {{ ref("portrait_report_effectif_fp_fga") }} as fac

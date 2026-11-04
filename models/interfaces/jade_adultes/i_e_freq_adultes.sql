@@ -31,6 +31,7 @@ select
     cohorte,
     grh,
     donpers,
+    cohorteaep as cohorte_aep,
     condadmiss as cond_admiss,
     serviceenseign as service_enseign,
     orghor as org_hor,

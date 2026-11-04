@@ -54,6 +54,7 @@ with
             freq.grh,
             freq.activ_form,
             freq.donpers,
+            freq.cohorte_aep,
             freq.groupe_horaire,
             freq.cond_admiss,
             freq.descr_condadmiss,

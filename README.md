@@ -688,11 +688,11 @@ vars:
   dashboards:
     educ_serv_adultes:
       portrait_css_fpfga:
-        criteres_reussites: replaceme #(22, 12, 04, 02)
+        criteres_reussites: replaceme #('22', '12', '04', '02')
         serv_ens_exclut: replaceme #(06, 01, 08, 03) # Exclure certains services d'enseignement
         motif_reussite_exclut: replaceme #10         # Exclure ou préciser le motif de départ de la formation en cours ou periode estivale
-        raison_depart_exclut_fga: replaceme (10,03,01,11,15) # Exclure certaines raisons de depart de ton calcul taux de reussite en FGA
-        raison_depart_exclut_fp: replaceme #(10,03,01,11,15) Exclure certaines raisons de depart de ton calcul taux de reussite en FP
+        raison_depart_exclut_fga: replaceme #('10','03','01','11','15')  Exclure certaines raisons de depart de ton calcul taux de reussite en FGA
+        raison_depart_exclut_fp: replaceme #('10','03','01','11','15') Exclure certaines raisons de depart de ton calcul taux de reussite en FP
         motif_depart_exclut_fga: replaceme #('E','M','T','F','R','N')Exclure certaines motifs de depart de ton calcul taux de reussite FGA
         motif_depart_exclut_fp: replaceme #('E','M','T','F','R','N') Exclure certaines motifs de depart de ton calcul taux de reussite FP
         depassement_par_defaut: replaceme # 200 Nombre d’heures seuil par défaut. Si ce seuil est dépassé, un dépassement sera calculé.

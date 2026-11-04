@@ -26,7 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -- Récupère la variable criteres_reussites depuis les variables dbt_project, avec une
 -- valeur par défaut si non définie
 {% if execute %}
-    {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("criteres_reussites", "(22, 12, 4, 2)") %}
+    {% set criteres_reussites = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("criteres_reussites", "('22', '12', '04', '02')") %}
 
     {% set serv_ens = var("dashboards", {}).get("educ_serv_adultes", {}).get("portrait_css_fpfga", {}).get("serv_ens_exclut", "") %}
     {% if serv_ens != '' %}
@@ -66,10 +66,8 @@ with
         -- dimension
         select
             {% for dim in dims -%}
-                case
-                    when {{ dim }} is null or {{ dim }} = '' then '-' else {{ dim }}
-                end as {{ dim }},
-                {{ dim }} as {{ dim }}_bis,
+                coalesce(nullif({{ dim }}, ''), '-') as {{ dim }},
+                coalesce(nullif({{ dim }}, ''), '-') as {{ dim }}_bis,
             {%- endfor %}
             freq,
             prenom_nom,
@@ -91,8 +89,7 @@ with
             descr_motif_dep
         from {{ ref("portrait_report_effectif_fp_fga") }}
         where
-            raison_depart in {{ criteres_reussites }}
-            and population = 'Formation générale des adultes'
+            population = 'Formation générale des adultes'
             and etat_formation
             = 'Terminé' {{ serv_ens_exclut }} {{ raison_dep_exclut }} {{ motif_depart_exclut }}
     ),

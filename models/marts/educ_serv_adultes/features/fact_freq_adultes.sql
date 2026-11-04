@@ -68,6 +68,7 @@ with
             freq.grh,
             freq.activ_form,
             freq.donpers,
+            freq.cohorte_aep,
             freq.cond_admiss,
             wlcon.cf_descr as descr_condadmiss,
             case
@@ -183,11 +184,13 @@ select
     grh,
     activ_form,
     donpers,
+    cohorte_aep,
     coalesce(
-        nullif(cohorte, ''),
-        nullif(activ_form, ''),
         nullif(grh, ''),
-        nullif(donpers, '')
+        nullif(activ_form, ''),
+        nullif(cohorte, ''),
+        nullif(donpers, ''),
+        nullif(cohorte_aep, '')
     ) as groupe_horaire,
     cond_admiss,
     descr_condadmiss,
