@@ -99,7 +99,9 @@ select
     desc_lang_matern as langue_maternelle,
     prog,
     case
-        when descr_prog is null then '-' else concat(prog, ' - ', descr_prog)
+        when descr_prog is null or descr_prog = ''
+        then '-'
+        else concat(prog, ' - ', descr_prog)
     end as programme,
     type_diplome,
     raison_grat_scol,
@@ -107,21 +109,21 @@ select
     type_parcours,
     concat(type_parcours, ' - ', descr_type_parcours) as desc_type_parcours,
     case
-        when descr_service_enseign is null
-        then descr_service_enseign
+        when descr_service_enseign is null or descr_service_enseign = ''
+        then '-'
         else concat(service_enseign, ' - ', descr_service_enseign)
     end as service_enseignement,
     service_enseign,
     motif_depart,
     case
-        when descr_motif_dep is null
-        then motif_depart
+        when descr_motif_dep is null or descr_motif_dep = ''
+        then '-'
         else concat(motif_depart, ' - ', descr_motif_dep)
     end as descr_motif_dep,
     raison_depart,
     case
-        when desc_raison_depart is null
-        then desc_raison_depart
+        when desc_raison_depart is null or desc_raison_depart = ''
+        then '-'
         else concat(raison_depart, ' - ', desc_raison_depart)
     end as desc_raison_depart
 from agg
