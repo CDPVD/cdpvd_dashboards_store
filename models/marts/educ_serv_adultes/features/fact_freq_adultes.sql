@@ -64,8 +64,11 @@ with
             org.descr as descr_org_hor,
             freq.date_deb,
             freq.date_fin_sifca,
+            freq.cohorte,
+            freq.grh,
             freq.activ_form,
             freq.donpers,
+            freq.cohorte_aep,
             freq.cond_admiss,
             wlcon.cf_descr as descr_condadmiss,
             case
@@ -177,8 +180,18 @@ select
     descr_org_hor,
     date_deb,
     date_fin_sifca,
+    cohorte,
+    grh,
     activ_form,
     donpers,
+    cohorte_aep,
+    coalesce(
+        nullif(grh, ''),
+        nullif(activ_form, ''),
+        nullif(cohorte, ''),
+        nullif(donpers, ''),
+        nullif(cohorte_aep, '')
+    ) as groupe_horaire,
     cond_admiss,
     descr_condadmiss,
     case
