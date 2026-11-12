@@ -18,12 +18,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 select
     fiche,
     type_adr,
-    date_effect,
     app,
     no_civ,
     orient_rue,
     genre_rue,
     rue,
     ville,
-    code_post
+    code_post,
+    code_pays,
+    tel,
+    envoi_meq,
+    date_effect,
+    date_maj,
+    date_fin_adr
 from {{ var("database_gpi") }}.dbo.gpm_e_adr

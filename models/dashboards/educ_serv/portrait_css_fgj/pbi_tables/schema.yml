@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: dim_eleve_fgj
+    config:
+      tags:
+        - educ_serv
+        - populations
+        - portrait_css_fgj
+      schema: "portrait_css_fgj"
+    description: >
+      Table de dimension répertoriant les informations statiques pour chaque élève dans les centres.
+    columns:
+      - name: code_perm
+        description: code permanent de l'élève
+        tests:
+          - not_null
+          - unique
+      - name: fiche
+        description: numéro de fiche de l'élève
+        tests:
+          - not_null
+          - unique
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - code_perm
+            - fiche
+  - name: fait_portrait_effectif_fgj
+    config:
+      alias: fait_report_effectif_fgj
+      tags:
+        - educ_serv
+        - populations
+        - portrait_css_fgj
+      schema: "dashboard_portrait_css_fgj"
+    description: >
+      Table de dimension répertoriant les informations statiques pour chaque élève dans les centres.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - fiche
+            - id_eco

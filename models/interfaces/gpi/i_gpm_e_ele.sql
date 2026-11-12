@@ -30,5 +30,14 @@ select
     pnom_tuteur,
     adr_electr_pere,
     adr_electr_mere,
-    adr_electr_tuteur
+    adr_electr_tuteur,
+    org,
+    langue_mater,
+    langue_maison,
+    code_lieu_naiss_pere,
+    code_lieu_naiss_mere,
+    repondant_pere,
+    code_lieu_naiss_ele_n,
+    code_lieu_naiss_ele,
+    lieu_naiss
 from {{ var("database_gpi") }}.dbo.gpm_e_ele
