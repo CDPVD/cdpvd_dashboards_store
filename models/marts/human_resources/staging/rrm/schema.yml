@@ -1,0 +1,53 @@
+version: 2
+
+models:
+
+  - name: stg_rrm_parametres
+    description: >
+      Paramètres du RRM (une seule ligne) : date de référence, seuil
+      d'inactivité et fenêtre d'observation de l'entonnoir.
+    config:
+      tags:
+        - rrm
+        - human_resources
+
+  - name: stg_rrm_dossiers
+    description: >
+      Une ligne par matricule : date d'engagement et date de fin de service
+      (renseignée seulement si tous les dossiers du matricule sont fermés).
+    config:
+      tags:
+        - rrm
+        - human_resources
+    columns:
+      - name: matr
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_rrm_emplois
+    description: >
+      Une ligne par matricule / emploi : corps d'emploi, catégorie, lieu de
+      travail et indicateur de statut d'engagement régulier (is_reg).
+    config:
+      tags:
+        - rrm
+        - human_resources
+
+  - name: stg_rrm_periodes_historique
+    description: >
+      Périodes d'historique de l'emploi principal régulier, avec le dernier
+      paiement régulier de la même catégorie et la fin effective de la période.
+    config:
+      tags:
+        - rrm
+        - human_resources
+
+  - name: stg_rrm_periodes_continues
+    description: >
+      Périodes d'emploi continues (gaps & islands) par matricule et catégorie,
+      avec le corps d'emploi et le lieu de travail de la période la plus récente.
+    config:
+      tags:
+        - rrm
+        - human_resources
