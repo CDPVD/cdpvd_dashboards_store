@@ -1,0 +1,28 @@
+version: 2
+
+models:
+
+  - name: fact_rrm_retention
+    description: >
+      Ancienneté et rétention par tranche de durée d'emploi : une ligne par
+      période d'emploi continue (matricule / catégorie), avec statut_emploi
+      (Actif, Inactif, Démission), indicateurs et tranche de durée
+      (duree_emploi_mois_complets). Lecture « entonnoir » sur
+      est_derniere_periode = 1.
+    config:
+      tags:
+        - rrm
+        - human_resources
+      schema: human_resources_features
+    columns:
+      - name: est_periode_recente_matr
+        description: >
+          1 sur la période la plus récente du matricule (période courante
+          d'abord, puis la plus récemment terminée), une seule par matr.
+          Utilisée par int_rrm_evenements, rrm_report_employe et
+          rrm_report_experience_categorie.
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+              quote: false
