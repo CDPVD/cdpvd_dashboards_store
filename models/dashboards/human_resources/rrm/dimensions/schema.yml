@@ -1,0 +1,47 @@
+version: 2
+
+models:
+
+  - name: rrm_report_dim_categorie
+    description: Dimension Catégorie d'emploi (catégories présentes dans les faits).
+    columns:
+      - name: cat_emp
+        tests:
+          - unique
+          - not_null
+
+  - name: rrm_report_dim_corps
+    description: Dimension Corps d'emploi (code - description) des tables par période.
+    columns:
+      - name: corp_empl
+        tests:
+          - unique
+          - not_null
+
+  - name: rrm_report_dim_unite
+    description: Dimension Unité administrative (lieu de travail) des tables par période.
+    columns:
+      - name: lieu_trav
+        tests:
+          - unique
+          - not_null
+
+  - name: rrm_report_dim_tranche
+    description: Dimension Tranche d'ancienneté (dim_rrm_tranche_duree), triée par ordre.
+    columns:
+      - name: anciennete_tranche
+        tests:
+          - unique
+          - not_null
+      - name: ordre
+        description: Ordre de tri de la tranche dans Power BI.
+
+  - name: rrm_report_dim_mois
+    description: Dimension Mois des graphiques mensuels (fin_mois, libellé AAAA-MM).
+    columns:
+      - name: fin_mois
+        tests:
+          - unique
+          - not_null
+      - name: Mois
+        description: Libellé du mois au format AAAA-MM, trié par fin_mois.

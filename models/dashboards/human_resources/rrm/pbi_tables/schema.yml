@@ -1,0 +1,124 @@
+version: 2
+
+models:
+
+  - name: rrm_report_employe
+    description: >
+      Dimension Employé(e) : une ligne par employé du RRM avec Nom complet
+      (recherche de la liste nominative) et statut_emploi (Actif, Inactif,
+      Démission), qui donne l'icône de rrm_report_periode_emplois.
+    columns:
+      - name: matr
+        tests:
+          - unique
+          - not_null
+
+  - name: rrm_report_experience_categorie
+    description: >
+      Une ligne par employé et catégorie d'emploi : tranche d'expérience dans
+      la catégorie, tranche d'ancienneté au CSS, date d'entrée dans la
+      catégorie, est_categorie_actuelle et issue exclusive (en_cours, depart,
+      sortie_autre_cat). Source de rrm_report_entonnoir_categorie.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - matr
+            - cat_empl
+
+  - name: rrm_report_entonnoir_categorie
+    description: >
+      Entonnoir de rétention dans la catégorie d'emploi, selon la tranche
+      d'expérience (source rrm_report_experience_categorie). Une ligne par
+      employé x catégorie x tranche atteinte, avec effectif_initial, en_cours,
+      depart, sortie_autre_cat et effectif_final
+      (effectif_initial - depart - sortie_autre_cat - en_cours = effectif_final)
+      et effectif_observe (= effectif_initial - en_cours).
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - matr
+            - cat_empl
+            - tranche_ordre
+
+  - name: rrm_report_periode
+    description: >
+      Périodes du segment « Période » (3 à 120 derniers mois) : date_debut
+      (photo de l'effectif initial), date_fin (dernier mois de
+      rrm_report_effectif_mensuel) et facteur_annualisation (12 / nb_mois).
+    columns:
+      - name: Période
+        tests:
+          - unique
+          - not_null
+
+  - name: rrm_report_periode_faits
+    description: >
+      Indicateurs de période calculés d'avance (page Mouvements du personnel) :
+      une ligne par période x employé x type_ligne (Effectif initial,
+      Effectif final, Embauche, Départ, Mouvement vertical), avec les
+      attributs à la date de la ligne. Colonnes additives pour Power BI
+      (SUM) : effectif_initial, effectif_final, effectif_moyen, embauche,
+      depart, mouvement, retenu, depart_annualise, mouvement_annualise.
+    columns:
+      - name: periode
+        tests:
+          - not_null
+      - name: retenu
+        description: >
+          Effectif initial seulement : 1 si toujours en emploi au CSS à la
+          fin de la période (peu importe la catégorie ou l'unité).
+
+  - name: rrm_report_periode_mensuel
+    description: >
+      Séries mensuelles par période (fin_mois dans la période) : une ligne
+      par période x mois x employé x type_ligne. effectif_moyen vaut 0,5 pour
+      l'effectif du mois et 0,5 pour l'effectif du mois précédent :
+      SUM(effectif_moyen) = (effectif du mois + effectif du mois précédent) / 2.
+
+  - name: rrm_report_periode_emplois
+    description: >
+      Liste nominative par période : une ligne par période x matricule x
+      emploi lié à la période, résumé à la fin de la période (situation,
+      début, fin, corps, lieu, statut d'engagement, ETAT, % du poste,
+      heures / semaine). employe = icône de statut au CSS + nom + matricule.
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - periode
+            - matr
+            - ref_empl
+
+  - name: rrm_report_pont_effectif
+    description: >
+      Pont de l'effectif (graphique en cascade, page Mouvements du personnel) :
+      une ligne par période x employé x étape, avec variation +1 / -1 et les
+      attributs de la photo concernée. SUM(variation) = effectif final sous
+      tout filtre Catégorie / Corps / Unité / Tranche. Étapes : Effectif
+      initial, Embauches, Retours et autres entrées, Départs du CSS, Autres
+      sorties, Changements de catégorie, Autres changements.
+    columns:
+      - name: periode
+        tests:
+          - not_null
+      - name: etape
+        tests:
+          - not_null
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - periode
+            - matr
+            - etape_ordre
+            - variation
+
+  - name: rrm_report_cohorte_embauche
+    description: >
+      Cohortes d'embauche (page Intégration des nouveaux employés) : une ligne
+      par embauche x mois depuis l'embauche (0 à 36, mois écoulés seulement).
+      present = encore en emploi régulier au CSS à la fin du mois.
+      Taux de survie = SUM(present) / SUM(observe).
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - matr
+            - mois_depuis_embauche
