@@ -69,12 +69,15 @@ models:
                 i_t_prog:
                     +enabled: false
             paie:
+                +enabled: true
                 i_pai_tab_corp_empl:
                     +enabled: false
                 i_pai_hemp:
                     +enabled: false
                 i_pai_tab_etat_empl:
                     +enabled: false
+                i_pai_hchq_pmnt:
+                    +enabled: true                    
     ### <<< END
 
     # This code block can be safely overriden in the cssXX_dashboards_store.
@@ -101,7 +104,7 @@ models:
                     - "mart_human_resources"
                 +schema: human_resources
                 features:
-                    +schema: human_resources_features                
+                    +schema: human_resources_features
                 staging:
                     +schema: human_resources_staging           
         dashboards:
@@ -122,6 +125,12 @@ models:
                     pbi_tables:
                         +post-hook:
                             - "{{ core_dashboards_store.stamp_model('dashboard_retirement') }}"
+                rrm:
+                    +tags: ["rrm"]
+                    +schema: "dashboard_rrm"
+                    pbi_tables:
+                        +post-hook:
+                            - "{{ core_dashboards_store.stamp_model('dashboard_rrm') }}"                            
 
                 endb:
                 
