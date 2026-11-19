@@ -1,0 +1,18 @@
+version: 2
+
+models:
+
+  - name: dim_rrm_tranche_duree
+    description: >
+      Tranches de durée d'emploi (mois complets, [mois_min, mois_max[).
+      Source unique des tranches pour le RRM.
+    config:
+      tags:
+        - rrm
+        - human_resources
+      schema: human_resources_dimensions
+    columns:
+      - name: ordre
+        tests:
+          - unique
+          - not_null
