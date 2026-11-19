@@ -1,0 +1,69 @@
+version: 2
+
+models:
+
+  - name: int_rrm_paiements_reguliers
+    description: >
+      Dates de paiement d'emplois réguliers par matricule et catégorie d'emploi.
+      Pré-agrégation indexée de i_pai_hchq_pmnt pour stg_rrm_periodes_historique.
+    config:
+      tags:
+        - rrm
+        - human_resources
+      schema: human_resources_features
+
+  - name: int_rrm_effectif_mensuel
+    description: >
+      Effectif régulier en fin de mois (120 derniers mois + mois courant) :
+      une ligne par mois x employé en emploi, avec catégorie / corps / lieu et
+      tranche d'ancienneté au CSS à la date de la photo. Étape des tables par
+      période du RRM.
+    config:
+      tags:
+        - rrm
+        - human_resources
+      schema: human_resources_features
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - fin_mois
+            - matr
+
+  - name: int_rrm_evenements
+    description: >
+      Événements datés du personnel régulier (Embauche, Mouvement vertical,
+      Départ), avec motif de départ (premier ETAT C sauf C10 après le dernier
+      emploi actif), catégorie / corps / lieu et tranche d'ancienneté à la
+      date de l'événement. Étape des tables par période du RRM.
+    config:
+      tags:
+        - rrm
+        - human_resources
+      schema: human_resources_features
+    columns:
+      - name: type_evenement
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - Embauche
+                - Mouvement vertical
+                - Départ
+
+  - name: int_rrm_emplois
+    description: >
+      Tous les emplois pai_hemp des employés du RRM : une ligne par matricule x
+      emploi x période aux mêmes caractéristiques. date_fin NULL si ouverte.
+      Étape de rrm_report_periode_emplois.
+    config:
+      tags:
+        - rrm
+        - human_resources
+      schema: human_resources_features
+    tests:
+      - core_dashboards_store.resolution:
+          combination_of_columns:
+            - matr
+            - ref_empl
+            - date_debut
+            - ordre
